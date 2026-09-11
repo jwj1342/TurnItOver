@@ -1,0 +1,14 @@
+# Discrete view set. Frame: Y up, +Z is the object's front. azimuth rotates about Y (0 = front), elevation about the horizon.
+views:
+  - {id: front,         azimuth_deg: 0,    elevation_deg: 0,   projection: orthographic}
+  - {id: back,          azimuth_deg: 180,  elevation_deg: 0,   projection: orthographic}
+  - {id: left,          azimuth_deg: -90,  elevation_deg: 0,   projection: orthographic}
+  - {id: right,         azimuth_deg: 90,   elevation_deg: 0,   projection: orthographic}
+  - {id: top,           azimuth_deg: 0,    elevation_deg: 90,  projection: orthographic}
+  - {id: bottom,        azimuth_deg: 0,    elevation_deg: -90, projection: orthographic}
+  - {id: oblique_fr,    azimuth_deg: 35,   elevation_deg: 25,  projection: perspective}
+  - {id: oblique_fl,    azimuth_deg: -35,  elevation_deg: 25,  projection: perspective}
+  - {id: oblique_br,    azimuth_deg: 145,  elevation_deg: 25,  projection: perspective}
+  - {id: oblique_bl,    azimuth_deg: -145, elevation_deg: 25,  projection: perspective}
+  - {id: grazing_front, azimuth_deg: 80,   elevation_deg: 5,   projection: perspective}
+  - {id: grazing_top,   azimuth_deg: 20,   elevation_deg: 80,  projection: perspective}

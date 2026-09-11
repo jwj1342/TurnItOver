@@ -1,0 +1,16 @@
+# Small detectability matrix on the toy asset: which single action exposes which corruption.
+seed: 0
+n_seeds: 4
+asset_source: {kind: toy}
+corruptions: [structure.part_offset, kinematics.joint_axis, runtime.triangle_budget]
+actions:
+  - {type: request_view, view_id: front}
+  - {type: request_view, view_id: oblique_fr}
+  - {type: request_view, view_id: grazing_front}
+  - {type: actuate_joint, joint_id: drawer_0, detent: limit}
+  - {type: actuate_joint, joint_id: drawer_1, detent: limit}
+  - {type: actuate_joint, joint_id: door, detent: limit}
+  - {type: query_runtime, property: stats}
+thresholds: {image_l1: 0.01, geometry_chamfer_m: 0.005, stats_rel: 0.05}
+render: {width: 256, height: 256}
+views: configs/views.yaml

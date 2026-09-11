@@ -1,0 +1,15 @@
+# generated data and logs
+data/*
+!data/.gitkeep
+logs/*
+!logs/.gitkeep
+# environments and caches
+.venv/
+.cache/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+# web build
+web/node_modules/
+web/dist/

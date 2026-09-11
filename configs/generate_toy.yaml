@@ -1,0 +1,25 @@
+# Vertical-slice run: toy cabinet, one corruption per sample, scripted observation.
+run_id: toy_smoke
+seed: 1234
+n_samples: 16
+asset_source: {kind: toy}
+corruptions:
+  - structure.part_offset
+  - kinematics.joint_axis
+  - runtime.triangle_budget
+budget: null                     # null = uncapped (data generation); an int enforces K
+observation_script:
+  - {type: request_view, view_id: front}
+  - {type: request_view, view_id: oblique_fr}
+  - {type: request_view, view_id: grazing_front}
+  - {type: actuate_joint, joint_id: drawer_0, detent: limit}
+  - {type: query_runtime, property: stats}
+  - {type: query_runtime, property: state_delta}
+  - {type: stop}
+evidence_states: [rest, "joint:*:limit"]
+checkers:
+  geometry.alignment: {tol_chamfer_m: 0.005, tol_iou: 0.9, samples_per_part: 2000}
+  runtime.budget: {max_triangles: 5000, max_draw_calls: 32}
+render: {width: 512, height: 512, harness_dir: web/dist, esbuild_bin: web/node_modules/.bin/esbuild, browser_restart_every: 200}
+views: configs/views.yaml
+output_dir: data/runs/${run_id}

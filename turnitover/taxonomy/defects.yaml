@@ -1,0 +1,42 @@
+# Defect taxonomy for 3D programs (from RP.md). Ids are dataset labels: never rename, only add.
+# visibility classes:
+#   static_visible      visible from at least one static view
+#   view_dependent      visible only from specific views (grazing, close-up, front)
+#   animation_required  requires actuate_joint
+#   probe_required      requires query_runtime (stats / hierarchy / geometry probe)
+#   temporal_required   requires a time series of frames
+#   context_dependent   unobservable without an external reference
+schema_version: 1
+layers: [geometry, structure, kinematics, material, runtime]
+visibility_classes: [static_visible, view_dependent, animation_required, probe_required, temporal_required, context_dependent]
+label_forms: [part_set, part_id, part_pair, part_axis, part_scalar, part_vector, part_rotation, part_class, part_interval, part_position, part_bool, hierarchy_edge, material_id, material_scalar, scalar, bool]
+defects:
+  - {id: geometry.thin_sheet,          layer: geometry,   name_zh: 实体替换为共面薄片,       injection: 挤出体改为极薄面片,          visibility: view_dependent,     visibility_note: 掠射视角可见，正视不可见,   label_form: part_set,       implemented: false}
+  - {id: geometry.open_volume,         layer: geometry,   name_zh: 未封闭体积,               injection: 删除端盖或开放边界,          visibility: probe_required,     visibility_note: 通常不可见，需几何探针,     label_form: part_set,       implemented: false}
+  - {id: geometry.self_intersection,   layer: geometry,   name_zh: 自相交,                   injection: 扰动轮廓使其自交,            visibility: view_dependent,     visibility_note: 部分可见,                   label_form: part_set,       implemented: false}
+  - {id: geometry.global_scale,        layer: geometry,   name_zh: 全局尺度错误,             injection: 整体等比缩放,                visibility: context_dependent,  visibility_note: 无参照物时不可见,           label_form: scalar,         implemented: false}
+  - {id: geometry.anisotropic_scale,   layer: geometry,   name_zh: 各向异性比例错误,         injection: 单轴缩放,                    visibility: static_visible,     visibility_note: 单视角可见,                 label_form: part_scalar,    implemented: false}
+  - {id: geometry.missing_part,        layer: geometry,   name_zh: 部件缺失,                 injection: 删除组件,                    visibility: static_visible,     visibility_note: 单视角常可见,               label_form: part_id,        implemented: false}
+  - {id: geometry.duplicate_part,      layer: geometry,   name_zh: 部件冗余,                 injection: 复制并微移,                  visibility: view_dependent,     visibility_note: 部分可见,                   label_form: part_id,        implemented: false}
+  - {id: geometry.missing_bevel,       layer: geometry,   name_zh: 倒角丢失,                 injection: 关闭 bevel,                  visibility: view_dependent,     visibility_note: 近景可见,                   label_form: part_set,       implemented: false}
+  - {id: structure.wrong_parent,       layer: structure,  name_zh: 父节点挂错,               injection: 改变层级归属,                visibility: animation_required, visibility_note: 静态不可见，动画时暴露,     label_form: hierarchy_edge, implemented: false}
+  - {id: structure.pivot_offset,       layer: structure,  name_zh: 枢轴位置偏移,             injection: 平移 pivot,                  visibility: animation_required, visibility_note: 静态不可见，动画时暴露,     label_form: part_vector,    implemented: false}
+  - {id: structure.part_offset,        layer: structure,  name_zh: 部件位置偏移,             injection: 平移部件,                    visibility: static_visible,     visibility_note: 单视角常可见,               label_form: part_vector,    implemented: true}
+  - {id: structure.part_rotation,      layer: structure,  name_zh: 部件朝向错误,             injection: 旋转部件,                    visibility: static_visible,     visibility_note: 单视角常可见,               label_form: part_rotation,  implemented: false}
+  - {id: structure.symmetry_break,     layer: structure,  name_zh: 对称性破坏,               injection: 单侧扰动,                    visibility: view_dependent,     visibility_note: 正视可见,                   label_form: part_pair,      implemented: false}
+  - {id: structure.interpenetration,   layer: structure,  name_zh: 部件互穿,                 injection: 平移使其相交,                visibility: view_dependent,     visibility_note: 部分可见,                   label_form: part_pair,      implemented: false}
+  - {id: structure.floating,           layer: structure,  name_zh: 悬空无接触,               injection: 抬升部件,                    visibility: view_dependent,     visibility_note: 部分可见,                   label_form: part_id,        implemented: false}
+  - {id: kinematics.joint_axis,        layer: kinematics, name_zh: 关节轴方向错误,           injection: 旋转轴向量,                  visibility: animation_required, visibility_note: 静态不可见，需动画序列,     label_form: part_axis,      implemented: true}
+  - {id: kinematics.joint_type,        layer: kinematics, name_zh: 关节类型错误,             injection: 旋转副与移动副互换,          visibility: animation_required, visibility_note: 静态不可见，需动画序列,     label_form: part_class,     implemented: false}
+  - {id: kinematics.joint_range,       layer: kinematics, name_zh: 行程范围错误,             injection: 放大或缩小限位,              visibility: animation_required, visibility_note: 静态不可见，需动画末态,     label_form: part_interval,  implemented: false}
+  - {id: kinematics.joint_anchor,      layer: kinematics, name_zh: 关节锚点错误,             injection: 平移锚点,                    visibility: animation_required, visibility_note: 静态不可见，需动画序列,     label_form: part_position,  implemented: false}
+  - {id: kinematics.direction_flip,    layer: kinematics, name_zh: 运动方向反向,             injection: 参数取负,                    visibility: animation_required, visibility_note: 静态不可见，需动画序列,     label_form: part_bool,      implemented: false}
+  - {id: material.basecolor_as_rough,  layer: material,   name_zh: 基础色误接为粗糙度,       injection: 通道错接,                    visibility: static_visible,     visibility_note: 可见，高光跟随图案,         label_form: material_id,    implemented: false}
+  - {id: material.metalness,           layer: material,   name_zh: 金属度错误,               injection: metalness 翻转,              visibility: static_visible,     visibility_note: 可见,                       label_form: material_scalar, implemented: false}
+  - {id: material.tiling_scale,        layer: material,   name_zh: 贴图平铺比例错误,         injection: 改变 repeat,                 visibility: static_visible,     visibility_note: 可见,                       label_form: material_id,    implemented: false}
+  - {id: material.emissive,            layer: material,   name_zh: 自发光误设,               injection: emissive 非零,               visibility: static_visible,     visibility_note: 可见,                       label_form: material_id,    implemented: false}
+  - {id: material.normal_map,          layer: material,   name_zh: 法线强度或方向错误,       injection: 取反或放大,                  visibility: view_dependent,     visibility_note: 近景可见,                   label_form: material_id,    implemented: false}
+  - {id: runtime.triangle_budget,      layer: runtime,    name_zh: 三角面超预算,             injection: 提高细分段数,                visibility: probe_required,     visibility_note: 不可见，需统计探针,         label_form: scalar,         implemented: true}
+  - {id: runtime.draw_calls,           layer: runtime,    name_zh: draw call 过多,           injection: 拆散网格或取消实例化,        visibility: probe_required,     visibility_note: 不可见，需统计探针,         label_form: scalar,         implemented: false}
+  - {id: runtime.missing_dispose,      layer: runtime,    name_zh: 资源未释放,               injection: 移除 dispose 调用,           visibility: probe_required,     visibility_note: 不可见，需运行时探针,       label_form: bool,           implemented: false}
+  - {id: runtime.tick_missing_or_phase, layer: runtime,   name_zh: 动画函数缺失或相位错误,   injection: 删除或偏移 tick,             visibility: temporal_required,  visibility_note: 静态不可见，需时序,         label_form: bool,           implemented: false}

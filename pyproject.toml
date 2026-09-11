@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "turnitover"
+version = "0.1.0"
+description = "Verification as active perception for LLM-generated 3D programs: data engine, observation harness, deterministic checkers."
+requires-python = ">=3.12"
+dependencies = [
+  "numpy",
+  "scipy",
+  "trimesh",
+  "pyyaml",
+  "pillow",
+  "playwright",
+]
+
+[project.scripts]
+turnitover = "turnitover.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["turnitover*"]
+
+[tool.setuptools.package-data]
+turnitover = ["taxonomy/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["browser: needs Chromium via Playwright and a built web/dist"]
+addopts = "-m 'not browser' -q"
