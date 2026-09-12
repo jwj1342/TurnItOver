@@ -8,7 +8,7 @@ import time
 from typing import Callable, Protocol
 
 from turnitover.core.actions import (
-    ActuateJoint, EmitDiagnosis, Observation, QueryRuntime, RequestView, Stop, action_cost,
+    Action, ActuateJoint, EmitDiagnosis, Observation, QueryRuntime, RequestView, Stop, action_cost,
 )
 from turnitover.policy.base import JudgePolicy, PolicyContext
 

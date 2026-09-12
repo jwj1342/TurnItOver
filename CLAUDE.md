@@ -16,6 +16,8 @@ Read `docs/architecture.md` first. `RP.md` is the research proposal that this co
 - `turnitover/taxonomy/defects.yaml` — defect ids are dataset labels. After editing run `make docs`.
 
 ## Working rules
+- README 的说明与新增面向使用者的文档默认使用中文，命令、路径和模型名保留原始拼写。
+- 遵循 DRY、关注点分离、SRP、清晰契约、低耦合高内聚、可扩展与任务状态隔离、可观测与可测试、KISS、YAGNI。具体边界见 `docs/engineering-principles.md`；只为实际共同语义抽取模块，避免预设未来需求。
 - `pytest` before every commit (unit tests, no browser). `pytest -m browser` when touching `web/` or `turnitover/render/`.
 - Randomness only through an explicit `numpy.random.Generator`. No global state in workers; a shard must be reproducible from `(config, shard index)`.
 - One responsibility per module. Checkers consume browser-exported evidence only, never `AssetSpec`.

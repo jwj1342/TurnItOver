@@ -1,121 +1,130 @@
 # TurnItOver
 
-Data engine and observation harness for **verification as active perception** of LLM-generated 3D programs
-(see `RP.md`). Corrupt a known-good articulated object program, observe it through a budgeted set of actions
-(views, joint actuation, runtime probes) in headless Chromium, score it with deterministic checkers, and write
-perfectly labeled samples.
+面向大模型生成的三维程序，研究**验证即主动感知**：评判器通过选择视角、驱动关节和查询运行时信息，在有限观测预算下获取证据、定位缺陷。研究计划见 [RP.md](RP.md)。
 
-Status: toy data engine, visual exports, role-based model API adapters, a single-pass photo-to-program baseline,
-and a budgeted verifier with active/fixed/random VLM policies and an offline runtime baseline.
-No external reconstruction pipeline or fine-tuned judge has been reproduced yet.
+当前已实现合成数据引擎、无头浏览器观测、确定性检查器、截图与视频导出、按角色配置的模型 API，以及支持主动、固定、随机观测的 verifier（验证器）。另有单次照片到程序的生成入口和离线运行时检查基线。外部重建流水线、评判器训练、生成—修复外循环和真实照片评测尚未完成。
 
-## Layout
+## 项目结构
 
-```
-turnitover/   Python package: core contracts, taxonomy, assets, corruptions, render, policy, checkers, storage, engine
-web/          TypeScript: Three.js runtime + window.harness (built with esbuild into web/dist)
-configs/      views.yaml, generate_toy.yaml, detectability_toy.yaml
-scripts/      setup_env.sh, bootstrap_login.sh, check_browser.py, slurm/*.sbatch
-tests/        unit (no browser) and browser (marked) tests
-docs/         architecture.md, protocol.md, taxonomy.md (generated), cluster.md
+```text
+turnitover/   Python 包：数据契约、资产、腐蚀、渲染、观测策略、检查器、存储、模型和验证器
+web/         Three.js 运行时与 window.harness，构建产物位于 web/dist
+configs/     视角、数据生成和可检测性实验配置
+scripts/     环境初始化、模型下载、示例入口和 Slurm 作业脚本
+tests/       单元测试与需要浏览器的集成测试
+docs/        架构、协议、模型配置、实验说明和缺陷分类文档
+models/      本地模型权重，仅说明文件进入版本控制
+output/      截图、视频、验证报告；保留一组完整示例，其余运行结果默认忽略
 ```
 
-## Quick start (Nibi)
+## 快速开始（Nibi 集群）
 
 ```bash
 source scripts/setup_env.sh
-bash scripts/bootstrap_login.sh            # once, on a login node
-sbatch scripts/slurm/smoke_browser.sbatch  # browser check + tests on a compute node
+bash scripts/bootstrap_login.sh           # 首次在登录节点安装环境
+sbatch scripts/slurm/smoke_browser.sbatch  # 在计算节点检查浏览器并运行测试
 CONFIG=configs/generate_toy.yaml sbatch scripts/slurm/generate_array.sbatch
 python -m turnitover inspect data/runs/toy_smoke/shard-0000.tar --n 4
 ```
 
-CLI (run inside a job, e.g. via `sbatch scripts/slurm/run_cmd.sbatch <command>` or an `salloc` session):
+依赖安装和集群约定见 [CLAUDE.md](CLAUDE.md)。批量实验通过 Slurm 执行，例如使用 `sbatch scripts/slurm/run_cmd.sbatch <命令>`，或在 `salloc` 会话中执行：
 
 ```bash
 python -m turnitover generate --config configs/generate_toy.yaml --shard 0/2 --n-samples 8
 python -m turnitover detectability --config configs/detectability_toy.yaml --out data/runs/detect_toy.json
 python -m turnitover inspect data/runs/toy_smoke/shard-0000.tar --n 4
-python -m turnitover render-docs        # lightweight; fine on a login node
+python -m turnitover render-docs  # 文档生成开销较小，可在登录节点执行
 ```
 
-## Visual output
+## 截图与视频
 
-Export actual browser renders to `output/` (requires the built web harness and Chromium):
+使用已构建的网页运行时和 Chromium，将实际渲染结果导出到 `output/`：
 
 ```bash
 source scripts/setup_env.sh
 python -m turnitover preview
-# Or on a compute node:
+# 或在计算节点执行：
 sbatch scripts/slurm/run_cmd.sbatch python -m turnitover preview
 ```
 
-Each run creates a timestamped folder containing:
+默认创建带时间戳的目录，包含：
 
-- `index.html`: offline gallery; open locally in a browser after downloading the folder.
-- `screenshots/`: 12 rest-pose views and one upper-limit image per joint.
-- `overview.png`: labeled contact sheet.
-- `turntable.mp4`: 360-degree orbit, 4 seconds by default.
-- `joints.mp4`: each joint moving separately, 4 seconds per joint.
-- `program.ts`, `manifest.json`: source, camera definitions, framing, joint limits, runtime stats and run metadata.
+- `index.html`：离线展示页面，下载整个目录后用浏览器打开。
+- `screenshots/`：12 个静止视角，以及每个关节运动到上限的截图。
+- `overview.png`：带标签的截图总览。
+- `turntable.mp4`：360 度转台视频，默认 4 秒。
+- `joints.mp4`：各关节分别运动的视频，默认每个关节 4 秒。
+- `program.ts`、`manifest.json`：源程序、相机、取景范围、关节限位、运行时统计和运行元数据。
 
-Videos use FFmpeg with `libx264`, fixed frame steps, and browser-compatible H.264/yuv420p;
-their playback speed does not depend on rendering speed. FFmpeg is a system dependency,
-not a Python package. Use `--ffmpeg /path/to/ffmpeg` to select it or `--no-video` for PNG-only output.
-Useful options: `--out output/my-preview --size 640 --fps 24 --seconds 4`.
-`--out` must be new or empty, to preserve previous results. Generated media are gitignored.
-Use `--program path/to/object.ts` to preview another program satisfying the Program ABI.
-Continuous orbit/motion is for visualization only; the research policy retains its discrete action space.
+视频由系统 FFmpeg 的 `libx264` 编码，使用浏览器兼容的 H.264/yuv420p 格式。按固定帧步长采样，播放速度不受渲染耗时影响。可用 `--ffmpeg /path/to/ffmpeg` 指定编码器，或用 `--no-video` 只导出 PNG。
 
-## Model APIs and photo inputs
+常用参数：`--out output/my-preview --size 640 --fps 24 --seconds 4`。输出目录必须为空或不存在。除仓库保留的完整示例外，生成媒体默认不进入版本控制。使用 `--program path/to/object.ts` 可预览其他符合程序 ABI 的候选。连续转台与运动仅用于展示，研究策略仍使用离散动作空间。
 
-Configure `.env` using [.env.example](.env.example), selecting provider and exact model ID independently
-for generator, judge and diagnosis. Existing shell variables override `.env`; secrets are gitignored.
+## 模型 API 与照片输入
+
+参照 [.env.example](.env.example) 配置本地 `.env`，分别为生成器（generator）、评判器（judge）和诊断角色（diagnosis）选择服务商与完整模型 ID。支持 OpenRouter 等服务；现有环境变量优先于 `.env`，密钥不进入版本控制。
 
 ```bash
 source scripts/setup_env.sh
-python -m turnitover models-check   # local configuration only, no API calls
+python -m turnitover models-check  # 仅检查本地配置，不调用 API
 python -m turnitover reconstruct --image reference.jpg --out output/photo-run
 python -m turnitover preview --program output/photo-run/program.ts --out output/photo-preview
 ```
 
-Use `reconstruct ... --dry-run` to prepare inputs without a key or network request.
-See [model setup](docs/models.md) for supported APIs, overrides and limitations, and
-[pipeline comparison](docs/pipeline-options.md) for actual reconstruction candidates and integration gaps.
+使用 `reconstruct ... --dry-run` 可在不提供密钥、不请求网络的情况下准备输入。支持的接口、配置覆盖方式和限制见 [模型配置](docs/models.md)；已有重建方案和接入缺口见 [流水线比较](docs/pipeline-options.md)。
 
-## Verifier
+## 验证器
+
+仓库自带示例程序，可以直接执行离线检查：
 
 ```bash
-python -m turnitover verify --program output/toy-preview/program.ts \
+python -m turnitover verify --program output/research-examples/triangle-budget/preview/program.ts \
   --policy runtime --budget 5 --out output/verify-runtime
-# Active VLM uses the .env judge role:
+# 主动视觉语言模型使用 .env 中的 judge 角色：
 python -m turnitover verify --program candidate.ts --reference-image reference.jpg \
   --policy active --budget 8 --out output/verify-active
 ```
 
-Outputs include an HTML evidence gallery, structured verdict/repair feedback, observation trace and model-call
-records. Budget exhaustion, uncertain judgment and execution errors are distinct. Local Qwen3-VL weights go
-under `models/`; see [verifier guide](docs/verifier.md) for GPU setup, Slurm commands and research limitations.
+输出包含 HTML 证据页面、结构化判定与修复建议、观测轨迹和模型调用记录。预算耗尽、判定不确定与执行错误分别记录；命令成功结束不等于候选通过验证。
 
-## Reproducible examples
+本地 Qwen3-VL 权重放在 `models/`，通过 GPU 作业执行推理。GPU 环境、Slurm 命令及证据边界见 [验证器说明](docs/verifier.md)。目前 Qwen3-VL-2B 的实测判定仍不可靠，详见 [实测记录](docs/verifier-smoke.md)。
+
+## 可复现示例
 
 ```bash
 source scripts/setup_env.sh
 python scripts/run_examples.py --out output/my-examples
 ```
 
-This produces two complete synthetic cases (triangle budget and joint-axis corruption), with reference/candidate
-screenshots, videos, verifier traces and independent audits. See [experiment guide](docs/experiments.md)
-and the [saved example gallery](output/research-examples/index.html). These are integration examples, not a research benchmark.
+该命令生成面数超限、关节轴错误两个合成案例，包含参考与候选的截图、视频、验证轨迹和独立审计。查看 [实验说明](docs/experiments.md) 与 [已保存的示例总览](output/research-examples/index.html)。这些示例用于验证工程链路，尚不构成研究基准。
 
-## Tests
+## 工程原则
+
+项目按以下原则维护；当前实现的证据与局限见 [工程原则检查](docs/engineering-principles.md)。
+
+| 原则 | 实践要求 |
+| --- | --- |
+| DRY：避免重复 | 共用动作执行、序列化和模型接口，避免多套逻辑产生行为差异。 |
+| 关注点分离 | 数据构造、观测策略、浏览器执行、检查与展示分别组织。 |
+| SRP：单一职责 | 模块围绕一个明确职责变化，编排入口负责连接组件。 |
+| 清晰抽象与契约 | 使用小接口和显式数据契约，固定协议的修改必须同步版本、文档与测试。 |
+| 低耦合、高内聚 | 检查器只消费导出证据；策略通过会话接口与浏览器交互。 |
+| 可扩展与无状态 | 数据分片使用稳定种子；运行状态限定在单个任务内，任务之间隔离。 |
+| 可观测与可测试 | 保存轨迹、判定、错误、模型用量和耗时，并提供单元与浏览器测试。 |
+| KISS：保持简单 | 优先使用直接的函数、配置文件和现有集群工具。 |
+| YAGNI：避免过度设计 | 只实现当前实验需要的能力，后续研究模块按实际需求增加。 |
+
+## 测试
 
 ```bash
-pytest              # unit tests, no browser
-pytest -m browser   # needs web/dist and the Playwright browser
+source scripts/setup_env.sh
+pytest             # 单元测试，不启动浏览器
+pytest -m browser  # 需要 web/dist 和 Playwright 浏览器
 ```
 
-## Read next
+## 进一步阅读
 
-`docs/architecture.md` for module boundaries and the pinned contracts, `docs/protocol.md` for the harness API,
-`CLAUDE.md` for working conventions.
+- [架构说明](docs/architecture.md)：模块边界与固定契约。
+- [协议说明](docs/protocol.md)：浏览器运行时接口与验证记录约定。
+- [实验说明](docs/experiments.md)：示例复现与当前研究范围。
+- [仓库工作约定](CLAUDE.md)：环境、依赖与提交前检查。

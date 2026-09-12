@@ -49,6 +49,9 @@ AssetSource ──AssetSpec──▶ Corruption ──ObjectProgram(spec, ts)─
 Rules: `checkers` never imports `assets` or `core.spec`; `policy` never imports `render` (it types the
 session structurally); `engine`, `verifier.runner` and CLI export workflows wire their respective tasks together.
 
+`verifier.report` owns offline HTML presentation; `verifier.runner` assembles execution and persistence.
+See [工程原则检查](engineering-principles.md) for the current evidence and limitations against the nine engineering principles.
+
 ## Statelessness and scale
 
 A shard is fully determined by `(config, shard, n_shards)`: indices come from `shard_indices`, per-sample
