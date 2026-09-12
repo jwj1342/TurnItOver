@@ -2,7 +2,9 @@
 
 Read `docs/architecture.md` first. `RP.md` is the research proposal that this code serves.
 
-## Environment (Alliance cluster, Nibi)
+## Environment
+- 个人电脑与通用环境使用 `scripts/bootstrap_local.sh` / `scripts/setup_local.sh`，允许使用 PyPI；计算集群配置见 `docs/cluster.md`。
+- 下列模块和 wheelhouse 规则仅适用于使用 `scripts/setup_env.sh` 的受管集群环境，不是所有合作者的安装要求。
 - Modules are loaded in exactly one place: `scripts/setup_env.sh` (`source` it). Never `module load` elsewhere, never in `~/.bashrc`.
 - Python deps come from the Alliance wheelhouse only. Before adding a dependency run `avail_wheels <pkg> --python 3.12`, then pin it in `requirements.txt`. No conda, no uv, no PyPI.
 - First-time setup on a login node: `bash scripts/bootstrap_login.sh` (venv, browser download, `npm ci`, web build).

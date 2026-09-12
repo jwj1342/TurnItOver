@@ -1,4 +1,4 @@
-# Pinned to the Alliance wheelhouse (python/3.12). Install with: pip install --no-index -r requirements.txt
+# Python 3.12 固定依赖。个人环境使用 pip install -r；受管 wheelhouse 使用 --no-index。
 numpy==2.4.2
 scipy==1.18.1
 trimesh==4.7.1

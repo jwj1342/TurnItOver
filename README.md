@@ -17,34 +17,54 @@ models/      本地模型权重，仅说明文件进入版本控制
 output/      截图、视频、验证报告；保留一组完整示例，其余运行结果默认忽略
 ```
 
-## 快速开始（Nibi 集群）
+## 环境配置
+
+两种环境运行同一套代码和实验；没有集群也可以运行截图、视频、离线 verifier 和远端模型 API。基础示例不需要独立 GPU，本地 Qwen 推理另需 CUDA GPU。
+
+### 方法一：个人电脑
+
+准备 Python 3.12、Node.js 22 或 24（含 npm）与 FFmpeg。Linux、macOS 使用 Bash；Windows 请使用 WSL2，在 WSL 内安装依赖并克隆仓库。
 
 ```bash
-source scripts/setup_env.sh
-bash scripts/bootstrap_login.sh           # 首次在登录节点安装环境
-sbatch scripts/slurm/smoke_browser.sbatch  # 在计算节点检查浏览器并运行测试
-CONFIG=configs/generate_toy.yaml sbatch scripts/slurm/generate_array.sbatch
-python -m turnitover inspect data/runs/toy_smoke/shard-0000.tar --n 4
+bash scripts/bootstrap_local.sh
+source scripts/setup_local.sh
+python scripts/check_browser.py
+python scripts/run_examples.py --out output/my-examples
 ```
 
-依赖安装和集群约定见 [CLAUDE.md](CLAUDE.md)。批量实验通过 Slurm 执行，例如使用 `sbatch scripts/slurm/run_cmd.sbatch <命令>`，或在 `salloc` 会话中执行：
+安装脚本在 `.venv-local/` 创建 Python 环境，从包索引安装固定依赖，下载 Chromium 并构建网页运行时。Linux 如果缺少浏览器系统库，按 [个人电脑配置](docs/local-setup.md) 安装。新终端重新执行 `source scripts/setup_local.sh` 即可。
+
+### 方法二：计算集群
+
+先按 [计算集群配置](docs/cluster.md) 准备共享环境，再通过调度器提交实验。Slurm 示例：
+
+```bash
+# 将 YOUR_ACCOUNT、YOUR_PARTITION 替换为自己的资源配置；不需要的选项可以省略。
+sbatch --account=YOUR_ACCOUNT --partition=YOUR_PARTITION \
+  scripts/slurm/run_portable.sbatch python scripts/run_examples.py --out output/cluster-examples
+```
+
+通用作业脚本不指定机构、账户或模块版本。仓库另保留已有受管环境的脚本，使用前需按本站配置调整；计算节点是否联网、允许哪些软件源，以所在集群规则为准。
+
+环境就绪后，可执行数据与可检测性实验：
 
 ```bash
 python -m turnitover generate --config configs/generate_toy.yaml --shard 0/2 --n-samples 8
 python -m turnitover detectability --config configs/detectability_toy.yaml --out data/runs/detect_toy.json
 python -m turnitover inspect data/runs/toy_smoke/shard-0000.tar --n 4
-python -m turnitover render-docs  # 文档生成开销较小，可在登录节点执行
+python -m turnitover render-docs
 ```
+
+以下命令均假设已激活对应环境，并从仓库根目录执行。集群上的批量任务请放入计算作业。
 
 ## 截图与视频
 
 使用已构建的网页运行时和 Chromium，将实际渲染结果导出到 `output/`：
 
 ```bash
-source scripts/setup_env.sh
 python -m turnitover preview
 # 或在计算节点执行：
-sbatch scripts/slurm/run_cmd.sbatch python -m turnitover preview
+sbatch scripts/slurm/run_portable.sbatch python -m turnitover preview
 ```
 
 默认创建带时间戳的目录，包含：
@@ -65,7 +85,6 @@ sbatch scripts/slurm/run_cmd.sbatch python -m turnitover preview
 参照 [.env.example](.env.example) 配置本地 `.env`，分别为生成器（generator）、评判器（judge）和诊断角色（diagnosis）选择服务商与完整模型 ID。支持 OpenRouter 等服务；现有环境变量优先于 `.env`，密钥不进入版本控制。
 
 ```bash
-source scripts/setup_env.sh
 python -m turnitover models-check  # 仅检查本地配置，不调用 API
 python -m turnitover reconstruct --image reference.jpg --out output/photo-run
 python -m turnitover preview --program output/photo-run/program.ts --out output/photo-preview
@@ -92,7 +111,6 @@ python -m turnitover verify --program candidate.ts --reference-image reference.j
 ## 可复现示例
 
 ```bash
-source scripts/setup_env.sh
 python scripts/run_examples.py --out output/my-examples
 ```
 
@@ -117,7 +135,6 @@ python scripts/run_examples.py --out output/my-examples
 ## 测试
 
 ```bash
-source scripts/setup_env.sh
 pytest             # 单元测试，不启动浏览器
 pytest -m browser  # 需要 web/dist 和 Playwright 浏览器
 ```

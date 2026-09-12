@@ -7,10 +7,10 @@
 ## 两个完整示例
 
 ```bash
-source scripts/setup_env.sh
+source scripts/setup_local.sh  # 受管集群改用 scripts/setup_env.sh
 python scripts/run_examples.py --out output/my-examples
 # 也可通过集群 CPU 任务执行：
-sbatch scripts/slurm/run_cmd.sbatch python scripts/run_examples.py --out output/my-job-examples
+sbatch scripts/slurm/run_portable.sbatch python scripts/run_examples.py --out output/my-job-examples
 ```
 
 需要完成 README 中的环境安装与 web 构建，并且系统有 FFmpeg。没有 FFmpeg 时可加

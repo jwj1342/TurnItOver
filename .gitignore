@@ -13,6 +13,7 @@ models/*
 .env.*
 !.env.example
 .venv/
+.venv-local/
 .venv-qwen/
 .cache/
 __pycache__/

@@ -10,7 +10,7 @@ It is an inference/evaluation harness, not a trained model or a complete generat
 No API or weights needed for the offline runtime baseline:
 
 ```bash
-source scripts/setup_env.sh
+source scripts/setup_local.sh  # 受管集群改用 scripts/setup_env.sh
 python -m turnitover verify --program output/toy-preview/program.ts \
   --policy runtime --budget 5 --out output/verify-runtime
 ```
@@ -42,7 +42,7 @@ not a verifier fine-tuned on our data. Model size/quality alone does not establi
 Prepare on a login node, using Alliance wheels only:
 
 ```bash
-source scripts/setup_env.sh
+source scripts/setup_local.sh  # 受管集群改用 scripts/setup_env.sh
 python3 scripts/download_qwen.py
 python -m venv .venv-qwen
 .venv-qwen/bin/python -m pip install --no-index -r requirements-qwen.txt

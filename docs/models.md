@@ -31,7 +31,7 @@ multiline values, shell execution, or sourcing is performed. Keep `.env` private
 Do not place secrets in model IDs or URLs. Remote endpoints require HTTPS; localhost HTTP supports vLLM tunnels.
 
 ```bash
-source scripts/setup_env.sh
+source scripts/setup_local.sh  # 受管集群改用 scripts/setup_env.sh
 python -m turnitover models-check
 ```
 
@@ -67,7 +67,7 @@ This is a single-pass baseline, **not an integration or reproduction of img2thre
 The judge role is used by the active/fixed/random [verifier](verifier.md). The diagnosis role is independently
 callable but is not yet wired into a repair loop. Local Qwen verification can bypass APIs with `--local-model`.
 
-Remote APIs need a network-enabled node. Nibi compute nodes have no internet: run API calls on a login node,
+Remote APIs need a network-enabled node. On clusters without compute-node internet access, run API calls on an authorized network-enabled node,
 then render saved programs through Slurm as needed. Local model servers require a reachable endpoint/tunnel.
 Video input requires a separate frame-sampling or upstream reconstruction pipeline; passing an MP4 as `--image` is unsupported.
 

@@ -1,6 +1,9 @@
-.PHONY: bootstrap web typecheck test test-browser docs smoke preview clean
+.PHONY: bootstrap bootstrap-cluster web typecheck test test-browser docs smoke preview clean
 
 bootstrap:
+	bash scripts/bootstrap_local.sh
+
+bootstrap-cluster:
 	bash scripts/bootstrap_login.sh
 
 web:
