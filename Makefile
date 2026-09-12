@@ -1,4 +1,4 @@
-.PHONY: bootstrap web typecheck test test-browser docs smoke clean
+.PHONY: bootstrap web typecheck test test-browser docs smoke preview clean
 
 bootstrap:
 	bash scripts/bootstrap_login.sh
@@ -20,6 +20,9 @@ docs:
 
 smoke:
 	python -m turnitover generate --config configs/generate_toy.yaml --n-samples 4 --out data/runs/smoke
+
+preview:
+	python -m turnitover preview
 
 clean:
 	rm -rf web/dist .pytest_cache

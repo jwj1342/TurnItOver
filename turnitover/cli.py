@@ -32,11 +32,104 @@ def main(argv: list[str] | None = None) -> int:
     i.add_argument("tar", type=Path)
     i.add_argument("--n", type=int, default=5)
 
+    p = sub.add_parser("preview", help="export PNG screenshots, MP4 videos, and an offline gallery")
+    p.add_argument("--out", type=Path, help="new/empty output directory (default: output/preview-TIMESTAMP)")
+    p.add_argument("--program", type=Path, help="ABI-compatible TypeScript; defaults to the toy cabinet")
+    p.add_argument("--size", type=int, default=640, help="square image size in pixels")
+    p.add_argument("--fps", type=int, default=24)
+    p.add_argument("--seconds", type=float, default=4, help="duration of orbit and of each joint sweep")
+    p.add_argument("--no-video", action="store_true", help="screenshots only; does not require FFmpeg")
+    p.add_argument("--ffmpeg", default="ffmpeg", help="FFmpeg executable with libx264 support")
+
+    mc = sub.add_parser("models-check", help="check role configuration locally; never calls APIs")
+    mc.add_argument("--env-file", type=Path, default=REPO_ROOT / ".env")
+    for command, help_text in (("model-call", "call a configured text/vision model once"),
+                               ("reconstruct", "single-pass photo-to-program baseline (not an upstream pipeline)")):
+        m = sub.add_parser(command, help=help_text)
+        m.add_argument("--env-file", type=Path, default=REPO_ROOT / ".env")
+        m.add_argument("--role", choices=("generator", "judge", "diagnosis"), default="generator")
+        m.add_argument("--prompt-file", type=Path, required=command == "model-call",
+                       default=REPO_ROOT / "docs/prompts/reconstruct.txt")
+        m.add_argument("--image", type=Path, action="append", help="repeat for multiple images")
+        m.add_argument("--out", type=Path, required=True)
+        m.add_argument("--dry-run", action="store_true", help="prepare inputs without API calls or keys")
+
     sub.add_parser("render-docs", help="regenerate docs/taxonomy.md")
+
+    v = sub.add_parser("verify", help="budgeted verifier with evidence-linked verdict and offline report")
+    v.add_argument("--program", type=Path, required=True)
+    v.add_argument("--out", type=Path, required=True)
+    v.add_argument("--reference-image", type=Path, action="append", default=[])
+    v.add_argument("--reference-program", type=Path, help="optional privileged gold audit; never sent to judge")
+    v.add_argument("--task", default="Verify the articulated object against the reference inputs.")
+    v.add_argument("--policy", choices=("active", "fixed", "random", "runtime"), default="active")
+    v.add_argument("--budget", type=int, default=8)
+    v.add_argument("--seed", type=int, default=0)
+    v.add_argument("--size", type=int, default=384)
+    v.add_argument("--views", type=Path, default=REPO_ROOT / "configs/views.yaml")
+    v.add_argument("--actions", nargs="+", choices=("request_view", "actuate_joint", "query_runtime"),
+                   default=["request_view", "actuate_joint", "query_runtime"])
+    v.add_argument("--max-triangles", type=int, default=5000)
+    v.add_argument("--max-draw-calls", type=int, default=32)
+    v.add_argument("--env-file", type=Path, default=REPO_ROOT / ".env")
+    v.add_argument("--local-model", type=Path, help="Qwen3-VL weights directory (CUDA); bypasses API configuration")
 
     args = parser.parse_args(argv)
     configure_logging(json_lines=args.log_json, level=args.log_level)
-    return {"generate": _generate, "detectability": _detectability, "inspect": _inspect, "render-docs": _render_docs}[args.cmd](args)
+    return {"generate": _generate, "detectability": _detectability, "inspect": _inspect,
+            "preview": _preview, "models-check": _models_check, "model-call": _model_call,
+            "reconstruct": _model_call, "verify": _verify, "render-docs": _render_docs}[args.cmd](args)
+
+
+def _verify(args) -> int:
+    from turnitover.core.program import ObjectProgram
+    from turnitover.models.config import model_config, read_environment
+    from turnitover.render.session import RenderConfig
+    from turnitover.render.views import load_views
+    from turnitover.verifier.runner import VerifyConfig, verify
+
+    model = None if args.local_model or args.policy == "runtime" else model_config("judge", read_environment(args.env_file))
+    result = verify(ObjectProgram(args.program.read_text()), args.out,
+                    RenderConfig(REPO_ROOT / "web/dist", REPO_ROOT / "web/node_modules/.bin/esbuild", args.size, args.size),
+                    load_views(args.views), VerifyConfig(budget=args.budget, mode=args.policy, seed=args.seed,
+                        action_types=tuple(args.actions), max_triangles=args.max_triangles, max_draw_calls=args.max_draw_calls),
+                    task=args.task, references=tuple(args.reference_image), model=model, local_model=args.local_model,
+                    reference_program=ObjectProgram(args.reference_program.read_text()) if args.reference_program else None)
+    print(f"{result['verdict']['status']} ({result['termination']}): {args.out.resolve() / 'index.html'}")
+    return 0 if result["status"] == "complete" else 1
+
+
+def _models_check(args) -> int:
+    from turnitover.models.commands import check_models
+
+    return check_models(args)
+
+
+def _model_call(args) -> int:
+    from turnitover.models.commands import run_call
+
+    return run_call(args, REPO_ROOT, reconstruct=args.cmd == "reconstruct")
+
+
+def _preview(args) -> int:
+    from datetime import datetime, timezone
+
+    from turnitover.assets.toy import toy_cabinet
+    from turnitover.core.program import ObjectProgram
+    from turnitover.preview import export_preview
+    from turnitover.render.session import RenderConfig
+    from turnitover.render.views import load_views
+
+    output = args.out or Path("output") / datetime.now(timezone.utc).strftime("preview-%Y%m%dT%H%M%S%fZ")
+    if not output.is_absolute():
+        output = REPO_ROOT / output
+    program = ObjectProgram(args.program.read_text(encoding="utf-8")) if args.program else ObjectProgram.from_spec(toy_cabinet())
+    render = RenderConfig(REPO_ROOT / "web/dist", REPO_ROOT / "web/node_modules/.bin/esbuild",
+                          width=args.size, height=args.size)
+    path = export_preview(program, render, load_views(REPO_ROOT / "configs/views.yaml"), output,
+                          fps=args.fps, seconds=args.seconds, videos=not args.no_video, ffmpeg=args.ffmpeg)
+    print(path)
+    return 0
 
 
 def _generate(args) -> int:

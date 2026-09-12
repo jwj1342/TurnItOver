@@ -1,0 +1,26 @@
+{
+  "verdict": {
+    "status": "fail",
+    "confidence": 1.0,
+    "findings": [
+      {
+        "defect_id": "runtime.triangle_budget",
+        "parts": [],
+        "severity": 0.2456,
+        "confidence": 1.0,
+        "evidence_steps": [
+          0
+        ],
+        "description": "triangles_scene=6228 exceeds limit 5000.",
+        "suggested_fix": "Reduce subdivisions or consolidate draw calls, then recheck."
+      }
+    ],
+    "summary": "Runtime budget violations found.",
+    "limitations": [
+      "Offline runtime baseline does not judge visual, kinematic or physical correctness."
+    ]
+  },
+  "termination": "budget_exhausted",
+  "program_sha": "0e96424d19619c1b",
+  "evidence_file": "trajectory.jsonl"
+}

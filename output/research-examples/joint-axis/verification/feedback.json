@@ -1,0 +1,14 @@
+{
+  "verdict": {
+    "status": "uncertain",
+    "confidence": 0.0,
+    "findings": [],
+    "summary": "No budget violation established; visual verification remains unavailable.",
+    "limitations": [
+      "Offline runtime baseline does not judge visual, kinematic or physical correctness."
+    ]
+  },
+  "termination": "budget_exhausted",
+  "program_sha": "4d49bcb36bf6c01b",
+  "evidence_file": "trajectory.jsonl"
+}

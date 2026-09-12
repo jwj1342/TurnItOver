@@ -3,8 +3,17 @@ data/*
 !data/.gitkeep
 logs/*
 !logs/.gitkeep
+output/*
+!output/.gitkeep
+!output/research-examples/
+models/*
+!models/README.md
 # environments and caches
+.env
+.env.*
+!.env.example
 .venv/
+.venv-qwen/
 .cache/
 __pycache__/
 *.pyc

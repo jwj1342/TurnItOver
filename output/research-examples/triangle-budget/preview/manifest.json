@@ -1,0 +1,428 @@
+{
+  "status": "complete",
+  "created_at": "2026-09-12T05:46:26+00:00",
+  "program_sha": "0e96424d19619c1b",
+  "fps": 12,
+  "seconds_per_segment": 2,
+  "width": 384,
+  "height": 384,
+  "views": [
+    {
+      "id": "front",
+      "azimuth_deg": 0.0,
+      "elevation_deg": 0.0,
+      "projection": "orthographic",
+      "distance_factor": 1.0
+    },
+    {
+      "id": "back",
+      "azimuth_deg": 180.0,
+      "elevation_deg": 0.0,
+      "projection": "orthographic",
+      "distance_factor": 1.0
+    },
+    {
+      "id": "left",
+      "azimuth_deg": -90.0,
+      "elevation_deg": 0.0,
+      "projection": "orthographic",
+      "distance_factor": 1.0
+    },
+    {
+      "id": "right",
+      "azimuth_deg": 90.0,
+      "elevation_deg": 0.0,
+      "projection": "orthographic",
+      "distance_factor": 1.0
+    },
+    {
+      "id": "top",
+      "azimuth_deg": 0.0,
+      "elevation_deg": 90.0,
+      "projection": "orthographic",
+      "distance_factor": 1.0
+    },
+    {
+      "id": "bottom",
+      "azimuth_deg": 0.0,
+      "elevation_deg": -90.0,
+      "projection": "orthographic",
+      "distance_factor": 1.0
+    },
+    {
+      "id": "oblique_fr",
+      "azimuth_deg": 35.0,
+      "elevation_deg": 25.0,
+      "projection": "perspective",
+      "distance_factor": 1.0
+    },
+    {
+      "id": "oblique_fl",
+      "azimuth_deg": -35.0,
+      "elevation_deg": 25.0,
+      "projection": "perspective",
+      "distance_factor": 1.0
+    },
+    {
+      "id": "oblique_br",
+      "azimuth_deg": 145.0,
+      "elevation_deg": 25.0,
+      "projection": "perspective",
+      "distance_factor": 1.0
+    },
+    {
+      "id": "oblique_bl",
+      "azimuth_deg": -145.0,
+      "elevation_deg": 25.0,
+      "projection": "perspective",
+      "distance_factor": 1.0
+    },
+    {
+      "id": "grazing_front",
+      "azimuth_deg": 80.0,
+      "elevation_deg": 5.0,
+      "projection": "perspective",
+      "distance_factor": 1.0
+    },
+    {
+      "id": "grazing_top",
+      "azimuth_deg": 20.0,
+      "elevation_deg": 80.0,
+      "projection": "perspective",
+      "distance_factor": 1.0
+    },
+    {
+      "id": "__preview_orbit_0",
+      "azimuth_deg": 0.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_1",
+      "azimuth_deg": 15.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_2",
+      "azimuth_deg": 30.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_3",
+      "azimuth_deg": 45.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_4",
+      "azimuth_deg": 60.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_5",
+      "azimuth_deg": 75.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_6",
+      "azimuth_deg": 90.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_7",
+      "azimuth_deg": 105.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_8",
+      "azimuth_deg": 120.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_9",
+      "azimuth_deg": 135.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_10",
+      "azimuth_deg": 150.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_11",
+      "azimuth_deg": 165.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_12",
+      "azimuth_deg": 180.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_13",
+      "azimuth_deg": 195.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_14",
+      "azimuth_deg": 210.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_15",
+      "azimuth_deg": 225.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_16",
+      "azimuth_deg": 240.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_17",
+      "azimuth_deg": 255.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_18",
+      "azimuth_deg": 270.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_19",
+      "azimuth_deg": 285.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_20",
+      "azimuth_deg": 300.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_21",
+      "azimuth_deg": 315.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_22",
+      "azimuth_deg": 330.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_orbit_23",
+      "azimuth_deg": 345.0,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.2
+    },
+    {
+      "id": "__preview_motion",
+      "azimuth_deg": 35,
+      "elevation_deg": 20,
+      "projection": "perspective",
+      "distance_factor": 1.25
+    }
+  ],
+  "git": {
+    "sha": "653a1d3e7fa76474222dcf0a0173e59aab2f511b",
+    "dirty": true
+  },
+  "framing": {
+    "center": [
+      0.0,
+      0.4,
+      0.0
+    ],
+    "radius": 0.6987712562966881,
+    "__type__": "Framing"
+  },
+  "joints": {
+    "drawer_0": {
+      "id": "drawer_0",
+      "type": "prismatic",
+      "part": "drawer_0",
+      "limits": [
+        0,
+        0.35
+      ]
+    },
+    "drawer_1": {
+      "id": "drawer_1",
+      "type": "prismatic",
+      "part": "drawer_1",
+      "limits": [
+        0,
+        0.35
+      ]
+    },
+    "door": {
+      "id": "door",
+      "type": "revolute",
+      "part": "door",
+      "limits": [
+        0,
+        1.5707963267948966
+      ]
+    }
+  },
+  "browser": "143.0.7499.4",
+  "gl": {
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "vendor": "Google Inc. (Google)"
+  },
+  "runtime_stats": {
+    "property": "stats",
+    "triangles_rendered": 6228,
+    "draw_calls": 9,
+    "triangles_scene": 6228,
+    "mesh_count": 9,
+    "geometries": 9,
+    "textures": 0,
+    "programs": 1,
+    "last_render_ms": 0.20000076293945312
+  },
+  "screenshots": [
+    {
+      "title": "front",
+      "path": "screenshots/00.png",
+      "joint_state": "rest"
+    },
+    {
+      "title": "back",
+      "path": "screenshots/01.png",
+      "joint_state": "rest"
+    },
+    {
+      "title": "left",
+      "path": "screenshots/02.png",
+      "joint_state": "rest"
+    },
+    {
+      "title": "right",
+      "path": "screenshots/03.png",
+      "joint_state": "rest"
+    },
+    {
+      "title": "top",
+      "path": "screenshots/04.png",
+      "joint_state": "rest"
+    },
+    {
+      "title": "bottom",
+      "path": "screenshots/05.png",
+      "joint_state": "rest"
+    },
+    {
+      "title": "oblique_fr",
+      "path": "screenshots/06.png",
+      "joint_state": "rest"
+    },
+    {
+      "title": "oblique_fl",
+      "path": "screenshots/07.png",
+      "joint_state": "rest"
+    },
+    {
+      "title": "oblique_br",
+      "path": "screenshots/08.png",
+      "joint_state": "rest"
+    },
+    {
+      "title": "oblique_bl",
+      "path": "screenshots/09.png",
+      "joint_state": "rest"
+    },
+    {
+      "title": "grazing_front",
+      "path": "screenshots/10.png",
+      "joint_state": "rest"
+    },
+    {
+      "title": "grazing_top",
+      "path": "screenshots/11.png",
+      "joint_state": "rest"
+    },
+    {
+      "title": "drawer_0: upper limit",
+      "path": "screenshots/joint-00.png",
+      "joint_id": "drawer_0",
+      "value": 0.35
+    },
+    {
+      "title": "drawer_1: upper limit",
+      "path": "screenshots/joint-01.png",
+      "joint_id": "drawer_1",
+      "value": 0.35
+    },
+    {
+      "title": "door: upper limit",
+      "path": "screenshots/joint-02.png",
+      "joint_id": "door",
+      "value": 1.5707963267948966
+    }
+  ],
+  "videos": [
+    {
+      "title": "360 degree turntable",
+      "path": "turntable.mp4",
+      "frames": 24,
+      "duration_seconds": 2.0
+    },
+    {
+      "title": "Joint motion (one joint at a time)",
+      "path": "joints.mp4",
+      "frames": 72,
+      "duration_seconds": 6.0,
+      "joint_order": [
+        "drawer_0",
+        "drawer_1",
+        "door"
+      ]
+    }
+  ],
+  "finished_at": "2026-09-12T05:46:29+00:00"
+}

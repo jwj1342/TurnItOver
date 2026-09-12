@@ -25,6 +25,29 @@ class SessionLike(Protocol):
     def query_runtime(self, prop) -> dict: ...
 
 
+def execute_observation(session: SessionLike, action: Action, step: int, image_sink: ImageSink) -> Observation:
+    """Shared action execution for dataset scripts and online verification. No hidden probes."""
+    t0 = time.perf_counter()
+    image_ref = None
+    payload = None
+    match action:
+        case RequestView(view_id=v):
+            res = session.request_view(v)
+            image_ref = image_sink(step, res.png)
+            payload = {"render_ms": res.render_ms, "camera": res.camera}
+        case ActuateJoint(joint_id=j, detent=d):
+            res = session.actuate(j, d)
+            image_ref = image_sink(step, res.png)
+            payload = {"value": res.value, "render_ms": res.render_ms}
+        case QueryRuntime(property=p):
+            payload = session.query_runtime(p)
+        case EmitDiagnosis() | Stop():
+            pass
+        case _:
+            raise TypeError("Unsupported observation action")
+    return Observation(step, action, image_ref, payload, (time.perf_counter() - t0) * 1000)
+
+
 def run_observation_loop(
     session: SessionLike,
     policy: JudgePolicy,
@@ -39,25 +62,8 @@ def run_observation_loop(
         action = policy.act(history)
         if context.budget is not None and spent + action_cost(action) > context.budget:
             action = Stop()
-        t0 = time.perf_counter()
-        image_ref = None
-        payload = None
-        match action:
-            case RequestView(view_id=v):
-                res = session.request_view(v)
-                image_ref = image_sink(step, res.png)
-                payload = {"render_ms": res.render_ms, "camera": res.camera}
-            case ActuateJoint(joint_id=j, detent=d):
-                res = session.actuate(j, d)
-                image_ref = image_sink(step, res.png)
-                payload = {"value": res.value, "render_ms": res.render_ms}
-            case QueryRuntime(property=p):
-                payload = session.query_runtime(p)
-            case EmitDiagnosis() | Stop():
-                pass
         spent += action_cost(action)
-        history.append(Observation(step=step, action=action, image_ref=image_ref, payload=payload,
-                                   elapsed_ms=(time.perf_counter() - t0) * 1000.0))
+        history.append(execute_observation(session, action, step, image_sink))
         if isinstance(action, (Stop, EmitDiagnosis)):
             break
     return tuple(history)

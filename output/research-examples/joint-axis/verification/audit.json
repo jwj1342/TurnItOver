@@ -1,0 +1,834 @@
+{
+  "status": "complete",
+  "reference_sha": "7c52e764236a28f6",
+  "checks": [
+    {
+      "checker_id": "geometry.alignment",
+      "passed": false,
+      "invariants": [
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_back"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 7.454097280239908e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_back"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_bottom"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 1.4150588897519978e-16,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_bottom"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_left"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.03612915183027e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_left"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_right"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.01494486491949e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_right"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_shelf"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 1.203047487679886e-16,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_shelf"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_top"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 1.607440181677394e-16,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_top"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "door"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 8.561163835706597e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "door"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "drawer_0"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.33382698956584e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "drawer_0"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "drawer_1"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.514499812124133e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "drawer_1"
+          ],
+          "state": "rest",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_back"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 7.454097280239908e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_back"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_bottom"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 1.4150588897519978e-16,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_bottom"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_left"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.03612915183027e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_left"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_right"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.01494486491949e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_right"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_shelf"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 1.203047487679886e-16,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_shelf"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_top"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 1.607440181677394e-16,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_top"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "door"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 8.561163835706597e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "door"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "drawer_0"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.341643074061687e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "drawer_0"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "drawer_1"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.514499812124133e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "drawer_1"
+          ],
+          "state": "joint:drawer_0:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_back"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 7.454097280239908e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_back"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_bottom"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 1.4150588897519978e-16,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_bottom"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_left"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.03612915183027e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_left"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_right"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.01494486491949e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_right"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_shelf"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 1.203047487679886e-16,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_shelf"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_top"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 1.607440181677394e-16,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_top"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "door"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 8.561163835706597e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "door"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "drawer_0"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.33382698956584e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "drawer_0"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "drawer_1"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.4868043861979324e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "drawer_1"
+          ],
+          "state": "joint:drawer_1:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_back"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 7.454097280239908e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_back"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_bottom"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 1.4150588897519978e-16,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_bottom"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_left"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.03612915183027e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_left"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_right"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.01494486491949e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_right"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_shelf"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 1.203047487679886e-16,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_shelf"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "body_top"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 1.607440181677394e-16,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "body_top"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 0.002216206630691886,
+          "tolerance": 0.9,
+          "passed": false,
+          "parts": [
+            "door"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 0.2344487540669257,
+          "tolerance": 0.005,
+          "passed": false,
+          "parts": [
+            "door"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "drawer_0"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.33382698956584e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "drawer_0"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "bbox_iou",
+          "value": 1.0,
+          "tolerance": 0.9,
+          "passed": true,
+          "parts": [
+            "drawer_1"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 3.514499812124133e-17,
+          "tolerance": 0.005,
+          "passed": true,
+          "parts": [
+            "drawer_1"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        }
+      ],
+      "score": 0.9722222222222222,
+      "__type__": "CheckResult"
+    },
+    {
+      "checker_id": "runtime.budget",
+      "passed": true,
+      "invariants": [
+        {
+          "name": "triangles",
+          "value": 108.0,
+          "tolerance": 5000.0,
+          "passed": true,
+          "parts": [],
+          "state": null,
+          "__type__": "Invariant"
+        },
+        {
+          "name": "draw_calls",
+          "value": 9.0,
+          "tolerance": 32.0,
+          "passed": true,
+          "parts": [],
+          "state": null,
+          "__type__": "Invariant"
+        }
+      ],
+      "score": 1.0,
+      "__type__": "CheckResult"
+    }
+  ],
+  "privileged": true,
+  "used_by_judge": false
+}

@@ -83,7 +83,11 @@ class ObservationSession:
 
     # ---- lifecycle -------------------------------------------------------
     def __enter__(self) -> "ObservationSession":
-        self.start()
+        try:
+            self.start()
+        except Exception:
+            self.close()
+            raise
         return self
 
     def __exit__(self, *exc) -> None:

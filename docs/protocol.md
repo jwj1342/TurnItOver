@@ -60,3 +60,11 @@ base64 in JSON. Decode with `turnitover.render.protocol.decode_positions / decod
 - **Evidence state keys**: `rest`, `joint:<id>:<detent>`.
 - **Rendering determinism**: `antialias:false`, pixel ratio 1, fixed lights and background, image taken with
   `canvas.toDataURL` right after `renderer.render`; SwiftShader (`--use-angle=swiftshader`).
+
+## Verifier episode v1
+
+`turnitover/verifier/contracts.py` defines a separate `VERIFIER_SCHEMA_VERSION=1`; existing Sample/ABI
+schemas are unchanged. The `verify` command uses explicit `action` or `verdict` JSON decisions and shares
+action execution with the dataset loop. It never interprets forced termination as `Stop()`/pass.
+Budget exhaustion triggers a final verdict call using existing evidence only. See [verifier.md](verifier.md)
+for schema validation, evidence privileges, termination reasons and output layout.

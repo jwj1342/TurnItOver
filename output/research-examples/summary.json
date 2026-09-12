@@ -1,0 +1,81 @@
+{
+  "status": "complete",
+  "created_at": "2026-09-12T05:46:23+00:00",
+  "git": {
+    "sha": "653a1d3e7fa76474222dcf0a0173e59aab2f511b",
+    "dirty": true
+  },
+  "synthetic": true,
+  "policy": "runtime",
+  "budget": 12,
+  "cases": [
+    {
+      "name": "triangle-budget",
+      "program_sha": "0e96424d19619c1b",
+      "verdict": "fail",
+      "spent": 12,
+      "checks": [
+        {
+          "checker_id": "geometry.alignment",
+          "passed": true
+        },
+        {
+          "checker_id": "runtime.budget",
+          "passed": false
+        }
+      ],
+      "failed_invariants": [
+        {
+          "name": "triangles",
+          "value": 6228.0,
+          "tolerance": 5000.0,
+          "passed": false,
+          "parts": [],
+          "state": null,
+          "__type__": "Invariant"
+        }
+      ]
+    },
+    {
+      "name": "joint-axis",
+      "program_sha": "4d49bcb36bf6c01b",
+      "verdict": "uncertain",
+      "spent": 12,
+      "checks": [
+        {
+          "checker_id": "geometry.alignment",
+          "passed": false
+        },
+        {
+          "checker_id": "runtime.budget",
+          "passed": true
+        }
+      ],
+      "failed_invariants": [
+        {
+          "name": "bbox_iou",
+          "value": 0.002216206630691886,
+          "tolerance": 0.9,
+          "passed": false,
+          "parts": [
+            "door"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        },
+        {
+          "name": "chamfer_m",
+          "value": 0.2344487540669257,
+          "tolerance": 0.005,
+          "passed": false,
+          "parts": [
+            "door"
+          ],
+          "state": "joint:door:limit",
+          "__type__": "Invariant"
+        }
+      ]
+    }
+  ],
+  "finished_at": "2026-09-12T05:46:45+00:00"
+}

@@ -23,7 +23,7 @@ turnitover = "turnitover.cli:main"
 include = ["turnitover*"]
 
 [tool.setuptools.package-data]
-turnitover = ["taxonomy/*.yaml"]
+turnitover = ["taxonomy/*.yaml", "verifier/*.txt"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -41,10 +41,13 @@ AssetSource ──AssetSpec──▶ Corruption ──ObjectProgram(spec, ts)─
 | `storage` | shard tar writer/reader | core, checkers.base |
 | `engine` | sharding, the vertical slice `run_generate` | everything above |
 | `detectability` | (defect, action) matrix on an asset | render, corruptions, checkers.meshops |
+| `models` | role config, REST vision adapters, single-call CLI workflows | stdlib, Pillow; syntax check for reconstruction |
+| `verifier` | validated decisions, budgeted episodes, active/fixed/random/runtime policies, reports and isolated audits | core, policy execution, render, models |
+| `preview`, `media` | offline visual gallery and frame-stepped videos | render, Pillow, system FFmpeg |
 | `telemetry`, `config`, `cli` | logging, YAML config, argparse | – |
 
 Rules: `checkers` never imports `assets` or `core.spec`; `policy` never imports `render` (it types the
-session structurally); `engine` is the only package that wires everything together.
+session structurally); `engine`, `verifier.runner` and CLI export workflows wire their respective tasks together.
 
 ## Statelessness and scale
 
@@ -66,7 +69,12 @@ completed manifest makes re-submission a no-op. One browser per worker process; 
 
 ## Deliberately not built (YAGNI)
 
-Training loops and torch deps, RL, the frontier-LLM generation loop and edit memory, oracle policy,
+Training loops and torch deps, RL, the multi-round frontier-LLM repair loop and edit memory, oracle policy,
 templated NL diagnosis, real asset converters, non-box parts, textures and material corruptions,
 physics / manifold / watertight checkers, HDF5, pydantic, Hydra, structlog, CI, Apptainer (fallback only),
 continuous views, a dev web server, partial-shard resume.
+
+`reconstruct` is a single-pass photo-to-program baseline, not a repair loop. `verify` uses an explicit
+VerificationPolicy decision contract, sharing browser action execution with the legacy dataset JudgePolicy loop.
+Preview orbit views are presentation-only; policy views remain discrete. Optional local Qwen dependencies
+are isolated in requirements-qwen.txt; baseline data generation has no torch requirement.
