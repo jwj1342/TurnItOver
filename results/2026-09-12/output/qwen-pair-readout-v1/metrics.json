@@ -1,0 +1,31 @@
+{
+  "status": "complete",
+  "scope": "two_image_discrimination",
+  "model": "models/Qwen3-VL-2B-Instruct",
+  "limitations": [
+    "Strongest acquired pair is selected with privileged pixel difference.",
+    "Same-image controls are deliberately trivial negatives.",
+    "Difference labels use the configured pixel proxy, not human annotations."
+  ],
+  "metrics": {
+    "front": {
+      "n": 16,
+      "positive": 11,
+      "fn": 9,
+      "correct": 7,
+      "tp": 2
+    },
+    "strongest": {
+      "n": 16,
+      "positive": 14,
+      "correct": 14,
+      "tp": 12,
+      "fn": 2
+    },
+    "identical": {
+      "n": 16,
+      "positive": 0,
+      "correct": 16
+    }
+  }
+}

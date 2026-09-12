@@ -29,6 +29,8 @@ def index_line(sample: Sample) -> dict:
         "severity": max((c.severity for c in sample.corruptions), default=0.0),
         "compile_ok": sample.compile_ok,
         "checks_passed": {c.checker_id: c.passed for c in sample.checks},
+        "quality": sample.dataset.get("quality", {}).get("status", "unvalidated"),
+        "split_group": sample.dataset.get("split_group"),
     }
 
 

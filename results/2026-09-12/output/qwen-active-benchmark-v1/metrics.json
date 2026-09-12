@@ -1,0 +1,311 @@
+{
+  "status": "complete",
+  "model": "models/Qwen3-VL-2B-Instruct",
+  "budget": 6,
+  "condition": "single_reference_online_active",
+  "samples": 16,
+  "limitations": [
+    "Zero-shot active policy; no fine-tuning.",
+    "Exposure is a post-hoc pixel proxy and never enters model prompts.",
+    "Failed or early-terminated episodes retain their actual observation cost."
+  ],
+  "totals": {
+    "labels": 23,
+    "exposed": 11,
+    "spent": 47,
+    "judge_finished": 16
+  },
+  "classes": {
+    "kinematics.joint_axis": {
+      "fn": 12
+    },
+    "structure.part_offset": {
+      "fn": 11
+    }
+  },
+  "episodes": [
+    {
+      "id": "1daf66e74604a17cd98514f0",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "kinematics.joint_axis",
+        "structure.part_offset"
+      ],
+      "predicted": [],
+      "exposed_labels": [
+        1
+      ],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "12292f5ccd44d23b00c6eeb2",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "kinematics.joint_axis"
+      ],
+      "predicted": [],
+      "exposed_labels": [],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "c244421b99cda00848041b5c",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [],
+      "predicted": [],
+      "exposed_labels": [],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "ab3280538ab9a815d9d73812",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "kinematics.joint_axis",
+        "structure.part_offset"
+      ],
+      "predicted": [],
+      "exposed_labels": [
+        1
+      ],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "71d54c75453ad4d5ae1bfd74",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "kinematics.joint_axis"
+      ],
+      "predicted": [],
+      "exposed_labels": [],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "863ba69c09d93d3eb423f96f",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "kinematics.joint_axis",
+        "structure.part_offset"
+      ],
+      "predicted": [],
+      "exposed_labels": [
+        1
+      ],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "0ef2512c120be685def69de2",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [],
+      "predicted": [],
+      "exposed_labels": [],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "8ea7f71d4c1f99739d65c1b2",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "structure.part_offset"
+      ],
+      "predicted": [],
+      "exposed_labels": [
+        0
+      ],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "211c7868e990baf229d54ce3",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "kinematics.joint_axis"
+      ],
+      "predicted": [],
+      "exposed_labels": [],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "e56befd6f2ca5236394b4aa5",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "kinematics.joint_axis",
+        "structure.part_offset"
+      ],
+      "predicted": [],
+      "exposed_labels": [
+        0
+      ],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "5723179cd337ca4535421de1",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "kinematics.joint_axis",
+        "structure.part_offset"
+      ],
+      "predicted": [],
+      "exposed_labels": [
+        1
+      ],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "766334b51c82721c01730825",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "structure.part_offset"
+      ],
+      "predicted": [],
+      "exposed_labels": [
+        0
+      ],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "9590a78332b3164d06403234",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "kinematics.joint_axis",
+        "structure.part_offset"
+      ],
+      "predicted": [],
+      "exposed_labels": [
+        0
+      ],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "5913d2ec7781f6bb3479cbf9",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "kinematics.joint_axis",
+        "structure.part_offset"
+      ],
+      "predicted": [],
+      "exposed_labels": [
+        1
+      ],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "0efeea9a55589e1d207e79d7",
+      "termination": "judge_finished",
+      "spent": 3,
+      "status": "uncertain",
+      "expected": [
+        "kinematics.joint_axis",
+        "structure.part_offset"
+      ],
+      "predicted": [],
+      "exposed_labels": [
+        1
+      ],
+      "visual_steps": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "2df2c2d58ca8d52d0ad8b6e6",
+      "termination": "judge_finished",
+      "spent": 2,
+      "status": "uncertain",
+      "expected": [
+        "kinematics.joint_axis",
+        "structure.part_offset"
+      ],
+      "predicted": [],
+      "exposed_labels": [
+        0
+      ],
+      "visual_steps": [
+        0,
+        1
+      ]
+    }
+  ],
+  "exposure_recall": 0.4782608695652174
+}

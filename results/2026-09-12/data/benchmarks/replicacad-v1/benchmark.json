@@ -1,0 +1,50 @@
+{
+  "status": "complete",
+  "config": "configs/generate_replicacad.yaml",
+  "audit": "output/replicacad-fk-v2/audit.json",
+  "counts": {
+    "train": 64,
+    "test": 16,
+    "validation": 16
+  },
+  "quality_counts": {
+    "accepted": 96
+  },
+  "runtime_metrics": {
+    "status": "complete",
+    "policy": "runtime",
+    "split": "test",
+    "n": 16,
+    "statuses": {
+      "uncertain": 16
+    },
+    "uncertain_rate": 1.0,
+    "per_class": {
+      "kinematics.joint_axis": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 12,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "structure.part_offset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 11,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "scope": "detection_on_saved_scripted_observations",
+    "limitations": [
+      "Uncertain samples count as missed detections for their gold defects.",
+      "No visual judge, active policy, or generator repair loop was evaluated."
+    ]
+  },
+  "limitations": [
+    "Six asset families only; no trained/active VLM evaluation yet.",
+    "Gold targets still require observation-exposure supervision."
+  ]
+}

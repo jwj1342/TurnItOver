@@ -6,7 +6,7 @@ from typing import Any
 
 from turnitover.core.actions import Observation
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 3
 
 
 @dataclass(frozen=True)
@@ -63,3 +63,4 @@ class Sample:
     timing_ms: dict[str, float]
     host: str
     created_at: str
+    dataset: dict[str, Any] = field(default_factory=dict)

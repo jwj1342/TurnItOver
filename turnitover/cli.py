@@ -32,6 +32,20 @@ def main(argv: list[str] | None = None) -> int:
     i.add_argument("tar", type=Path)
     i.add_argument("--n", type=int, default=5)
 
+    for name in ("make-splits", "prepare-dataset"):
+        ds = sub.add_parser(name, help="prepare asset-group splits or isolated inputs and gold targets")
+        ds.add_argument("--shards", type=Path, nargs="+", required=True)
+        ds.add_argument("--out", type=Path, required=True)
+        if name == "make-splits":
+            ds.add_argument("--seed", type=int, default=0)
+        else:
+            ds.add_argument("--splits", type=Path, required=True)
+
+    ev = sub.add_parser("evaluate-dataset", help="evaluate the offline runtime baseline on prepared observations")
+    ev.add_argument("--dataset", type=Path, required=True)
+    ev.add_argument("--split", choices=("train", "validation", "test"), default="test")
+    ev.add_argument("--out", type=Path, required=True)
+
     p = sub.add_parser("preview", help="export PNG screenshots, MP4 videos, and an offline gallery")
     p.add_argument("--out", type=Path, help="new/empty output directory (default: output/preview-TIMESTAMP)")
     p.add_argument("--program", type=Path, help="ABI-compatible TypeScript; defaults to the toy cabinet")
@@ -78,7 +92,24 @@ def main(argv: list[str] | None = None) -> int:
     configure_logging(json_lines=args.log_json, level=args.log_level)
     return {"generate": _generate, "detectability": _detectability, "inspect": _inspect,
             "preview": _preview, "models-check": _models_check, "model-call": _model_call,
-            "reconstruct": _model_call, "verify": _verify, "render-docs": _render_docs}[args.cmd](args)
+            "reconstruct": _model_call, "verify": _verify, "render-docs": _render_docs,
+            "make-splits": _dataset, "prepare-dataset": _dataset, "evaluate-dataset": _evaluate_dataset}[args.cmd](args)
+
+
+def _dataset(args) -> int:
+    from turnitover.dataset.prepare import make_splits, prepare
+
+    result = (make_splits(args.shards, args.out, args.seed) if args.cmd == "make-splits"
+              else prepare(args.shards, args.splits, args.out))
+    print(result)
+    return 0
+
+
+def _evaluate_dataset(args) -> int:
+    from turnitover.dataset.evaluate import evaluate_runtime
+
+    print(evaluate_runtime(args.dataset, args.split, args.out))
+    return 0
 
 
 def _verify(args) -> int:
@@ -140,7 +171,7 @@ def _generate(args) -> int:
     changes = {}
     if args.out:
         changes["output_dir"] = args.out if args.out.is_absolute() else REPO_ROOT / args.out
-    if args.n_samples:
+    if args.n_samples is not None:
         changes["n_samples"] = args.n_samples
     cfg = dataclasses.replace(cfg, **changes)
     shard, n_shards = parse_shard(args.shard)

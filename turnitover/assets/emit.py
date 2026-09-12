@@ -5,6 +5,7 @@ Deterministic: same spec -> byte-identical source. Naming: part Group is named
 """
 from __future__ import annotations
 
+import json
 from turnitover.core.spec import AssetSpec, JointSpec, JointType, PartSpec
 
 
@@ -62,11 +63,24 @@ def emit_program(spec: AssetSpec) -> str:
 def _emit_part(w, p: PartSpec, joint: JointSpec | None) -> None:
     w(f"  {{ // part {p.id}")
     w(f"    const g = new THREE.Group(); g.name = {p.id!r};")
-    w(
-        f"    const mesh = new THREE.Mesh(new THREE.BoxGeometry({_v(p.size)}, {_v(p.segments)}), "
-        f"materials[{p.material!r}]); mesh.name = {p.id + '#mesh'!r};"
-    )
-    w("    g.add(mesh);")
+    if p.mesh is None:
+        w(f"    const geometry = new THREE.BoxGeometry({_v(p.size)}, {_v(p.segments)});")
+    elif p.mesh.faces:
+        packed = lambda rows: json.dumps([x for row in rows for x in row], separators=(",", ":"))
+        w("    const geometry = new THREE.BufferGeometry();")
+        w(f"    geometry.setAttribute('position', new THREE.Float32BufferAttribute({packed(p.mesh.vertices)}, 3));")
+        w(f"    geometry.setIndex({packed(p.mesh.faces)});")
+        w("    geometry.computeVertexNormals();")
+        if p.mesh.colors:
+            w(f"    geometry.setAttribute('color', new THREE.Float32BufferAttribute({packed(p.mesh.colors)}, 3));")
+    if p.mesh is None or p.mesh.faces:
+        material = p.material
+        if p.mesh is not None and p.mesh.colors:
+            material = "colors:" + p.id
+            w(f"    materials[{material!r}] = materials[{p.material!r}].clone();")
+            w(f"    materials[{material!r}].color.set('#ffffff'); materials[{material!r}].vertexColors = true;")
+        w(f"    const mesh = new THREE.Mesh(geometry, materials[{material!r}]); mesh.name = {p.id + '#mesh'!r};")
+        w("    g.add(mesh);")
     if p.rotation != (0.0, 0.0, 0.0):
         w(f"    g.rotation.set({_v(p.rotation)});")
     if joint is None:
@@ -83,10 +97,12 @@ def _emit_part(w, p: PartSpec, joint: JointSpec | None) -> None:
         w(f"    const limits: [number, number] = [{_num(joint.limits[0])}, {_num(joint.limits[1])}];")
         w(f"    const sign = {_num(joint.sign)};")
         w(f"    const anchor = new THREE.Vector3({_v(joint.anchor)});")
+        w(f"    const frame = new THREE.Quaternion().setFromEuler(new THREE.Euler({_v(joint.frame_rotation)}));")
+        w("    pivot.quaternion.copy(frame);")
         if joint.type is JointType.REVOLUTE:
-            setter = "pivot.quaternion.setFromAxisAngle(axis, sign * v);"
+            setter = "pivot.quaternion.copy(frame).multiply(new THREE.Quaternion().setFromAxisAngle(axis, sign * v));"
         else:
-            setter = "pivot.position.copy(anchor).addScaledVector(axis, sign * v);"
+            setter = "pivot.position.copy(anchor).addScaledVector(axis.clone().applyQuaternion(frame), sign * v);"
         w(
             f"    joints[{joint.id!r}] = {{ type: {joint.type.value!r}, part: {p.id!r}, limits, "
             f"set(v: number) {{ v = Math.min(limits[1], Math.max(limits[0], v)); {setter} }} }};"

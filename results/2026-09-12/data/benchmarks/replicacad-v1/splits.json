@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "seed": 42,
+  "unit": "split_group",
+  "groups": {
+    "replicacad:doors": "test",
+    "replicacad:kitchen_cupboards": "validation",
+    "replicacad:chest_of_drawers": "train",
+    "replicacad:cabinet": "train",
+    "replicacad:kitchen_counter": "train",
+    "replicacad:fridge": "train"
+  }
+}

@@ -33,16 +33,18 @@ AssetSource ──AssetSpec──▶ Corruption ──ObjectProgram(spec, ts)─
 |---|---|---|
 | `core` | pinned dataclasses: spec, program, actions, sample; JSON serde | – |
 | `taxonomy` | `defects.yaml` loader, doc renderer | – |
-| `assets` | `AssetSource` protocol, toy asset, spec → TypeScript emitter | core |
+| `assets` | toy and local mesh catalogs, URDF import, independent FK audit, spec → TypeScript emitter | core, numpy, scipy, trimesh |
 | `corruptions` | registry keyed by defect id; three implementations | core, taxonomy |
 | `render` | Playwright session, TS transpile, view set, protocol mirror | core, checkers.base |
 | `policy` | `JudgePolicy` protocol, `ScriptedPolicy`, budgeted loop | core |
 | `checkers` | evidence collection, pure mesh math, two checkers | core, render (evidence only) |
 | `storage` | shard tar writer/reader | core, checkers.base |
 | `engine` | sharding, the vertical slice `run_generate` | everything above |
+| `dataset` | asset-group splits, isolated input/gold export, privileged diagnosis templates, offline runtime evaluation | core, storage, verifier |
 | `detectability` | (defect, action) matrix on an asset | render, corruptions, checkers.meshops |
 | `models` | role config, REST vision adapters, single-call CLI workflows | stdlib, Pillow; syntax check for reconstruction |
 | `verifier` | validated decisions, budgeted episodes, active/fixed/random/runtime policies, reports and isolated audits | core, policy execution, render, models |
+| `repair` | transactional source edits, versioned repair episodes, feedback isolation and independent browser audits | core, checkers, render, models |
 | `preview`, `media` | offline visual gallery and frame-stepped videos | render, Pillow, system FFmpeg |
 | `telemetry`, `config`, `cli` | logging, YAML config, argparse | – |
 
@@ -72,8 +74,8 @@ completed manifest makes re-submission a no-op. One browser per worker process; 
 
 ## Deliberately not built (YAGNI)
 
-Training loops and torch deps, RL, the multi-round frontier-LLM repair loop and edit memory, oracle policy,
-templated NL diagnosis, real asset converters, non-box parts, textures and material corruptions,
+Training loops, RL, full RP oracle repair efficiency experiments,
+single-reference final-diagnosis supervision, full texture-preserving asset conversion and material corruptions,
 physics / manifold / watertight checkers, HDF5, pydantic, Hydra, structlog, CI, Apptainer (fallback only),
 continuous views, a dev web server, partial-shard resume.
 
@@ -81,3 +83,13 @@ continuous views, a dev web server, partial-shard resume.
 VerificationPolicy decision contract, sharing browser action execution with the legacy dataset JudgePolicy loop.
 Preview orbit views are presentation-only; policy views remain discrete. Optional local Qwen dependencies
 are isolated in requirements-qwen.txt; baseline data generation has no torch requirement.
+
+`oracle` implements finite-grid counterfactual pixel-exposure teachers, state-correct budgeted
+recipes, causal action export, paired-reference diagnosis targets and optional processor adapters.
+Identical public prefixes can be exported as empirical weighted action distributions within each split.
+These are privileged-teacher targets, not a proof that a single-reference policy can infer the same
+actions or diagnoses. See [Oracle 与训练导出](oracle-supervision.md).
+
+`repair.loop` records code versions, unsuccessful attempts, costs and regressions. Its generator is
+injected; browser tests use a fixture and do not constitute model results. Prepared feedback conditions
+and current limitations are described in [修复实验执行层](repair-experiment.md).

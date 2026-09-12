@@ -19,4 +19,8 @@ def make_source(kind: str, **kwargs) -> AssetSource:
         from turnitover.assets.toy import ToyAssetSource
 
         return ToyAssetSource()
+    if kind == "catalog":
+        from turnitover.assets.catalog import CatalogSource
+
+        return CatalogSource(**kwargs)
     raise ValueError(f"unknown asset source kind {kind!r}")

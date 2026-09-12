@@ -1,0 +1,508 @@
+{
+  "version": 1,
+  "scope": "measurement_snapshot_not_full_replay_bundle",
+  "files": {
+    "data/benchmarks/replicacad-v1/benchmark.json": {
+      "sha256": "e54849a9a24c5dbacc7891c148ba8571fcb932a00f9e0bf48dc59758794b0d80",
+      "bytes": 1181
+    },
+    "data/benchmarks/replicacad-v1/splits.json": {
+      "sha256": "489079565751c298bfd1a8aa3cc3666788fbec8919110af993d71ad3f2ff7997",
+      "bytes": 313
+    },
+    "data/benchmarks/oracle-v1/manifest.json": {
+      "sha256": "9d28164154ef20443ea8206c3ae647db6224cf06733d0a6f7c2b25175f53da11",
+      "bytes": 11970
+    },
+    "data/benchmarks/paired-v1/manifest.json": {
+      "sha256": "d130a669341636077aa3efaf709e1105639fc687df85bb5bd04a1671ccb2cfec",
+      "bytes": 698
+    },
+    "data/benchmarks/oracle-action-distributions-v1/manifest.json": {
+      "sha256": "29a783c1fa26327c7144ad96e4a57567ce2444b770532d069d3c2b8dbf726638",
+      "bytes": 1762
+    },
+    "output/replicacad-fk-v3/audit.json": {
+      "sha256": "36228101b67d63b4024019ec8dd6f5bdf94453a27c7558dc4c760750a85ff444",
+      "bytes": 32990
+    },
+    "output/oracle-observable-ambiguity-v1.json": {
+      "sha256": "458f8037de4d5ef716af0b28935de65066d3d29d2107fa6c4c2d0de9c39b7bec",
+      "bytes": 4548
+    },
+    "output/qwen-evidence-v1/metrics.json": {
+      "sha256": "7af06df462d123478dc3da416c1e78269d592ab1d620debd2a0e23428ff9402d",
+      "bytes": 4646
+    },
+    "output/qwen-evidence-final-v1/metrics.json": {
+      "sha256": "8a8abffee7d351fe2f9cb946dee0b84339cd6a44541badc7d6b94910594db1b4",
+      "bytes": 4479
+    },
+    "output/qwen-active-benchmark-v1/metrics.json": {
+      "sha256": "f6da1bb6f0cecfca2e7b519733b6b7f3422187fc87e5a2604abf490f1a027654",
+      "bytes": 6094
+    },
+    "output/qwen-pair-readout-v1/metrics.json": {
+      "sha256": "bce799dfa3dc679acba349ed5d99e6ac26140606c58ae4b1aa1a4f733b0f4a02",
+      "bytes": 673
+    },
+    "output/qwen-defect-readout-v1/metrics.json": {
+      "sha256": "cb6aa4fb90688812797fee732ed5e1da54eb535d5caf45634530eabe25e2bcdd",
+      "bytes": 857
+    },
+    "output/repair-generator-sol-smoke-v1/manifest.json": {
+      "sha256": "b4deeed5434659834c9b3c6b7a038e9853bac8c528fd2f4e8927ccd88febe9cc",
+      "bytes": 1066
+    },
+    "output/repair-generator-sol-smoke-v1/audit.private.json": {
+      "sha256": "2ff5e81197a23ef8ebd00d816689847e154fc9e9cb6aff2a03f519bc9db518de",
+      "bytes": 6684
+    },
+    "output/repair-pilot-prepared-v2/manifest.json": {
+      "sha256": "bf8fd168b5b379f1cf1990f124667b07fab3f9313a2a0c3f704eec4fcef488d8",
+      "bytes": 38212
+    },
+    "output/repair-sol-pilot-v1/summary.json": {
+      "sha256": "4cb09ea2ad98fa4dafcf51e4b435833cfb45c5c19a14ba5cbec7dcf5f9edc548",
+      "bytes": 6676
+    },
+    "output/repair-sol-pilot-v1/analysis.json": {
+      "sha256": "cabb769584ceb137a88acdb9ca2c0c0aea32b7c77497f1923bac2e26df038cc2",
+      "bytes": 10736
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/combined/initial.audit.private.json": {
+      "sha256": "02b0feb1843666a9b7fddfce7dfddd0fa056bd12d8286a84edddbf7618e9b223",
+      "bytes": 3013
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/fixed/initial.audit.private.json": {
+      "sha256": "02b0feb1843666a9b7fddfce7dfddd0fa056bd12d8286a84edddbf7618e9b223",
+      "bytes": 3013
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/gold_constraints/initial.audit.private.json": {
+      "sha256": "02b0feb1843666a9b7fddfce7dfddd0fa056bd12d8286a84edddbf7618e9b223",
+      "bytes": 3013
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/oracle_observations/initial.audit.private.json": {
+      "sha256": "02b0feb1843666a9b7fddfce7dfddd0fa056bd12d8286a84edddbf7618e9b223",
+      "bytes": 3013
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/combined/initial.audit.private.json": {
+      "sha256": "470805890f5b24bc215472e3e0a1dc2d30fae1ba091a7d2096f40a17d2d1c580",
+      "bytes": 3059
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/fixed/initial.audit.private.json": {
+      "sha256": "470805890f5b24bc215472e3e0a1dc2d30fae1ba091a7d2096f40a17d2d1c580",
+      "bytes": 3059
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/gold_constraints/initial.audit.private.json": {
+      "sha256": "470805890f5b24bc215472e3e0a1dc2d30fae1ba091a7d2096f40a17d2d1c580",
+      "bytes": 3059
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/oracle_observations/initial.audit.private.json": {
+      "sha256": "470805890f5b24bc215472e3e0a1dc2d30fae1ba091a7d2096f40a17d2d1c580",
+      "bytes": 3059
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/combined/initial.audit.private.json": {
+      "sha256": "a3437e9e9b3dbd6e8b466c815f69211d76177ce03ef0823cab5380f93b1d02a7",
+      "bytes": 3082
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/fixed/initial.audit.private.json": {
+      "sha256": "a3437e9e9b3dbd6e8b466c815f69211d76177ce03ef0823cab5380f93b1d02a7",
+      "bytes": 3082
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/gold_constraints/initial.audit.private.json": {
+      "sha256": "a3437e9e9b3dbd6e8b466c815f69211d76177ce03ef0823cab5380f93b1d02a7",
+      "bytes": 3082
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/oracle_observations/initial.audit.private.json": {
+      "sha256": "a3437e9e9b3dbd6e8b466c815f69211d76177ce03ef0823cab5380f93b1d02a7",
+      "bytes": 3082
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/combined/initial.audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/fixed/initial.audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/gold_constraints/initial.audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/oracle_observations/initial.audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/combined/result.json": {
+      "sha256": "d9912007df5912c64966b349f5307a06aeea7359cb3415daaba662db0786aadd",
+      "bytes": 1501
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/fixed/result.json": {
+      "sha256": "46bb988c56c03f1695903dc48397f219507dec1e694cde201ad59abee5f2acf6",
+      "bytes": 1488
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/gold_constraints/result.json": {
+      "sha256": "e0b7ebee8ae5a5080f143a01230842dcd3a7d3b831cf002df1ebdd2329128239",
+      "bytes": 1883
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/oracle_observations/result.json": {
+      "sha256": "b70ee48280938135fcca445650c254ea918e7e86991bd6846a330285c88052cf",
+      "bytes": 1501
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/combined/result.json": {
+      "sha256": "d358025ac06d4c1761260c96c9289e6f7ce62746db2070676757184003910fa7",
+      "bytes": 1930
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/fixed/result.json": {
+      "sha256": "fc919ccaaa96a07fb28768155abde4416d240cca87c6285c228ba65d7b406e0e",
+      "bytes": 1488
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/gold_constraints/result.json": {
+      "sha256": "04c2b9f50b91c071913b5ad00477c5c4af0275e13d40a1c7957c4a70fbfb3b61",
+      "bytes": 1501
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/oracle_observations/result.json": {
+      "sha256": "d474d735124ee696f3a432ed04fe6e7d5f1d958165ee7803a0afdef206263941",
+      "bytes": 1502
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/combined/result.json": {
+      "sha256": "9add567e3ad0f89c488a8ca77ecace87f4805ae44bae2d4e9736bcf2a634c28a",
+      "bytes": 1502
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/fixed/result.json": {
+      "sha256": "448c9fa86f22595a42fbd5dc6323e4d7ff22994e1a3488a0fcc199bb0dd17c3c",
+      "bytes": 1502
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/gold_constraints/result.json": {
+      "sha256": "8d632fc8cafd57729343f80ca12dcfea969257e62a80ed8a63fba4f9726ffc71",
+      "bytes": 1502
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/oracle_observations/result.json": {
+      "sha256": "d019d4b11a225898307e0378f7f3d291f483f65ee172e8635b268ff8811e9b65",
+      "bytes": 1502
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/combined/result.json": {
+      "sha256": "12da79b1316f5a67003de87d9de6aa9fbaf0d33468b7f4dc8f5ba4dcf410f28c",
+      "bytes": 1104
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/fixed/result.json": {
+      "sha256": "3fe78011bd08a80054bc4569def570e5303fe2c697cf0b4a6e1b4923aa515ae1",
+      "bytes": 1104
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/gold_constraints/result.json": {
+      "sha256": "2ce64662d83cf68afcc48778375a89beaa380312654549bc119354391c9a8cc2",
+      "bytes": 1104
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/oracle_observations/result.json": {
+      "sha256": "28f258141c70481fa1a519f26b6909e07bcbae38196388e190a2a4ed6facd55d",
+      "bytes": 1104
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/combined/round-000/model.json": {
+      "sha256": "06ff53b75d49e09a48fa3f08c9540ac57b9a730ad69ebf7d9e06c5deb0d97338",
+      "bytes": 689
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/combined/round-001/model.json": {
+      "sha256": "897231b7b98331477fe3d68d82cd2446635f3eded353e97e8344b2193a215b2c",
+      "bytes": 690
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/fixed/round-000/model.json": {
+      "sha256": "6a6bc5850269ddae9d1121e139a8ab6776820abdebe9d15716700e2b89b56def",
+      "bytes": 689
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/fixed/round-001/model.json": {
+      "sha256": "efc555f969f4798960040a6113b8eabcd221bbe55fc1baa9641b935417682140",
+      "bytes": 689
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/gold_constraints/round-000/model.json": {
+      "sha256": "f9f2e8b04715e100d9dabcbf0c08946f019dde07958e2dcd0ac95071a3e1bdb5",
+      "bytes": 692
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/gold_constraints/round-001/model.json": {
+      "sha256": "4c2c5e3393fe279d75b6ed79606a6dfbfc32d4be342eaad84f3be722c15f6082",
+      "bytes": 692
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/gold_constraints/round-002/model.json": {
+      "sha256": "d5629d74785e4036c99314b2ebeed76cc3256186496fb5ff063f493d1078b27f",
+      "bytes": 690
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/oracle_observations/round-000/model.json": {
+      "sha256": "24f953ce08144b290685be6f4aa931a3d1354325a182a14fbfae2199471d63c0",
+      "bytes": 691
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/oracle_observations/round-001/model.json": {
+      "sha256": "5fcb930a21722e8ab72b32cb3ce4905afcb1a59002bf1ffcd60f5ec82d044078",
+      "bytes": 691
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/combined/round-000/model.json": {
+      "sha256": "23bb9156fa960748cfef6f4e139c5fb9c8ecc2ae904393eb279b90269e0f8b06",
+      "bytes": 690
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/combined/round-001/model.json": {
+      "sha256": "8d365222531fd6273e0609e54847c815ab299f5df638bac52468a8298e21db4b",
+      "bytes": 693
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/combined/round-002/model.json": {
+      "sha256": "9d3517b51d23f0e95532ee0a507003dd16e733499aad5172edc8ffcabf766d43",
+      "bytes": 690
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/fixed/round-000/model.json": {
+      "sha256": "86f6febb77f094d765ef88fb91ca27fb73fa12e61e7b9dadcb172359b8a49d12",
+      "bytes": 693
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/fixed/round-001/model.json": {
+      "sha256": "c7ca26a549c0ab79f9e01d4d8fdcbfa7120fe9c069973150aeac7bf6cd370d1c",
+      "bytes": 692
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/gold_constraints/round-000/model.json": {
+      "sha256": "6f515ac6806580f04449fc6f5a637ea6cfe2952b6fa2daedc42c04dfb3f06fad",
+      "bytes": 691
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/gold_constraints/round-001/model.json": {
+      "sha256": "b26c6b5e9f2f2f2eb35f63e42ab11797cf7ac673411f87afc69dabf30f2800a3",
+      "bytes": 691
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/oracle_observations/round-000/model.json": {
+      "sha256": "e1f1ef0314136a3d7b283e25b05ac154fb72608057b83b8f1374a9bca55aa6b7",
+      "bytes": 690
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/oracle_observations/round-001/model.json": {
+      "sha256": "6210abc338b43d5c3b1d0409e0f6993f4c0e98e57f9a6f55c36d00c38e1bc1b7",
+      "bytes": 689
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/combined/round-000/model.json": {
+      "sha256": "c6c94c21838317bcb71172b928d58cdc16f78fbbc9f71dc64c423af7031b7d2d",
+      "bytes": 693
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/combined/round-001/model.json": {
+      "sha256": "ae9ff9f3b25a30ad6ff601633ba55a34eef48da054d8f9b62a28172a6c5a6c4f",
+      "bytes": 691
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/fixed/round-000/model.json": {
+      "sha256": "cdb2a3e891fa8dec904512d0b2cb404b7cd215af63d5367cac0f83cd8adc7fd8",
+      "bytes": 693
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/fixed/round-001/model.json": {
+      "sha256": "c95b80ffdc0f2b42f42871f069365be26204744a2233c5adb5792288d2d27173",
+      "bytes": 688
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/gold_constraints/round-000/model.json": {
+      "sha256": "b3c6eea71cce70cb6c6a7664e1d6bea726f5bb259f887371b5103f81d0e96607",
+      "bytes": 689
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/gold_constraints/round-001/model.json": {
+      "sha256": "09fca0f8fa3cd1ebe648b35e81a37dec6faafbea787658c834d5cbc58cd71839",
+      "bytes": 688
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/oracle_observations/round-000/model.json": {
+      "sha256": "b3c2379bc9d63d63ffdebc681ac2cfc8c851cc0ef3940963415f68065c3d446a",
+      "bytes": 690
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/oracle_observations/round-001/model.json": {
+      "sha256": "2d0b419fc0e3005506d773dd6682e5e62e73b77cd506d227316956c9a1fc86f9",
+      "bytes": 692
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/combined/round-000/model.json": {
+      "sha256": "fbc4a9829e25c0a43da9e7e4d6e139ac313f1cd64bc2d4f1693c00c4df31c613",
+      "bytes": 688
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/fixed/round-000/model.json": {
+      "sha256": "8466f9bf15ffbed585837dfe6b225d676c5647cedfe5c3f01e5e70e5e20f67a9",
+      "bytes": 692
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/gold_constraints/round-000/model.json": {
+      "sha256": "4dc5143fb7b19e4fbb27785084f816bb4b8219120f66cb2c80923ee63fd16f89",
+      "bytes": 691
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/oracle_observations/round-000/model.json": {
+      "sha256": "9f15be3f8d6f3cf98f8de1529feec286ae3b35ed39f87dda32b0f3a659816b2e",
+      "bytes": 688
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/combined/round-000/audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/fixed/round-000/audit.private.json": {
+      "sha256": "f78ff9e3f22fade1499f0b4381a58ff19d86f7fbfeb9d7f1fb43935384dbf090",
+      "bytes": 2999
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/gold_constraints/round-000/audit.private.json": {
+      "sha256": "f78ff9e3f22fade1499f0b4381a58ff19d86f7fbfeb9d7f1fb43935384dbf090",
+      "bytes": 2999
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/gold_constraints/round-001/audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/oracle_observations/round-000/audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/combined/round-000/audit.private.json": {
+      "sha256": "58d3acf84b8e643c513e722adcae74a45df474dfbc69a4a5f3dfa06e27358762",
+      "bytes": 2996
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/combined/round-001/audit.private.json": {
+      "sha256": "1dcb60b5967572e15ba4fb952d6dfe0779abdeea45ec83cd97b986150919038a",
+      "bytes": 3001
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/combined/round-002/audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/fixed/round-000/audit.private.json": {
+      "sha256": "173bb3fdf587bf421c5f552084ec6a0c5dc6fa1b0776c5710d0f54e1dcd90f12",
+      "bytes": 3068
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/gold_constraints/round-000/audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/oracle_observations/round-000/audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/combined/round-000/audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/fixed/round-000/audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/gold_constraints/round-000/audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/oracle_observations/round-000/audit.private.json": {
+      "sha256": "cc8774afbcf4d03e2a14c1b0e18273ba61f6d0a8db4030c864d89029232a8022",
+      "bytes": 2946
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/combined/round-000/response.txt": {
+      "sha256": "a1ada6a6373882b74489e65aa786d319d699409cd26b24cf2c6da0c86c153630",
+      "bytes": 182
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/combined/round-001/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/fixed/round-000/response.txt": {
+      "sha256": "ba3d20e74f06b89be3dc0f4c760fc0869e9a41860ebe03331312e6d58d75c505",
+      "bytes": 191
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/fixed/round-001/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/gold_constraints/round-000/response.txt": {
+      "sha256": "ba3d20e74f06b89be3dc0f4c760fc0869e9a41860ebe03331312e6d58d75c505",
+      "bytes": 191
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/gold_constraints/round-001/response.txt": {
+      "sha256": "ee5bfb5781b3b7932332e07825dd2f3d0228eb4ae1f1835e2244d4a2e5bd3b8c",
+      "bytes": 132
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/gold_constraints/round-002/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/oracle_observations/round-000/response.txt": {
+      "sha256": "a1ada6a6373882b74489e65aa786d319d699409cd26b24cf2c6da0c86c153630",
+      "bytes": 182
+    },
+    "output/repair-sol-pilot-v1/12292f5ccd44d23b00c6eeb2/oracle_observations/round-001/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/combined/round-000/response.txt": {
+      "sha256": "d79eaa600ef75bc587839580e3f3895598b16244112d5916eb23ade757c17b9a",
+      "bytes": 646
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/combined/round-001/response.txt": {
+      "sha256": "770ca95e8e8e3e5cb25798980752733ff9621831673b7100a82c47c3b09629ae",
+      "bytes": 190
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/combined/round-002/response.txt": {
+      "sha256": "b458aea5eac78061ab370faf28a51a45ba692367fda88e0f0a32a4064c383632",
+      "bytes": 507
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/fixed/round-000/response.txt": {
+      "sha256": "c52bc8c64d8c899a41515b25beae764a1305d7ca89ad948f2a4a6cd0daf4549a",
+      "bytes": 349
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/fixed/round-001/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/gold_constraints/round-000/response.txt": {
+      "sha256": "923569623a8472a63386c8468cf1633ccee600fb99bb741979af364041c08970",
+      "bytes": 329
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/gold_constraints/round-001/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/oracle_observations/round-000/response.txt": {
+      "sha256": "923569623a8472a63386c8468cf1633ccee600fb99bb741979af364041c08970",
+      "bytes": 329
+    },
+    "output/repair-sol-pilot-v1/1daf66e74604a17cd98514f0/oracle_observations/round-001/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/combined/round-000/response.txt": {
+      "sha256": "7854635741912302cec651171911e46e2114ae55b9d3f0bfd090d38ef4db0b28",
+      "bytes": 152
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/combined/round-001/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/fixed/round-000/response.txt": {
+      "sha256": "7854635741912302cec651171911e46e2114ae55b9d3f0bfd090d38ef4db0b28",
+      "bytes": 152
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/fixed/round-001/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/gold_constraints/round-000/response.txt": {
+      "sha256": "7854635741912302cec651171911e46e2114ae55b9d3f0bfd090d38ef4db0b28",
+      "bytes": 152
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/gold_constraints/round-001/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/oracle_observations/round-000/response.txt": {
+      "sha256": "7854635741912302cec651171911e46e2114ae55b9d3f0bfd090d38ef4db0b28",
+      "bytes": 152
+    },
+    "output/repair-sol-pilot-v1/8ea7f71d4c1f99739d65c1b2/oracle_observations/round-001/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/combined/round-000/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/fixed/round-000/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/gold_constraints/round-000/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    },
+    "output/repair-sol-pilot-v1/c244421b99cda00848041b5c/oracle_observations/round-000/response.txt": {
+      "sha256": "4eec88892aaea47180553a8d767a9ecee0b8806f2510c8a5ae4092973388ec98",
+      "bytes": 13
+    }
+  },
+  "limitations": [
+    "No images, full programs, assets, weights or API credentials included.",
+    "Historical paths in copied records refer to the original workspace.",
+    "Source hashes support traceability; omitted source files are not recoverable from hashes.",
+    "Historical limitations describe each run at its execution time; see the current research status."
+  ]
+}

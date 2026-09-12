@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "status": "complete",
+  "max_rounds": 3,
+  "delta": 0.0,
+  "initial_sha256": "9918523084e6b4cb361cf68e8f012a182a9b4292af27272dda3603a5a39f5fc2",
+  "limitations": [
+    "Exact-source revisits are not the RP geometric epsilon oscillation metric.",
+    "Audit is privileged; only observe() decides which feedback reaches the generator."
+  ],
+  "termination": "generator_stop",
+  "rounds": [
+    {
+      "round": 0,
+      "before_sha256": "9918523084e6b4cb361cf68e8f012a182a9b4292af27272dda3603a5a39f5fc2",
+      "before_score": 0.4,
+      "observation_cost": 6,
+      "teacher_renders": 0,
+      "outcome": "applied",
+      "after_sha256": "dfd1fd4e2d6be5c4cd6beac05272d7d55f862268ead937aec97ceeea6d1447f2",
+      "after_score": 0.4,
+      "passed": false
+    },
+    {
+      "round": 1,
+      "before_sha256": "dfd1fd4e2d6be5c4cd6beac05272d7d55f862268ead937aec97ceeea6d1447f2",
+      "before_score": 0.4,
+      "observation_cost": 6,
+      "teacher_renders": 0,
+      "outcome": "stop",
+      "after_sha256": "dfd1fd4e2d6be5c4cd6beac05272d7d55f862268ead937aec97ceeea6d1447f2",
+      "after_score": 0.4
+    }
+  ],
+  "score_trace": [
+    0.4,
+    0.4
+  ],
+  "final_passed": false,
+  "first_success_round": null,
+  "repair_attempts": 1,
+  "model_calls": 2,
+  "non_improving_rate": 1.0,
+  "exact_state_revisit_rate": 0.0,
+  "best_round": 0,
+  "stop_error_rounds": 1,
+  "observation_cost": 12,
+  "teacher_renders": 0,
+  "total_tokens": 89427,
+  "quality_gain_per_token": 0.0
+}

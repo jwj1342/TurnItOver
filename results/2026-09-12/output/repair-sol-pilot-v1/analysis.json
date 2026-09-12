@@ -1,0 +1,369 @@
+{
+  "model": {
+    "role": "generator",
+    "provider": "openrouter",
+    "model": "openai/gpt-5.6-sol",
+    "key_configured": true,
+    "max_tokens": 8192,
+    "timeout": 180.0
+  },
+  "conditions": {
+    "fixed": {
+      "damaged_cases": 3,
+      "repaired": 1,
+      "clean_cases": 1,
+      "clean_preserved": 1,
+      "model_calls": 7,
+      "total_tokens": 312959,
+      "reported_cost_usd": "0.8291120",
+      "cost_missing_calls": 0,
+      "episodes": [
+        {
+          "initial_passed": false,
+          "id": "1daf66e74604a17cd98514f0",
+          "condition": "fixed",
+          "final_passed": false,
+          "first_success_round": null,
+          "model_calls": 2,
+          "observation_cost": 12,
+          "non_improving_rate": 1.0,
+          "exact_state_revisit_rate": 0.0,
+          "stop_error_rounds": 1,
+          "total_tokens": 89427,
+          "score_trace": [
+            0.4,
+            0.4
+          ],
+          "reported_cost_usd": "0.2363670",
+          "cost_missing_calls": 0
+        },
+        {
+          "initial_passed": false,
+          "id": "12292f5ccd44d23b00c6eeb2",
+          "condition": "fixed",
+          "final_passed": false,
+          "first_success_round": null,
+          "model_calls": 2,
+          "observation_cost": 12,
+          "non_improving_rate": 1.0,
+          "exact_state_revisit_rate": 0.0,
+          "stop_error_rounds": 1,
+          "total_tokens": 89364,
+          "score_trace": [
+            0.6,
+            0.6
+          ],
+          "reported_cost_usd": "0.236427",
+          "cost_missing_calls": 0
+        },
+        {
+          "initial_passed": true,
+          "id": "c244421b99cda00848041b5c",
+          "condition": "fixed",
+          "final_passed": true,
+          "first_success_round": 0,
+          "model_calls": 1,
+          "observation_cost": 6,
+          "non_improving_rate": null,
+          "exact_state_revisit_rate": null,
+          "stop_error_rounds": 0,
+          "total_tokens": 44285,
+          "score_trace": [
+            1.0
+          ],
+          "reported_cost_usd": "0.1146635",
+          "cost_missing_calls": 0
+        },
+        {
+          "initial_passed": false,
+          "id": "8ea7f71d4c1f99739d65c1b2",
+          "condition": "fixed",
+          "final_passed": true,
+          "first_success_round": 1,
+          "model_calls": 2,
+          "observation_cost": 12,
+          "non_improving_rate": 0.0,
+          "exact_state_revisit_rate": 0.0,
+          "stop_error_rounds": 0,
+          "total_tokens": 89883,
+          "score_trace": [
+            0.8,
+            1.0
+          ],
+          "reported_cost_usd": "0.2416545",
+          "cost_missing_calls": 0
+        }
+      ]
+    },
+    "gold_constraints": {
+      "damaged_cases": 3,
+      "repaired": 3,
+      "clean_cases": 1,
+      "clean_preserved": 1,
+      "model_calls": 8,
+      "total_tokens": 357742,
+      "reported_cost_usd": "0.8374565",
+      "cost_missing_calls": 0,
+      "episodes": [
+        {
+          "initial_passed": false,
+          "id": "1daf66e74604a17cd98514f0",
+          "condition": "gold_constraints",
+          "final_passed": true,
+          "first_success_round": 1,
+          "model_calls": 2,
+          "observation_cost": 12,
+          "non_improving_rate": 0.0,
+          "exact_state_revisit_rate": 0.0,
+          "stop_error_rounds": 0,
+          "total_tokens": 90586,
+          "score_trace": [
+            0.4,
+            1.0
+          ],
+          "reported_cost_usd": "0.1435505",
+          "cost_missing_calls": 0
+        },
+        {
+          "initial_passed": false,
+          "id": "12292f5ccd44d23b00c6eeb2",
+          "condition": "gold_constraints",
+          "final_passed": true,
+          "first_success_round": 2,
+          "model_calls": 3,
+          "observation_cost": 18,
+          "non_improving_rate": 0.5,
+          "exact_state_revisit_rate": 0.0,
+          "stop_error_rounds": 0,
+          "total_tokens": 134170,
+          "score_trace": [
+            0.6,
+            0.6,
+            1.0
+          ],
+          "reported_cost_usd": "0.3508405",
+          "cost_missing_calls": 0
+        },
+        {
+          "initial_passed": true,
+          "id": "c244421b99cda00848041b5c",
+          "condition": "gold_constraints",
+          "final_passed": true,
+          "first_success_round": 0,
+          "model_calls": 1,
+          "observation_cost": 6,
+          "non_improving_rate": null,
+          "exact_state_revisit_rate": null,
+          "stop_error_rounds": 0,
+          "total_tokens": 43973,
+          "score_trace": [
+            1.0
+          ],
+          "reported_cost_usd": "0.1113485",
+          "cost_missing_calls": 0
+        },
+        {
+          "initial_passed": false,
+          "id": "8ea7f71d4c1f99739d65c1b2",
+          "condition": "gold_constraints",
+          "final_passed": true,
+          "first_success_round": 1,
+          "model_calls": 2,
+          "observation_cost": 12,
+          "non_improving_rate": 0.0,
+          "exact_state_revisit_rate": 0.0,
+          "stop_error_rounds": 0,
+          "total_tokens": 89013,
+          "score_trace": [
+            0.8,
+            1.0
+          ],
+          "reported_cost_usd": "0.231717",
+          "cost_missing_calls": 0
+        }
+      ]
+    },
+    "oracle_observations": {
+      "damaged_cases": 3,
+      "repaired": 3,
+      "clean_cases": 1,
+      "clean_preserved": 1,
+      "model_calls": 7,
+      "total_tokens": 312288,
+      "reported_cost_usd": "0.8224845",
+      "cost_missing_calls": 0,
+      "episodes": [
+        {
+          "initial_passed": false,
+          "id": "1daf66e74604a17cd98514f0",
+          "condition": "oracle_observations",
+          "final_passed": true,
+          "first_success_round": 1,
+          "model_calls": 2,
+          "observation_cost": 12,
+          "non_improving_rate": 0.0,
+          "exact_state_revisit_rate": 0.0,
+          "stop_error_rounds": 0,
+          "total_tokens": 90145,
+          "score_trace": [
+            0.4,
+            1.0
+          ],
+          "reported_cost_usd": "0.243652",
+          "cost_missing_calls": 0
+        },
+        {
+          "initial_passed": false,
+          "id": "12292f5ccd44d23b00c6eeb2",
+          "condition": "oracle_observations",
+          "final_passed": true,
+          "first_success_round": 1,
+          "model_calls": 2,
+          "observation_cost": 12,
+          "non_improving_rate": 0.0,
+          "exact_state_revisit_rate": 0.0,
+          "stop_error_rounds": 0,
+          "total_tokens": 88574,
+          "score_trace": [
+            0.6,
+            1.0
+          ],
+          "reported_cost_usd": "0.2285270",
+          "cost_missing_calls": 0
+        },
+        {
+          "initial_passed": true,
+          "id": "c244421b99cda00848041b5c",
+          "condition": "oracle_observations",
+          "final_passed": true,
+          "first_success_round": 0,
+          "model_calls": 1,
+          "observation_cost": 6,
+          "non_improving_rate": null,
+          "exact_state_revisit_rate": null,
+          "stop_error_rounds": 0,
+          "total_tokens": 43984,
+          "score_trace": [
+            1.0
+          ],
+          "reported_cost_usd": "0.111646",
+          "cost_missing_calls": 0
+        },
+        {
+          "initial_passed": false,
+          "id": "8ea7f71d4c1f99739d65c1b2",
+          "condition": "oracle_observations",
+          "final_passed": true,
+          "first_success_round": 1,
+          "model_calls": 2,
+          "observation_cost": 12,
+          "non_improving_rate": 0.0,
+          "exact_state_revisit_rate": 0.0,
+          "stop_error_rounds": 0,
+          "total_tokens": 89585,
+          "score_trace": [
+            0.8,
+            1.0
+          ],
+          "reported_cost_usd": "0.2386595",
+          "cost_missing_calls": 0
+        }
+      ]
+    },
+    "combined": {
+      "damaged_cases": 3,
+      "repaired": 3,
+      "clean_cases": 1,
+      "clean_preserved": 1,
+      "model_calls": 8,
+      "total_tokens": 359736,
+      "reported_cost_usd": "0.9552930",
+      "cost_missing_calls": 0,
+      "episodes": [
+        {
+          "initial_passed": false,
+          "id": "1daf66e74604a17cd98514f0",
+          "condition": "combined",
+          "final_passed": true,
+          "first_success_round": 3,
+          "model_calls": 3,
+          "observation_cost": 18,
+          "non_improving_rate": 0.3333333333333333,
+          "exact_state_revisit_rate": 0.0,
+          "stop_error_rounds": 0,
+          "total_tokens": 136798,
+          "score_trace": [
+            0.4,
+            0.6,
+            0.6,
+            1.0
+          ],
+          "reported_cost_usd": "0.3721105",
+          "cost_missing_calls": 0
+        },
+        {
+          "initial_passed": false,
+          "id": "12292f5ccd44d23b00c6eeb2",
+          "condition": "combined",
+          "final_passed": true,
+          "first_success_round": 1,
+          "model_calls": 2,
+          "observation_cost": 12,
+          "non_improving_rate": 0.0,
+          "exact_state_revisit_rate": 0.0,
+          "stop_error_rounds": 0,
+          "total_tokens": 89048,
+          "score_trace": [
+            0.6,
+            1.0
+          ],
+          "reported_cost_usd": "0.2310995",
+          "cost_missing_calls": 0
+        },
+        {
+          "initial_passed": true,
+          "id": "c244421b99cda00848041b5c",
+          "condition": "combined",
+          "final_passed": true,
+          "first_success_round": 0,
+          "model_calls": 1,
+          "observation_cost": 6,
+          "non_improving_rate": null,
+          "exact_state_revisit_rate": null,
+          "stop_error_rounds": 0,
+          "total_tokens": 44090,
+          "score_trace": [
+            1.0
+          ],
+          "reported_cost_usd": "0.112511",
+          "cost_missing_calls": 0
+        },
+        {
+          "initial_passed": false,
+          "id": "8ea7f71d4c1f99739d65c1b2",
+          "condition": "combined",
+          "final_passed": true,
+          "first_success_round": 1,
+          "model_calls": 2,
+          "observation_cost": 12,
+          "non_improving_rate": 0.0,
+          "exact_state_revisit_rate": 0.0,
+          "stop_error_rounds": 0,
+          "total_tokens": 89800,
+          "score_trace": [
+            0.8,
+            1.0
+          ],
+          "reported_cost_usd": "0.2395720",
+          "cost_missing_calls": 0
+        }
+      ]
+    }
+  },
+  "reported_cost_usd": "3.4443460",
+  "limitations": [
+    "Observation recipes are frozen from the initial corruption oracle, not recomputed after edits.",
+    "Gold feedback describes failed deterministic constraints, not perfect semantic diagnosis.",
+    "This pilot is not the complete RP three-oracle upper-bound experiment."
+  ]
+}

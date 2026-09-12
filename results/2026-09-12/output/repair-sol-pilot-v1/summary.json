@@ -1,0 +1,243 @@
+{
+  "status": "complete",
+  "scope": "prepared_four_condition_repair_pilot",
+  "model": {
+    "role": "generator",
+    "provider": "openrouter",
+    "model": "openai/gpt-5.6-sol",
+    "key_configured": true,
+    "max_tokens": 8192,
+    "timeout": 180.0
+  },
+  "prepared_manifest_sha256": "bf8fd168b5b379f1cf1990f124667b07fab3f9313a2a0c3f704eec4fcef488d8",
+  "maximum_generator_calls": 48,
+  "episodes": [
+    {
+      "id": "1daf66e74604a17cd98514f0",
+      "condition": "fixed",
+      "final_passed": false,
+      "first_success_round": null,
+      "model_calls": 2,
+      "observation_cost": 12,
+      "non_improving_rate": 1.0,
+      "exact_state_revisit_rate": 0.0,
+      "stop_error_rounds": 1,
+      "total_tokens": 89427
+    },
+    {
+      "id": "1daf66e74604a17cd98514f0",
+      "condition": "gold_constraints",
+      "final_passed": true,
+      "first_success_round": 1,
+      "model_calls": 2,
+      "observation_cost": 12,
+      "non_improving_rate": 0.0,
+      "exact_state_revisit_rate": 0.0,
+      "stop_error_rounds": 0,
+      "total_tokens": 90586
+    },
+    {
+      "id": "1daf66e74604a17cd98514f0",
+      "condition": "oracle_observations",
+      "final_passed": true,
+      "first_success_round": 1,
+      "model_calls": 2,
+      "observation_cost": 12,
+      "non_improving_rate": 0.0,
+      "exact_state_revisit_rate": 0.0,
+      "stop_error_rounds": 0,
+      "total_tokens": 90145
+    },
+    {
+      "id": "1daf66e74604a17cd98514f0",
+      "condition": "combined",
+      "final_passed": true,
+      "first_success_round": 3,
+      "model_calls": 3,
+      "observation_cost": 18,
+      "non_improving_rate": 0.3333333333333333,
+      "exact_state_revisit_rate": 0.0,
+      "stop_error_rounds": 0,
+      "total_tokens": 136798
+    },
+    {
+      "id": "12292f5ccd44d23b00c6eeb2",
+      "condition": "fixed",
+      "final_passed": false,
+      "first_success_round": null,
+      "model_calls": 2,
+      "observation_cost": 12,
+      "non_improving_rate": 1.0,
+      "exact_state_revisit_rate": 0.0,
+      "stop_error_rounds": 1,
+      "total_tokens": 89364
+    },
+    {
+      "id": "12292f5ccd44d23b00c6eeb2",
+      "condition": "gold_constraints",
+      "final_passed": true,
+      "first_success_round": 2,
+      "model_calls": 3,
+      "observation_cost": 18,
+      "non_improving_rate": 0.5,
+      "exact_state_revisit_rate": 0.0,
+      "stop_error_rounds": 0,
+      "total_tokens": 134170
+    },
+    {
+      "id": "12292f5ccd44d23b00c6eeb2",
+      "condition": "oracle_observations",
+      "final_passed": true,
+      "first_success_round": 1,
+      "model_calls": 2,
+      "observation_cost": 12,
+      "non_improving_rate": 0.0,
+      "exact_state_revisit_rate": 0.0,
+      "stop_error_rounds": 0,
+      "total_tokens": 88574
+    },
+    {
+      "id": "12292f5ccd44d23b00c6eeb2",
+      "condition": "combined",
+      "final_passed": true,
+      "first_success_round": 1,
+      "model_calls": 2,
+      "observation_cost": 12,
+      "non_improving_rate": 0.0,
+      "exact_state_revisit_rate": 0.0,
+      "stop_error_rounds": 0,
+      "total_tokens": 89048
+    },
+    {
+      "id": "c244421b99cda00848041b5c",
+      "condition": "fixed",
+      "final_passed": true,
+      "first_success_round": 0,
+      "model_calls": 1,
+      "observation_cost": 6,
+      "non_improving_rate": null,
+      "exact_state_revisit_rate": null,
+      "stop_error_rounds": 0,
+      "total_tokens": 44285
+    },
+    {
+      "id": "c244421b99cda00848041b5c",
+      "condition": "gold_constraints",
+      "final_passed": true,
+      "first_success_round": 0,
+      "model_calls": 1,
+      "observation_cost": 6,
+      "non_improving_rate": null,
+      "exact_state_revisit_rate": null,
+      "stop_error_rounds": 0,
+      "total_tokens": 43973
+    },
+    {
+      "id": "c244421b99cda00848041b5c",
+      "condition": "oracle_observations",
+      "final_passed": true,
+      "first_success_round": 0,
+      "model_calls": 1,
+      "observation_cost": 6,
+      "non_improving_rate": null,
+      "exact_state_revisit_rate": null,
+      "stop_error_rounds": 0,
+      "total_tokens": 43984
+    },
+    {
+      "id": "c244421b99cda00848041b5c",
+      "condition": "combined",
+      "final_passed": true,
+      "first_success_round": 0,
+      "model_calls": 1,
+      "observation_cost": 6,
+      "non_improving_rate": null,
+      "exact_state_revisit_rate": null,
+      "stop_error_rounds": 0,
+      "total_tokens": 44090
+    },
+    {
+      "id": "8ea7f71d4c1f99739d65c1b2",
+      "condition": "fixed",
+      "final_passed": true,
+      "first_success_round": 1,
+      "model_calls": 2,
+      "observation_cost": 12,
+      "non_improving_rate": 0.0,
+      "exact_state_revisit_rate": 0.0,
+      "stop_error_rounds": 0,
+      "total_tokens": 89883
+    },
+    {
+      "id": "8ea7f71d4c1f99739d65c1b2",
+      "condition": "gold_constraints",
+      "final_passed": true,
+      "first_success_round": 1,
+      "model_calls": 2,
+      "observation_cost": 12,
+      "non_improving_rate": 0.0,
+      "exact_state_revisit_rate": 0.0,
+      "stop_error_rounds": 0,
+      "total_tokens": 89013
+    },
+    {
+      "id": "8ea7f71d4c1f99739d65c1b2",
+      "condition": "oracle_observations",
+      "final_passed": true,
+      "first_success_round": 1,
+      "model_calls": 2,
+      "observation_cost": 12,
+      "non_improving_rate": 0.0,
+      "exact_state_revisit_rate": 0.0,
+      "stop_error_rounds": 0,
+      "total_tokens": 89585
+    },
+    {
+      "id": "8ea7f71d4c1f99739d65c1b2",
+      "condition": "combined",
+      "final_passed": true,
+      "first_success_round": 1,
+      "model_calls": 2,
+      "observation_cost": 12,
+      "non_improving_rate": 0.0,
+      "exact_state_revisit_rate": 0.0,
+      "stop_error_rounds": 0,
+      "total_tokens": 89800
+    }
+  ],
+  "limitations": [
+    "Observation recipes are frozen from the initial corruption oracle, not recomputed after edits.",
+    "Gold feedback describes failed deterministic constraints, not perfect semantic diagnosis.",
+    "This pilot is not the complete RP three-oracle upper-bound experiment."
+  ],
+  "conditions": {
+    "fixed": {
+      "n": 4,
+      "final_passed": 2,
+      "model_calls": 7,
+      "total_tokens": 312959,
+      "observation_cost": 42
+    },
+    "gold_constraints": {
+      "n": 4,
+      "final_passed": 4,
+      "model_calls": 8,
+      "total_tokens": 357742,
+      "observation_cost": 48
+    },
+    "oracle_observations": {
+      "n": 4,
+      "final_passed": 4,
+      "model_calls": 7,
+      "total_tokens": 312288,
+      "observation_cost": 42
+    },
+    "combined": {
+      "n": 4,
+      "final_passed": 4,
+      "model_calls": 8,
+      "total_tokens": 359736,
+      "observation_cost": 48
+    }
+  }
+}

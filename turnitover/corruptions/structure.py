@@ -15,11 +15,12 @@ class PartOffset:
         self.min_m, self.max_m = min_m, max_m
 
     def applicable(self, program: ObjectProgram) -> bool:
-        return program.spec is not None and len(program.spec.parts) > 0
+        return program.spec is not None and any(p.mesh is None or p.mesh.faces for p in program.spec.parts)
 
     def apply(self, program: ObjectProgram, rng: np.random.Generator):
         spec = require_spec(program)
-        part = spec.parts[rng.integers(len(spec.parts))]
+        visible = [p for p in spec.parts if p.mesh is None or p.mesh.faces]
+        part = visible[rng.integers(len(visible))]
         mag = float(rng.uniform(self.min_m, self.max_m))
         vec = unit_vector(rng) * mag
         origin = tuple(float(o + d) for o, d in zip(part.origin, vec))

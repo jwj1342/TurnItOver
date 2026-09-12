@@ -1,0 +1,1044 @@
+{
+  "status": "complete",
+  "results": [
+    {
+      "asset_id": "replicacad_cabinet",
+      "program_sha": "f5d5d1d8467fa139",
+      "source_files": [
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/cabinet/cabinet.glb",
+          "sha256": "1a2fc25987e8340595a9cba2cb5ff6de3a0c8a3ed899b79a01154b20e99bda43"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/cabinet/cabinet.urdf",
+          "sha256": "bf560d8611d45dfe01a07a04e6553e489d9c16d9838d39302a6328d2d6fe0b22"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/cabinet/door.glb",
+          "sha256": "e8a3745f531600609d590e84c345d495962121dfb93e2792ddd1b71659c61603"
+        }
+      ],
+      "tolerance_m": 1e-05,
+      "passed": true,
+      "max_vertex_error_m": 4.388614304567825e-08,
+      "states": [
+        {
+          "state": "rest",
+          "joint_values": {},
+          "max_vertex_error_m": 4.2768477067077134e-08,
+          "passed": true
+        },
+        {
+          "state": "left_slide:lower",
+          "joint_values": {
+            "left_slide": 0.0
+          },
+          "max_vertex_error_m": 4.2768477067077134e-08,
+          "passed": true
+        },
+        {
+          "state": "left_slide:mid",
+          "joint_values": {
+            "left_slide": 0.4
+          },
+          "max_vertex_error_m": 4.2768477067077134e-08,
+          "passed": true
+        },
+        {
+          "state": "left_slide:upper",
+          "joint_values": {
+            "left_slide": 0.8
+          },
+          "max_vertex_error_m": 4.388614304567825e-08,
+          "passed": true
+        },
+        {
+          "state": "right_slide:lower",
+          "joint_values": {
+            "right_slide": -0.76
+          },
+          "max_vertex_error_m": 3.994514585831578e-08,
+          "passed": true
+        },
+        {
+          "state": "right_slide:mid",
+          "joint_values": {
+            "right_slide": -0.38
+          },
+          "max_vertex_error_m": 3.994514585831578e-08,
+          "passed": true
+        },
+        {
+          "state": "right_slide:upper",
+          "joint_values": {
+            "right_slide": 0.0
+          },
+          "max_vertex_error_m": 4.2768477067077134e-08,
+          "passed": true
+        },
+        {
+          "state": "combined:0",
+          "joint_values": {
+            "left_slide": 0.2969689605985219,
+            "right_slide": -0.6592611324928919
+          },
+          "max_vertex_error_m": 3.994514585831578e-08,
+          "passed": true
+        },
+        {
+          "state": "combined:1",
+          "joint_values": {
+            "left_slide": 0.23540378998444922,
+            "right_slide": -0.2559918882715221
+          },
+          "max_vertex_error_m": 3.994514585831578e-08,
+          "passed": true
+        },
+        {
+          "state": "combined:2",
+          "joint_values": {
+            "left_slide": 0.49954878242229994,
+            "right_slide": -0.6140191405141875
+          },
+          "max_vertex_error_m": 3.994514585831578e-08,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "asset_id": "replicacad_chest_of_drawers",
+      "program_sha": "12c9fc502bb0468f",
+      "source_files": [
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/chest_of_drawers/chestOfDrawers_01.urdf",
+          "sha256": "df3a819ba28d16065a1d56c8ab9fe85f7069e95533afb0f311249b54c018a223"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/chest_of_drawers/chestOfDrawers_DrawerBot.glb",
+          "sha256": "da67edf0647f65a7b8bab0335357449c328613e8f6a173e83ff8eccda8898bc2"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/chest_of_drawers/chestOfDrawers_DrawerMid.glb",
+          "sha256": "31afab357efa4c4c134e5a5b492146989c01c82cf75ed4ef7c0d3d19d5a716ec"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/chest_of_drawers/chestOfDrawers_DrawerTop.glb",
+          "sha256": "17c9876b24a0bece319d65b434fb921698d673a85e7f244eda59b25e71598949"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/chest_of_drawers/chestOfDrawers_base.glb",
+          "sha256": "a60432e00d47e7206ec374842780002d0dfca363fbee196b96546b89df479d89"
+        }
+      ],
+      "tolerance_m": 1e-05,
+      "passed": true,
+      "max_vertex_error_m": 2.2812154316761302e-07,
+      "states": [
+        {
+          "state": "rest",
+          "joint_values": {},
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_topL:lower",
+          "joint_values": {
+            "drawer_topL": 0.0
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_topL:mid",
+          "joint_values": {
+            "drawer_topL": 0.25
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_topL:upper",
+          "joint_values": {
+            "drawer_topL": 0.5
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_topR:lower",
+          "joint_values": {
+            "drawer_topR": 0.0
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_topR:mid",
+          "joint_values": {
+            "drawer_topR": 0.25
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_topR:upper",
+          "joint_values": {
+            "drawer_topR": 0.5
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_midL:lower",
+          "joint_values": {
+            "drawer_midL": 0.0
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_midL:mid",
+          "joint_values": {
+            "drawer_midL": 0.25
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_midL:upper",
+          "joint_values": {
+            "drawer_midL": 0.5
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_midR:lower",
+          "joint_values": {
+            "drawer_midR": 0.0
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_midR:mid",
+          "joint_values": {
+            "drawer_midR": 0.25
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_midR:upper",
+          "joint_values": {
+            "drawer_midR": 0.5
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_botL:lower",
+          "joint_values": {
+            "drawer_botL": 0.0
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_botL:mid",
+          "joint_values": {
+            "drawer_botL": 0.25
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_botL:upper",
+          "joint_values": {
+            "drawer_botL": 0.5
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_botR:lower",
+          "joint_values": {
+            "drawer_botR": 0.0
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_botR:mid",
+          "joint_values": {
+            "drawer_botR": 0.25
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "drawer_botR:upper",
+          "joint_values": {
+            "drawer_botR": 0.5
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "combined:0",
+          "joint_values": {
+            "drawer_topL": 0.1856056003740762,
+            "drawer_topR": 0.06627557072836066,
+            "drawer_midL": 0.14712736874028076,
+            "drawer_midR": 0.3315842840318934,
+            "drawer_botL": 0.31221798901393744,
+            "drawer_botR": 0.09604003913540299
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "combined:1",
+          "joint_values": {
+            "drawer_topL": 0.08259239816628594,
+            "drawer_topR": 0.261553704513524,
+            "drawer_midL": 0.1359385458371804,
+            "drawer_midR": 0.45154643653524046,
+            "drawer_botL": 0.30637172731425083,
+            "drawer_botR": 0.4609512565653516
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        },
+        {
+          "state": "combined:2",
+          "joint_values": {
+            "drawer_topL": 0.15573901438924748,
+            "drawer_topR": 0.13679286865671803,
+            "drawer_midL": 0.18447103361770045,
+            "drawer_midR": 0.05747455155132358,
+            "drawer_botL": 0.39189500381236214,
+            "drawer_botR": 0.18618649800456355
+          },
+          "max_vertex_error_m": 2.2812154316761302e-07,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "asset_id": "replicacad_door",
+      "program_sha": "3449e570c856981d",
+      "source_files": [
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/doors/door1.glb",
+          "sha256": "e5a535952737537db5c1af0c5e5df5435f37b117755cb6d630e9e26c5732f135"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/doors/door1.urdf",
+          "sha256": "cd0127293024da3abb1f5783e627cdad7a1cfc0a5388a3de11d175e4ddaf0fbd"
+        }
+      ],
+      "tolerance_m": 1e-05,
+      "passed": true,
+      "max_vertex_error_m": 2.025958864508018e-07,
+      "states": [
+        {
+          "state": "rest",
+          "joint_values": {},
+          "max_vertex_error_m": 1.456321350047219e-07,
+          "passed": true
+        },
+        {
+          "state": "root_rotation:lower",
+          "joint_values": {
+            "root_rotation": 0.0
+          },
+          "max_vertex_error_m": 1.456321350047219e-07,
+          "passed": true
+        },
+        {
+          "state": "root_rotation:mid",
+          "joint_values": {
+            "root_rotation": 1.25
+          },
+          "max_vertex_error_m": 1.2577002060702827e-07,
+          "passed": true
+        },
+        {
+          "state": "root_rotation:upper",
+          "joint_values": {
+            "root_rotation": 2.5
+          },
+          "max_vertex_error_m": 1.4402750374463187e-07,
+          "passed": true
+        },
+        {
+          "state": "combined:0",
+          "joint_values": {
+            "root_rotation": 0.928028001870381
+          },
+          "max_vertex_error_m": 2.025958864508018e-07,
+          "passed": true
+        },
+        {
+          "state": "combined:1",
+          "joint_values": {
+            "root_rotation": 0.3313778536418033
+          },
+          "max_vertex_error_m": 1.4112605744036077e-07,
+          "passed": true
+        },
+        {
+          "state": "combined:2",
+          "joint_values": {
+            "root_rotation": 0.7356368437014038
+          },
+          "max_vertex_error_m": 1.461700914409014e-07,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "asset_id": "replicacad_fridge",
+      "program_sha": "7c1f64c5078818ef",
+      "source_files": [
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/fridge/body.glb",
+          "sha256": "c8162e5cee6948dc3496185e6c3d60b6885ef240fa00503f04d5bdd4fb854434"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/fridge/bottom_door.glb",
+          "sha256": "44bd6af27be1be4596405597a6fedb81162b0af0a50583d2f6fc74aca282e834"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/fridge/fridge.urdf",
+          "sha256": "1a7a9364a22cd00bdf899c5f20b48d3987da3a3407ff1de1a2f77d2b7eda3f0f"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/fridge/top_door.glb",
+          "sha256": "42b03920664f4f67b550493df5f558ec5be827e1c2a687dbc9a97c309358a595"
+        }
+      ],
+      "tolerance_m": 1e-05,
+      "passed": true,
+      "max_vertex_error_m": 8.786014240072581e-08,
+      "states": [
+        {
+          "state": "rest",
+          "joint_values": {},
+          "max_vertex_error_m": 5.8102016992117976e-08,
+          "passed": true
+        },
+        {
+          "state": "top_door_hinge:lower",
+          "joint_values": {
+            "top_door_hinge": 0.0
+          },
+          "max_vertex_error_m": 5.8102016992117976e-08,
+          "passed": true
+        },
+        {
+          "state": "top_door_hinge:mid",
+          "joint_values": {
+            "top_door_hinge": 1.15
+          },
+          "max_vertex_error_m": 5.8102016992117976e-08,
+          "passed": true
+        },
+        {
+          "state": "top_door_hinge:upper",
+          "joint_values": {
+            "top_door_hinge": 2.3
+          },
+          "max_vertex_error_m": 6.038325496133385e-08,
+          "passed": true
+        },
+        {
+          "state": "bottom_door_hinge:lower",
+          "joint_values": {
+            "bottom_door_hinge": 0.0
+          },
+          "max_vertex_error_m": 5.8102016992117976e-08,
+          "passed": true
+        },
+        {
+          "state": "bottom_door_hinge:mid",
+          "joint_values": {
+            "bottom_door_hinge": 1.25
+          },
+          "max_vertex_error_m": 5.8102016992117976e-08,
+          "passed": true
+        },
+        {
+          "state": "bottom_door_hinge:upper",
+          "joint_values": {
+            "bottom_door_hinge": 2.5
+          },
+          "max_vertex_error_m": 5.8102016992117976e-08,
+          "passed": true
+        },
+        {
+          "state": "combined:0",
+          "joint_values": {
+            "top_door_hinge": 0.8537857617207505,
+            "bottom_door_hinge": 0.3313778536418033
+          },
+          "max_vertex_error_m": 5.8102016992117976e-08,
+          "passed": true
+        },
+        {
+          "state": "combined:1",
+          "joint_values": {
+            "top_door_hinge": 0.6767858962052915,
+            "bottom_door_hinge": 1.657921420159467
+          },
+          "max_vertex_error_m": 8.786014240072581e-08,
+          "passed": true
+        },
+        {
+          "state": "combined:2",
+          "joint_values": {
+            "top_door_hinge": 1.436202749464112,
+            "bottom_door_hinge": 0.48020019567701494
+          },
+          "max_vertex_error_m": 6.934295793497027e-08,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "asset_id": "replicacad_kitchen_counter",
+      "program_sha": "41fe84152ffd376f",
+      "source_files": [
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/kitchen_counter/drawer1.glb",
+          "sha256": "a04ed78161cd493a10e09e48a4058e7764dfe257e622881fbfcdebed4a06d143"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/kitchen_counter/drawer2.glb",
+          "sha256": "3d0981d7e98b99f8baa20e32ea5513142005f5cfc3028b203d7871c9961d0928"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/kitchen_counter/drawer3.glb",
+          "sha256": "6706dfacf7631d3fe93c6bc3ceb9603bb271dd238c5cfcb381dbeced64ab5fd0"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/kitchen_counter/drawer4.glb",
+          "sha256": "eeaf56b41ad5f6433ab241bd59cf5247df5a4c7d370c755e6648861fb417ed48"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/kitchen_counter/kitchen_counter.glb",
+          "sha256": "c744744190b798655d89f9c1393de2ffee5b1c2d7d1c33dca96af473e3ab4bc3"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/kitchen_counter/kitchen_counter.urdf",
+          "sha256": "537b556e80b639c675e4945df32c3dee354eff1932082a7b1eb4c8513f09148c"
+        }
+      ],
+      "tolerance_m": 1e-05,
+      "passed": true,
+      "max_vertex_error_m": 6.817023132503263e-08,
+      "states": [
+        {
+          "state": "rest",
+          "joint_values": {},
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "left_slide_top:lower",
+          "joint_values": {
+            "left_slide_top": 0.0
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "left_slide_top:mid",
+          "joint_values": {
+            "left_slide_top": 0.25
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "left_slide_top:upper",
+          "joint_values": {
+            "left_slide_top": 0.5
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "left_slide_bottom:lower",
+          "joint_values": {
+            "left_slide_bottom": 0.0
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "left_slide_bottom:mid",
+          "joint_values": {
+            "left_slide_bottom": 0.25
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "left_slide_bottom:upper",
+          "joint_values": {
+            "left_slide_bottom": 0.5
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "middle_slide_top:lower",
+          "joint_values": {
+            "middle_slide_top": 0.0
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "middle_slide_top:mid",
+          "joint_values": {
+            "middle_slide_top": 0.25
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "middle_slide_top:upper",
+          "joint_values": {
+            "middle_slide_top": 0.5
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "middle_slide_middle:lower",
+          "joint_values": {
+            "middle_slide_middle": 0.0
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "middle_slide_middle:mid",
+          "joint_values": {
+            "middle_slide_middle": 0.25
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "middle_slide_middle:upper",
+          "joint_values": {
+            "middle_slide_middle": 0.5
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "middle_slide_bottom:lower",
+          "joint_values": {
+            "middle_slide_bottom": 0.0
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "middle_slide_bottom:mid",
+          "joint_values": {
+            "middle_slide_bottom": 0.25
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "middle_slide_bottom:upper",
+          "joint_values": {
+            "middle_slide_bottom": 0.5
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "right_slide_top:lower",
+          "joint_values": {
+            "right_slide_top": 0.0
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "right_slide_top:mid",
+          "joint_values": {
+            "right_slide_top": 0.25
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "right_slide_top:upper",
+          "joint_values": {
+            "right_slide_top": 0.5
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "right_slide_bottom:lower",
+          "joint_values": {
+            "right_slide_bottom": 0.0
+          },
+          "max_vertex_error_m": 6.817023132503263e-08,
+          "passed": true
+        },
+        {
+          "state": "right_slide_bottom:mid",
+          "joint_values": {
+            "right_slide_bottom": 0.25
+          },
+          "max_vertex_error_m": 6.817023131665384e-08,
+          "passed": true
+        },
+        {
+          "state": "right_slide_bottom:upper",
+          "joint_values": {
+            "right_slide_bottom": 0.5
+          },
+          "max_vertex_error_m": 6.669645181463559e-08,
+          "passed": true
+        },
+        {
+          "state": "combined:0",
+          "joint_values": {
+            "left_slide_top": 0.1856056003740762,
+            "left_slide_bottom": 0.06627557072836066,
+            "middle_slide_top": 0.14712736874028076,
+            "middle_slide_middle": 0.3315842840318934,
+            "middle_slide_bottom": 0.31221798901393744,
+            "right_slide_top": 0.09604003913540299,
+            "right_slide_bottom": 0.08259239816628594
+          },
+          "max_vertex_error_m": 6.809874817230542e-08,
+          "passed": true
+        },
+        {
+          "state": "combined:1",
+          "joint_values": {
+            "left_slide_top": 0.261553704513524,
+            "left_slide_bottom": 0.1359385458371804,
+            "middle_slide_top": 0.45154643653524046,
+            "middle_slide_middle": 0.30637172731425083,
+            "middle_slide_bottom": 0.4609512565653516,
+            "right_slide_top": 0.15573901438924748,
+            "right_slide_bottom": 0.13679286865671803
+          },
+          "max_vertex_error_m": 6.808594875707784e-08,
+          "passed": true
+        },
+        {
+          "state": "combined:2",
+          "joint_values": {
+            "left_slide_top": 0.18447103361770045,
+            "left_slide_bottom": 0.05747455155132358,
+            "middle_slide_top": 0.39189500381236214,
+            "middle_slide_middle": 0.18618649800456355,
+            "middle_slide_bottom": 0.18170367127168752,
+            "right_slide_top": 0.12731498197461494,
+            "right_slide_bottom": 0.0029718054929838145
+          },
+          "max_vertex_error_m": 6.633032783003161e-08,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "asset_id": "replicacad_kitchen_cupboards",
+      "program_sha": "73da860017175a6b",
+      "source_files": [
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/kitchen_cupboards/kitchenCupboard_01.urdf",
+          "sha256": "8856366ccad312a676bf5ae1edbf42466e242f53ab5ef7ff81b09725b21b76b4"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/kitchen_cupboards/kitchencupboard_base.glb",
+          "sha256": "0ce28f53b9aebbd9fe85b9ec566add39c8b4b686f998cf851cbe685bee0226aa"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/kitchen_cupboards/kitchencupboard_doorWhole_L.glb",
+          "sha256": "e1827ea912d1a980255bcc673bf543f7105e1171a4555ee805528fe2411841aa"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/kitchen_cupboards/kitchencupboard_doorWhole_R.glb",
+          "sha256": "3a7eac8405158da267f90696bf4b28399f7289e31807bf2fc8a819f1740e1e35"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/kitchen_cupboards/kitchencupboard_doorWindow_L.glb",
+          "sha256": "ee505d885f8093a6d2140a717c0902a178d9bd6915f3b49bc72667eb7b68545a"
+        },
+        {
+          "path": "/scratch/jwj/TurnItOver/data/assets/replicacad-3e8c7fe/urdf/kitchen_cupboards/kitchencupboard_doorWindow_R.glb",
+          "sha256": "57de79a0eafdc20ab5b8a15f05cea9bb2497595b352695caf6c71d5a1b51aa34"
+        }
+      ],
+      "tolerance_m": 1e-05,
+      "passed": true,
+      "max_vertex_error_m": 3.0992777340252657e-07,
+      "states": [
+        {
+          "state": "rest",
+          "joint_values": {},
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWhole_1L_hinge:lower",
+          "joint_values": {
+            "doorWhole_1L_hinge": -2.3
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWhole_1L_hinge:mid",
+          "joint_values": {
+            "doorWhole_1L_hinge": -1.15
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWhole_1L_hinge:upper",
+          "joint_values": {
+            "doorWhole_1L_hinge": 0.0
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWhole_1R_hinge:lower",
+          "joint_values": {
+            "doorWhole_1R_hinge": 0.0
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWhole_1R_hinge:mid",
+          "joint_values": {
+            "doorWhole_1R_hinge": 1.15
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWhole_1R_hinge:upper",
+          "joint_values": {
+            "doorWhole_1R_hinge": 2.3
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWhole_2L_hinge:lower",
+          "joint_values": {
+            "doorWhole_2L_hinge": -2.3
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWhole_2L_hinge:mid",
+          "joint_values": {
+            "doorWhole_2L_hinge": -1.15
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWhole_2L_hinge:upper",
+          "joint_values": {
+            "doorWhole_2L_hinge": 0.0
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWhole_2R_hinge:lower",
+          "joint_values": {
+            "doorWhole_2R_hinge": 0.0
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWhole_2R_hinge:mid",
+          "joint_values": {
+            "doorWhole_2R_hinge": 1.15
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWhole_2R_hinge:upper",
+          "joint_values": {
+            "doorWhole_2R_hinge": 2.3
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWindow_1L_hinge:lower",
+          "joint_values": {
+            "doorWindow_1L_hinge": -2.3
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWindow_1L_hinge:mid",
+          "joint_values": {
+            "doorWindow_1L_hinge": -1.15
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWindow_1L_hinge:upper",
+          "joint_values": {
+            "doorWindow_1L_hinge": 0.0
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWindow_1R_hinge:lower",
+          "joint_values": {
+            "doorWindow_1R_hinge": 0.0
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWindow_1R_hinge:mid",
+          "joint_values": {
+            "doorWindow_1R_hinge": 1.15
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWindow_1R_hinge:upper",
+          "joint_values": {
+            "doorWindow_1R_hinge": 2.3
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWindow_2L_hinge:lower",
+          "joint_values": {
+            "doorWindow_2L_hinge": -2.3
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWindow_2L_hinge:mid",
+          "joint_values": {
+            "doorWindow_2L_hinge": -1.15
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWindow_2L_hinge:upper",
+          "joint_values": {
+            "doorWindow_2L_hinge": 0.0
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWindow_2R_hinge:lower",
+          "joint_values": {
+            "doorWindow_2R_hinge": 0.0
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWindow_2R_hinge:mid",
+          "joint_values": {
+            "doorWindow_2R_hinge": 1.15
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "doorWindow_2R_hinge:upper",
+          "joint_values": {
+            "doorWindow_2R_hinge": 2.3
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "combined:0",
+          "joint_values": {
+            "doorWhole_1L_hinge": -1.4462142382792493,
+            "doorWhole_1R_hinge": 0.30486762535045897,
+            "doorWhole_2L_hinge": -1.6232141037947083,
+            "doorWhole_2R_hinge": 1.5252877065467094,
+            "doorWindow_1L_hinge": -0.8637972505358877,
+            "doorWindow_1R_hinge": 0.4417841800228537,
+            "doorWindow_2L_hinge": -1.9200749684350846,
+            "doorWindow_2R_hinge": 1.2031470407622102
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "combined:1",
+          "joint_values": {
+            "doorWhole_1L_hinge": -1.6746826891489701,
+            "doorWhole_1R_hinge": 2.0771136080621058,
+            "doorWhole_2L_hinge": -0.890690054354446,
+            "doorWhole_2R_hinge": 2.120375780200617,
+            "doorWindow_1L_hinge": -1.5836005338094616,
+            "doorWindow_1R_hinge": 0.6292471958209028,
+            "doorWindow_2L_hinge": -1.4514332453585777,
+            "doorWindow_2R_hinge": 0.26438293713608846
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        },
+        {
+          "state": "combined:2",
+          "joint_values": {
+            "doorWhole_1L_hinge": -0.4972829824631342,
+            "doorWhole_1R_hinge": 0.8564578908209922,
+            "doorWhole_2L_hinge": -1.4641631121502372,
+            "doorWhole_2R_hinge": 0.5856489170832286,
+            "doorWindow_1L_hinge": -2.286329694732274,
+            "doorWindow_1R_hinge": 1.2141224510571218,
+            "doorWindow_2L_hinge": -1.0100260333207,
+            "doorWindow_2R_hinge": 1.9190235060345575
+          },
+          "max_vertex_error_m": 3.0992777340252657e-07,
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "source": "independent URDF FK vs browser-exported vertices",
+  "limitations": [
+    "Kinematic/visual mesh fidelity only; no physics or texture fidelity claim."
+  ]
+}

@@ -2,7 +2,13 @@
 
 面向大模型生成的三维程序，研究**验证即主动感知**：评判器通过选择视角、驱动关节和查询运行时信息，在有限观测预算下获取证据、定位缺陷。研究计划见 [RP.md](RP.md)。
 
-当前已实现合成数据引擎、无头浏览器观测、确定性检查器、截图与视频导出、按角色配置的模型 API，以及支持主动、固定、随机观测的 verifier（验证器）。另有单次照片到程序的生成入口和离线运行时检查基线。外部重建流水线、评判器训练、生成—修复外循环和真实照片评测尚未完成。
+当前已实现合成数据引擎、无头浏览器观测、确定性检查器、截图与视频导出、按角色配置的模型 API，以及支持主动、固定、随机观测的 verifier（验证器）。另有单次照片到程序的生成入口和离线运行时检查基线。已完成真实资产小型 benchmark、自动监督导出及 GPT-5.6 Sol 四条件修复试验。评判器训练、完整 RP oracle 上界与真实照片评测尚未完成。
+
+## 当前研究进展
+
+合作者请先读 [研究状态与接手指南](docs/research-status.md)：包含研究问题、已验证证据、结论边界、下一轮完成标准和从零复现顺序。
+[已提交测量快照](results/2026-09-12/README.md) 可直接核对指标、真实模型补丁与费用，无需 API 或 GPU。
+修复试验中固定观察成功 1/3，三种额外反馈条件各成功 3/3；仅三个损坏案例，不能作为训练收益或泛化结论。
 
 ## 项目结构
 
@@ -13,6 +19,7 @@ configs/     视角、数据生成和可检测性实验配置
 scripts/     环境初始化、模型下载、示例入口和 Slurm 作业脚本
 tests/       单元测试与需要浏览器的集成测试
 docs/        架构、协议、模型配置、实验说明和缺陷分类文档
+results/     进入版本控制的轻量测量快照，不含大规模数据或凭证
 models/      本地模型权重，仅说明文件进入版本控制
 output/      截图、视频、验证报告；保留一组完整示例，其余运行结果默认忽略
 ```
@@ -109,6 +116,12 @@ python -m turnitover verify --program candidate.ts --reference-image reference.j
 本地 Qwen3-VL 权重放在 `models/`，通过 GPU 作业执行推理。GPU 环境、Slurm 命令及证据边界见 [验证器说明](docs/verifier.md)。目前 Qwen3-VL-2B 的实测判定仍不可靠，详见 [实测记录](docs/verifier-smoke.md)。
 
 ## 可复现示例
+
+数据基础设施新增多资产清单、正常/组合腐蚀、标签资格检查、按资产组划分和输入/真值隔离导出，
+使用方法见 [数据流水线](docs/dataset-pipeline.md)。已调研关节资产库，并提供 ReplicaCAD 公开关节子集
+的固定版本下载脚本，见 [资产调研](docs/asset-sources.md)。已完成六类 ReplicaCAD 网格转换和 102 状态
+运动学审计，命令与验收记录见 [真实网格 benchmark](docs/mesh-benchmark.md)。
+已导出预算内 oracle 动作监督与成对参考诊断，见 [Oracle 与训练导出](docs/oracle-supervision.md)。VLM 训练尚未实现。
 
 ```bash
 python scripts/run_examples.py --out output/my-examples

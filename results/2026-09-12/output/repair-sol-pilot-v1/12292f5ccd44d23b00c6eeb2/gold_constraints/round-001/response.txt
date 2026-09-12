@@ -1,0 +1,1 @@
+{"edits":[{"old":"    const axis = new THREE.Vector3(0.0, -1.0, 0.0);","new":"    const axis = new THREE.Vector3(0.0, 1.0, 0.0);"}]}

@@ -1,7 +1,7 @@
 """AssetSpec: the canonical, mutable-by-replacement description of an articulated object.
 
 Corruptions operate on this; the Three.js program is derived from it by
-``turnitover.assets.emit``. Box geometry only for now.
+``turnitover.assets.emit``. Parts support boxes or embedded indexed triangle meshes.
 """
 from __future__ import annotations
 
@@ -27,6 +27,13 @@ class MaterialSpec:
 
 
 @dataclass(frozen=True)
+class MeshSpec:
+    vertices: tuple[Vec3, ...]
+    faces: tuple[IVec3, ...]
+    colors: tuple[Vec3, ...] = ()  # linear RGB, optionally one per vertex
+
+
+@dataclass(frozen=True)
 class PartSpec:
     id: str
     parent: str | None
@@ -35,6 +42,7 @@ class PartSpec:
     size: Vec3 = (0.1, 0.1, 0.1)
     segments: IVec3 = (1, 1, 1)
     material: str = "default"
+    mesh: MeshSpec | None = None  # None = box; empty mesh = transform-only link
 
 
 @dataclass(frozen=True)
@@ -46,6 +54,7 @@ class JointSpec:
     anchor: Vec3
     limits: tuple[float, float]
     sign: float = 1.0
+    frame_rotation: Vec3 = (0.0, 0.0, 0.0)  # Three.js intrinsic XYZ, before joint motion
 
 
 @dataclass(frozen=True)

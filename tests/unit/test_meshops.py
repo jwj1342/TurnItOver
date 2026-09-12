@@ -44,3 +44,30 @@ def test_surface_chamfer_tessellation_invariant():
     v2, f2 = _box(offset=(0.3, 0, 0))
     d = meshops.surface_chamfer(v, f, v2, f2, 2000)
     assert 0.05 < d < 0.3
+
+
+def test_large_triangle_not_hidden_by_nearer_centroids():
+    # The query lies on a large triangle, while 20 tiny triangles have nearer centroids.
+    large = np.array([[-100., -100., 0], [100., -100., 0], [0, 100., 0]])
+    tiny = [np.array([[0., 0., z], [.01, 0., z], [0., .01, z]]) for z in np.linspace(.1, .2, 20)]
+    vertices = np.concatenate([large, *tiny])
+    faces = np.arange(len(vertices)).reshape(-1, 3)
+    assert meshops.point_surface_distance(np.array([[0., 0., 0.]]), vertices, faces)[0] < 1e-12
+
+
+def test_degenerate_faces_do_not_produce_nan():
+    vertices = np.array([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]])
+    faces = np.array([[0, 0, 0], [0, 1, 1], [0, 1, 2]])
+    distances = meshops.point_surface_distance(np.array([[.2, .2, .3], [.5, -.2, 0]]), vertices, faces)
+    assert np.allclose(distances, [.3, .2])
+
+
+def test_bounded_search_matches_brute_force():
+    rng = np.random.default_rng(92)
+    vertices = rng.normal(size=(120, 3))
+    faces = np.arange(120).reshape(-1, 3)
+    points = rng.normal(size=(30, 3))
+    triangles = vertices[faces]
+    paired = trimesh.triangles.closest_point(np.tile(triangles, (len(points), 1, 1)), np.repeat(points, len(faces), axis=0))
+    brute = np.linalg.norm(paired-np.repeat(points, len(faces), axis=0), axis=1).reshape(len(points), -1).min(axis=1)
+    assert np.allclose(meshops.point_surface_distance(points, vertices, faces), brute, atol=1e-12)

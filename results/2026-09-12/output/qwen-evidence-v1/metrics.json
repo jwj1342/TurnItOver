@@ -1,0 +1,215 @@
+{
+  "status": "complete",
+  "model": "models/Qwen3-VL-2B-Instruct",
+  "samples": 16,
+  "scope": "frozen_VLM_recognition_on_saved_trajectories",
+  "limitations": [
+    "Single and paired conditions differ in reference information.",
+    "Oracle trajectories use privileged synthetic truth.",
+    "Invalid outputs count as missed detections, not successful uncertainty.",
+    "Six asset families; the test split contains only the door family.",
+    "No active model action selection or repair loop evaluated."
+  ],
+  "metrics": {
+    "oracle/single": {
+      "n": 16,
+      "invalid": 7,
+      "statuses": {
+        "uncertain": 9
+      },
+      "classes": {
+        "runtime.triangle_budget": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "kinematics.joint_axis": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 12,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "structure.part_offset": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "oracle/paired": {
+      "n": 16,
+      "invalid": 9,
+      "statuses": {
+        "pass": 5,
+        "uncertain": 2
+      },
+      "classes": {
+        "runtime.triangle_budget": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "kinematics.joint_axis": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 12,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "structure.part_offset": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "fixed/single": {
+      "n": 16,
+      "invalid": 3,
+      "statuses": {
+        "uncertain": 13
+      },
+      "classes": {
+        "runtime.triangle_budget": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "kinematics.joint_axis": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 12,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "structure.part_offset": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "fixed/paired": {
+      "n": 16,
+      "invalid": 12,
+      "statuses": {
+        "pass": 4
+      },
+      "classes": {
+        "runtime.triangle_budget": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "kinematics.joint_axis": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 12,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "structure.part_offset": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "random/single": {
+      "n": 16,
+      "invalid": 1,
+      "statuses": {
+        "uncertain": 15
+      },
+      "classes": {
+        "runtime.triangle_budget": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "kinematics.joint_axis": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 12,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "structure.part_offset": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "random/paired": {
+      "n": 16,
+      "invalid": 5,
+      "statuses": {
+        "uncertain": 9,
+        "pass": 2
+      },
+      "classes": {
+        "runtime.triangle_budget": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "kinematics.joint_axis": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 12,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "structure.part_offset": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    }
+  }
+}

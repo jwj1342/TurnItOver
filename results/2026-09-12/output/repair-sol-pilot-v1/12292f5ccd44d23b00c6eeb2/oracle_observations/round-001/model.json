@@ -1,0 +1,28 @@
+{
+  "model": "openai/gpt-5.6-sol",
+  "usage": {
+    "prompt_tokens": 43854,
+    "completion_tokens": 314,
+    "total_tokens": 44168,
+    "cost": 0.1127735,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 43851,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.1127735,
+      "upstream_inference_prompt_cost": 0.1096335,
+      "upstream_inference_completions_cost": 0.00314
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 303,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "finish_reason": "stop",
+  "elapsed_ms": 7475.728761404753
+}

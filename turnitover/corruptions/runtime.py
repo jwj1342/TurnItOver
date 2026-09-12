@@ -19,12 +19,15 @@ class TriangleBudget:
         self.k_parts = k_parts
 
     def applicable(self, program: ObjectProgram) -> bool:
-        return program.spec is not None and len(program.spec.parts) > 0
+        return program.spec is not None and any(p.mesh is None for p in program.spec.parts)
 
     def apply(self, program: ObjectProgram, rng: np.random.Generator):
         spec = require_spec(program)
-        k = min(self.k_parts, len(spec.parts))
-        chosen = [spec.parts[i] for i in rng.choice(len(spec.parts), size=k, replace=False)]
+        boxes = [p for p in spec.parts if p.mesh is None]
+        if not boxes:
+            raise ValueError("Triangle subdivision corruption currently requires box parts")
+        k = min(self.k_parts, len(boxes))
+        chosen = [boxes[i] for i in rng.choice(len(boxes), size=k, replace=False)]
         factor = int(self.FACTORS[rng.integers(len(self.FACTORS))])
         new_spec = spec
         for p in chosen:
@@ -45,6 +48,9 @@ class TriangleBudget:
 def _box_triangles(spec) -> int:
     total = 0
     for p in spec.parts:
+        if p.mesh is not None:
+            total += len(p.mesh.faces)
+            continue
         sx, sy, sz = p.segments
         total += 2 * 2 * (sx * sy + sy * sz + sx * sz)
     return total

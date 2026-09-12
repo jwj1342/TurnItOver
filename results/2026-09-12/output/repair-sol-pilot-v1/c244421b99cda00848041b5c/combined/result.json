@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "status": "complete",
+  "max_rounds": 3,
+  "delta": 0.0,
+  "initial_sha256": "3449e570c856981d95e27e018499f2ae82eb21fd726102bb14f0a2d205683d69",
+  "limitations": [
+    "Exact-source revisits are not the RP geometric epsilon oscillation metric.",
+    "Audit is privileged; only observe() decides which feedback reaches the generator."
+  ],
+  "termination": "generator_stop",
+  "rounds": [
+    {
+      "round": 0,
+      "before_sha256": "3449e570c856981d95e27e018499f2ae82eb21fd726102bb14f0a2d205683d69",
+      "before_score": 1.0,
+      "observation_cost": 6,
+      "teacher_renders": 0,
+      "outcome": "stop",
+      "after_sha256": "3449e570c856981d95e27e018499f2ae82eb21fd726102bb14f0a2d205683d69",
+      "after_score": 1.0
+    }
+  ],
+  "score_trace": [
+    1.0
+  ],
+  "final_passed": true,
+  "first_success_round": 0,
+  "repair_attempts": 0,
+  "model_calls": 1,
+  "non_improving_rate": null,
+  "exact_state_revisit_rate": null,
+  "best_round": 0,
+  "stop_error_rounds": 0,
+  "observation_cost": 6,
+  "teacher_renders": 0,
+  "total_tokens": 44090,
+  "quality_gain_per_token": 0.0
+}

@@ -68,3 +68,29 @@ schemas are unchanged. The `verify` command uses explicit `action` or `verdict` 
 action execution with the dataset loop. It never interprets forced termination as `Stop()`/pass.
 Budget exhaustion triggers a final verdict call using existing evidence only. See [verifier.md](verifier.md)
 for schema validation, evidence privileges, termination reasons and output layout.
+
+## Dataset Sample v2
+
+`SCHEMA_VERSION=2` adds a default-empty `dataset` mapping to Sample. The reader still accepts v1;
+dataset preparation requires v2 records with validated provenance and quality. ABI/action contracts are unchanged.
+`corruptions` may be empty (clean), single, or a sequence of distinct corruption types (composition order).
+`dataset` contains category, split_group, origin/license, reference image paths/view, reference program source,
+candidate part/joint IDs, available views, configured constraints, trajectory policy and quality qualification.
+Quality records final and isolated label validity; accepted means only that configured constraints support
+the labels. It does not certify all defects or establish that the judge observed the evidence.
+
+Raw shards additionally contain `reference/00.png`. Program sources, checker results and quality metadata are
+privileged. `prepare-dataset` writes separate `*.inputs.jsonl` and `*.gold.jsonl`; only inputs and their image
+paths may be sent to the judge. Export format version is 1, independent of Sample and Verifier versions.
+See [dataset-pipeline.md](dataset-pipeline.md) for split and eligibility rules.
+
+## AssetSpec / Sample v3
+
+`SCHEMA_VERSION=3` adds optional `PartSpec.mesh: MeshSpec`, with indexed vertices/faces and optional
+linear RGB vertex colors. `mesh=None` retains box behavior; an empty mesh denotes a transform-only link.
+`JointSpec.frame_rotation` is a Three.js intrinsic XYZ Euler rotation applied before the variable joint
+motion. Revolute orientation is `R_frame R_axis(q)`; prismatic displacement is `R_frame axis * q`.
+URDF extrinsic xyz angles are converted to this representation without changing the Program ABI.
+The reader accepts earlier specs through field defaults; prepared dataset export accepts Sample v2/v3.
+URDF import retains visual mesh topology and node transforms; textures are sampled to vertex colors,
+not imported as textures. Collision geometry and physical properties are not certified by this path.

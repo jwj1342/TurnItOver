@@ -1,0 +1,1 @@
+{"edits":[{"old":"    const axis = new THREE.Vector3(-0.6672135012315429, 0.7099736397646679, -0.2253077331421528).normalize();","new":"    const axis = new THREE.Vector3(0.0, 1.0, 0.0);"}]}

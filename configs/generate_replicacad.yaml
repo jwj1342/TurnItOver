@@ -1,0 +1,25 @@
+run_id: replicacad_benchmark_v1
+seed: 712
+n_samples: 96
+asset_source: {kind: catalog, manifest: data/assets/replicacad-catalog-v1/catalog.json}
+clean_fraction: 0.25
+max_corruptions: 2
+corruptions: [structure.part_offset, kinematics.joint_axis]
+budget: null
+observation_script:
+  - {type: request_view, view_id: front}
+  - {type: request_view, view_id: oblique_fr}
+  - {type: actuate_joint, joint_id: "*", detent: zero}
+  - {type: request_view, view_id: oblique_fr}
+  - {type: actuate_joint, joint_id: "*", detent: mid}
+  - {type: request_view, view_id: front}
+  - {type: actuate_joint, joint_id: "*", detent: limit}
+  - {type: query_runtime, property: stats}
+  - {type: stop}
+evidence_states: [rest, "joint:*:zero", "joint:*:mid", "joint:*:limit"]
+checkers:
+  geometry.alignment: {tol_chamfer_m: 0.005, tol_iou: 0.9, samples_per_part: 1000}
+  runtime.budget: {max_triangles: 5000, max_draw_calls: 32}
+render: {width: 256, height: 256}
+views: configs/views.yaml
+output_dir: data/runs/${run_id}

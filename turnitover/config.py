@@ -27,6 +27,16 @@ class GenerateConfig:
     budget: int | None = None
     config_path: Path | None = None
     corruption_params: dict[str, dict] = field(default_factory=dict)
+    clean_fraction: float = 0.0
+    max_corruptions: int = 1
+
+    def __post_init__(self):
+        if self.n_samples <= 0 or not 0 <= self.clean_fraction <= 1:
+            raise ValueError("n_samples must be positive and clean_fraction must be in [0, 1]")
+        if self.max_corruptions < 1 or len(set(self.corruptions)) != len(self.corruptions):
+            raise ValueError("max_corruptions must be positive and corruption IDs unique")
+        if self.clean_fraction < 1 and self.max_corruptions > len(self.corruptions):
+            raise ValueError("max_corruptions exceeds the number of configured corruption types")
 
 
 def parse_action(d: dict) -> Action:
@@ -60,11 +70,14 @@ def load_generate_config(path: Path, repo_root: Path | None = None) -> GenerateC
     )
     run_id = str(raw["run_id"])
     output_dir = _resolve(root, str(raw.get("output_dir", "data/runs/${run_id}")).replace("${run_id}", run_id))
+    asset_source = dict(raw.get("asset_source", {"kind": "toy"}))
+    if "manifest" in asset_source:
+        asset_source["manifest"] = str(_resolve(root, asset_source["manifest"]))
     return GenerateConfig(
         run_id=run_id,
         seed=int(raw["seed"]),
         n_samples=int(raw["n_samples"]),
-        asset_source=dict(raw.get("asset_source", {"kind": "toy"})),
+        asset_source=asset_source,
         corruptions=tuple(raw["corruptions"]),
         observation_script=tuple(parse_action(a) for a in raw["observation_script"]),
         evidence_states=tuple(raw.get("evidence_states", ["rest"])),
@@ -75,4 +88,6 @@ def load_generate_config(path: Path, repo_root: Path | None = None) -> GenerateC
         budget=raw.get("budget"),
         config_path=path,
         corruption_params={k: (v or {}) for k, v in raw.get("corruption_params", {}).items()},
+        clean_fraction=float(raw.get("clean_fraction", 0.0)),
+        max_corruptions=int(raw.get("max_corruptions", 1)),
     )

@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "status": "complete",
+  "oracle": "/scratch/jwj/TurnItOver/data/benchmarks/oracle-v1",
+  "oracle_manifest_sha256": "9d28164154ef20443ea8206c3ae647db6224cf06733d0a6f7c2b25175f53da11",
+  "condition": "paired_reference_diagnosis",
+  "limitations": [
+    "Additional matched references are privileged experimental inputs.",
+    "Targets use pixel exposure as a proxy for recognizable evidence.",
+    "No pass targets: finite observations do not establish clean geometry.",
+    "Severity comes from synthetic truth; confidence is uncalibrated."
+  ],
+  "counts": {
+    "train": 192,
+    "test": 48,
+    "validation": 48
+  },
+  "statuses": {
+    "fail": 181,
+    "uncertain": 107
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "status": "complete",
+  "conflicting_observable_prefix_groups": 5,
+  "affected_examples": 36,
+  "conflicts": [
+    {
+      "split": "train",
+      "signature": "7ddf84ba5936bcc66b0f3b730c44f33f93cff77dd5726aab43dcbeac7a0e163d",
+      "examples": [
+        "92fba45b2582c0f9cc34c5ae:action:1",
+        "56074f70350f61d63ecc4c52:action:1",
+        "054a25809c4aa6534b9e3e2a:action:1",
+        "86712590b8294fd9bdd53a0f:action:1",
+        "8e185e59873ded4caa5d2a14:action:1",
+        "b3279a46460f24d2f2cd411f:action:1"
+      ],
+      "targets": {
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"left_slide\", \"detent\": \"mid\"}}": 5,
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"right_slide\", \"detent\": \"zero\"}}": 1
+      }
+    },
+    {
+      "split": "train",
+      "signature": "0ec505acb693653e61bbf9de6618e7628b2863acaf0b1fccd0d2867f403ad66b",
+      "examples": [
+        "eb5cf688131c63945f11ada8:action:1",
+        "5d183f1a71d7439cd9611951:action:1",
+        "1a569db9c92936344eaf9c3c:action:1",
+        "c75a13da062ed78b40b88c7e:action:1",
+        "c5f63fbd49e8329f1957220a:action:1",
+        "4f2db62e82241bd8f0f80654:action:1",
+        "517a9fff8e2bff706758ce81:action:1",
+        "420957dd4a650bc4639fa74b:action:1",
+        "ba1f11e26bf033fbe9c9928b:action:1",
+        "850d9dd38f8593f1fc927050:action:1",
+        "12cd980dbb958eaa17b41a67:action:1"
+      ],
+      "targets": {
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"drawer_midL\", \"detent\": \"mid\"}}": 3,
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"drawer_topR\", \"detent\": \"mid\"}}": 2,
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"drawer_botL\", \"detent\": \"limit\"}}": 1,
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"drawer_topL\", \"detent\": \"mid\"}}": 3,
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"drawer_topR\", \"detent\": \"limit\"}}": 1,
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"drawer_botR\", \"detent\": \"mid\"}}": 1
+      }
+    },
+    {
+      "split": "train",
+      "signature": "64c0c648d6b68508128ea95571aba1205c9c5b91c321f2b4bfee622cb8072858",
+      "examples": [
+        "44f86a9f272e336f958ad3bc:action:1",
+        "fca5f98774bf126cdf3ea13e:action:1",
+        "fec35867256f9ba7c5f7c2aa:action:1",
+        "dbd03687ab5841a2d5a67d30:action:1",
+        "9d5266d401cccba975db77f2:action:1",
+        "c0ef0b828489d828b1fdeb63:action:1"
+      ],
+      "targets": {
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"bottom_door_hinge\", \"detent\": \"mid\"}}": 3,
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"top_door_hinge\", \"detent\": \"mid\"}}": 3
+      }
+    },
+    {
+      "split": "train",
+      "signature": "d199e0a50bc7d02f915520736bf294b1deed354f1a030aa0ebf33c2ba7d6829b",
+      "examples": [
+        "5ee6d434c89c4e8b835fb352:action:1",
+        "872ed01161d14d0211b8f50e:action:1",
+        "9bd7aabef6fb1c50c22fd446:action:1",
+        "49c3b3e062fdde07c4cdf2fd:action:1",
+        "215c3bbc9e46f30e0a40d5ef:action:1",
+        "caf2cbf7cb0f9e84a44e5bfb:action:1",
+        "a730c1e76fa3e3422572a3c6:action:1"
+      ],
+      "targets": {
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"left_slide_top\", \"detent\": \"mid\"}}": 5,
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"middle_slide_bottom\", \"detent\": \"mid\"}}": 1,
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"left_slide_bottom\", \"detent\": \"mid\"}}": 1
+      }
+    },
+    {
+      "split": "validation",
+      "signature": "49839610d2e6cd6f20477ed741c53d0d16a0653358fec1c9edd5d5e65ea8c14b",
+      "examples": [
+        "435a53718927d86abf111462:action:1",
+        "7c00f7010f9c02f794ca7418:action:1",
+        "be67b08309b4901f637a01c3:action:1",
+        "5cbe389e9287fe78195705d6:action:1",
+        "f4eb4a1a87ebae7e60691eeb:action:1",
+        "727c66a14584340d8010d920:action:1"
+      ],
+      "targets": {
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"doorWhole_1L_hinge\", \"detent\": \"zero\"}}": 5,
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"doorWhole_1R_hinge\", \"detent\": \"mid\"}}": 1
+      }
+    }
+  ],
+  "interpretation": "Privileged teacher actions can differ for identical visible prefixes. BC targets are not uniquely inferable from learner inputs; oracle exposure is an upper bound, not achievable-policy evidence."
+}

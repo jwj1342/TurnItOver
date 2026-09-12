@@ -1,0 +1,42 @@
+{
+  "status": "complete",
+  "model": {
+    "role": "generator",
+    "provider": "openrouter",
+    "model": "openai/gpt-5.6-sol",
+    "key_configured": true,
+    "max_tokens": 8192,
+    "timeout": 180.0
+  },
+  "case": "1daf66e74604a17cd98514f0",
+  "condition": "gold_constraints",
+  "response": {
+    "model": "openai/gpt-5.6-sol",
+    "usage": {
+      "prompt_tokens": 44158,
+      "completion_tokens": 2099,
+      "total_tokens": 46257,
+      "cost": 0.1313835,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 44155,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.1313835,
+        "upstream_inference_prompt_cost": 0.1103935,
+        "upstream_inference_completions_cost": 0.02099
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1954,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop",
+    "elapsed_ms": 37538.24196383357
+  },
+  "decision": "edits"
+}
