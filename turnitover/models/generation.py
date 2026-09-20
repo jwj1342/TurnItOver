@@ -61,7 +61,7 @@ def generate_program(prompt: str, images: tuple[Path, ...], output: Path, call: 
         _write_json(output / "result.json", manifest)
         return GenerationResult(program, response.model, response.usage, response.finish_reason, response.elapsed_ms)
     except Exception as exc:
-        manifest.update(status="failed", error_type=type(exc).__name__)
+        manifest.update(status="failed", error_type=type(exc).__name__, error=str(exc))
         _write_json(output / "result.json", manifest)
         raise
 

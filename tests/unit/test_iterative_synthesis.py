@@ -49,7 +49,9 @@ def test_generate_program_records_program_and_rejects_truncation(tmp_path):
         pass
     else:
         raise AssertionError("truncated response was accepted")
-    assert json.loads((tmp_path / "truncated/result.json").read_text())["status"] == "failed"
+    failed = json.loads((tmp_path / "truncated/result.json").read_text())
+    assert failed["status"] == "failed"
+    assert failed.get("error"), "生成失败时应落盘错误详情以便诊断"
 
 
 def test_repair_proposal_reuses_public_feedback_contract(tmp_path):
