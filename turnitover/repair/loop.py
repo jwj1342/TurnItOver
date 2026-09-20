@@ -19,6 +19,18 @@ class Feedback:
     teacher_renders: int = 0
 
 
+@dataclass(frozen=True)
+class RepairProposal:
+    source: str | None
+    outcome: str
+    response: str
+    error: str | None
+    usage: dict
+    model: str
+    finish_reason: str
+    elapsed_ms: float
+
+
 def usage_tokens(usage):
     """Keep provider usage unchanged in logs while counting all reported tokens."""
     for key in ('total_tokens','totalTokenCount'):
@@ -57,6 +69,38 @@ def prepare_request(folder, source, packet, memory, remaining):
     (folder/'prompt.txt').write_text(prompt)
     (folder/'feedback.json').write_text(json.dumps(public,indent=2))
     return prompt,paths
+
+
+def propose_repair(source, generator, packet, output, *, previous_attempts=(), remaining_calls=1):
+    """Ask for and apply one public-feedback repair without consulting a private audit."""
+    if type(remaining_calls) is not int or remaining_calls < 1:
+        raise ValueError('remaining_calls must be a positive integer')
+    output=Path(output)
+    if output.exists() and any(output.iterdir()):
+        raise ValueError('Repair output directory must be new or empty')
+    output.mkdir(parents=True,exist_ok=True)
+    prompt,images=prepare_request(output,source,packet,list(previous_attempts),remaining_calls)
+    response=generator(prompt,images)
+    (output/'response.txt').write_text(response.text)
+    metadata={k:v for k,v in asdict(response).items() if k!='text'}
+    (output/'model.json').write_text(json.dumps(metadata,indent=2))
+    if response.finish_reason not in ('completed','stop','end_turn','STOP'):
+        raise ModelError('Incomplete generator response')
+    try:
+        proposed=apply_response(source,parse_json(response.text))
+    except ValueError as exc:
+        result=RepairProposal(None,'invalid_patch',response.text,str(exc),response.usage,
+                              response.model,response.finish_reason,response.elapsed_ms)
+    else:
+        if proposed is None:
+            result=RepairProposal(None,'stop',response.text,None,response.usage,
+                                  response.model,response.finish_reason,response.elapsed_ms)
+        else:
+            (output/'proposed.ts').write_text(proposed)
+            result=RepairProposal(proposed,'applied',response.text,None,response.usage,
+                                  response.model,response.finish_reason,response.elapsed_ms)
+    (output/'result.json').write_text(json.dumps(asdict(result),indent=2))
+    return result
 
 
 def run_repair(initial, generator, observe, audit, output, max_rounds=3, delta=0., expected_first_request=None):
