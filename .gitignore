@@ -15,6 +15,7 @@ models/*
 .venv/
 .venv-local/
 .venv-qwen/
+.venv-openhands/
 .cache/
 __pycache__/
 *.pyc
