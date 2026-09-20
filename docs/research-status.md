@@ -5,6 +5,8 @@
 建议先读本文，再看[能力诊断](capability-diagnosis.md)和[修复实验](repair-experiment.md)。
 [RP](../RP.md) 是研究设想；本文记录已验证进展与尚未成立的假设，不把规划当作结果。
 
+正式 `turnitover` 包新增原生照片重建迭代入口 `turnitover iterate`，复用 Program ABI、`ObservationSession`、verifier 与 patch protocol：单次生成候选 → 确定性 render gate → 证据驱动的有限轮 verifier 修复，render 失败与视觉修改各有独立预算，只有 evidence-linked 的 verifier pass 才算接受。该路径经单元与浏览器 fixture 验证，但尚未运行真实照片模型实验，不构成新的效果结果。参见[原生照片重建迭代闭环](iterative-synthesis.md)。
+
 ## 已打通的流程
 
 1. 获取有来源记录的 ReplicaCAD 关节资产，转换为可执行 Three.js 程序，并用原始 URDF 独立核对运动。
@@ -100,6 +102,8 @@ python scripts/summarize_repair_experiment.py output/repair-model-new
 
 ## 本次交接检查
 
-本次提交前执行：102 项单元测试通过，1 项可选 torch 依赖测试跳过；12 项实际浏览器测试通过。
-新增回归检查核对全部快照哈希、从逐轨迹记录重算修复汇总，并拒绝汇总与轨迹不一致的结果。
-本地文档链接与 `git diff --check` 通过。此次整理没有新增付费模型调用，也没有重新选择或剔除实验案例。
+本分支提交前执行：107 项非浏览器测试通过，1 项可选 torch 依赖测试跳过。新增用例覆盖 Program ABI
+生成、非空白 render gate、render 与视觉修改的独立预算、以及 final revision 的 fresh verification；
+新增的 render gate 浏览器测试通过。数据引擎 `test_generate_smoke` 的 shard 独立性用例在当前环境失败，
+但该失败在 `origin/main` 同样复现，与本次改动无关。本地文档链接与 `git diff --check` 通过。
+此次工程整合没有新增付费模型调用，也没有重新选择或剔除实验案例。
