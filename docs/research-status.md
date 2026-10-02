@@ -5,6 +5,8 @@
 建议先读本文，再看[能力诊断](capability-diagnosis.md)和[修复实验](repair-experiment.md)。
 [RP](../RP.md) 是研究设想；本文记录已验证进展与尚未成立的假设，不把规划当作结果。
 
+仓库另在 `handoff/img2threejs/` 隔离保存一套待审阅的 Image-to-Three.js prototype。它展示了 HTML 生成、确定性 render gate、主动视觉验证、有限轮修改和 trajectory 回放，但尚未接入 TurnItOver 的 Program ABI、ObservationSession 或正式 repair loop，也不构成新的实验结果。参见 [交接说明](img2threejs-handoff.md)与[闭环实验方案](iterative-synthesis-study.md)。
+
 ## 已打通的流程
 
 1. 获取有来源记录的 ReplicaCAD 关节资产，转换为可执行 Three.js 程序，并用原始 URDF 独立核对运动。

@@ -1,0 +1,5 @@
+-r requirements.txt
+
+# Current OpenHands Agent SDK stack. Python 3.12+ required upstream.
+openhands-sdk==1.47.0
+openhands-tools==1.47.0

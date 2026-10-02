@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>runtime error</title></head>
+<body style="margin:0">
+<canvas id="scene" width="320" height="240" style="width:320px;height:240px"></canvas>
+<script>
+const ctx = document.getElementById('scene').getContext('2d');
+ctx.fillStyle = '#444';
+ctx.fillRect(0, 0, 320, 240);
+throw new Error('intentional runtime failure');
+</script>
+</body>
+</html>

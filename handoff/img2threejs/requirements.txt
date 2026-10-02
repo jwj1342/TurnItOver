@@ -1,0 +1,7 @@
+streamlit>=1.40,<2
+beautifulsoup4>=4.12,<5
+jsbeautifier>=1.15,<2
+playwright>=1.55,<2
+pillow>=12.3.0,<13
+python-dotenv>=1.0,<2
+pytest>=8,<9
