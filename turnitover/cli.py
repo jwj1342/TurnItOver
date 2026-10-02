@@ -88,11 +88,31 @@ def main(argv: list[str] | None = None) -> int:
     v.add_argument("--env-file", type=Path, default=REPO_ROOT / ".env")
     v.add_argument("--local-model", type=Path, help="Qwen3-VL weights directory (CUDA); bypasses API configuration")
 
+    it = sub.add_parser("iterate", help="generate, render-gate, verify, and repair a photo reconstruction")
+    it.add_argument("--reference-image", type=Path, action="append", required=True)
+    it.add_argument("--out", type=Path, required=True)
+    it.add_argument("--initial-program", type=Path, help="skip initial generation and start from this ABI program")
+    it.add_argument("--prompt-file", type=Path, default=REPO_ROOT / "docs/prompts/reconstruct.txt")
+    it.add_argument("--task", default="Verify the articulated object against the reference inputs.")
+    it.add_argument("--policy", choices=("active", "fixed", "random", "runtime"), default="active")
+    it.add_argument("--budget", type=int, default=8)
+    it.add_argument("--seed", type=int, default=0)
+    it.add_argument("--size", type=int, default=384)
+    it.add_argument("--views", type=Path, default=REPO_ROOT / "configs/views.yaml")
+    it.add_argument("--actions", nargs="+", choices=("request_view", "actuate_joint", "query_runtime"),
+                    default=["request_view", "actuate_joint", "query_runtime"])
+    it.add_argument("--max-runtime-repairs", type=int, default=3)
+    it.add_argument("--max-visual-revisions", type=int, default=2)
+    it.add_argument("--blank-stddev-threshold", type=float, default=1.0)
+    it.add_argument("--max-triangles", type=int, default=5000)
+    it.add_argument("--max-draw-calls", type=int, default=32)
+    it.add_argument("--env-file", type=Path, default=REPO_ROOT / ".env")
+
     args = parser.parse_args(argv)
     configure_logging(json_lines=args.log_json, level=args.log_level)
     return {"generate": _generate, "detectability": _detectability, "inspect": _inspect,
             "preview": _preview, "models-check": _models_check, "model-call": _model_call,
-            "reconstruct": _model_call, "verify": _verify, "render-docs": _render_docs,
+            "reconstruct": _model_call, "verify": _verify, "iterate": _iterate, "render-docs": _render_docs,
             "make-splits": _dataset, "prepare-dataset": _dataset, "evaluate-dataset": _evaluate_dataset}[args.cmd](args)
 
 
@@ -134,6 +154,38 @@ def _models_check(args) -> int:
     from turnitover.models.commands import check_models
 
     return check_models(args)
+
+
+def _iterate(args) -> int:
+    from turnitover.core.program import ObjectProgram
+    from turnitover.models.client import complete
+    from turnitover.models.config import model_config, read_environment
+    from turnitover.render.session import RenderConfig
+    from turnitover.render.views import load_views
+    from turnitover.repair.iterative import IterativeConfig, run_iterative
+    from turnitover.verifier.runner import VerifyConfig
+
+    environment = read_environment(args.env_file)
+    generator = model_config("generator", environment)
+    generator.validate()
+    judge = None if args.policy == "runtime" else model_config("judge", environment)
+    if judge:
+        judge.validate()
+    render = RenderConfig(REPO_ROOT / "web/dist", REPO_ROOT / "web/node_modules/.bin/esbuild",
+                          args.size, args.size)
+    verifier = VerifyConfig(budget=args.budget, mode=args.policy, seed=args.seed,
+                            action_types=tuple(args.actions), max_triangles=args.max_triangles,
+                            max_draw_calls=args.max_draw_calls)
+    config = IterativeConfig(args.max_runtime_repairs, args.max_visual_revisions,
+                             args.blank_stddev_threshold, verifier, args.task)
+    result = run_iterative(tuple(args.reference_image), args.out, render, load_views(args.views), config,
+                           lambda prompt, images: complete(generator, prompt, images),
+                           generation_prompt=args.prompt_file.read_text(encoding="utf-8"),
+                           initial_program=ObjectProgram(args.initial_program.read_text(encoding="utf-8"))
+                           if args.initial_program else None,
+                           judge_model=judge)
+    print(f"{result['status']} accepted={result['accepted']}: {args.out.resolve() / 'result.json'}")
+    return 0 if result["accepted"] else 1
 
 
 def _model_call(args) -> int:
