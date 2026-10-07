@@ -3,7 +3,8 @@
 The verifier loads a candidate Three.js program, acquires evidence under a hard action budget, and
 produces a structured verdict with per-defect localization, severity, confidence, evidence references
 and suggested repairs. Reference photographs are optional; the task may instead specify runtime requirements.
-It is an inference/evaluation harness, not a trained model or a complete generation–repair outer loop.
+It is an inference/evaluation harness, not a trained model. The bounded generation–repair inference loop is
+provided separately by [`turnitover iterate`](iterative-synthesis.md).
 
 ## Run
 
@@ -108,7 +109,7 @@ It is not a calibrated oracle or complete physical/kinematic test suite.
 
 See [local smoke-test results](verifier-smoke.md) for actual Qwen trials, including rejected model decisions.
 
-Real-photo evaluation, fine-tuning, instance/state-conditioned oracle trajectories, calibrated uncertainty,
-formal coverage and metrics aggregation, and the generation–repair outer loop remain to be implemented.
+Formal real-photo evaluation, fine-tuning, instance/state-conditioned oracle trajectories, calibrated uncertainty,
+and formal coverage and metrics aggregation remain to be implemented.
 Current schema validation establishes evidence references, not that a model's interpretation of them is true.
 Generated programs still execute in the existing browser harness; this is not a general-purpose hostile-code sandbox.

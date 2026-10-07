@@ -102,8 +102,16 @@ python scripts/summarize_repair_experiment.py output/repair-model-new
 
 ## 本次交接检查
 
-本分支提交前执行：107 项非浏览器测试通过，1 项可选 torch 依赖测试跳过。新增用例覆盖 Program ABI
-生成、非空白 render gate、render 与视觉修改的独立预算、以及 final revision 的 fresh verification；
-新增的 render gate 浏览器测试通过。数据引擎 `test_generate_smoke` 的 shard 独立性用例在当前环境失败，
-但该失败在 `origin/main` 同样复现，与本次改动无关。本地文档链接与 `git diff --check` 通过。
-此次工程整合没有新增付费模型调用，也没有重新选择或剔除实验案例。
+本次提交前执行：102 项单元测试通过，1 项可选 torch 依赖测试跳过；12 项实际浏览器测试通过。
+新增回归检查核对全部快照哈希、从逐轨迹记录重算修复汇总，并拒绝汇总与轨迹不一致的结果。
+本地文档链接与 `git diff --check` 通过。此次整理没有新增付费模型调用，也没有重新选择或剔除实验案例。
+
+## PR #2 原生迭代闭环验证（2026-10-07）
+
+本轮定向执行 `tests/unit/test_iterative_synthesis.py` 和 `tests/browser/test_render_gate.py`，共 11 项通过；
+覆盖 Program ABI 生成、render gate、环境错误、fresh verification，以及视觉修改预算的四类终止路径。
+完整非浏览器测试、完整浏览器测试和真实 gate 主流程集成测试仍待最终执行。
+
+本地真实模型记录可以证明 generation、render gate、verifier 和 visual revision 曾完整执行，但最完整候选
+仍为 `accepted=false`，且对应旧提交、未被 Git 追踪。当前没有可由仓库直接复核的当前版本 E2E 结果，
+因此不将该记录表述为“E2E 已通过”或真实照片效果结果。

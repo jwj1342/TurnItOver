@@ -15,7 +15,7 @@ reference image
       └─ uncertain/error → explicit terminal status
 ```
 
-runtime repair 与 visual revision 使用独立预算。前者只接收编译、加载、截图或近似空白画面的结构化错误；后者只接收 verifier 的公开 verdict、findings 及 findings 实际引用的 observations。私有 audit 不进入该模型可见闭环。每次源码改变后都会创建新的 render gate 和 verifier 目录，因此不会复用旧页面、相机、关节状态或对话。
+runtime repair 与 visual revision 使用独立预算：`max_runtime_repairs` 在每个 visual round 开始时重新计算，`max_visual_revisions` 则在整次运行中全局共享。前者只接收编译、加载、截图或近似空白画面的结构化错误；后者只接收 verifier 的公开 verdict、findings 及 findings 实际引用的 observations。私有 audit 不进入该模型可见闭环。每次源码改变后都会创建新的 render gate 和 verifier 目录，因此不会复用旧页面、相机、关节状态或对话。
 
 ## 运行
 
@@ -71,7 +71,3 @@ final.ts
 ```
 
 `render gate success` 只表示程序可由共享 harness 加载且固定截图不是近似常量图；`accepted` 只表示当前 verifier 在给定输入和预算下选择停止。二者都不是物理正确性、隐藏结构正确性或数据集泛化的证明。
-
-## Viewer
-
-`handoff/img2threejs/app.py` 现在可直接发现 TurnItOver 根目录 `output/` 下带 `kind=iterative_synthesis` 的运行。它读取上述权威 artifact，并将 TypeScript diff、render gate 截图和 verifier evidence 适配到原有只读界面；不会生成另一份 trajectory schema，也不会把 TypeScript 当作独立 HTML 执行。
