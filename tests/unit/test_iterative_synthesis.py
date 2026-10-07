@@ -1,12 +1,13 @@
 import json
 
+import pytest
 from PIL import Image
 
 from turnitover.core.program import ObjectProgram
 from turnitover.models.client import ModelResult
 from turnitover.models.generation import generate_program
 from turnitover.render.gate import RenderGateResult, image_stddev, run_render_gate
-from turnitover.render.session import RenderConfig
+from turnitover.render.session import BrowserTransportError, HarnessError, RenderConfig, _to_harness_error
 from turnitover.render.views import load_views
 from turnitover.repair.iterative import IterativeConfig, run_iterative
 from turnitover.repair.loop import Feedback, RepairProposal, propose_repair
@@ -99,6 +100,42 @@ def test_render_gate_preserves_original_system_error(tmp_path, monkeypatch):
     assert result.message == artifact["message"] == message
     assert artifact["stage"] == "browser_start"
     assert artifact["failure_kind"] == "environment"
+
+
+@pytest.mark.parametrize(("operation", "expected_stage"), [("load", "program_load"), ("request_view", "request_view")])
+def test_render_gate_classifies_unstructured_playwright_failures_as_environment(
+    tmp_path, monkeypatch, operation, expected_stage
+):
+    transport = _to_harness_error("Target page, context or browser has been closed")
+    assert isinstance(transport, BrowserTransportError)
+    assert type(_to_harness_error('{"stage":"validate","message":"joints missing"}')) is HarnessError
+
+    class BrokenSession:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            pass
+
+        def load(self, *args, **kwargs):
+            if operation == "load":
+                raise transport
+
+        def request_view(self, *args):
+            if operation == "request_view":
+                raise transport
+
+    monkeypatch.setattr("turnitover.render.gate.ObservationSession", BrokenSession)
+    result = run_render_gate(ObjectProgram(SOURCE), tmp_path / operation, _render(tmp_path),
+                             _views(__import__("pathlib").Path(__file__).resolve().parents[2]))
+
+    assert not result.success
+    assert result.stage == expected_stage
+    assert result.error_type == "BrowserTransportError"
+    assert result.failure_kind == "environment"
 
 
 def test_iterative_loop_gates_and_fresh_verifies_final_revision(tmp_path):

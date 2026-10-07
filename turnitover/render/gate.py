@@ -12,7 +12,7 @@ from PIL import Image
 from playwright.sync_api import Error as PlaywrightError
 
 from turnitover.core.program import ObjectProgram
-from turnitover.render.session import CompileError, HarnessError, ObservationSession, RenderConfig
+from turnitover.render.session import BrowserTransportError, CompileError, HarnessError, ObservationSession, RenderConfig
 from turnitover.render.views import ViewDef
 
 
@@ -63,6 +63,9 @@ def run_render_gate(program: ObjectProgram, output: Path, render: RenderConfig,
     except CompileError as exc:
         result = RenderGateResult(False, "compile", type(exc).__name__, str(exc),
                                   failure_kind="candidate")
+    except BrowserTransportError as exc:
+        result = RenderGateResult(False, stage, type(exc).__name__, exc.message,
+                                  failure_kind="environment")
     except HarnessError as exc:
         result = RenderGateResult(False, exc.stage or stage, type(exc).__name__, exc.message,
                                   failure_kind="candidate")

@@ -104,7 +104,7 @@
 
 完成条件：环境问题不消耗生成模型修复次数，候选程序问题仍能正常修复。
 
-当前进度（2026-10-07）：`6f663bb` 已增加 `failure_kind`，验证缺失 esbuild 直接以 `environment_error` 终止且不调用 repair。浏览器在 load/request-view 期间的 Playwright 错误仍可能被转换成 candidate `HarnessError`；ABI/load 与空白渲染的分类测试也待补。
+当前进度（2026-10-07）：`6f663bb` 已增加 `failure_kind`，验证缺失 esbuild 直接以 `environment_error` 终止且不调用 repair。未携带 harness 结构化错误的 Playwright load/request-view 失败现在归为 `BrowserTransportError` 与 environment；结构化 ABI/load 错误和空白渲染均归为 candidate 并进入 runtime repair。对应单元与真实 browser 回归测试已通过。
 
 ### 3. 保留 render gate 原始错误
 
@@ -244,7 +244,7 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 
 完成条件：9 月 12 日记录未被改写，本 PR 验证结果独立追加且可由测试输出复核。
 
-当前进度（2026-10-07）：已恢复主分支的 9 月 12 日原文，并另起“PR #2 原生迭代闭环验证”段落；完整非浏览器测试已通过（1 项跳过），完整浏览器测试 14 项通过。
+当前进度（2026-10-07）：已恢复主分支的 9 月 12 日原文，并另起“PR #2 原生迭代闭环验证”段落；完整非浏览器测试已通过（1 项跳过），完整浏览器测试 16 项通过。
 
 ### 9. 处理 PR #1/PR #2 文档冲突
 
@@ -355,7 +355,7 @@ git diff --check
 
 完成条件：完整单元测试、浏览器测试和 `git diff --check` 通过，`research-status` 中的测试数字与实际输出一致。
 
-当前进度（2026-10-07）：完整非浏览器测试已通过（1 项跳过）；完整浏览器测试以项目 Playwright 缓存运行，14 项通过。归档 artifact 保留模型原始文本中的尾随空白，最终 diff whitespace 检查须将该证据目录作为保真例外单独记录，其余代码和文档 diff 必须通过检查。
+当前进度（2026-10-07）：完整非浏览器测试已通过（1 项跳过）；完整浏览器测试以项目 Playwright 缓存运行，16 项通过。归档 artifact 保留模型原始文本中的尾随空白，最终 diff whitespace 检查须将该证据目录作为保真例外单独记录，其余代码和文档 diff 必须通过检查。
 
 ## 最终交付
 
