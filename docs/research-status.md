@@ -110,8 +110,9 @@ python scripts/summarize_repair_experiment.py output/repair-model-new
 
 本轮定向执行 `tests/unit/test_iterative_synthesis.py` 和 `tests/browser/test_render_gate.py`，共 11 项通过；
 覆盖 Program ABI 生成、render gate、环境错误、fresh verification，以及视觉修改预算的四类终止路径。
-完整非浏览器测试、完整浏览器测试和真实 gate 主流程集成测试仍待最终执行。
+新增 browser 集成测试已真实经过 `run_iterative -> render gate -> verifier -> result.json`；完整非浏览器测试和完整浏览器测试仍待最终执行。
 
-本地真实模型记录可以证明 generation、render gate、verifier 和 visual revision 曾完整执行，但最完整候选
-仍为 `accepted=false`，且对应旧提交、未被 Git 追踪。当前没有可由仓库直接复核的当前版本 E2E 结果，
-因此不将该记录表述为“E2E 已通过”或真实照片效果结果。
+本地 `output/smoke-test/pr2-pipeline-no-thinking` 已记录一次 `accepted=true` 的真实模型 E2E：
+generation、render gate 和 active verifier 均完成，verifier 在三步主动观测后返回 `pass`。
+该记录使用受控的 toy cabinet 多视图输入，对应 `410ce57` 且 `dirty=true`，并未被 Git 追踪；
+因此它证明受控 fixture 上的工程 E2E 已落地，但不构成当前 clean commit、单张真实照片重建或泛化效果结果。

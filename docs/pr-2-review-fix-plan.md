@@ -8,7 +8,7 @@
 
 | Reviewer 意见 | 对应计划 | 完成结果 |
 | --- | --- | --- |
-| 真实模型 E2E 声明与仓库记录、artifact 不一致 | 第 4 项 | 已审计：存在真实模型完整失败闭环，但无 accepted、当前版本或已提交的可审计 E2E 结果；PR 声明需降级 |
+| 真实模型 E2E 声明与仓库记录、artifact 不一致 | 第 4 项 | 已审计：受控多视图 fixture 上存在一次 `accepted=true` 的真实模型 E2E；但 artifact 未提交且运行于 dirty 旧提交，声明需限定范围 |
 | 文档声称支持不存在的 Viewer | 第 7 项 | 已删除 Viewer 章节和悬空路径，并补充预算作用域与实现边界 |
 | PR #1 与 PR #2 被描述为可独立合并，但 README 和 research-status 存在冲突 | 第 9 项 | 已准备准确的 PR 正文措辞；两个 PR 无代码依赖，但后合并者需解决文档冲突 |
 | 编译工具缺失等环境问题会错误消耗 runtime repair | 第 2 项 | 主问题已修复（`6f663bb`）；浏览器运行期崩溃分类及 ABI/load、空白渲染测试待补 |
@@ -22,7 +22,7 @@
 | render gate 用固定文案覆盖浏览器/系统原始错误 | 第 3 项 | 已修复（`c7c351a`）；gate artifact、repair feedback 和根 result 均保留原始错误，定向测试通过 |
 | 9 月 12 日 research-status 记录被覆盖 | 第 8 项 | 已恢复历史原文，并将本 PR 当前验证结果另起段落 |
 | 架构文档和仓库约定仍称生成闭环暂不做 | 第 7 项 | 已同步 architecture、verifier 和 CLAUDE；README 原表述无需修改 |
-| 主流程测试完全 mock render gate | 第 6 项 | 增加真实经过 gate 的 browser 集成测试 |
+| 主流程测试完全 mock render gate | 第 6 项 | 已新增真实经过 gate 的 browser 集成测试 |
 | `.gitignore` 新增了无关的 `.venv-openhands/` | 第 11 项 | 已删除该忽略项；本地虚拟环境保持未跟踪且不纳入 PR |
 | 数据引擎测试被称为主分支既有失败，但 reviewer 尚未确认 | 第 12 项 | 在 PR 分支和最新主分支同环境复现并修正文案 |
 | Reviewer 将提交 `repair/loop.py` 的新改动 | 实施前准备、第 10.3 项 | 先同步最新主分支，再完成 repair 去重 |
@@ -159,9 +159,9 @@
 1. 证据完整：提交最小完整 results 快照和 manifest，保留 E2E 声明，并准确写明实际终态，不把“链路跑完”写成“最终通过”。
 2. 证据不完整：删除 PR 正文中的 E2E 已跑通声明，统一改为“单元测试和真实浏览器测试验证了工程链路，未提交可审计的真实模型 E2E 结果”。
 
-当前进度（2026-10-07）：已有本地记录中，`output/iterate-real-active-user2` 的证据链最完整，包含真实 generation、两轮 render gate、verifier model calls、visual revision 和一轮四步主动观测；但其根结果为 `accepted=false`，两轮 verdict 均为 `fail`，最终因视觉修改预算耗尽结束。该记录对应旧提交且未被 Git 追踪；当前 HEAD 也没有 clean、accepted 的 E2E 运行。因此采用第 2 种表述，不把“链路执行过”写成“E2E 已通过”或“真实照片评测完成”。
+当前进度（2026-10-07）：`output/smoke-test/pr2-pipeline-no-thinking` 包含最强证据链：真实 generation、render gate、4 次 judge 调用和三步主动观测，根结果为 `accepted=true`，verifier 返回 `pass`。输入是受控 toy cabinet 多视图拼图，运行记录对应 `410ce57` 且 `dirty=true`，并未被 Git 追踪。因此可以声明“受控 fixture 上的真实模型 E2E 已落地”，但不能扩展为当前 clean commit、单张真实照片或泛化效果结果。
 
-PR 正文改为：“单元测试和真实浏览器测试验证了工程链路；本地真实模型链路曾完整执行，但最终未接受，且未提交可审计的当前版本 E2E artifact，因此不作为效果结果。”
+PR 正文改为：“单元测试和真实浏览器测试验证了工程链路；另有一次受控多视图 fixture 的真实模型 E2E 运行完成 generation、render gate 和 active verification，并以 `accepted=true` 结束。该 artifact 尚未以当前 clean commit 版本化提交，不作为真实照片或泛化效果结果。”
 
 完成条件：PR 正文、仓库文档和版本化 artifact 三者一致，每项真实模型声明都可以直接复核。
 
@@ -204,6 +204,8 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 - 检查 `render.png`、gate `result.json`、program SHA、artifact 路径和根终态。
 
 完成条件：至少一个 browser 测试真实经过 `run_iterative -> render gate -> verifier -> result.json`，且不访问外部模型。
+
+当前进度（2026-10-07）：已新增 `tests/browser/test_iterative_synthesis.py`。测试使用真实 esbuild、Playwright、render gate 和 verifier，仅以本地确定性 generator/judge fixture 代替外部模型；与既有 render gate 测试一起在真实 Chromium 环境通过。
 
 ### 7. 修正文档与实现不一致
 
