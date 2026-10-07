@@ -8,23 +8,23 @@
 
 | Reviewer 意见 | 对应计划 | 完成结果 |
 | --- | --- | --- |
-| 真实模型 E2E 声明与仓库记录、artifact 不一致 | 第 4 项 | 已审计：受控多视图 fixture 上存在一次 `accepted=true` 的真实模型 E2E；但 artifact 未提交且运行于 dirty 旧提交，声明需限定范围 |
+| 真实模型 E2E 声明与仓库记录、artifact 不一致 | 第 4 项 | 已审计：受控多视图 fixture 上存在一次 `accepted=true` 的真实模型 E2E，证据快照已归档；运行仍对应 dirty 旧提交，声明需限定范围 |
 | 文档声称支持不存在的 Viewer | 第 7 项 | 已删除 Viewer 章节和悬空路径，并补充预算作用域与实现边界 |
 | PR #1 与 PR #2 被描述为可独立合并，但 README 和 research-status 存在冲突 | 第 9 项 | 已准备准确的 PR 正文措辞；两个 PR 无代码依赖，但后合并者需解决文档冲突 |
 | 编译工具缺失等环境问题会错误消耗 runtime repair | 第 2 项 | 主问题已修复（`6f663bb`）；浏览器运行期崩溃分类及 ABI/load、空白渲染测试待补 |
 | visual revision 正常耗尽时被记录成 invalid patch | 第 1 项 | 已完成：根终止原因为 `revision_limit`，四类计划内边界测试均已覆盖 |
 | invalid patch 后重复 render 相同源码 | 第 5 项 | 源码 SHA 未变化时跳过 gate |
 | runtime repair 与 visual revision 的预算作用域未说明 | 第 7 项 | 已明确前者每轮重置、后者全局共享 |
-| 新增了三份重复 JSON writer | 第 10.1 项 | 统一公共原子 JSON writer |
-| 正常 finish reason 取值散落在五处 | 第 10.2 项 | 统一公共集合或判断函数 |
-| `propose_repair` 与 `run_repair` 存在重复逻辑 | 第 10.3 项 | 让 `run_repair` 复用公共 proposal 流程 |
-| iterate 与 verify 重复声明十个 CLI 参数 | 第 10.4 项 | 提取共用 argparse 参数注册函数 |
+| 新增了三份重复 JSON writer | 第 10.1 项 | 待统一为公共原子 JSON writer |
+| 正常 finish reason 取值散落在五处 | 第 10.2 项 | 待统一为公共集合或判断函数 |
+| `propose_repair` 与 `run_repair` 存在重复逻辑 | 第 10.3 项 | 待让 `run_repair` 复用公共 proposal 流程 |
+| iterate 与 verify 重复声明十个 CLI 参数 | 第 10.4 项 | 待提取共用 argparse 参数注册函数 |
 | render gate 用固定文案覆盖浏览器/系统原始错误 | 第 3 项 | 已修复（`c7c351a`）；gate artifact、repair feedback 和根 result 均保留原始错误，定向测试通过 |
 | 9 月 12 日 research-status 记录被覆盖 | 第 8 项 | 已恢复历史原文，并将本 PR 当前验证结果另起段落 |
 | 架构文档和仓库约定仍称生成闭环暂不做 | 第 7 项 | 已同步 architecture、verifier 和 CLAUDE；README 原表述无需修改 |
 | 主流程测试完全 mock render gate | 第 6 项 | 已新增真实经过 gate 的 browser 集成测试 |
 | `.gitignore` 新增了无关的 `.venv-openhands/` | 第 11 项 | 已删除该忽略项；本地虚拟环境保持未跟踪且不纳入 PR |
-| 数据引擎测试被称为主分支既有失败，但 reviewer 尚未确认 | 第 12 项 | 在 PR 分支和最新主分支同环境复现并修正文案 |
+| 数据引擎测试被称为主分支既有失败，但 reviewer 尚未确认 | 第 12 项 | 待在 PR 分支和最新主分支同环境复现；PR 正文不预先归因 |
 | Reviewer 将提交 `repair/loop.py` 的新改动 | 实施前准备、第 10.3 项 | 先同步最新主分支，再完成 repair 去重 |
 
 ## 实施顺序
@@ -159,9 +159,9 @@
 1. 证据完整：提交最小完整 results 快照和 manifest，保留 E2E 声明，并准确写明实际终态，不把“链路跑完”写成“最终通过”。
 2. 证据不完整：删除 PR 正文中的 E2E 已跑通声明，统一改为“单元测试和真实浏览器测试验证了工程链路，未提交可审计的真实模型 E2E 结果”。
 
-当前进度（2026-10-07）：`output/smoke-test/pr2-pipeline-no-thinking` 包含最强证据链：真实 generation、render gate、4 次 judge 调用和三步主动观测，根结果为 `accepted=true`，verifier 返回 `pass`。输入是受控 toy cabinet 多视图拼图，运行记录对应 `410ce57` 且 `dirty=true`，并未被 Git 追踪。因此可以声明“受控 fixture 上的真实模型 E2E 已落地”，但不能扩展为当前 clean commit、单张真实照片或泛化效果结果。
+当前进度（2026-10-07）：`output/smoke-test/pr2-pipeline-no-thinking` 包含最强证据链：真实 generation、render gate、4 次 judge 调用和三步主动观测，根结果为 `accepted=true`，verifier 返回 `pass`。输入是受控 toy cabinet 多视图拼图，运行记录对应 `410ce57` 且 `dirty=true`；证据快照已归档到仓库。因此可以声明“受控 fixture 上的真实模型 E2E 已落地”，但不能扩展为当前 clean commit、单张真实照片或泛化效果结果。
 
-PR 正文改为：“单元测试和真实浏览器测试验证了工程链路；另有一次受控多视图 fixture 的真实模型 E2E 运行完成 generation、render gate 和 active verification，并以 `accepted=true` 结束。该 artifact 尚未以当前 clean commit 版本化提交，不作为真实照片或泛化效果结果。”
+PR 正文改为：“单元测试和真实浏览器测试验证了工程链路；另有一次受控多视图 fixture 的真实模型 E2E 运行完成 generation、render gate 和 active verification，并以 `accepted=true` 结束。该 artifact 已版本化归档，但运行本身对应 dirty 的旧提交；不作为真实照片或泛化效果结果。”
 
 完成条件：PR 正文、仓库文档和版本化 artifact 三者一致，每项真实模型声明都可以直接复核。
 
@@ -244,7 +244,7 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 
 完成条件：9 月 12 日记录未被改写，本 PR 验证结果独立追加且可由测试输出复核。
 
-当前进度（2026-10-07）：已恢复主分支的 9 月 12 日原文，并另起“PR #2 原生迭代闭环验证”段落；其中只记录当前已执行的 11 项定向测试，完整测试数字待最终验证后补充。
+当前进度（2026-10-07）：已恢复主分支的 9 月 12 日原文，并另起“PR #2 原生迭代闭环验证”段落；完整非浏览器测试已通过（1 项跳过），完整浏览器测试 14 项通过。
 
 ### 9. 处理 PR #1/PR #2 文档冲突
 
@@ -307,11 +307,11 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 修改方案：
 
 - 删除本 PR 新增的 `.venv-openhands/` 忽略项。
-- 检查最终 diff，排除 handoff Viewer、本地 output、虚拟环境、缓存、日志和其他无关文件。
+- 检查最终 diff，排除 handoff Viewer、虚拟环境、缓存、日志和其他无关文件；仅保留已归档的 `output/smoke-test/pr2-pipeline-no-thinking/` 作为可审计 E2E 证据。
 
 完成条件：PR 不再包含 `.venv-openhands/` 改动及其他无关文件。
 
-当前进度（2026-10-07）：已删除 `.venv-openhands/` 忽略项；本地虚拟环境目录不暂存、不提交，最终 diff 仍需在全部修改完成后复核。
+当前进度（2026-10-07）：已删除 `.venv-openhands/` 忽略项；本地虚拟环境目录不暂存、不提交。`output/smoke-test/pr2-pipeline-no-thinking/` 是有意归档的 E2E 证据，最终 diff 仍需在全部修改完成后复核。
 
 ### 12. 核实数据引擎测试失败
 
@@ -334,7 +334,7 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 python -m pytest tests/unit/test_iterative_synthesis.py tests/unit/test_repair.py
 
 # 完整非浏览器测试
-python -m pytest
+.venv-local/bin/python -m pytest -m 'not browser' -q
 
 # 完整浏览器测试
 .venv-local/bin/python -m pytest -m browser -q
@@ -354,6 +354,8 @@ git diff --check
 - 最终 diff 只包含 review 要求的修改。
 
 完成条件：完整单元测试、浏览器测试和 `git diff --check` 通过，`research-status` 中的测试数字与实际输出一致。
+
+当前进度（2026-10-07）：完整非浏览器测试已通过（1 项跳过）；完整浏览器测试以项目 Playwright 缓存运行，14 项通过。归档 artifact 保留模型原始文本中的尾随空白，最终 diff whitespace 检查须将该证据目录作为保真例外单独记录，其余代码和文档 diff 必须通过检查。
 
 ## 最终交付
 

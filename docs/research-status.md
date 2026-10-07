@@ -110,7 +110,7 @@ python scripts/summarize_repair_experiment.py output/repair-model-new
 
 本轮定向执行 `tests/unit/test_iterative_synthesis.py` 和 `tests/browser/test_render_gate.py`，共 11 项通过；
 覆盖 Program ABI 生成、render gate、环境错误、fresh verification，以及视觉修改预算的四类终止路径。
-新增 browser 集成测试已真实经过 `run_iterative -> render gate -> verifier -> result.json`；完整非浏览器测试和完整浏览器测试仍待最终执行。
+新增 browser 集成测试已真实经过 `run_iterative -> render gate -> verifier -> result.json`；完整非浏览器测试已通过（1 项跳过），完整浏览器测试 14 项通过。
 
 本地 `output/smoke-test/pr2-pipeline-no-thinking` 已记录一次 `accepted=true` 的真实模型 E2E：
 generation、render gate 和 active verifier 均完成，verifier 在三步主动观测后返回 `pass`。
