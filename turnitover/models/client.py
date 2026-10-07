@@ -33,6 +33,13 @@ class ModelResult:
     elapsed_ms: float
 
 
+NORMAL_FINISH_REASONS = frozenset({"completed", "end_turn", "STOP", "stop"})
+
+
+def is_normal_finish_reason(reason: str) -> bool:
+    return reason in NORMAL_FINISH_REASONS
+
+
 def image_part(path: Path) -> tuple[str, str]:
     with Image.open(path) as image:
         mime = Image.MIME.get(image.format)

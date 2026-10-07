@@ -5,7 +5,7 @@ from urllib.error import HTTPError
 import pytest
 from PIL import Image
 
-from turnitover.models.client import ModelError, complete, parse_response, request_payload
+from turnitover.models.client import ModelError, complete, is_normal_finish_reason, parse_response, request_payload
 from turnitover.models.commands import extract_program
 from turnitover.models.config import ModelConfig, model_config, read_environment
 
@@ -81,6 +81,12 @@ def test_qwen37_plus_disables_thinking_without_changing_other_compatible_models(
 ])
 def test_response_text_excludes_reasoning(provider, response):
     assert parse_response(provider, response, 1).text == "ok"
+
+
+@pytest.mark.parametrize("reason", ("completed", "end_turn", "STOP", "stop"))
+def test_normal_finish_reasons_are_shared(reason):
+    assert is_normal_finish_reason(reason)
+    assert not is_normal_finish_reason("length")
 
 
 def test_http_error_redacts_body_and_url(monkeypatch):

@@ -12,6 +12,24 @@ from turnitover.telemetry import configure_logging
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
+def _add_verification_arguments(parser: argparse.ArgumentParser, *, reference_required: bool) -> None:
+    reference_defaults = {} if reference_required else {"default": []}
+    parser.add_argument("--reference-image", type=Path, action="append", required=reference_required,
+                        **reference_defaults)
+    parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--task", default="Verify the articulated object against the reference inputs.")
+    parser.add_argument("--policy", choices=("active", "fixed", "random", "runtime"), default="active")
+    parser.add_argument("--budget", type=int, default=8)
+    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--size", type=int, default=384)
+    parser.add_argument("--views", type=Path, default=REPO_ROOT / "configs/views.yaml")
+    parser.add_argument("--actions", nargs="+", choices=("request_view", "actuate_joint", "query_runtime"),
+                        default=["request_view", "actuate_joint", "query_runtime"])
+    parser.add_argument("--max-triangles", type=int, default=5000)
+    parser.add_argument("--max-draw-calls", type=int, default=32)
+    parser.add_argument("--env-file", type=Path, default=REPO_ROOT / ".env")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="turnitover")
     parser.add_argument("--log-json", action="store_true")
@@ -72,41 +90,17 @@ def main(argv: list[str] | None = None) -> int:
 
     v = sub.add_parser("verify", help="budgeted verifier with evidence-linked verdict and offline report")
     v.add_argument("--program", type=Path, required=True)
-    v.add_argument("--out", type=Path, required=True)
-    v.add_argument("--reference-image", type=Path, action="append", default=[])
+    _add_verification_arguments(v, reference_required=False)
     v.add_argument("--reference-program", type=Path, help="optional privileged gold audit; never sent to judge")
-    v.add_argument("--task", default="Verify the articulated object against the reference inputs.")
-    v.add_argument("--policy", choices=("active", "fixed", "random", "runtime"), default="active")
-    v.add_argument("--budget", type=int, default=8)
-    v.add_argument("--seed", type=int, default=0)
-    v.add_argument("--size", type=int, default=384)
-    v.add_argument("--views", type=Path, default=REPO_ROOT / "configs/views.yaml")
-    v.add_argument("--actions", nargs="+", choices=("request_view", "actuate_joint", "query_runtime"),
-                   default=["request_view", "actuate_joint", "query_runtime"])
-    v.add_argument("--max-triangles", type=int, default=5000)
-    v.add_argument("--max-draw-calls", type=int, default=32)
-    v.add_argument("--env-file", type=Path, default=REPO_ROOT / ".env")
     v.add_argument("--local-model", type=Path, help="Qwen3-VL weights directory (CUDA); bypasses API configuration")
 
     it = sub.add_parser("iterate", help="generate, render-gate, verify, and repair a photo reconstruction")
-    it.add_argument("--reference-image", type=Path, action="append", required=True)
-    it.add_argument("--out", type=Path, required=True)
+    _add_verification_arguments(it, reference_required=True)
     it.add_argument("--initial-program", type=Path, help="skip initial generation and start from this ABI program")
     it.add_argument("--prompt-file", type=Path, default=REPO_ROOT / "docs/prompts/reconstruct.txt")
-    it.add_argument("--task", default="Verify the articulated object against the reference inputs.")
-    it.add_argument("--policy", choices=("active", "fixed", "random", "runtime"), default="active")
-    it.add_argument("--budget", type=int, default=8)
-    it.add_argument("--seed", type=int, default=0)
-    it.add_argument("--size", type=int, default=384)
-    it.add_argument("--views", type=Path, default=REPO_ROOT / "configs/views.yaml")
-    it.add_argument("--actions", nargs="+", choices=("request_view", "actuate_joint", "query_runtime"),
-                    default=["request_view", "actuate_joint", "query_runtime"])
     it.add_argument("--max-runtime-repairs", type=int, default=3)
     it.add_argument("--max-visual-revisions", type=int, default=2)
     it.add_argument("--blank-stddev-threshold", type=float, default=1.0)
-    it.add_argument("--max-triangles", type=int, default=5000)
-    it.add_argument("--max-draw-calls", type=int, default=32)
-    it.add_argument("--env-file", type=Path, default=REPO_ROOT / ".env")
 
     args = parser.parse_args(argv)
     configure_logging(json_lines=args.log_json, level=args.log_level)

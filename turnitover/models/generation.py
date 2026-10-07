@@ -3,20 +3,17 @@ from __future__ import annotations
 
 import dataclasses
 import hashlib
-import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
 from turnitover.core.program import ObjectProgram
-from turnitover.models.client import ModelError, ModelResult, image_part
+from turnitover.core.jsonio import write_json_atomic
+from turnitover.models.client import ModelError, ModelResult, image_part, is_normal_finish_reason
 from turnitover.models.commands import extract_program
 
 
 ModelCall = Callable[[str, list[Path]], ModelResult]
-NORMAL_FINISH_REASONS = {"completed", "end_turn", "STOP", "stop"}
-
-
 @dataclass(frozen=True)
 class GenerationResult:
     program: ObjectProgram
@@ -47,26 +44,20 @@ def generate_program(prompt: str, images: tuple[Path, ...], output: Path, call: 
         image_records.append({"path": target.name, "sha256": hashlib.sha256(content).hexdigest()})
     manifest = {"version": 1, "status": "running", "images": image_records,
                 "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest()}
-    _write_json(output / "result.json", manifest)
+    write_json_atomic(output / "result.json", manifest)
     try:
         response = call(prompt, copied)
         (output / "response.txt").write_text(response.text, encoding="utf-8")
         public = {key: value for key, value in dataclasses.asdict(response).items() if key != "text"}
-        _write_json(output / "model.json", public)
-        if response.finish_reason not in NORMAL_FINISH_REASONS:
+        write_json_atomic(output / "model.json", public)
+        if not is_normal_finish_reason(response.finish_reason):
             raise ModelError("Incomplete generator response")
         program = ObjectProgram(extract_program(response.text))
         (output / "program.ts").write_text(program.source, encoding="utf-8")
         manifest.update(status="complete", program_sha=program.sha, model=public)
-        _write_json(output / "result.json", manifest)
+        write_json_atomic(output / "result.json", manifest)
         return GenerationResult(program, response.model, response.usage, response.finish_reason, response.elapsed_ms)
     except Exception as exc:
         manifest.update(status="failed", error_type=type(exc).__name__, error=str(exc))
-        _write_json(output / "result.json", manifest)
+        write_json_atomic(output / "result.json", manifest)
         raise
-
-
-def _write_json(path: Path, value: dict) -> None:
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False), encoding="utf-8")
-    temporary.replace(path)

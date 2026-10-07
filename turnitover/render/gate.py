@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import dataclasses
 import io
-import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -12,6 +11,7 @@ from PIL import Image
 from playwright.sync_api import Error as PlaywrightError
 
 from turnitover.core.program import ObjectProgram
+from turnitover.core.jsonio import write_json_atomic
 from turnitover.render.session import BrowserTransportError, CompileError, HarnessError, ObservationSession, RenderConfig
 from turnitover.render.views import ViewDef
 
@@ -72,11 +72,5 @@ def run_render_gate(program: ObjectProgram, output: Path, render: RenderConfig,
     except (PlaywrightError, OSError) as exc:
         result = RenderGateResult(False, stage, type(exc).__name__, str(exc),
                                   failure_kind="environment")
-    _write_json(output / "result.json", dataclasses.asdict(result))
+    write_json_atomic(output / "result.json", dataclasses.asdict(result))
     return result
-
-
-def _write_json(path: Path, value: dict) -> None:
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False), encoding="utf-8")
-    temporary.replace(path)

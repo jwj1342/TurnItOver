@@ -3,13 +3,13 @@ from __future__ import annotations
 
 import dataclasses
 import hashlib
-import json
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
 from turnitover.core.program import ObjectProgram
+from turnitover.core.jsonio import write_json_atomic
 from turnitover.models.client import ModelResult, image_part
 from turnitover.models.generation import generate_program
 from turnitover.render.gate import RenderGateResult, run_render_gate
@@ -87,7 +87,7 @@ def run_iterative(
         "model_calls": {"generation": 0, "runtime_repair": 0, "visual_revision": 0, "judge": 0},
         "total_tokens": 0,
     }
-    _write_json(output / "result.json", report)
+    write_json_atomic(output / "result.json", report)
     try:
         if initial_program is None:
             generated = generate_program(generation_prompt or "", copied_references, output / "generation", generator_call)
@@ -110,7 +110,7 @@ def run_iterative(
         round_record = {"round": round_index, "program_sha": program.sha, "render_attempts": [],
                         "verifier": None, "visual_revisions": []}
         report["rounds"].append(round_record)
-        _write_json(output / "result.json", report)
+        write_json_atomic(output / "result.json", report)
 
         runtime_memory: list[dict] = []
         gate_result: RenderGateResult | None = None
@@ -123,7 +123,7 @@ def run_iterative(
             gate_record.update(attempt=gate_index, program_sha=program.sha,
                                artifact=str(gate_dir.relative_to(output) / "result.json"))
             round_record["render_attempts"].append(gate_record)
-            _write_json(output / "result.json", report)
+            write_json_atomic(output / "result.json", report)
             if gate_result.success:
                 round_record["program_sha"] = program.sha
                 break
@@ -173,7 +173,7 @@ def run_iterative(
             "spent": verification.get("spent"),
             "artifact": str(verifier_dir.relative_to(output) / "result.json"),
         }
-        _write_json(output / "result.json", report)
+        write_json_atomic(output / "result.json", report)
         if verification.get("status") != "complete":
             return _finish(output, report, "verification_error", final_program=program,
                            termination=verification.get("termination"))
@@ -206,7 +206,7 @@ def run_iterative(
                 "artifact": str(repair_dir.relative_to(output) / "result.json"),
             })
             visual_memory.append(_proposal_memory(proposal, attempt_index))
-            _write_json(output / "result.json", report)
+            write_json_atomic(output / "result.json", report)
             if proposal.outcome == "stop":
                 return _finish(output, report, "max_visual_revisions", final_program=program,
                                termination="generator_stop")
@@ -280,12 +280,5 @@ def _finish(output: Path, report: dict, status: str, *, accepted: bool = False,
     if final_program is not None:
         (output / "final.ts").write_text(final_program.source, encoding="utf-8")
         report["final_program"] = {"path": "final.ts", "sha": final_program.sha}
-    _write_json(output / "result.json", report)
+    write_json_atomic(output / "result.json", report)
     return report
-
-
-def _write_json(path: Path, value: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False), encoding="utf-8")
-    temporary.replace(path)

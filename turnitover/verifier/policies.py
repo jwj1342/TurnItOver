@@ -11,7 +11,7 @@ import numpy as np
 
 from turnitover.core.actions import Observation, QueryRuntime, RuntimeProperty
 from turnitover.core.serde import to_dict
-from turnitover.models.client import ModelError, ModelResult
+from turnitover.models.client import ModelError, ModelResult, is_normal_finish_reason
 from turnitover.taxonomy import load_taxonomy
 from turnitover.verifier.contracts import Context, parse_json
 
@@ -76,7 +76,7 @@ class VisionPolicy:
             response = self.call(prompt, images)
             (call_dir / "response.txt").write_text(response.text)
             record.update({k: v for k, v in dataclasses.asdict(response).items() if k != "text"})
-            if response.finish_reason not in {"completed", "end_turn", "STOP", "stop"}:
+            if not is_normal_finish_reason(response.finish_reason):
                 raise ModelError("Judge response is incomplete")
             parsed = parse_json(response.text)
             if self.mode != "active" and "verdict" not in parsed:
