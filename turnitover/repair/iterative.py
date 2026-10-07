@@ -129,7 +129,9 @@ def run_iterative(
                 break
             if gate_result.failure_kind == "environment":
                 return _finish(output, report, "render_failed", final_program=program,
-                               termination="environment_error", error_type=gate_result.error_type)
+                               termination="environment_error", error_type=gate_result.error_type,
+                               message=gate_result.message, stage=gate_result.stage,
+                               failure_kind=gate_result.failure_kind)
             if runtime_calls >= cfg.max_runtime_repairs:
                 return _finish(output, report, "render_failed", final_program=program)
             packet = _render_feedback(cfg.task, copied_references, gate_result, gate_dir)

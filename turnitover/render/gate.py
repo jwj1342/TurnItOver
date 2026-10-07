@@ -67,8 +67,7 @@ def run_render_gate(program: ObjectProgram, output: Path, render: RenderConfig,
         result = RenderGateResult(False, exc.stage or stage, type(exc).__name__, exc.message,
                                   failure_kind="candidate")
     except (PlaywrightError, OSError) as exc:
-        result = RenderGateResult(False, stage, type(exc).__name__,
-                                  "Browser environment could not complete the render gate.",
+        result = RenderGateResult(False, stage, type(exc).__name__, str(exc),
                                   failure_kind="environment")
     _write_json(output / "result.json", dataclasses.asdict(result))
     return result

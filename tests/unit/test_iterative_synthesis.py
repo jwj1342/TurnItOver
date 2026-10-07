@@ -5,7 +5,7 @@ from PIL import Image
 from turnitover.core.program import ObjectProgram
 from turnitover.models.client import ModelResult
 from turnitover.models.generation import generate_program
-from turnitover.render.gate import RenderGateResult, image_stddev
+from turnitover.render.gate import RenderGateResult, image_stddev, run_render_gate
 from turnitover.render.session import RenderConfig
 from turnitover.render.views import load_views
 from turnitover.repair.iterative import IterativeConfig, run_iterative
@@ -74,6 +74,31 @@ def test_image_stddev_distinguishes_constant_and_varied_images():
     varied.save(varied_bytes, format="PNG")
     assert image_stddev(constant.getvalue()) == 0
     assert image_stddev(varied_bytes.getvalue()) > 1
+
+
+def test_render_gate_preserves_original_system_error(tmp_path, monkeypatch):
+    message = "unique browser startup failure"
+
+    class BrokenSession:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def __enter__(self):
+            raise OSError(message)
+
+        def __exit__(self, *args):
+            pass
+
+    monkeypatch.setattr("turnitover.render.gate.ObservationSession", BrokenSession)
+    gate_dir = tmp_path / "gate"
+    result = run_render_gate(ObjectProgram(SOURCE), gate_dir, _render(tmp_path),
+                             _views(__import__("pathlib").Path(__file__).resolve().parents[2]))
+    artifact = json.loads((gate_dir / "result.json").read_text())
+
+    assert result.error_type == artifact["error_type"] == "OSError"
+    assert result.message == artifact["message"] == message
+    assert artifact["stage"] == "browser_start"
+    assert artifact["failure_kind"] == "environment"
 
 
 def test_iterative_loop_gates_and_fresh_verifies_final_revision(tmp_path):
@@ -173,12 +198,21 @@ def test_render_failure_has_independent_bounded_repair_budget(tmp_path):
     def gate(program, output, *args):
         output.mkdir(parents=True)
         calls["gate"] += 1
-        return RenderGateResult(False, "compile", "CompileError", "bad program",
+        return RenderGateResult(False, "compile", "CompileError", "unique candidate error",
                                 failure_kind="candidate")
 
     def repair(source, generator, packet, output, **kwargs):
         output.mkdir(parents=True)
         calls["repair"] += 1
+        assert packet.public["render_gate"] == {
+            "success": False,
+            "stage": "compile",
+            "error_type": "CompileError",
+            "message": "unique candidate error",
+            "image_ref": None,
+            "image_stddev": None,
+            "failure_kind": "candidate",
+        }
         return RepairProposal(None, "invalid_patch", "bad", "invalid", {}, "fixture", "completed", 1.0)
 
     cfg = IterativeConfig(max_runtime_repairs=2, max_visual_revisions=9,
@@ -200,7 +234,7 @@ def test_environment_render_failure_does_not_consume_runtime_repair_budget(tmp_p
     def gate(program, output, *args):
         output.mkdir(parents=True)
         calls["gate"] += 1
-        return RenderGateResult(False, "program_load", "FileNotFoundError", "missing esbuild",
+        return RenderGateResult(False, "program_load", "FileNotFoundError", "unique missing esbuild",
                                 failure_kind="environment")
 
     def repair(*args, **kwargs):
@@ -220,3 +254,11 @@ def test_environment_render_failure_does_not_consume_runtime_repair_budget(tmp_p
     assert result["model_calls"]["runtime_repair"] == 0
     assert calls == {"gate": 1, "repair": 0}
     assert result["rounds"][0]["render_attempts"][0]["failure_kind"] == "environment"
+    assert {key: result[key] for key in ("error_type", "message", "stage", "failure_kind")} == {
+        "error_type": "FileNotFoundError",
+        "message": "unique missing esbuild",
+        "stage": "program_load",
+        "failure_kind": "environment",
+    }
+    artifact = json.loads((tmp_path / "run/result.json").read_text())
+    assert artifact["message"] == "unique missing esbuild"
