@@ -114,5 +114,5 @@ python scripts/summarize_repair_experiment.py output/repair-model-new
 
 本地 `output/smoke-test/pr2-pipeline-no-thinking` 已记录一次 `accepted=true` 的真实模型 E2E：
 generation、render gate 和 active verifier 均完成，verifier 在三步主动观测后返回 `pass`。
-该记录使用受控的 toy cabinet 多视图输入，对应 `410ce57` 且 `dirty=true`，并未被 Git 追踪；
+该记录使用受控的 toy cabinet 多视图输入，对应 `410ce57` 且 `dirty=true`，证据快照已纳入 Git；
 因此它证明受控 fixture 上的工程 E2E 已落地，但不构成当前 clean commit、单张真实照片重建或泛化效果结果。
