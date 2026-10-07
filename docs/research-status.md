@@ -112,6 +112,7 @@ python scripts/summarize_repair_experiment.py output/repair-model-new
 覆盖 Program ABI 生成、render gate、环境错误、fresh verification，以及视觉修改预算的四类终止路径。
 新增 browser 集成测试已真实经过 `run_iterative -> render gate -> verifier -> result.json`；完整非浏览器测试已通过（1 项跳过），完整浏览器测试 16 项通过。
 补充的错误分类回归覆盖 Playwright load/request-view 传输失败、Program ABI/load 失败和空白渲染：前者直接作为 environment 终止，后两者作为 candidate 进入 runtime repair。
+`eb64cf3` 统一了原子 JSON writer、模型正常结束判断、repair 响应解析和 verify/iterate 共同 CLI 参数；原有 artifact 路径、repair audit/评分边界和命令专属参数保持不变。
 数据引擎 shard 可复现性用例 `test_catalog_clean_and_mixed_are_shard_independent`（覆盖 `turnitover/engine/generate.py`）在已构建 `web/dist` 与 Chromium 就绪的环境连续运行 3 次通过；它不覆盖本 PR 的 `iterate` 路径。此前本机失败未完成可复现根因定位，故不作主分支或数据引擎逻辑失败归因。
 
 本地 `output/smoke-test/pr2-pipeline-no-thinking` 已记录一次 `accepted=true` 的真实模型 E2E：

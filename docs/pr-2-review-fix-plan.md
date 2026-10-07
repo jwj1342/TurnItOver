@@ -15,10 +15,10 @@
 | visual revision 正常耗尽时被记录成 invalid patch | 第 1 项 | 已完成：根终止原因为 `revision_limit`，四类计划内边界测试均已覆盖 |
 | invalid patch 后重复 render 相同源码 | 第 5 项 | 源码 SHA 未变化时跳过 gate |
 | runtime repair 与 visual revision 的预算作用域未说明 | 第 7 项 | 已明确前者每轮重置、后者全局共享 |
-| 新增了三份重复 JSON writer | 第 10.1 项 | 待统一为公共原子 JSON writer |
-| 正常 finish reason 取值散落在五处 | 第 10.2 项 | 待统一为公共集合或判断函数 |
-| `propose_repair` 与 `run_repair` 存在重复逻辑 | 第 10.3 项 | 待让 `run_repair` 复用公共 proposal 流程 |
-| iterate 与 verify 重复声明十个 CLI 参数 | 第 10.4 项 | 待提取共用 argparse 参数注册函数 |
+| 新增了三份重复 JSON writer | 第 10.1 项 | 已统一为公共原子 JSON writer |
+| 正常 finish reason 取值散落在五处 | 第 10.2 项 | 已统一为公共判断函数 |
+| `propose_repair` 与 `run_repair` 存在重复逻辑 | 第 10.3 项 | 已复用公共响应解析 helper，保留 audit 分支 |
+| iterate 与 verify 重复声明十个 CLI 参数 | 第 10.4 项 | 已提取共用 argparse 参数注册函数 |
 | render gate 用固定文案覆盖浏览器/系统原始错误 | 第 3 项 | 已修复（`c7c351a`）；gate artifact、repair feedback 和根 result 均保留原始错误，定向测试通过 |
 | 9 月 12 日 research-status 记录被覆盖 | 第 8 项 | 已恢复历史原文，并将本 PR 当前验证结果另起段落 |
 | 架构文档和仓库约定仍称生成闭环暂不做 | 第 7 项 | 已同步 architecture、verifier 和 CLAUDE；README 原表述无需修改 |
@@ -285,7 +285,7 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 #### 10.3 `run_repair` / `propose_repair`
 
 - 基于 reviewer 更新后的最新 `repair/loop.py` 实施。
-- 让 `run_repair` 复用 `propose_repair` 的请求准备、模型调用、finish reason 校验、patch 解析和 proposal artifact 写入。
+- 提取公共响应解析 helper，复用 finish reason 校验、响应 metadata 落盘与 patch 解析；保持两条流程各自的请求准备和 artifact 时机。
 - 保留 `run_repair` 独有的 observe、私有 audit、评分和候选接受逻辑。
 - 保留 `expected_first_request` 在模型调用前进行 prompt/图片一致性校验。
 
@@ -297,6 +297,8 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 - 补 parser 测试，检查默认值、choices 和 required 语义。
 
 完成条件：四类重复代码均有唯一实现，现有行为和 artifact 契约不变。
+
+当前进度（2026-10-07）：`eb64cf3` 已新增 `core/jsonio.py` 并替换四处原子 JSON writer；五处 finish reason 判断统一为 `models/client.py` 的公共判断；repair 共享响应解析 helper，`run_repair` 的首请求校验、私有 audit、评分与 ledger 保持不变；verify/iterate 复用参数注册函数且保留各自专属参数与 reference image required 差异。新增 JSON、finish reason 与 CLI 回归测试，完整非浏览器测试通过（1 项跳过），完整浏览器测试 16 项通过。
 
 ### 11. 清理无关改动
 
