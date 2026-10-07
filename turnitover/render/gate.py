@@ -24,6 +24,7 @@ class RenderGateResult:
     message: str | None = None
     image_ref: str | None = None
     image_stddev: float | None = None
+    failure_kind: str | None = None
 
 
 def image_stddev(png: bytes) -> float:
@@ -43,7 +44,7 @@ def run_render_gate(program: ObjectProgram, output: Path, render: RenderConfig,
         raise ValueError("Render-gate output directory must be new or empty")
     output.mkdir(parents=True, exist_ok=True)
     (output / "candidate.ts").write_text(program.source, encoding="utf-8")
-    stage = "environment"
+    stage = "browser_start"
     try:
         with ObservationSession(render, views) as session:
             stage = "program_load"
@@ -55,15 +56,20 @@ def run_render_gate(program: ObjectProgram, output: Path, render: RenderConfig,
             deviation = image_stddev(observation.png)
             if deviation <= blank_stddev_threshold:
                 result = RenderGateResult(False, "pixel_check", "BlankRender",
-                                          "Rendered image is blank or nearly constant.", "render.png", deviation)
+                                          "Rendered image is blank or nearly constant.", "render.png", deviation,
+                                          failure_kind="candidate")
             else:
                 result = RenderGateResult(True, "complete", image_ref="render.png", image_stddev=deviation)
     except CompileError as exc:
-        result = RenderGateResult(False, "compile", type(exc).__name__, str(exc))
+        result = RenderGateResult(False, "compile", type(exc).__name__, str(exc),
+                                  failure_kind="candidate")
     except HarnessError as exc:
-        result = RenderGateResult(False, exc.stage or stage, type(exc).__name__, exc.message)
+        result = RenderGateResult(False, exc.stage or stage, type(exc).__name__, exc.message,
+                                  failure_kind="candidate")
     except (PlaywrightError, OSError) as exc:
-        result = RenderGateResult(False, stage, type(exc).__name__, "Browser environment could not complete the render gate.")
+        result = RenderGateResult(False, stage, type(exc).__name__,
+                                  "Browser environment could not complete the render gate.",
+                                  failure_kind="environment")
     _write_json(output / "result.json", dataclasses.asdict(result))
     return result
 

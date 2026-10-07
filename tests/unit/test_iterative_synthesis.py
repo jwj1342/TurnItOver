@@ -173,7 +173,8 @@ def test_render_failure_has_independent_bounded_repair_budget(tmp_path):
     def gate(program, output, *args):
         output.mkdir(parents=True)
         calls["gate"] += 1
-        return RenderGateResult(False, "compile", "CompileError", "bad program")
+        return RenderGateResult(False, "compile", "CompileError", "bad program",
+                                failure_kind="candidate")
 
     def repair(source, generator, packet, output, **kwargs):
         output.mkdir(parents=True)
@@ -189,3 +190,33 @@ def test_render_failure_has_independent_bounded_repair_budget(tmp_path):
                            repair_call=repair)
     assert result["status"] == "render_failed" and not result["accepted"]
     assert calls == {"gate": 3, "repair": 2}
+
+
+def test_environment_render_failure_does_not_consume_runtime_repair_budget(tmp_path):
+    photo = _photo(tmp_path / "photo.png")
+    repo_root = __import__("pathlib").Path(__file__).resolve().parents[2]
+    calls = {"gate": 0, "repair": 0}
+
+    def gate(program, output, *args):
+        output.mkdir(parents=True)
+        calls["gate"] += 1
+        return RenderGateResult(False, "program_load", "FileNotFoundError", "missing esbuild",
+                                failure_kind="environment")
+
+    def repair(*args, **kwargs):
+        calls["repair"] += 1
+        raise AssertionError("environment failures must not invoke runtime repair")
+
+    cfg = IterativeConfig(max_runtime_repairs=2, max_visual_revisions=0,
+                          verifier=VerifyConfig(mode="runtime"))
+    result = run_iterative((photo,), tmp_path / "run", _render(tmp_path), _views(repo_root), cfg,
+                           lambda *_: ModelResult(SOURCE, "fixture", {}, "completed", 1.0),
+                           generation_prompt="build", gate_call=gate,
+                           verifier_call=lambda *a, **k: (_ for _ in ()).throw(AssertionError("verified")),
+                           repair_call=repair)
+
+    assert result["status"] == "render_failed"
+    assert result["termination"] == "environment_error"
+    assert result["model_calls"]["runtime_repair"] == 0
+    assert calls == {"gate": 1, "repair": 0}
+    assert result["rounds"][0]["render_attempts"][0]["failure_kind"] == "environment"

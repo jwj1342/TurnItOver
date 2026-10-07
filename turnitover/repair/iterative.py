@@ -127,7 +127,7 @@ def run_iterative(
             if gate_result.success:
                 round_record["program_sha"] = program.sha
                 break
-            if gate_result.stage == "environment":
+            if gate_result.failure_kind == "environment":
                 return _finish(output, report, "render_failed", final_program=program,
                                termination="environment_error", error_type=gate_result.error_type)
             if runtime_calls >= cfg.max_runtime_repairs:
