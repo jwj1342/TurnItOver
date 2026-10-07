@@ -213,7 +213,7 @@ def run_iterative(
                 break
         if revised is None:
             return _finish(output, report, "max_visual_revisions", final_program=program,
-                           termination="invalid_patch" if cfg.max_visual_revisions else "revision_limit")
+                           termination="revision_limit")
         program = revised
         round_index += 1
 

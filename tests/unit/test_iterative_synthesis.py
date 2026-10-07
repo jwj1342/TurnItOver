@@ -121,6 +121,50 @@ def test_iterative_loop_gates_and_fresh_verifies_final_revision(tmp_path):
     assert (tmp_path / "run/round-001/verifier").is_dir()
 
 
+def test_iterative_loop_records_revision_limit_after_nonzero_budget_is_exhausted(tmp_path):
+    photo = _photo(tmp_path / "photo.png")
+    repo_root = __import__("pathlib").Path(__file__).resolve().parents[2]
+    calls = {"gate": 0, "verifier": 0, "repair": 0}
+
+    def gate(program, output, render, views, threshold):
+        output.mkdir(parents=True)
+        calls["gate"] += 1
+        return RenderGateResult(True, "complete", image_ref=None, image_stddev=4.0)
+
+    def verifier(program, output, render, views, cfg, **kwargs):
+        output.mkdir(parents=True)
+        calls["verifier"] += 1
+        return {"status": "complete", "termination": "judge_finished", "spent": 1,
+                "model_calls": [{}], "trajectory": [{"step": 0, "payload": {"stats": {}}}],
+                "verdict": {"status": "fail", "confidence": 1.0,
+                            "findings": [{"defect_id": "geometry.missing_part", "parts": [],
+                                          "severity": 1.0, "confidence": 1.0,
+                                          "evidence_steps": [0], "description": "missing",
+                                          "suggested_fix": "add it"}],
+                            "summary": "revise", "limitations": []}}
+
+    def repair(source, generator, packet, output, **kwargs):
+        output.mkdir(parents=True)
+        calls["repair"] += 1
+        return RepairProposal(source + "// revised\n", "applied", "{}", None,
+                              {"total_tokens": 5}, "fixture", "completed", 1.0)
+
+    cfg = IterativeConfig(max_runtime_repairs=0, max_visual_revisions=1,
+                          verifier=VerifyConfig(budget=1))
+    result = run_iterative((photo,), tmp_path / "run", _render(tmp_path), _views(repo_root), cfg,
+                           lambda *_: ModelResult(SOURCE, "fixture", {}, "completed", 1.0),
+                           generation_prompt="build", gate_call=gate, verifier_call=verifier,
+                           repair_call=repair)
+
+    assert result["status"] == "max_visual_revisions"
+    assert result["termination"] == "revision_limit"
+    assert calls == {"gate": 2, "verifier": 2, "repair": 1}
+    assert result["model_calls"]["visual_revision"] == 1
+    assert result["total_tokens"] == 5
+    assert result["rounds"][0]["visual_revisions"][0]["outcome"] == "applied"
+    assert (tmp_path / "run/final.ts").read_text() == SOURCE + "// revised\n"
+
+
 def test_render_failure_has_independent_bounded_repair_budget(tmp_path):
     photo = _photo(tmp_path / "photo.png")
     repo_root = __import__("pathlib").Path(__file__).resolve().parents[2]
