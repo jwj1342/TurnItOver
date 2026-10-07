@@ -42,7 +42,8 @@ class VisionPolicy:
         self.calls: list[dict] = []
         self._plan = None
 
-    def decide(self, context: Context, history: Sequence[Observation], remaining: int) -> dict:
+    def decide(self, context: Context, history: Sequence[Observation], remaining: int,
+               validation_feedback: str | None = None) -> dict:
         if self._plan is None:
             self._plan = action_plan(context)
             if self.mode == "random":
@@ -61,6 +62,8 @@ class VisionPolicy:
         final_only = remaining == 0 or self.mode != "active"
         protocol = resources.files("turnitover.verifier").joinpath("final_prompt.txt" if final_only else "prompt.txt").read_text()
         prompt = protocol + "\nObserved task data:\n" + json.dumps(data, ensure_ascii=False)
+        if validation_feedback:
+            prompt += "\n\nValidation feedback from your previous response:\n" + validation_feedback
         if self.mode != "active":
             prompt += "\nFixed observation collection has finished. Return a final verdict now."
         call_dir = self.output / "model_calls" / f"{len(self.calls):03d}"
@@ -93,7 +96,8 @@ class RuntimePolicy:
     """Checks observable budget violations only; never claims reference/geometry validity."""
     calls: tuple = ()
 
-    def decide(self, context: Context, history: Sequence[Observation], remaining: int) -> dict:
+    def decide(self, context: Context, history: Sequence[Observation], remaining: int,
+               validation_feedback: str | None = None) -> dict:
         plan = action_plan(context)
         if remaining and len(history) < len(plan):
             return {"action": plan[len(history)]}

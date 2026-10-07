@@ -51,7 +51,7 @@ class Policy:
         self.decisions = iter(decisions)
         self.remaining = []
 
-    def decide(self, context, history, remaining):
+    def decide(self, context, history, remaining, validation_feedback=None):
         self.remaining.append(remaining)
         return next(self.decisions)
 
@@ -68,7 +68,7 @@ def test_budget_allows_final_verdict_after_last_observation(context):
 def test_zero_budget_cannot_act_or_pass(context):
     for decision in ({"action": {"type": "request_view", "view_id": "front"}}, final("pass")):
         session = Session()
-        result = run_verification(session, Policy([decision]), context, 0, lambda *a: "x")
+        result = run_verification(session, Policy([decision] * 3), context, 0, lambda *a: "x")
         assert not session.actions and result.verdict.status == "uncertain"
         assert result.termination == "invalid_decision"
 
@@ -82,7 +82,7 @@ def test_zero_budget_cannot_act_or_pass(context):
 ])
 def test_invalid_actions_do_not_reach_browser(context, action):
     session = Session()
-    result = run_verification(session, Policy([{"action": action}]), context, 1, lambda *a: "x")
+    result = run_verification(session, Policy([{"action": action}] * 3), context, 1, lambda *a: "x")
     assert not session.actions and result.termination == "invalid_decision"
 
 
@@ -108,7 +108,7 @@ def test_valid_evidence_linked_finding(context):
 
 def test_qwen_pass_with_findings_is_rejected_with_explanation(context):
     # Regression from the first real local Qwen trials: correct finding, contradictory pass.
-    policy = Policy([{"action": {"type": "query_runtime", "property": "stats"}}, final("pass", [finding()])])
+    policy = Policy([{"action": {"type": "query_runtime", "property": "stats"}}] + [final("pass", [finding()])] * 3)
     result = run_verification(Session(), policy, context, 1, lambda *a: "unused")
     assert result.verdict.status == "uncertain" and result.termination == "invalid_decision"
     assert "no findings" in result.error_message
@@ -121,7 +121,7 @@ def test_duplicate_json_keys_rejected():
 
 def test_model_error_preserves_previous_observations(context):
     class FailingPolicy:
-        def decide(self, context, history, remaining):
+        def decide(self, context, history, remaining, validation_feedback=None):
             if history:
                 raise ModelError("network")
             return {"action": {"type": "request_view", "view_id": "front"}}
@@ -162,6 +162,45 @@ def test_vision_receives_ordered_images_without_gold_or_source(tmp_path, context
     assert data["image_order"][1]["step"] == 0
     assert set(data) == {"context", "remaining", "taxonomy_ids", "image_order", "history"}
     assert (tmp_path / "model_calls/000/response.txt").exists()
+
+
+def test_invalid_decision_retries_with_feedback_without_spending_budget(tmp_path, context):
+    responses = iter([
+        {"action": {"type": "actuate_joint", "joint_id": "door", "detent": "limit"}},
+        {"action": {"type": "actuate_joint", "joint_id": "hinge", "detent": "limit"}},
+        final("uncertain"),
+    ])
+    prompts = []
+
+    def model(prompt, images):
+        prompts.append(prompt)
+        return ModelResult(json.dumps(next(responses)), "mock", {"total_tokens": 1}, "completed", 1)
+
+    policy = VisionPolicy(model, tmp_path, [])
+    result = run_verification(Session(), policy, context, 1, lambda i, p: f"{i}.png")
+
+    assert result.termination == "budget_exhausted" and result.spent == 1
+    assert len(policy.calls) == 3
+    assert "Validation feedback" in prompts[1]
+    assert '"joint_id": "door"' in prompts[1]
+    assert '"joint_ids": ["hinge"]' in prompts[1]
+
+
+def test_three_invalid_decisions_end_without_spending_budget(tmp_path, context):
+    prompts = []
+
+    def model(prompt, images):
+        prompts.append(prompt)
+        raw = {"action": {"type": "actuate_joint", "joint_id": "door", "detent": "limit"}}
+        return ModelResult(json.dumps(raw), "mock", {"total_tokens": 1}, "completed", 1)
+
+    policy = VisionPolicy(model, tmp_path, [])
+    result = run_verification(Session(), policy, context, 1, lambda *a: "unused")
+
+    assert result.termination == "invalid_decision" and result.spent == 0
+    assert len(policy.calls) == len(prompts) == 3
+    assert all((tmp_path / f"model_calls/{attempt:03d}/response.txt").exists() for attempt in range(3))
+    assert not (tmp_path / "observations").exists()
 
 
 def test_fixed_baseline_uses_one_final_model_call(tmp_path, context):
