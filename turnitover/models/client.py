@@ -68,8 +68,11 @@ def request_payload(cfg: ModelConfig, prompt: str, images: list[Path]) -> tuple[
             "max_output_tokens": cfg.max_tokens, "input": [{"role": "user", "content": content}]}
     content = [{"type": "image_url", "image_url": {"url": f"data:{mime};base64,{data}"}} for mime, data in parts]
     content.append({"type": "text", "text": prompt})
-    return cfg.base_url + "/chat/completions", headers, {"model": cfg.model, "max_tokens": cfg.max_tokens,
-        "messages": [{"role": "user", "content": content}]}
+    body = {"model": cfg.model, "max_tokens": cfg.max_tokens,
+            "messages": [{"role": "user", "content": content}]}
+    if cfg.provider == "openai_compatible" and cfg.model.startswith("qwen3.7-plus"):
+        body["enable_thinking"] = False
+    return cfg.base_url + "/chat/completions", headers, body
 
 
 def parse_response(provider: str, data: dict, elapsed_ms: float) -> ModelResult:

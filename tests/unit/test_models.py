@@ -61,6 +61,18 @@ def test_provider_vision_wire_formats(tmp_path, provider, suffix, image_key, tok
     assert "secret-key" in json.dumps(headers)
 
 
+def test_qwen37_plus_disables_thinking_without_changing_other_compatible_models():
+    qwen = ModelConfig("generator", "openai_compatible", "qwen3.7-plus",
+                       "https://test/v1", "secret-key")
+    _, _, qwen_body = request_payload(qwen, "build", [])
+    assert qwen_body["enable_thinking"] is False
+
+    generic = ModelConfig("generator", "openai_compatible", "test-model",
+                          "https://test/v1", "secret-key")
+    _, _, generic_body = request_payload(generic, "build", [])
+    assert "enable_thinking" not in generic_body
+
+
 @pytest.mark.parametrize("provider,response", [
     ("openai", {"output": [{"type": "reasoning"}, {"type": "message", "content": [{"type": "output_text", "text": "ok"}]}], "status": "completed"}),
     ("anthropic", {"content": [{"type": "thinking", "thinking": "private"}, {"type": "text", "text": "ok"}], "stop_reason": "end_turn"}),
