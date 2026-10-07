@@ -24,7 +24,7 @@
 | 架构文档和仓库约定仍称生成闭环暂不做 | 第 7 项 | 已同步 architecture、verifier 和 CLAUDE；README 原表述无需修改 |
 | 主流程测试完全 mock render gate | 第 6 项 | 已新增真实经过 gate 的 browser 集成测试 |
 | `.gitignore` 新增了无关的 `.venv-openhands/` | 第 11 项 | 已删除该忽略项；本地虚拟环境保持未跟踪且不纳入 PR |
-| 数据引擎测试被称为主分支既有失败，但 reviewer 尚未确认 | 第 12 项 | 待在 PR 分支和最新主分支同环境复现；PR 正文不预先归因 |
+| 数据引擎测试被称为主分支既有失败，但 reviewer 尚未确认 | 第 12 项 | 已复核当前环境：shard 可复现性用例连续 3 次通过；撤回历史失败归因 |
 | Reviewer 将提交 `repair/loop.py` 的新改动 | 实施前准备、第 10.3 项 | 先同步最新主分支，再完成 repair 去重 |
 
 ## 实施顺序
@@ -40,7 +40,7 @@
 - Fetch 最新 `origin/main`，确认 PR head 和 merge base。
 - 检查 reviewer 提到的 `repair/loop.py` 改动是否已经进入主分支；先整理分支，再做 repair 公共逻辑重构。
 - 检查 PR #1 与 PR #2 在 README 和 `docs/research-status.md` 上的冲突，确定实际合并顺序。
-- 记录当前单元测试、浏览器测试和数据引擎失败的基线结果。
+- 记录当前单元测试、浏览器测试和数据引擎 shard 可复现性用例的基线结果。
 
 完成条件：PR #2 基于最新主分支，`loop.py` 的上游改动已保留，PR #1 的文档冲突位置和测试基线已经明确。
 
@@ -313,17 +313,17 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 
 当前进度（2026-10-07）：已删除 `.venv-openhands/` 忽略项；本地虚拟环境目录不暂存、不提交。`output/smoke-test/pr2-pipeline-no-thinking/` 是有意归档的 E2E 证据，最终 diff 仍需在全部修改完成后复核。
 
-### 12. 核实数据引擎测试失败
+### 12. 复核数据引擎 shard 可复现性用例
 
 修改方案：
 
-- 确定 PR 正文所指的测试节点、运行命令和完整错误摘要。
-- 在 PR 分支和最新 `origin/main` 的同一环境中运行同一测试。
-- 两边均失败：在 PR 中贴出可复核的错误信息，并作为独立问题说明。
-- 仅 PR 分支失败：作为本 PR 回归修复。
-- 无法复现：删除“主分支同样失败”的声明。
+- 确认 `test_catalog_clean_and_mixed_are_shard_independent` 检验“整体生成”和“两 shard 生成后合并”逐字节一致的可复现性契约。
+- 记录它是依赖 Chromium 与已构建 `web/dist` 的 browser 用例，覆盖 `turnitover/engine/generate.py`，不覆盖本 PR 新增的 `iterate` 路径。
+- 若当前环境连续通过，删除“当前环境失败”及“`origin/main` 同样失败”的历史归因；不把尚未复现的环境解释写成数据引擎根因。
 
-完成条件：关于该测试失败的归因有同环境输出支持，PR 正文不再包含未经确认的判断。
+完成条件：PR 正文只陈述可复核的当前结果，不再包含未经确认的失败归因。
+
+当前进度（2026-10-07）：在 `web/dist` 与 Chromium 已就绪的当前环境中，`test_catalog_clean_and_mixed_are_shard_independent` 连续运行 3 次通过。此前本机失败的记录已经过时；由于未对历史失败完成可复现的根因定位，不将其归因为主分支或数据引擎逻辑问题。
 
 ### 13. 完整验证
 
@@ -363,6 +363,6 @@ git diff --check
 - 各项代码、测试和文档修改摘要。
 - E2E artifact 审计结论及最终声明。
 - PR #1/PR #2 冲突处理结果。
-- 数据引擎失败的双分支复现结果。
+- 数据引擎 shard 可复现性用例的当前复核结果。
 - 完整测试与 `git diff --check` 输出。
 - 与最终结果一致的 PR 正文。
