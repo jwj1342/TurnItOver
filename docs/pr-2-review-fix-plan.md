@@ -209,6 +209,27 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 
 当前进度（2026-10-07）：已新增 `tests/browser/test_iterative_synthesis.py`。测试使用真实 esbuild、Playwright、render gate 和 verifier，仅以本地确定性 generator/judge fixture 代替外部模型；与既有 render gate 测试一起在真实 Chromium 环境通过。
 
+### 6.1 明确 verifier 非法决策重试边界（补充实施项，非 Reviewer 原始意见）
+
+涉及文件：
+
+- `turnitover/verifier/loop.py`
+- `turnitover/verifier/policies.py`
+- `tests/unit/test_verifier.py`
+- `docs/verifier.md`
+- `docs/iterative-synthesis.md`
+
+行为与预算口径：
+
+- 同一决策点的 schema、action 或 verdict 校验失败时，最多尝试 3 次模型调用，并向后续尝试提供结构化校验反馈。
+- 非法决策没有执行浏览器动作，因此不消耗 observation budget，也不会产生虚构 observation。
+- 每次重试仍写入 `model_calls/`，并计入模型调用数、原生 token usage、延迟和 iterative 根结果的 token 汇总。
+- 连续 3 次非法决策后，以 `termination=invalid_decision` 和 `verdict=uncertain` 结束。
+
+完成条件：文档不再把 observation budget 等同于模型调用预算；测试同时覆盖“非法后修正成功”和“连续三次非法终止”。
+
+当前进度（2026-10-08）：保留 `3a7120e` 的有界重试实现；相关单元测试与完整非浏览器、浏览器回归均通过。该提交作为 E2E 过程中发现并正式保留的鲁棒性修复，不再视为临时 smoke-test 改动。
+
 ### 7. 修正文档与实现不一致
 
 涉及文件：

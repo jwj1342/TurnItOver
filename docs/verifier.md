@@ -72,15 +72,20 @@ metadata consistent when comparing baselines. Runtime hierarchy is acquired only
 Observations cost one; all attempted browser actions are charged, including failed attempts. Rendering
 after actuation uses the current camera and preserves other joint states. No free runtime queries or
 candidate screenshots are injected. At K observations the judge gets one final decision call with remaining=0.
-Active mode therefore makes at most K+1 model calls; fixed/random make one final model call. Every call's
-usage and latency are recorded separately, so equal observation budgets do not imply equal inference cost.
+Each decision opportunity allows at most three model attempts when schema or action validation rejects the
+previous response. These retries do not consume observation budget because no browser action ran, but every
+attempt is retained in `model_calls/` and counts toward token usage and inference cost. Active mode therefore
+makes at most 3(K+1) model calls in the all-invalid worst case; fixed/random make at most three final-decision
+calls. With valid first responses their usual bounds remain K+1 and one call. Equal observation budgets do not
+imply equal inference cost.
 
 Verdicts: `pass`, `fail`, `uncertain`. Termination reasons are separate: `judge_finished`, `budget_exhausted`,
 `invalid_decision`, `model_error`, `observation_error`, `program_error`, or infrastructure/internal errors.
 Budget exhaustion never synthesizes a pass. Invalid JSON/actions/findings become an uncertain error result,
-without silent repair, retries, invented observations or extra budget. Findings must cite existing successful
-steps and use known taxonomy/part IDs, finite [0,1] confidence/severity values and repair text. Missing parts
-are described in text with an empty part list. Confidence is model-reported, not calibrated.
+after at most three rejected model attempts at the same decision opportunity. Validation feedback contains the
+rejected decision, error and legal values; it cannot invent observations or add observation budget. Findings
+must cite existing successful steps and use known taxonomy/part IDs, finite [0,1] confidence/severity values and
+repair text. Missing parts are described in text with an empty part list. Confidence is model-reported, not calibrated.
 
 ## Outputs
 

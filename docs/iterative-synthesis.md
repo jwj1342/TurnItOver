@@ -17,6 +17,8 @@ reference image
 
 runtime repair 与 visual revision 使用独立预算：`max_runtime_repairs` 在每个 visual round 开始时重新计算，`max_visual_revisions` 则在整次运行中全局共享。前者只接收编译、加载、截图或近似空白画面的结构化错误；后者只接收 verifier 的公开 verdict、findings 及 findings 实际引用的 observations。私有 audit 不进入该模型可见闭环。每次源码改变后都会创建新的 render gate 和 verifier 目录，因此不会复用旧页面、相机、关节状态或对话。
 
+verifier 的 observation budget 只计算实际尝试的浏览器动作。若 judge 返回的 JSON、action 或 verdict 未通过校验，同一决策点最多调用模型 3 次并把校验反馈交给下一次尝试；这些重试不消耗 observation budget，但每次调用及其 token、延迟和原始响应都会写入 verifier artifact，并汇总进根 `result.json` 的 judge 调用数与 token 总数。
+
 ## 运行
 
 先按[模型配置](models.md)设置 generator 与 judge。所有命令从仓库根目录执行，输出目录必须不存在或为空。
