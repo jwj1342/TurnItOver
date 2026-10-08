@@ -336,7 +336,7 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 
 完成条件：PR 不再包含 `.venv-openhands/` 改动及其他无关文件。
 
-当前进度（2026-10-07）：已删除 `.venv-openhands/` 忽略项；本地虚拟环境目录不暂存、不提交。`output/smoke-test/pr2-pipeline-no-thinking/` 是有意归档的 E2E 证据，最终 diff 仍需在全部修改完成后复核。
+当前进度（2026-10-08 复核）：已删除 `.venv-openhands/` 忽略项；最终 diff 未跟踪 handoff、Viewer、虚拟环境、缓存、日志、构建依赖或凭证。`output/smoke-test/pr2-pipeline-no-thinking/` 是唯一有意纳入的运行输出，共 38 个文件，源码和输入哈希与 artifact 记录一致且未发现敏感字段。`410ce57` 的 Qwen thinking 临时特例已由 `967f4ec` 收敛为仅作用于 `qwen3.7-plus`、默认关闭但可通过环境变量重新开启的配置策略；`3a7120e` 的非法决策重试由第 6.1 项正式记录。其余文件均可映射到 Reviewer 施工项或明确批准的补充实施项。
 
 ### 12. 复核数据引擎 shard 可复现性用例
 
@@ -380,11 +380,11 @@ git diff --check
 - 重复 JSON writer 已移除；
 - Viewer 和“生成闭环暂不做”的过期描述已清理；
 - Markdown 相对链接有效；
-- 最终 diff 只包含 review 要求的修改。
+- 最终 diff 只包含 review 要求的修改和明确批准的补充实施项。
 
 完成条件：完整单元测试和浏览器测试通过；工作区 diff 以及排除已审计 E2E 证据快照后的分支 diff 通过 whitespace 检查；`research-status` 中的测试数字与实际输出一致。
 
-当前进度（2026-10-08 复核）：完整非浏览器测试已通过（1 项跳过）；完整浏览器测试以项目 Playwright 缓存运行，16 项通过。`output/smoke-test/pr2-pipeline-no-thinking/` 是已审计的原始运行证据，其中模型响应及派生源码保留运行时内容，以维持 artifact 与所记录源码 SHA 的一致性；该目录不纳入 whitespace 检查，不新增仓库级 Git 属性例外，其余分支 diff 和工作区 diff 均须通过 `git diff --check`。
+当前进度（2026-10-08 复核）：定向单元测试 51 项通过；完整非浏览器测试通过（1 项跳过）；完整浏览器测试以项目 Playwright 缓存运行，16 项通过。变更 Markdown 的相对链接检查无断链，工作区 diff 与排除已审计 E2E 证据快照后的分支 diff 均通过 whitespace 检查。`output/smoke-test/pr2-pipeline-no-thinking/` 保留模型响应及派生源码的运行时内容，以维持 artifact 与所记录源码 SHA 的一致性；该目录不新增仓库级 Git 属性例外。
 
 ## 最终交付
 
