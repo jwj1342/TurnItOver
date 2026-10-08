@@ -343,8 +343,12 @@ python -m pytest tests/unit/test_iterative_synthesis.py tests/unit/test_repair.p
 # 完整浏览器测试
 .venv-local/bin/python -m pytest -m browser -q
 
-# Diff 检查
-git diff --check origin/main...HEAD
+# 分支级 Diff 检查：排除保持原始内容的已审计 E2E 证据快照
+git diff --check origin/main...HEAD -- \
+  . \
+  ':(exclude)output/smoke-test/pr2-pipeline-no-thinking/**'
+
+# 工作区 Diff 检查
 git diff --check
 ```
 
@@ -357,9 +361,9 @@ git diff --check
 - Markdown 相对链接有效；
 - 最终 diff 只包含 review 要求的修改。
 
-完成条件：完整单元测试、浏览器测试和 `git diff --check` 通过，`research-status` 中的测试数字与实际输出一致。
+完成条件：完整单元测试和浏览器测试通过；工作区 diff 以及排除已审计 E2E 证据快照后的分支 diff 通过 whitespace 检查；`research-status` 中的测试数字与实际输出一致。
 
-当前进度（2026-10-07）：完整非浏览器测试已通过（1 项跳过）；完整浏览器测试以项目 Playwright 缓存运行，16 项通过。归档 artifact 保留模型原始文本中的尾随空白，最终 diff whitespace 检查须将该证据目录作为保真例外单独记录，其余代码和文档 diff 必须通过检查。
+当前进度（2026-10-08 复核）：完整非浏览器测试已通过（1 项跳过）；完整浏览器测试以项目 Playwright 缓存运行，16 项通过。`output/smoke-test/pr2-pipeline-no-thinking/` 是已审计的原始运行证据，其中模型响应及派生源码保留运行时内容，以维持 artifact 与所记录源码 SHA 的一致性；该目录不纳入 whitespace 检查，不新增仓库级 Git 属性例外，其余分支 diff 和工作区 diff 均须通过 `git diff --check`。
 
 ## 最终交付
 
