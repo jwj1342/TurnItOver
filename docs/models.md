@@ -15,7 +15,8 @@ Protocol sources: [OpenAI image input](https://developers.openai.com/api/docs/gu
 [Gemini image input](https://ai.google.dev/gemini-api/docs/image-understanding).
 OpenAI-compatible services differ in supported models/parameters; this adapter implements the basic
 Chat Completions text/image subset, not every extension. Gemini here means the API-key Developer API,
-not Vertex AI OAuth. No streaming, tool calls, native video or automatic retry is implemented.
+not Vertex AI OAuth. No streaming, tool calls or native video is implemented. The model client does not
+automatically retry transport/provider failures; verifier-level validation retries are documented separately.
 For `openai_compatible` models whose ID starts with `qwen3.7-plus`, the current development default sends
 `enable_thinking=false` to avoid long reasoning during rapid iteration. Set
 `TIO_QWEN37_ENABLE_THINKING=true` to re-enable thinking without changing code. The setting is ignored for

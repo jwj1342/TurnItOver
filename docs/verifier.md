@@ -71,7 +71,7 @@ metadata consistent when comparing baselines. Runtime hierarchy is acquired only
 
 Observations cost one; all attempted browser actions are charged, including failed attempts. Rendering
 after actuation uses the current camera and preserves other joint states. No free runtime queries or
-candidate screenshots are injected. At K observations the judge gets one final decision call with remaining=0.
+candidate screenshots are injected. At K observations the judge gets one final decision opportunity with remaining=0.
 Each decision opportunity allows at most three model attempts when schema or action validation rejects the
 previous response. These retries do not consume observation budget because no browser action ran, but every
 attempt is retained in `model_calls/` and counts toward token usage and inference cost. Active mode therefore
@@ -99,7 +99,8 @@ repair text. Missing parts are described in text with an empty part list. Confid
 Output directories must be new or empty. Exit code 0 means the verification run completed, **not** that
 the candidate passed; read `verdict.status`. Execution/decision errors return nonzero. Metadata writes are atomic.
 Partial traces remain available after errors. Full input/prompt/response logs can contain user data but not API credentials.
-Invalid decisions include a schema-validation explanation in `error_message`; raw model responses are retained.
+Runs terminating with `invalid_decision` include the final schema-validation explanation in `error_message`;
+raw model responses from every attempt are retained.
 
 ## Privileged gold audit
 

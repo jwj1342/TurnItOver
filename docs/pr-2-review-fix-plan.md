@@ -150,7 +150,7 @@
 
 - 是否能对应到明确代码版本；
 - 是否包含 generation、render gate、verifier trajectory/model calls 和根 `result.json`；
-- 是否能证明生成了合法 Program ABI，并完成正文所称的四步主动观测；
+- 是否能证明生成了合法 Program ABI；本次运行的预算上限为 4，实际完成 3 步主动观测，第 4 次 judge 调用返回最终 verdict；
 - 输入、日志和响应是否适合提交；
 - 最终终态是 accepted、fail、uncertain 还是预算耗尽。
 
@@ -356,7 +356,7 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 
 ```bash
 # 定向测试
-python -m pytest tests/unit/test_iterative_synthesis.py tests/unit/test_repair.py
+python -m pytest tests/unit/test_iterative_synthesis.py tests/unit/test_repair.py tests/unit/test_models.py
 
 # 完整非浏览器测试
 .venv-local/bin/python -m pytest -m 'not browser' -q
