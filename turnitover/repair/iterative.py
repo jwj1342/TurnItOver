@@ -116,24 +116,28 @@ def run_iterative(
         gate_result: RenderGateResult | None = None
         runtime_calls = 0
         gate_index = 0
+        render_required = True
         while True:
             gate_dir = round_dir / "render-gate" / f"attempt-{gate_index:03d}"
-            gate_result = gate_call(program, gate_dir, render, views, cfg.blank_stddev_threshold)
-            gate_record = dataclasses.asdict(gate_result)
-            gate_record.update(attempt=gate_index, program_sha=program.sha,
-                               artifact=str(gate_dir.relative_to(output) / "result.json"))
-            round_record["render_attempts"].append(gate_record)
-            write_json_atomic(output / "result.json", report)
-            if gate_result.success:
-                round_record["program_sha"] = program.sha
-                break
-            if gate_result.failure_kind == "environment":
-                return _finish(output, report, "render_failed", final_program=program,
-                               termination="environment_error", error_type=gate_result.error_type,
-                               message=gate_result.message, stage=gate_result.stage,
-                               failure_kind=gate_result.failure_kind)
+            if render_required:
+                gate_result = gate_call(program, gate_dir, render, views, cfg.blank_stddev_threshold)
+                gate_record = dataclasses.asdict(gate_result)
+                gate_record.update(attempt=gate_index, program_sha=program.sha,
+                                   artifact=str(gate_dir.relative_to(output) / "result.json"))
+                round_record["render_attempts"].append(gate_record)
+                write_json_atomic(output / "result.json", report)
+                if gate_result.success:
+                    round_record["program_sha"] = program.sha
+                    break
+                if gate_result.failure_kind == "environment":
+                    return _finish(output, report, "render_failed", final_program=program,
+                                   termination="environment_error", error_type=gate_result.error_type,
+                                   message=gate_result.message, stage=gate_result.stage,
+                                   failure_kind=gate_result.failure_kind)
+                render_required = False
             if runtime_calls >= cfg.max_runtime_repairs:
                 return _finish(output, report, "render_failed", final_program=program)
+            assert gate_result is not None
             packet = _render_feedback(cfg.task, copied_references, gate_result, gate_dir)
             repair_dir = round_dir / "runtime-repairs" / f"repair-{runtime_calls:03d}"
             try:
@@ -147,13 +151,16 @@ def run_iterative(
             report["model_calls"]["runtime_repair"] += 1
             report["total_tokens"] += usage_tokens(proposal.usage)
             runtime_memory.append(_proposal_memory(proposal, runtime_calls - 1))
-            gate_index += 1
             if proposal.outcome == "stop":
                 return _finish(output, report, "render_failed", final_program=program,
                                termination="generator_stop")
             if proposal.source is not None:
-                program = ObjectProgram(proposal.source)
-                (round_dir / "candidate.ts").write_text(program.source, encoding="utf-8")
+                candidate = ObjectProgram(proposal.source)
+                if candidate.sha != program.sha:
+                    program = candidate
+                    (round_dir / "candidate.ts").write_text(program.source, encoding="utf-8")
+                    gate_index += 1
+                    render_required = True
 
         verifier_dir = round_dir / "verifier"
         try:

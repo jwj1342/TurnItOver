@@ -11,9 +11,9 @@
 | 真实模型 E2E 声明与仓库记录、artifact 不一致 | 第 4 项 | 已审计：受控多视图 fixture 上存在一次 `accepted=true` 的真实模型 E2E，证据快照已归档；运行仍对应 dirty 旧提交，声明需限定范围 |
 | 文档声称支持不存在的 Viewer | 第 7 项 | 已删除 Viewer 章节和悬空路径，并补充预算作用域与实现边界 |
 | PR #1 与 PR #2 被描述为可独立合并，但 README 和 research-status 存在冲突 | 第 9 项 | 已准备准确的 PR 正文措辞；两个 PR 无代码依赖，但后合并者需解决文档冲突 |
-| 编译工具缺失等环境问题会错误消耗 runtime repair | 第 2 项 | 主问题已修复（`6f663bb`）；浏览器运行期崩溃分类及 ABI/load、空白渲染测试待补 |
+| 编译工具缺失等环境问题会错误消耗 runtime repair | 第 2 项 | 已完成：环境错误不消耗 repair；浏览器传输、ABI/load 和空白渲染分类测试均已覆盖 |
 | visual revision 正常耗尽时被记录成 invalid patch | 第 1 项 | 已完成：根终止原因为 `revision_limit`，四类计划内边界测试均已覆盖 |
-| invalid patch 后重复 render 相同源码 | 第 5 项 | 源码 SHA 未变化时跳过 gate |
+| invalid patch 后重复 render 相同源码 | 第 5 项 | 已完成：invalid patch 和相同 SHA 的 no-op patch 不再触发重复 gate |
 | runtime repair 与 visual revision 的预算作用域未说明 | 第 7 项 | 已明确前者每轮重置、后者全局共享 |
 | 新增了三份重复 JSON writer | 第 10.1 项 | 已统一为公共原子 JSON writer |
 | 正常 finish reason 取值散落在五处 | 第 10.2 项 | 已统一为公共判断函数 |
@@ -25,7 +25,7 @@
 | 主流程测试完全 mock render gate | 第 6 项 | 已新增真实经过 gate 的 browser 集成测试 |
 | `.gitignore` 新增了无关的 `.venv-openhands/` | 第 11 项 | 已删除该忽略项；本地虚拟环境保持未跟踪且不纳入 PR |
 | 数据引擎测试被称为主分支既有失败，但 reviewer 尚未确认 | 第 12 项 | 已复核当前环境：shard 可复现性用例连续 3 次通过；撤回历史失败归因 |
-| Reviewer 将提交 `repair/loop.py` 的新改动 | 实施前准备、第 10.3 项 | 先同步最新主分支，再完成 repair 去重 |
+| Reviewer 将提交 `repair/loop.py` 的新改动 | 实施前准备、第 10.3 项 | 已完成：分支已包含最新主分支改动，并在此基础上完成 repair 响应解析去重 |
 
 ## 实施顺序
 
@@ -133,7 +133,7 @@
 
 完成条件：运行记录中可以看到原始错误，repair 模型不会再收到模糊固定文案。
 
-当前进度（2026-10-07）：`c7c351a` 已保留原始错误，并由定向测试确认 gate artifact、candidate repair feedback 和 environment 根 `result.json` 中的信息一致。第 1–3 项相关定向测试共 11 项通过，仍需最终全量测试。
+当前进度（2026-10-08 复核）：`c7c351a` 已保留原始错误，并由定向测试确认 gate artifact、candidate repair feedback 和 environment 根 `result.json` 中的信息一致。第 1–3 项相关定向测试共 11 项通过；完整非浏览器测试通过（1 项跳过），完整浏览器测试 16 项通过。
 
 ### 4. 统一真实模型 E2E 声明与证据
 
@@ -188,6 +188,8 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 - no-op patch 不触发新 gate。
 
 完成条件：相同源码不会被重复渲染，调用和 artifact 计数准确。
+
+当前进度（2026-10-07）：runtime repair 仅在候选源码 SHA 变化后创建新的 render-gate attempt；invalid patch 和相同 SHA 的 no-op patch 继续计入 repair 调用、token 与历史，但复用上一次 gate 失败，不重复渲染。已覆盖连续两次 invalid patch、第一次 invalid 后第二次有效、相同源码 no-op 三类回归；定向测试 21 项、完整非浏览器测试（1 项跳过）及完整浏览器测试 16 项均通过。
 
 ### 6. 增加真实经过 render gate 的主流程集成测试
 

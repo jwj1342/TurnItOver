@@ -375,7 +375,81 @@ def test_render_failure_has_independent_bounded_repair_budget(tmp_path):
                            verifier_call=lambda *a, **k: (_ for _ in ()).throw(AssertionError("verified")),
                            repair_call=repair)
     assert result["status"] == "render_failed" and not result["accepted"]
-    assert calls == {"gate": 3, "repair": 2}
+    assert calls == {"gate": 1, "repair": 2}
+    assert len(result["rounds"][0]["render_attempts"]) == 1
+
+
+def test_runtime_repair_renders_after_invalid_then_valid_patch(tmp_path):
+    photo = _photo(tmp_path / "photo.png")
+    repo_root = __import__("pathlib").Path(__file__).resolve().parents[2]
+    calls = {"gate": [], "repair": 0}
+    revised_source = SOURCE + "\n// revised"
+
+    def gate(program, output, *args):
+        output.mkdir(parents=True)
+        calls["gate"].append(program.sha)
+        if program.source == revised_source:
+            return RenderGateResult(True, "complete", image_ref=None, image_stddev=4.0)
+        return RenderGateResult(False, "compile", "CompileError", "candidate error",
+                                failure_kind="candidate")
+
+    def repair(source, generator, packet, output, **kwargs):
+        output.mkdir(parents=True)
+        calls["repair"] += 1
+        if calls["repair"] == 1:
+            return RepairProposal(None, "invalid_patch", "bad", "invalid", {},
+                                  "fixture", "completed", 1.0)
+        return RepairProposal(revised_source, "applied", "good", None, {},
+                              "fixture", "completed", 1.0)
+
+    cfg = IterativeConfig(max_runtime_repairs=2, max_visual_revisions=0,
+                          verifier=VerifyConfig(mode="runtime"))
+    result = run_iterative((photo,), tmp_path / "run", _render(tmp_path), _views(repo_root), cfg,
+                           lambda *_: ModelResult(SOURCE, "fixture", {}, "completed", 1.0),
+                           generation_prompt="build", gate_call=gate,
+                           verifier_call=lambda *a, **k: {
+                               "status": "complete", "termination": "judge_finished",
+                               "model_calls": [], "trajectory": [],
+                               "verdict": {"status": "uncertain"},
+                           }, repair_call=repair)
+
+    assert result["status"] == "verification_uncertain"
+    assert calls == {"gate": [ObjectProgram(SOURCE).sha, ObjectProgram(revised_source).sha],
+                     "repair": 2}
+    assert len(result["rounds"][0]["render_attempts"]) == 2
+
+
+def test_runtime_repair_does_not_render_noop_patch(tmp_path):
+    photo = _photo(tmp_path / "photo.png")
+    repo_root = __import__("pathlib").Path(__file__).resolve().parents[2]
+    calls = {"gate": 0, "repair": 0}
+
+    def gate(program, output, *args):
+        output.mkdir(parents=True)
+        calls["gate"] += 1
+        return RenderGateResult(False, "compile", "CompileError", "candidate error",
+                                failure_kind="candidate")
+
+    def repair(source, generator, packet, output, **kwargs):
+        output.mkdir(parents=True)
+        calls["repair"] += 1
+        return RepairProposal(source, "applied", "noop", None, {"total_tokens": 3},
+                              "fixture", "completed", 1.0)
+
+    cfg = IterativeConfig(max_runtime_repairs=1, max_visual_revisions=0,
+                          verifier=VerifyConfig(mode="runtime"))
+    result = run_iterative((photo,), tmp_path / "run", _render(tmp_path), _views(repo_root), cfg,
+                           lambda *_: ModelResult(SOURCE, "fixture", {}, "completed", 1.0),
+                           generation_prompt="build", gate_call=gate,
+                           verifier_call=lambda *a, **k: (_ for _ in ()).throw(AssertionError("verified")),
+                           repair_call=repair)
+
+    assert result["status"] == "render_failed"
+    assert result["model_calls"]["runtime_repair"] == 1
+    assert result["total_tokens"] == 3
+    assert calls == {"gate": 1, "repair": 1}
+    assert len(result["rounds"][0]["render_attempts"]) == 1
+    assert not (tmp_path / "run/round-000/render-gate/attempt-001").exists()
 
 
 def test_environment_render_failure_does_not_consume_runtime_repair_budget(tmp_path):
