@@ -77,8 +77,9 @@ def request_payload(cfg: ModelConfig, prompt: str, images: list[Path]) -> tuple[
     content.append({"type": "text", "text": prompt})
     body = {"model": cfg.model, "max_tokens": cfg.max_tokens,
             "messages": [{"role": "user", "content": content}]}
-    if cfg.provider == "openai_compatible" and cfg.model.startswith("qwen3.7-plus"):
-        body["enable_thinking"] = False
+    if (cfg.provider == "openai_compatible" and cfg.model.startswith("qwen3.7-plus")
+            and cfg.enable_thinking is not None):
+        body["enable_thinking"] = cfg.enable_thinking
     return cfg.base_url + "/chat/completions", headers, body
 
 
