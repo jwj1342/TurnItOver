@@ -41,3 +41,20 @@ def test_unsupported_joint_is_not_silently_frozen(tmp_path):
     path.write_text(URDF.replace('type="revolute"', 'type="continuous"'))
     with pytest.raises(ValueError, match="Unsupported joint"):
         UrdfModel(path)
+
+
+def test_continuous_joint_can_be_explicitly_fixed_at_zero(tmp_path):
+    path = tmp_path / "static-reference.urdf"
+    path.write_text(URDF.replace('type="revolute"', 'type="continuous"'))
+    model = UrdfModel(path, continuous_joint_policy="fixed")
+    spec = model.spec("fixture", "fixture")
+    assert model.continuous_joints_fixed_at_zero == ("hinge",)
+    assert [joint.id for joint in spec.joints] == ["slide"]
+    assert np.allclose(model.world_vertices({})["arm"].mean(axis=0), [2, 1, 0])
+
+
+def test_continuous_joint_policy_rejects_unknown_value(tmp_path):
+    path = tmp_path / "fixture.urdf"
+    path.write_text(URDF)
+    with pytest.raises(ValueError, match="continuous_joint_policy"):
+        UrdfModel(path, continuous_joint_policy="unknown")
