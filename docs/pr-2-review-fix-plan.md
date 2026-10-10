@@ -25,11 +25,23 @@
 | 主流程测试完全 mock render gate | 第 6 项 | 已新增真实经过 gate 的 browser 集成测试 |
 | `.gitignore` 新增了无关的 `.venv-openhands/` | 第 11 项 | 已删除该忽略项；本地虚拟环境保持未跟踪且不纳入 PR |
 | 数据引擎测试被称为主分支既有失败，但 reviewer 尚未确认 | 第 12 项 | 已复核当前环境：shard 可复现性用例连续 3 次通过；撤回历史失败归因 |
-| Reviewer 将提交 `repair/loop.py` 的新改动 | 实施前准备、第 10.3 项 | 已完成：分支已包含最新主分支改动，并在此基础上完成 repair 响应解析去重 |
+| Reviewer 将提交 `repair/loop.py` 的新改动 | 实施前准备、第 10.3 项 | 待同步：reviewer 复核时确认该批本地改动仍未推送；当前分支不能预先吸收尚不存在的上游提交 |
+
+## 2026-10-09 复核意见对照表
+
+| Reviewer 意见 | 完成结果 |
+| --- | --- |
+| 默认空白图阈值放过非灰色纯色场景 | 已按空间维度计算逐通道标准差；单元测试覆盖非灰色纯色图，真实 Chromium 测试以默认阈值拒绝空场景 |
+| 失败模型响应未计入根结果调用数和 token | 已在实际 generator 调用边界统计；generation、runtime repair、visual revision 均覆盖 `finish_reason=length` 且已知 usage 的失败回归 |
+| fixed/random 的非对象 JSON 绕过非法决策重试 | 已将非对象顶层值统一转为 `DecisionError`；覆盖 `null`、`42`、`false` 后纠正及连续三次非法终止 |
+| 缺少 fail 后实际 repair、重新渲染和 fresh verifier 的浏览器用例 | 已使用确定性模型 fixture，真实经过 `propose_repair`、补丁应用、两轮 render gate 和两次独立 verifier |
+| Playwright 传输错误分类证据应区分模拟会话与真实浏览器 | 已在研究状态中明确：传输错误分类来自模拟 session 的单元回归，render gate 与闭环另由真实 Chromium 用例覆盖 |
+| 归档模型运行不能作为多轮修复效果证据 | 已明确该 dirty 旧提交运行的 runtime repair 与 visual revision 调用均为 0，只证明单轮生成—渲染—验证成功 |
+| reviewer 的 `repair/loop.py` 改动仍未推送 | 保持待同步；上游提交发布后再解决冲突并复跑全量测试 |
 
 ## 实施顺序
 
-1. 同步最新 `origin/main`，吸收 reviewer 对 `repair/loop.py` 的新改动。
+1. reviewer 推送 `repair/loop.py` 改动后，同步最新 `origin/main` 并解决冲突。
 2. 完成 P0：终止原因、环境错误、原始错误和 E2E 证据。
 3. 完成 P1：跳过重复 render、真实 gate 集成测试和文档修正。
 4. 完成 P2：公共逻辑去重、无关改动清理和全量测试。
@@ -42,7 +54,7 @@
 - 检查 PR #1 与 PR #2 在 README 和 `docs/research-status.md` 上的冲突，确定实际合并顺序。
 - 记录当前单元测试、浏览器测试和数据引擎 shard 可复现性用例的基线结果。
 
-完成条件：PR #2 基于最新主分支，`loop.py` 的上游改动已保留，PR #1 的文档冲突位置和测试基线已经明确。
+完成条件：现有 review 修改基于当前最新主分支；reviewer 发布 `loop.py` 上游改动后再保留其语义并解决冲突；PR #1 的文档冲突位置和测试基线已经明确。
 
 ## P0
 
@@ -104,7 +116,7 @@
 
 完成条件：环境问题不消耗生成模型修复次数，候选程序问题仍能正常修复。
 
-当前进度（2026-10-07）：`6f663bb` 已增加 `failure_kind`，验证缺失 esbuild 直接以 `environment_error` 终止且不调用 repair。未携带 harness 结构化错误的 Playwright load/request-view 失败现在归为 `BrowserTransportError` 与 environment；结构化 ABI/load 错误和空白渲染均归为 candidate 并进入 runtime repair。对应单元与真实 browser 回归测试已通过。
+当前进度（2026-10-10）：`6f663bb` 已增加 `failure_kind`，验证缺失 esbuild 直接以 `environment_error` 终止且不调用 repair。未携带 harness 结构化错误的 Playwright load/request-view 失败通过模拟 session 的单元回归验证为 `BrowserTransportError` 与 environment；结构化 ABI/load 错误和空白渲染归为 candidate。真实 Chromium 用例独立覆盖正常 render gate、默认阈值空场景和闭环执行，不把模拟传输异常表述为真实浏览器复现。
 
 ### 3. 保留 render gate 原始错误
 
@@ -207,7 +219,7 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 
 完成条件：至少一个 browser 测试真实经过 `run_iterative -> render gate -> verifier -> result.json`，且不访问外部模型。
 
-当前进度（2026-10-07）：已新增 `tests/browser/test_iterative_synthesis.py`。测试使用真实 esbuild、Playwright、render gate 和 verifier，仅以本地确定性 generator/judge fixture 代替外部模型；与既有 render gate 测试一起在真实 Chromium 环境通过。
+当前进度（2026-10-10）：`tests/browser/test_iterative_synthesis.py` 使用真实 esbuild、Playwright、render gate、`propose_repair` 和 verifier，仅以本地确定性 generator/judge fixture 代替外部模型。除首轮通过外，现已覆盖 verifier fail、实际补丁应用、第二轮真实 gate 和 fresh verifier pass，并核对两轮源码 SHA 与 artifact。
 
 ### 6.1 明确 verifier 非法决策重试边界（补充实施项，非 Reviewer 原始意见）
 
@@ -228,7 +240,7 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 
 完成条件：文档不再把 observation budget 等同于模型调用预算；测试同时覆盖“非法后修正成功”和“连续三次非法终止”。
 
-当前进度（2026-10-08）：保留 `3a7120e` 的有界重试实现；相关单元测试与完整非浏览器、浏览器回归均通过。该提交作为 E2E 过程中发现并正式保留的鲁棒性修复，不再视为临时 smoke-test 改动。
+当前进度（2026-10-10）：保留 `3a7120e` 的有界重试实现，并补齐 fixed/random 对非对象顶层 JSON 的类型校验；相关测试覆盖 `null`、`42`、`false` 后纠正及连续三次非法终止。该提交作为 E2E 过程中发现并正式保留的鲁棒性修复，不再视为临时 smoke-test 改动。
 
 ### 7. 修正文档与实现不一致
 
@@ -307,7 +319,7 @@ PR 正文改为：“单元测试和真实浏览器测试验证了工程链路�
 
 #### 10.3 `run_repair` / `propose_repair`
 
-- 基于 reviewer 更新后的最新 `repair/loop.py` 实施。
+- 当前公共解析 helper 基于已发布主分支实施；reviewer 尚未推送的 `repair/loop.py` 改动保持待同步。
 - 提取公共响应解析 helper，复用 finish reason 校验、响应 metadata 落盘与 patch 解析；保持两条流程各自的请求准备和 artifact 时机。
 - 保留 `run_repair` 独有的 observe、私有 audit、评分和候选接受逻辑。
 - 保留 `expected_first_request` 在模型调用前进行 prompt/图片一致性校验。
@@ -384,7 +396,7 @@ git diff --check
 
 完成条件：完整单元测试和浏览器测试通过；工作区 diff 以及排除已审计 E2E 证据快照后的分支 diff 通过 whitespace 检查；`research-status` 中的测试数字与实际输出一致。
 
-当前进度（2026-10-08 复核）：定向单元测试 51 项通过；完整非浏览器测试通过（1 项跳过）；完整浏览器测试以项目 Playwright 缓存运行，16 项通过。变更 Markdown 的相对链接检查无断链，工作区 diff 与排除已审计 E2E 证据快照后的分支 diff 均通过 whitespace 检查。`output/smoke-test/pr2-pipeline-no-thinking/` 保留模型响应及派生源码的运行时内容，以维持 artifact 与所记录源码 SHA 的一致性；该目录不新增仓库级 Git 属性例外。
+当前进度（2026-10-10 复核）：在重新构建 `web/dist` 后，完整非浏览器测试为 141 项通过、1 项跳过，完整浏览器测试为 18 项通过；TypeScript typecheck 通过。验证环境为 Python 3.12.7、Node.js 22.22.3、npm 10.9.8、Playwright 1.57.0、Chrome for Testing 143.0.7499.4。`output/smoke-test/pr2-pipeline-no-thinking/` 保留模型响应及派生源码的运行时内容，以维持 artifact 与所记录源码 SHA 的一致性；该目录不新增仓库级 Git 属性例外。
 
 ## 最终交付
 

@@ -111,11 +111,17 @@ python scripts/summarize_repair_experiment.py output/repair-model-new
 本轮定向执行 `tests/unit/test_iterative_synthesis.py` 和 `tests/browser/test_render_gate.py`，共 11 项通过；
 覆盖 Program ABI 生成、render gate、环境错误、fresh verification，以及视觉修改预算的四类终止路径。
 新增 browser 集成测试已真实经过 `run_iterative -> render gate -> verifier -> result.json`；完整非浏览器测试已通过（1 项跳过），完整浏览器测试 16 项通过。
-补充的错误分类回归覆盖 Playwright load/request-view 传输失败、Program ABI/load 失败和空白渲染：前者直接作为 environment 终止，后两者作为 candidate 进入 runtime repair。
+补充的单元回归通过模拟 session 覆盖 Playwright load/request-view 传输失败、Program ABI/load 失败和空白渲染：前者直接作为 environment 终止，后两者作为 candidate 进入 runtime repair；真实 Chromium 用例另行覆盖正常 render gate 与迭代闭环，不将模拟传输异常表述为真实浏览器复现。
 `eb64cf3` 统一了原子 JSON writer、模型正常结束判断、repair 响应解析和 verify/iterate 共同 CLI 参数；原有 artifact 路径、repair audit/评分边界和命令专属参数保持不变。
 数据引擎 shard 可复现性用例 `test_catalog_clean_and_mixed_are_shard_independent`（覆盖 `turnitover/engine/generate.py`）在已构建 `web/dist` 与 Chromium 就绪的环境连续运行 3 次通过；它不覆盖本 PR 的 `iterate` 路径。此前本机失败未完成可复现根因定位，故不作主分支或数据引擎逻辑失败归因。
 
 本地 `output/smoke-test/pr2-pipeline-no-thinking` 已记录一次 `accepted=true` 的真实模型 E2E：
 generation、render gate 和 active verifier 均完成，verifier 在三步主动观测后返回 `pass`。
 该记录使用受控的 toy cabinet 多视图输入，对应 `410ce57` 且 `dirty=true`，证据快照已纳入 Git；
-因此它证明受控 fixture 上的工程 E2E 已落地，但不构成当前 clean commit、单张真实照片重建或泛化效果结果。
+该次运行的 runtime repair 与 visual revision 调用均为 0，因此只证明受控 fixture 上的单轮生成—渲染—验证成功，不构成多轮修复效果、当前 clean commit、单张真实照片重建或泛化效果结果。
+
+## PR #2 复核修正（2026-10-10）
+
+本轮按 reviewer 的逐行复现修正三处边界：空白图指标只统计空间变化；generation、runtime repair 和 visual revision 在实际模型调用边界记录失败调用及已知 token；fixed/random 的非对象 JSON 统一进入非法决策反馈与最多三次尝试。新增的真实 Chromium 用例使用确定性模型 fixture，完整经过 verifier fail、`propose_repair`、补丁应用、第二轮 render gate 和 fresh verifier pass。
+
+在最新代码提交上重新构建 `web/dist` 并执行 typecheck；完整非浏览器测试为 141 项通过、1 项跳过，完整浏览器测试为 18 项通过。环境为 Python 3.12.7、Node.js 22.22.3、npm 10.9.8、Playwright 1.57.0、Chrome for Testing 143.0.7499.4。reviewer 提到的 `repair/loop.py` 本地改动尚未推送，当前保持待同步，不预先声称已吸收。
