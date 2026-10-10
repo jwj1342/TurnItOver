@@ -27,3 +27,19 @@ def test_native_render_gate_accepts_visible_program_and_structures_compile_failu
     assert environment_failure.stage == "program_load"
     assert environment_failure.error_type == "FileNotFoundError"
     assert environment_failure.failure_kind == "environment"
+
+
+def test_native_render_gate_rejects_constant_color_with_default_threshold(
+    tmp_path, render_config, views
+):
+    empty = ObjectProgram(
+        "export default function createObject(THREE) { "
+        "return {root: new THREE.Group(), joints: {}}; }"
+    )
+
+    rejected = run_render_gate(empty, tmp_path / "empty", render_config, views)
+
+    assert not rejected.success
+    assert rejected.stage == "pixel_check"
+    assert rejected.error_type == "BlankRender"
+    assert rejected.image_stddev == 0

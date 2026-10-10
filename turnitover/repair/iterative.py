@@ -88,12 +88,25 @@ def run_iterative(
         "total_tokens": 0,
     }
     write_json_atomic(output / "result.json", report)
+
+    def tracked_generator(kind: str):
+        def call(prompt: str, images: list[Path]) -> ModelResult:
+            report["model_calls"][kind] += 1
+            response = generator_call(prompt, images)
+            report["total_tokens"] += usage_tokens(response.usage)
+            return response
+        return call
+
+    def record_proposal_if_untracked(kind: str, calls_before: int, proposal: RepairProposal) -> None:
+        if report["model_calls"][kind] == calls_before:
+            report["model_calls"][kind] += 1
+            report["total_tokens"] += usage_tokens(proposal.usage)
+
     try:
         if initial_program is None:
-            generated = generate_program(generation_prompt or "", copied_references, output / "generation", generator_call)
+            generated = generate_program(generation_prompt or "", copied_references, output / "generation",
+                                         tracked_generator("generation"))
             program = generated.program
-            report["model_calls"]["generation"] = 1
-            report["total_tokens"] += usage_tokens(generated.usage)
         else:
             program = initial_program
             (output / "initial.ts").write_text(program.source, encoding="utf-8")
@@ -140,16 +153,16 @@ def run_iterative(
             assert gate_result is not None
             packet = _render_feedback(cfg.task, copied_references, gate_result, gate_dir)
             repair_dir = round_dir / "runtime-repairs" / f"repair-{runtime_calls:03d}"
+            calls_before = report["model_calls"]["runtime_repair"]
             try:
-                proposal = repair_call(program.source, generator_call, packet, repair_dir,
+                proposal = repair_call(program.source, tracked_generator("runtime_repair"), packet, repair_dir,
                                        previous_attempts=runtime_memory,
                                        remaining_calls=cfg.max_runtime_repairs-runtime_calls)
             except Exception as exc:
                 return _finish(output, report, "generation_failed", final_program=program,
                                phase="runtime_repair", error_type=type(exc).__name__)
             runtime_calls += 1
-            report["model_calls"]["runtime_repair"] += 1
-            report["total_tokens"] += usage_tokens(proposal.usage)
+            record_proposal_if_untracked("runtime_repair", calls_before, proposal)
             runtime_memory.append(_proposal_memory(proposal, runtime_calls - 1))
             if proposal.outcome == "stop":
                 return _finish(output, report, "render_failed", final_program=program,
@@ -196,8 +209,9 @@ def run_iterative(
         revised = None
         while visual_calls < cfg.max_visual_revisions:
             repair_dir = round_dir / "visual-revisions" / f"revision-{visual_calls:03d}"
+            calls_before = report["model_calls"]["visual_revision"]
             try:
-                proposal = repair_call(program.source, generator_call, packet, repair_dir,
+                proposal = repair_call(program.source, tracked_generator("visual_revision"), packet, repair_dir,
                                        previous_attempts=visual_memory,
                                        remaining_calls=cfg.max_visual_revisions-visual_calls)
             except Exception as exc:
@@ -205,8 +219,7 @@ def run_iterative(
                                phase="visual_revision", error_type=type(exc).__name__)
             attempt_index = visual_calls
             visual_calls += 1
-            report["model_calls"]["visual_revision"] += 1
-            report["total_tokens"] += usage_tokens(proposal.usage)
+            record_proposal_if_untracked("visual_revision", calls_before, proposal)
             round_record["visual_revisions"].append({
                 "outcome": proposal.outcome,
                 "error": proposal.error,
