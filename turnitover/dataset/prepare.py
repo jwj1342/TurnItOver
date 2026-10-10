@@ -53,7 +53,9 @@ def diagnosis(sample):
             text = f"Scene triangle count {c.params['triangles_after']} exceeds the configured budget."
         else:
             raise ValueError(f"No diagnosis template for {c.defect_id}")
-        findings.append({"defect_id": c.defect_id, "parts": list(c.parts), "severity": c.severity,
+        findings.append({"defect_id": c.defect_id, "parts": list(c.parts),
+                         "joint_id": c.params.get("joint") if c.defect_id == "kinematics.joint_axis" else None,
+                         "severity": c.severity,
                          "description": text, "parameters": c.params})
     return {"status": "fail" if findings else "pass", "findings": findings,
             "scope": "configured_synthetic_constraints", "privileged": True,

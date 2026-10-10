@@ -207,7 +207,7 @@ def test_iterative_loop_gates_and_fresh_verifies_final_revision(tmp_path):
             return {"status": "complete", "termination": "judge_finished", "spent": 1,
                     "model_calls": [{}], "trajectory": [{"step": 0, "payload": {"stats": {}}}],
                     "verdict": {"status": "fail", "confidence": 1.0,
-                                "findings": [{"defect_id": "geometry.missing_part", "parts": [],
+                                "findings": [{"defect_id": "geometry.missing_part", "parts": [], "joint_id": None,
                                               "severity": 1.0, "confidence": 1.0, "evidence_steps": [0],
                                               "description": "missing", "suggested_fix": "add it"}],
                                 "summary": "revise", "limitations": []}}
@@ -250,7 +250,7 @@ def test_iterative_loop_records_revision_limit_after_nonzero_budget_is_exhausted
         return {"status": "complete", "termination": "judge_finished", "spent": 1,
                 "model_calls": [{}], "trajectory": [{"step": 0, "payload": {"stats": {}}}],
                 "verdict": {"status": "fail", "confidence": 1.0,
-                            "findings": [{"defect_id": "geometry.missing_part", "parts": [],
+                            "findings": [{"defect_id": "geometry.missing_part", "parts": [], "joint_id": None,
                                           "severity": 1.0, "confidence": 1.0,
                                           "evidence_steps": [0], "description": "missing",
                                           "suggested_fix": "add it"}],

@@ -64,6 +64,11 @@ def main(argv: list[str] | None = None) -> int:
     ev.add_argument("--split", choices=("train", "validation", "test"), default="test")
     ev.add_argument("--out", type=Path, required=True)
 
+    sv = sub.add_parser("score-verifier", help="score frozen verifier v2 results against private gold")
+    sv.add_argument("--gold", type=Path, required=True)
+    sv.add_argument("--results", type=Path, required=True)
+    sv.add_argument("--out", type=Path, required=True)
+
     p = sub.add_parser("preview", help="export PNG screenshots, MP4 videos, and an offline gallery")
     p.add_argument("--out", type=Path, help="new/empty output directory (default: output/preview-TIMESTAMP)")
     p.add_argument("--program", type=Path, help="ABI-compatible TypeScript; defaults to the toy cabinet")
@@ -107,7 +112,8 @@ def main(argv: list[str] | None = None) -> int:
     return {"generate": _generate, "detectability": _detectability, "inspect": _inspect,
             "preview": _preview, "models-check": _models_check, "model-call": _model_call,
             "reconstruct": _model_call, "verify": _verify, "iterate": _iterate, "render-docs": _render_docs,
-            "make-splits": _dataset, "prepare-dataset": _dataset, "evaluate-dataset": _evaluate_dataset}[args.cmd](args)
+            "make-splits": _dataset, "prepare-dataset": _dataset, "evaluate-dataset": _evaluate_dataset,
+            "score-verifier": _score_verifier}[args.cmd](args)
 
 
 def _dataset(args) -> int:
@@ -123,6 +129,13 @@ def _evaluate_dataset(args) -> int:
     from turnitover.dataset.evaluate import evaluate_runtime
 
     print(evaluate_runtime(args.dataset, args.split, args.out))
+    return 0
+
+
+def _score_verifier(args) -> int:
+    from turnitover.verifier.scoring import score_verifier
+
+    print(score_verifier(args.gold, args.results, args.out))
     return 0
 
 
