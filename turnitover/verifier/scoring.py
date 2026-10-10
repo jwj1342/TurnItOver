@@ -9,6 +9,7 @@ import re
 
 from turnitover.core.jsonio import write_json_atomic
 from turnitover.verifier.contracts import VERIFIER_SCHEMA_VERSION
+from turnitover.verifier.gt_validator import GT_VALIDATION_SCHEMA_VERSION
 
 
 def score_verifier(gold_path: Path, results_root: Path, output_path: Path) -> dict:
@@ -27,16 +28,36 @@ def score_verifier(gold_path: Path, results_root: Path, output_path: Path) -> di
     for case_id, target in gold.items():
         expected = _signatures(target["findings"])
         expected_ids = {item[0] for item in expected}
-        is_defect = bool(expected)
-        counts["defect" if is_defect else "clean"] += 1
+        labeled_is_defect = bool(expected)
+        is_defect = labeled_is_defect
         result_path = results_root / case_id / "result.json"
         result, result_error = _read_result(result_path)
+        code_correct = None
+        validation_failed = False
         if result is not None:
             if result.get("schema_version") != VERIFIER_SCHEMA_VERSION:
                 raise ValueError(f"Verifier schema mismatch for {case_id}; rerun under v{VERIFIER_SCHEMA_VERSION}")
             if result.get("program_sha") != target["program_sha"]:
                 raise ValueError(f"Candidate program SHA mismatch for {case_id}")
-        outcome, predicted, result_error = _prediction(result, result_error)
+            validation, validation_error = _read_validation(results_root / case_id / "gt_validation.json")
+            if validation is not None:
+                if validation.get("schema_version") != GT_VALIDATION_SCHEMA_VERSION:
+                    raise ValueError(f"GT validation schema mismatch for {case_id}")
+                if validation.get("candidate_sha") != target["program_sha"]:
+                    raise ValueError(f"GT validation candidate SHA mismatch for {case_id}")
+                code_correct = validation.get("code_correct")
+                if validation.get("status") != "complete" or type(code_correct) is not bool:
+                    validation_error = "incomplete_gt_validation"
+                elif code_correct == labeled_is_defect:
+                    raise ValueError(f"Invalid ground truth for {case_id}: label and validated code disagree")
+                else:
+                    is_defect = not code_correct
+            if validation_error:
+                counts["validation_error"] += 1
+                validation_failed, result_error = True, validation_error
+        outcome, predicted, result_error = (("error", set(), result_error) if validation_failed
+                                             else _prediction(result, result_error))
+        counts["defect" if is_defect else "clean"] += 1
         predicted_ids = {item[0] for item in predicted}
 
         if outcome == "uncertain":
@@ -81,6 +102,7 @@ def score_verifier(gold_path: Path, results_root: Path, output_path: Path) -> di
                      "detection_correct": ((is_defect and outcome == "fail") or
                                            (not is_defect and outcome == "pass")),
                      "exact_match": exact_match, "error": result_error,
+                     "code_correct": code_correct,
                      "observations": case_observations, "budget_spent": case_spent,
                      "tokens": usage, "inference_time_ms": case_latency})
 
@@ -101,6 +123,7 @@ def score_verifier(gold_path: Path, results_root: Path, output_path: Path) -> di
         "exact_match_accuracy": _ratio(counts["exact_match"], n),
         "joint_localization_accuracy": _ratio(counts["joint_correct"], counts["joint_targets"]),
         "uncertain_rate": _ratio(counts["uncertain"], n), "error_rate": _ratio(counts["error"], n),
+        "gt_validation_error_rate": _ratio(counts["validation_error"], n),
         "average_observations": observations / n, "average_budget_spent": budget_spent / n,
         "tokens": {"input": token_totals["input"], "output": token_totals["output"],
                    "total": token_totals["total"], "average_total": token_totals["total"] / n,
@@ -151,6 +174,18 @@ def _read_result(path: Path) -> tuple[dict | None, str | None]:
     if not isinstance(result, dict):
         return None, "invalid_result_json"
     return result, None
+
+
+def _read_validation(path: Path) -> tuple[dict | None, str | None]:
+    if not path.is_file():
+        return None, "missing_gt_validation"
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None, "invalid_gt_validation_json"
+    if not isinstance(value, dict):
+        return None, "invalid_gt_validation_json"
+    return value, None
 
 
 def _prediction(result: dict | None, error: str | None):

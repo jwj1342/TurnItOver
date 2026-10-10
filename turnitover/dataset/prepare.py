@@ -122,6 +122,7 @@ def prepare(shards, splits_path: Path, output: Path):
                                            for o in observations]}
                 gold = {"id": uid, "source_id": sample.source_id, "sample_id": sample.sample_id,
                         "asset_id": sample.asset_id, "category": meta["category"], "split_group": group,
+                        "program_sha": sample.program_sha, "reference_sha": sample.reference_sha,
                         "provenance": {k: meta[k] for k in ("origin", "license")},
                         "quality": meta["quality"], "target": diagnosis(sample), "checks": to_dict(sample.checks),
                         "candidate_program": sample.program_source, "reference_program": meta["reference_program_source"]}

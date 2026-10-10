@@ -96,7 +96,8 @@ def main(argv: list[str] | None = None) -> int:
     v = sub.add_parser("verify", help="budgeted verifier with evidence-linked verdict and offline report")
     v.add_argument("--program", type=Path, required=True)
     _add_verification_arguments(v, reference_required=False)
-    v.add_argument("--reference-program", type=Path, help="optional privileged gold audit; never sent to judge")
+    v.add_argument("--reference-program", type=Path,
+                   help="optional privileged GT code validation after verdict; never sent to judge")
     v.add_argument("--local-model", type=Path, help="Qwen3-VL weights directory (CUDA); bypasses API configuration")
 
     it = sub.add_parser("iterate", help="generate, render-gate, verify, and repair a photo reconstruction")

@@ -120,6 +120,7 @@ def test_evaluation_counts_uncertain_as_miss_with_undefined_precision(tmp_path):
     prepare(shards, splits, prepared)
     gold_path = prepared / "test.gold.jsonl"
     row = json.loads(gold_path.read_text())
+    assert row["program_sha"] and row["reference_sha"]
     row["target"]["findings"] = [{"defect_id": "kinematics.joint_axis"}]
     gold_path.write_text(json.dumps(row) + "\n")
     metrics = evaluate_runtime(prepared, "test", tmp_path / "eval")

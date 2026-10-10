@@ -102,14 +102,16 @@ Partial traces remain available after errors. Full input/prompt/response logs ca
 Runs terminating with `invalid_decision` include the final schema-validation explanation in `error_message`;
 raw model responses from every attempt are retained.
 
-## Privileged gold audit
+## Privileged GT code validation
 
-`--reference-program known-good.ts` runs existing geometry/runtime checkers AFTER the judge's verdict in a
-separate session and writes `audit.json`. It never changes the judge verdict or enters a model prompt.
-Reference framing is shared within the audit. Candidate rendering for the judge uses candidate auto-framing:
+`--reference-program known-good.ts` runs deterministic contract, geometry, and runtime checks AFTER the judge's
+verdict in a separate session and writes `gt_validation.json` (`audit.json` remains as a compatibility alias).
+It reports `code_correct` but never changes the judge verdict or enters a model prompt. Reference framing is
+shared within validation. Candidate rendering for the judge uses candidate auto-framing:
 global scale relative to a reference program is therefore not a supported judge claim in this version.
-The audit needs matching part/joint conventions; unsupported or missing states can produce an audit error.
-It is not a calibrated oracle or complete physical/kinematic test suite.
+The validator compares joint IDs, types, parts, and limits directly, then compares geometry at rest, midpoint,
+and upper-limit states. Axis and anchor errors are therefore checked through their observable motion rather
+than source-code parsing. It is not a complete physical simulation test suite.
 
 ## Remaining research work
 

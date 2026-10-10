@@ -3,6 +3,7 @@ import json
 import pytest
 
 from turnitover.verifier.contracts import VERIFIER_SCHEMA_VERSION
+from turnitover.verifier.gt_validator import GT_VALIDATION_SCHEMA_VERSION
 from turnitover.verifier.scoring import score_verifier
 
 
@@ -23,6 +24,11 @@ def _result(root, case_id, program_sha, status, findings, *, schema=VERIFIER_SCH
              "model_calls": [{"usage": {"input_tokens": 8, "output_tokens": 2, "total_tokens": 10},
                                "elapsed_ms": 5.0}]}
     (folder / "result.json").write_text(json.dumps(value))
+    validation = {"schema_version": GT_VALIDATION_SCHEMA_VERSION, "status": "complete",
+                  "candidate_sha": program_sha, "reference_sha": "reference",
+                  "code_correct": not findings if status != "pass" else not bool(findings),
+                  "checks": [], "privileged": True, "used_by_verifier": False}
+    (folder / "gt_validation.json").write_text(json.dumps(validation))
 
 
 def test_scores_detection_exact_joint_cost_and_latency(tmp_path):
@@ -48,6 +54,9 @@ def test_scores_detection_exact_joint_cost_and_latency(tmp_path):
     _result(results, "axis-wrong-joint", "axis-wrong-sha", "fail",
             [_finding("kinematics.joint_axis", ["door"], "other-hinge")])
     _result(results, "accepted-defect", "offset-sha", "pass", [])
+    validation = json.loads((results / "accepted-defect/gt_validation.json").read_text())
+    validation["code_correct"] = False
+    (results / "accepted-defect/gt_validation.json").write_text(json.dumps(validation))
 
     report = score_verifier(gold, results, tmp_path / "metrics.json")
 
@@ -84,4 +93,27 @@ def test_rejects_old_schema_and_candidate_mismatch(tmp_path):
         score_verifier(gold, tmp_path / "old", tmp_path / "old-metrics.json")
     _result(tmp_path / "wrong", "case", "different", "pass", [])
     with pytest.raises(ValueError, match="SHA mismatch"):
+        score_verifier(gold, tmp_path / "wrong", tmp_path / "wrong-metrics.json")
+
+
+def test_requires_validated_code_and_rejects_label_disagreement(tmp_path):
+    gold = tmp_path / "gold.jsonl"
+    row = {"id": "case", "program_sha": "sha",
+           "target": {"status": "fail", "findings": [
+               _finding("kinematics.joint_axis", ["door"], "hinge")]}}
+    _gold(gold, [row])
+    _result(tmp_path / "missing", "case", "sha", "fail", row["target"]["findings"])
+    (tmp_path / "missing/case/gt_validation.json").unlink()
+
+    report = score_verifier(gold, tmp_path / "missing", tmp_path / "missing-metrics.json")
+    assert report["error_rate"] == report["gt_validation_error_rate"] == 1
+    assert report["per_case"][0]["error"] == "missing_gt_validation"
+    assert report["tokens"]["total"] == 10 and report["average_observations"] == 2
+
+    _result(tmp_path / "wrong", "case", "sha", "fail", row["target"]["findings"])
+    validation_path = tmp_path / "wrong/case/gt_validation.json"
+    validation = json.loads(validation_path.read_text())
+    validation["code_correct"] = True
+    validation_path.write_text(json.dumps(validation))
+    with pytest.raises(ValueError, match="Invalid ground truth"):
         score_verifier(gold, tmp_path / "wrong", tmp_path / "wrong-metrics.json")
