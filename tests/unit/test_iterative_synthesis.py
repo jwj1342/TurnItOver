@@ -67,14 +67,65 @@ def test_repair_proposal_reuses_public_feedback_contract(tmp_path):
 def test_image_stddev_distinguishes_constant_and_varied_images():
     import io
 
-    constant = io.BytesIO()
-    Image.new("RGB", (4, 4), "white").save(constant, format="PNG")
+    constant_gray = io.BytesIO()
+    Image.new("RGB", (4, 4), "white").save(constant_gray, format="PNG")
+    constant_color = io.BytesIO()
+    Image.new("RGB", (4, 4), (32, 32, 36)).save(constant_color, format="PNG")
     varied = Image.new("RGB", (4, 4), "white")
     varied.putpixel((0, 0), (0, 0, 0))
     varied_bytes = io.BytesIO()
     varied.save(varied_bytes, format="PNG")
-    assert image_stddev(constant.getvalue()) == 0
+    assert image_stddev(constant_gray.getvalue()) == 0
+    assert image_stddev(constant_color.getvalue()) == 0
     assert image_stddev(varied_bytes.getvalue()) > 1
+
+
+def test_iterative_counts_incomplete_generation_response(tmp_path):
+    photo = _photo(tmp_path / "photo.png")
+
+    def generator(*_):
+        return ModelResult(SOURCE, "fixture", {"total_tokens": 17}, "length", 1.0)
+
+    result = run_iterative((photo,), tmp_path / "run", _render(tmp_path),
+                           _views(__import__("pathlib").Path(__file__).resolve().parents[2]),
+                           IterativeConfig(), generator, generation_prompt="build")
+
+    assert result["status"] == "generation_failed"
+    assert result["model_calls"]["generation"] == 1
+    assert result["total_tokens"] == 17
+
+
+@pytest.mark.parametrize("phase", ["runtime_repair", "visual_revision"])
+def test_iterative_counts_incomplete_repair_response(tmp_path, phase):
+    photo = _photo(tmp_path / "photo.png")
+
+    def generator(*_):
+        return ModelResult('{"stop": true}', "fixture", {"total_tokens": 17}, "length", 1.0)
+
+    def gate(program, output, *args):
+        output.mkdir(parents=True)
+        return RenderGateResult(phase == "visual_revision", "complete" if phase == "visual_revision" else "compile",
+                                None if phase == "visual_revision" else "CompileError",
+                                None if phase == "visual_revision" else "candidate error",
+                                failure_kind=None if phase == "visual_revision" else "candidate")
+
+    def verifier(*args, **kwargs):
+        return {"status": "complete", "termination": "judge_finished", "spent": 0,
+                "model_calls": [], "trajectory": [],
+                "verdict": {"status": "fail", "confidence": 1.0, "findings": [],
+                            "summary": "revise", "limitations": []}}
+
+    cfg = IterativeConfig(max_runtime_repairs=1, max_visual_revisions=1,
+                          verifier=VerifyConfig(budget=0))
+    result = run_iterative((photo,), tmp_path / "run", _render(tmp_path),
+                           _views(__import__("pathlib").Path(__file__).resolve().parents[2]), cfg,
+                           generator, initial_program=ObjectProgram(SOURCE), gate_call=gate,
+                           verifier_call=verifier)
+
+    assert result["status"] == "generation_failed"
+    assert result["phase"] == phase
+    assert result["model_calls"][phase] == 1
+    assert result["total_tokens"] == 17
 
 
 def test_render_gate_preserves_original_system_error(tmp_path, monkeypatch):

@@ -30,7 +30,7 @@ class RenderGateResult:
 def image_stddev(png: bytes) -> float:
     with Image.open(io.BytesIO(png)) as image:
         rgb = np.asarray(image.convert("RGB"), dtype=np.float32)
-    return float(rgb.std())
+    return float(rgb.std(axis=(0, 1)).max())
 
 
 def run_render_gate(program: ObjectProgram, output: Path, render: RenderConfig,

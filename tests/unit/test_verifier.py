@@ -203,6 +203,36 @@ def test_three_invalid_decisions_end_without_spending_budget(tmp_path, context):
     assert not (tmp_path / "observations").exists()
 
 
+@pytest.mark.parametrize("mode", ["fixed", "random"])
+@pytest.mark.parametrize("invalid", ["null", "42", "false"])
+def test_baselines_retry_non_object_json(tmp_path, context, mode, invalid):
+    responses = iter([invalid, json.dumps(final())])
+    prompts = []
+
+    def model(prompt, images):
+        prompts.append(prompt)
+        return ModelResult(next(responses), "mock", {"total_tokens": 1}, "completed", 1)
+
+    result = run_verification(Session(), VisionPolicy(model, tmp_path, [], mode=mode), context, 0,
+                              lambda *args: "unused")
+
+    assert result.termination == "budget_exhausted" and result.spent == 0
+    assert len(prompts) == 2
+    assert "Validation feedback" in prompts[1]
+
+
+@pytest.mark.parametrize("mode", ["fixed", "random"])
+def test_baselines_end_after_three_non_object_decisions(tmp_path, context, mode):
+    def model(*_):
+        return ModelResult("null", "mock", {"total_tokens": 1}, "completed", 1)
+
+    policy = VisionPolicy(model, tmp_path, [], mode=mode)
+    result = run_verification(Session(), policy, context, 0, lambda *args: "unused")
+
+    assert result.termination == "invalid_decision" and result.spent == 0
+    assert len(policy.calls) == 3
+
+
 def test_fixed_baseline_uses_one_final_model_call(tmp_path, context):
     calls = []
     def model(prompt, images):
