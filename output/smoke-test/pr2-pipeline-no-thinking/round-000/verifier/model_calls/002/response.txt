@@ -1,0 +1,7 @@
+{
+  "action": {
+    "type": "actuate_joint",
+    "joint_id": "door",
+    "detent": "limit"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "path": "model_calls/003",
+  "status": "received",
+  "model": "qwen3.7-plus",
+  "usage": {
+    "prompt_tokens": 2946,
+    "total_tokens": 3062,
+    "completion_tokens": 116,
+    "prompt_tokens_details": {
+      "cached_tokens": 1152,
+      "image_tokens": 1592,
+      "text_tokens": 1354
+    },
+    "completion_tokens_details": {
+      "text_tokens": 116
+    }
+  },
+  "finish_reason": "stop",
+  "elapsed_ms": 5993.497307004873
+}

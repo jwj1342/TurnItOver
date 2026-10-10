@@ -5,7 +5,7 @@ from urllib.error import HTTPError
 import pytest
 from PIL import Image
 
-from turnitover.models.client import ModelError, complete, parse_response, request_payload
+from turnitover.models.client import ModelError, complete, is_normal_finish_reason, parse_response, request_payload
 from turnitover.models.commands import extract_program
 from turnitover.models.config import ModelConfig, model_config, read_environment
 
@@ -61,6 +61,46 @@ def test_provider_vision_wire_formats(tmp_path, provider, suffix, image_key, tok
     assert "secret-key" in json.dumps(headers)
 
 
+@pytest.mark.parametrize("configured,expected", [(False, False), (True, True)])
+def test_qwen37_plus_uses_configured_thinking_mode(configured, expected):
+    qwen = ModelConfig("generator", "openai_compatible", "qwen3.7-plus",
+                       "https://test/v1", "secret-key", enable_thinking=configured)
+    _, _, body = request_payload(qwen, "build", [])
+    assert body["enable_thinking"] is expected
+
+
+def test_qwen37_plus_thinking_defaults_off_and_can_be_enabled_from_environment():
+    base = {"TIO_GENERATOR_PROVIDER": "openai_compatible",
+            "TIO_GENERATOR_MODEL": "qwen3.7-plus"}
+    disabled = model_config("generator", base)
+    enabled = model_config("generator", {**base, "TIO_QWEN37_ENABLE_THINKING": "true"})
+
+    assert disabled.enable_thinking is False
+    assert disabled.public()["enable_thinking"] is False
+    assert enabled.enable_thinking is True
+
+
+def test_qwen37_plus_rejects_invalid_thinking_configuration():
+    with pytest.raises(ValueError, match="TIO_QWEN37_ENABLE_THINKING"):
+        model_config("generator", {
+            "TIO_GENERATOR_PROVIDER": "openai_compatible",
+            "TIO_GENERATOR_MODEL": "qwen3.7-plus",
+            "TIO_QWEN37_ENABLE_THINKING": "sometimes",
+        })
+
+
+def test_qwen37_plus_setting_does_not_change_other_compatible_models():
+    generic = model_config("generator", {
+        "TIO_GENERATOR_PROVIDER": "openai_compatible",
+        "TIO_GENERATOR_MODEL": "test-model",
+        "TIO_QWEN37_ENABLE_THINKING": "true",
+    })
+    assert generic.enable_thinking is None
+
+    _, _, generic_body = request_payload(generic, "build", [])
+    assert "enable_thinking" not in generic_body
+
+
 @pytest.mark.parametrize("provider,response", [
     ("openai", {"output": [{"type": "reasoning"}, {"type": "message", "content": [{"type": "output_text", "text": "ok"}]}], "status": "completed"}),
     ("anthropic", {"content": [{"type": "thinking", "thinking": "private"}, {"type": "text", "text": "ok"}], "stop_reason": "end_turn"}),
@@ -69,6 +109,12 @@ def test_provider_vision_wire_formats(tmp_path, provider, suffix, image_key, tok
 ])
 def test_response_text_excludes_reasoning(provider, response):
     assert parse_response(provider, response, 1).text == "ok"
+
+
+@pytest.mark.parametrize("reason", ("completed", "end_turn", "STOP", "stop"))
+def test_normal_finish_reasons_are_shared(reason):
+    assert is_normal_finish_reason(reason)
+    assert not is_normal_finish_reason("length")
 
 
 def test_http_error_redacts_body_and_url(monkeypatch):
