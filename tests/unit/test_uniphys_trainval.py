@@ -2,6 +2,8 @@ import dataclasses
 import json
 from types import SimpleNamespace
 
+import pytest
+
 from scripts import convert_uniphys, prepare_uniphys_verifier_benchmark, select_uniphys_trainval
 from turnitover.core.serde import to_dict
 
@@ -92,3 +94,16 @@ def test_builds_three_cases_per_object_into_separate_gold_files(tmp_path, toy_sp
     assert len((output / "train.gold.jsonl").read_text().splitlines()) == 3
     assert len((output / "validation.gold.jsonl").read_text().splitlines()) == 3
     assert not (output / "test.gold.jsonl").exists()
+
+
+def test_rejects_duplicate_candidate_sha_before_completing_benchmark():
+    group = "uniphys:fixture:UPB_00000030"
+    cases = [{"id": f"UPB_00000030-{variant}", "split_group": group, "split": "train"}
+             for variant in ("clean", "axis", "offset")]
+    gold = {"train": [
+        {**case, "program_sha": "duplicate" if index < 2 else "unique"}
+        for index, case in enumerate(cases)
+    ]}
+
+    with pytest.raises(ValueError, match="candidate program SHAs must be unique"):
+        prepare_uniphys_verifier_benchmark._validate_case_identity(cases, gold)

@@ -17,7 +17,7 @@
 
 **已实现：资产身份与 test-only 评测边界。** [`convert_uniphys.py`](../scripts/convert_uniphys.py) 将选定 URDF 固化为可由 `CatalogSource` 加载的 `AssetSpec` catalog，逐资产记录数据集 revision、转换输入哈希、许可证、continuous joint 零位固定策略和唯一 `split_group`，并输出全部映射到 test 的显式清单。旧下载清单可逐文件验证其中 14 个资产；其余 6 个资产记录本次实际转换输入哈希，不冒充旧清单已覆盖。60-case 构造器只遍历该 catalog 中的20个 `AssetSpec`，不再重复维护对象 ID 或读取可变的原始 `meta_data.json`，并在 object、case 和 private gold 中记录 `split_group` 与 `split=test`；catalog 版完整产物位于 `data/benchmarks/uniphys-verifier-60-catalog-v1/`。复现命令为 `python scripts/convert_uniphys.py`，随后运行 `python scripts/prepare_uniphys_verifier_benchmark.py`。
 
-**已实现：UniPhys Train/Validation case 收集。** [`select_uniphys_trainval.py`](../scripts/select_uniphys_trainval.py) 排除冻结的20个 Test 对象，按固定 seed 对其余对象执行 URDF 条件检查和完整 Mesh 转换预检，收集100个 Train 与20个 Validation 对象；[`convert_uniphys.py`](../scripts/convert_uniphys.py) 和 [`prepare_uniphys_verifier_benchmark.py`](../scripts/prepare_uniphys_verifier_benchmark.py) 仅在显式提供 split plan 时生成独立 train/validation catalog。正式产物含300个 Train case、60个 Validation case和360份完成的逐案例预检；两者及 Test 的原始物体交集均为空。默认调用仍只复现原有 Test。
+**已实现：UniPhys Train/Validation case 收集。** [`select_uniphys_trainval.py`](../scripts/select_uniphys_trainval.py) 排除冻结的20个 Test 对象，按固定 seed 对其余对象执行 URDF 条件检查和完整 Mesh 转换预检，收集100个 Train 与20个 Validation 对象；[`convert_uniphys.py`](../scripts/convert_uniphys.py) 和 [`prepare_uniphys_verifier_benchmark.py`](../scripts/prepare_uniphys_verifier_benchmark.py) 仅在显式提供 split plan 时生成独立 train/validation catalog，并在完成前统一校验 case ID、候选 SHA 及每物体 `clean / axis / offset` 三种变体。正式产物含300个 Train case、60个 Validation case和360份完成的逐案例预检；两者及 Test 的原始物体交集均为空。[`run_uniphys_verifier_batch.py`](../scripts/run_uniphys_verifier_batch.py) 通过 `--split train|validation|test` 对三者复用相同的冻结身份检查、逐案例落盘和评分流程；真实模型批次尚未运行。
 
 **可复用的既有基础。** ReplicaCAD 数据引擎已支持按原始资产分组、腐蚀样本和私有真值隔离；Oracle 动作/成对诊断导出、Qwen3-VL 处理器适配及 assistant-only loss 已存在，见 [`dataset-pipeline.md`](dataset-pipeline.md) 和 [`oracle-supervision.md`](oracle-supervision.md)。这些是可复用组件，**不是 UniPhys 新数据已接通或模型已完成微调**。
 
@@ -39,4 +39,4 @@
 
 ---
 
-最近同步：**2026-10-11 · Train/Validation case 已生成**；冻结100/20个对象并生成300/60个 case，360份预检全部完成，Train、Validation、Test 原始物体无交叉；尚未导出训练 Episode 或运行 SFT。
+最近同步：**2026-10-11 · Train/Validation 冻结检查与批跑入口已对齐 Test**；三套 split 统一校验 case/候选 SHA/三变体，并复用同一增量批跑评分入口；现有产物只读检查为 Test 60、Validation 60、Train 300个唯一候选，真实模型批次尚未运行。

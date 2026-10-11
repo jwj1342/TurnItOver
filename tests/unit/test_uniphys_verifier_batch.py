@@ -11,16 +11,16 @@ def _sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _benchmark(tmp_path):
+def _benchmark(tmp_path, *, split="test", object_count=20):
     root = tmp_path / "benchmark"
     (root / "cases").mkdir(parents=True)
     (root / "objects").mkdir()
     catalog = root / "catalog.json"
     catalog.write_text("frozen catalog", encoding="utf-8")
     cases, gold = [], []
-    for object_index in range(20):
+    for object_index in range(object_count):
         object_id = f"UPB_{object_index:08d}"
-        split_group = f"uniphys:test:{object_id}"
+        split_group = f"uniphys:{split}:{object_id}"
         object_dir = root / "objects" / object_id
         object_dir.mkdir()
         reference_program = object_dir / "clean.ts"
@@ -38,22 +38,27 @@ def _benchmark(tmp_path):
             cases.append({"id": case_id, "program": program.relative_to(root).as_posix(),
                           "reference_program": reference_program.relative_to(root).as_posix(),
                           "reference_images": [image.relative_to(root).as_posix()],
-                          "split_group": split_group, "split": "test", "task": "verify"})
+                          "split_group": split_group, "split": split, "task": "verify"})
             findings = [] if variant == "clean" else [{
                 "defect_id": "structure.part_offset", "parts": ["part"], "joint_id": None}]
             gold.append({"id": case_id, "program_sha": program_sha,
                          "reference_sha": reference_sha, "split_group": split_group,
-                         "split": "test", "target": {
+                         "split": split, "target": {
                              "status": "pass" if variant == "clean" else "fail",
                              "findings": findings}})
-    (root / "test.gold.jsonl").write_text(
+    (root / f"{split}.gold.jsonl").write_text(
         "".join(json.dumps(row) + "\n" for row in gold), encoding="utf-8")
     manifest = {
-        "status": "complete", "object_count": 20, "case_count": 60,
-        "preflight": {"status": "complete", "validated_cases": 60},
+        "status": "complete", "object_count": object_count, "case_count": 3 * object_count,
+        "object_counts": {split: object_count}, "case_counts": {split: 3 * object_count},
+        "preflight": {"status": "complete", "validated_cases": 3 * object_count},
         "verifier_schema_version": VERIFIER_SCHEMA_VERSION,
         "catalog": str(catalog.resolve()), "catalog_sha256": _sha256(catalog), "cases": cases,
     }
+    if split != "test":
+        splits = root / "trainval-splits.json"
+        splits.write_text(json.dumps({"version": 1, "split": split}), encoding="utf-8")
+        manifest.update(splits=str(splits.resolve()), splits_sha256=_sha256(splits))
     (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     return root
 
@@ -68,8 +73,8 @@ def _complete_verify(program, output, render, views, config, **kwargs):
 
 
 def _score(gold, results, output):
-    assert len(gold.read_text(encoding="utf-8").splitlines()) == 60
-    report = {"status": "complete", "n": 60}
+    count = len(gold.read_text(encoding="utf-8").splitlines())
+    report = {"status": "complete", "n": count}
     output.write_text(json.dumps(report), encoding="utf-8")
     return report
 
@@ -86,6 +91,21 @@ def test_runs_all_frozen_cases_and_scores(tmp_path):
     assert report["totals"] == {"planned": 60, "completed": 60, "errors": 0}
     assert (output / "metrics.json").is_file()
     assert all(task["status"] == "complete" for task in report["tasks"])
+
+
+@pytest.mark.parametrize("split", ("train", "validation"))
+def test_runs_train_validation_with_the_same_frozen_checks(tmp_path, split):
+    benchmark = _benchmark(tmp_path, split=split, object_count=2)
+    output = tmp_path / "results"
+
+    report = run_uniphys_verifier_batch.run(
+        benchmark, output, tmp_path / ".env", split=split, policy="runtime",
+        verify_case=_complete_verify, score=_score)
+
+    assert report["status"] == "complete"
+    assert report["config"]["split"] == split
+    assert report["totals"] == {"planned": 6, "completed": 6, "errors": 0}
+    assert all(task["split"] == split for task in report["tasks"])
 
 
 def test_rejects_a_case_path_outside_the_frozen_benchmark(tmp_path):

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import defaultdict
 import hashlib
 import json
 from pathlib import Path
@@ -27,6 +28,31 @@ from turnitover.verifier.gt_validator import validate_code
 OBJECT_COUNT = 20
 MAX_TRIANGLES = 1_000_000
 MAX_DRAW_CALLS = 1_024
+
+
+def _validate_case_identity(cases: list[dict], gold: dict[str, list[dict]]) -> None:
+    gold_rows = [row for rows in gold.values() for row in rows]
+    case_ids = [row["id"] for row in cases]
+    gold_by_id = {row["id"]: row for row in gold_rows}
+    if len(set(case_ids)) != len(case_ids) or len(gold_by_id) != len(gold_rows):
+        raise ValueError("Benchmark case IDs must be unique")
+    if set(case_ids) != set(gold_by_id):
+        raise ValueError("Benchmark and gold case IDs differ")
+    program_shas = [row["program_sha"] for row in gold_rows]
+    if len(set(program_shas)) != len(program_shas):
+        raise ValueError("Benchmark candidate program SHAs must be unique")
+    variants_by_group = defaultdict(list)
+    for case in cases:
+        target = gold_by_id[case["id"]]
+        if (case["split"] != target["split"]
+                or case["split_group"] != target["split_group"]):
+            raise ValueError(f"Case split identity mismatch: {case['id']}")
+        variants_by_group[case["split_group"]].append(
+            (case["id"].rsplit("-", 1)[-1], case["split"]))
+    if any(sorted(variant for variant, _ in rows) != ["axis", "clean", "offset"]
+           or len({split for _, split in rows}) != 1
+           for rows in variants_by_group.values()):
+        raise ValueError("Each split_group must contain clean/axis/offset exactly once")
 
 
 def _load_frozen_catalog(catalog_path: Path) -> tuple[dict, CatalogSource, tuple]:
@@ -145,6 +171,7 @@ def run(catalog_path: Path, output: Path, *, splits_path: Path | None = None,
                     "target": {"status": "pass" if expected_correct else "fail", "findings": finding},
                 })
             write_json_atomic(output / "manifest.json", manifest)
+        _validate_case_identity(cases, gold)
         for split, rows in gold.items():
             (output / f"{split}.gold.jsonl").write_text(
                 "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows), encoding="utf-8")

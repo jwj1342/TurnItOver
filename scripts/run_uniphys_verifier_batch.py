@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run and score the frozen 60-case UniPhys verifier benchmark."""
+"""Run and score one frozen UniPhys verifier benchmark split."""
 from __future__ import annotations
 
 import argparse
@@ -25,7 +25,7 @@ from turnitover.verifier.runner import VerifyConfig, verify
 from turnitover.verifier.scoring import score_verifier
 
 
-CASE_COUNT = 60
+SPLITS = ("train", "validation", "test")
 TERMINAL_STATUSES = {"complete", "error"}
 
 
@@ -42,7 +42,7 @@ def _resolve_inside(root: Path, value: str, label: str) -> Path:
     return path
 
 
-def _load_gold(path: Path) -> dict[str, dict]:
+def _load_gold(path: Path, split: str) -> dict[str, dict]:
     rows = {}
     for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
         if not line.strip():
@@ -53,24 +53,35 @@ def _load_gold(path: Path) -> dict[str, dict]:
             raise ValueError(f"Invalid gold case id on line {number}")
         if case_id in rows:
             raise ValueError(f"Duplicate gold case id: {case_id}")
-        if row.get("split") != "test" or not isinstance(row.get("split_group"), str):
-            raise ValueError(f"Gold case is not test-only: {case_id}")
+        if row.get("split") != split or not isinstance(row.get("split_group"), str):
+            raise ValueError(f"Gold case is not in the {split} split: {case_id}")
         rows[case_id] = row
     return rows
 
 
-def _load_benchmark(benchmark: Path) -> tuple[dict, list[dict], Path]:
+def _load_benchmark(benchmark: Path, split: str = "test") -> tuple[dict, list[dict], Path]:
+    if split not in SPLITS:
+        raise ValueError(f"Unsupported benchmark split: {split}")
     root = benchmark.resolve()
     manifest_path = root / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     cases = manifest.get("cases")
-    if (manifest.get("status") != "complete" or manifest.get("object_count") != 20
-            or manifest.get("case_count") != CASE_COUNT or not isinstance(cases, list)
-            or len(cases) != CASE_COUNT
-            or manifest.get("preflight", {}).get("validated_cases") != CASE_COUNT):
-        raise ValueError("Expected a complete, preflighted 20-object/60-case benchmark")
+    if (manifest.get("status") != "complete" or not isinstance(cases, list)
+            or manifest.get("case_count") != len(cases)
+            or manifest.get("preflight", {}).get("validated_cases") != len(cases)):
+        raise ValueError("Expected a complete, fully preflighted benchmark")
     if manifest.get("verifier_schema_version") != VERIFIER_SCHEMA_VERSION:
         raise ValueError("Benchmark verifier schema does not match this checkout")
+    object_counts, case_counts = manifest.get("object_counts"), manifest.get("case_counts")
+    if isinstance(object_counts, dict) and isinstance(case_counts, dict):
+        object_count, case_count = object_counts.get(split), case_counts.get(split)
+    elif split == "test":
+        object_count, case_count = manifest.get("object_count"), manifest.get("case_count")
+    else:
+        raise ValueError(f"Benchmark manifest has no counts for the {split} split")
+    if (type(object_count) is not int or object_count < 1
+            or type(case_count) is not int or case_count != 3 * object_count):
+        raise ValueError(f"Invalid object/case counts for the {split} split")
 
     catalog_value = manifest.get("catalog")
     if not isinstance(catalog_value, str) or not catalog_value:
@@ -80,17 +91,24 @@ def _load_benchmark(benchmark: Path) -> tuple[dict, list[dict], Path]:
         catalog = (root / catalog).resolve()
     if not catalog.is_file() or _sha256(catalog) != manifest.get("catalog_sha256"):
         raise ValueError("Frozen catalog is missing or its SHA-256 has changed")
+    splits_value = manifest.get("splits")
+    if splits_value is not None:
+        splits_path = Path(splits_value)
+        if not splits_path.is_absolute():
+            splits_path = (root / splits_path).resolve()
+        if not splits_path.is_file() or _sha256(splits_path) != manifest.get("splits_sha256"):
+            raise ValueError("Frozen split manifest is missing or its SHA-256 has changed")
 
-    gold_path = root / "test.gold.jsonl"
-    gold = _load_gold(gold_path)
-    if len(gold) != CASE_COUNT:
-        raise ValueError(f"Expected {CASE_COUNT} unique gold cases, got {len(gold)}")
+    gold_path = root / f"{split}.gold.jsonl"
+    gold = _load_gold(gold_path, split)
+    if len(gold) != case_count:
+        raise ValueError(f"Expected {case_count} unique {split} gold cases, got {len(gold)}")
 
     loaded = []
     seen = set()
     program_shas = set()
     variants_by_group = defaultdict(set)
-    for row in cases:
+    for row in (row for row in cases if row.get("split") == split):
         case_id = row.get("id")
         if (not isinstance(case_id, str)
                 or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", case_id)
@@ -100,8 +118,7 @@ def _load_benchmark(benchmark: Path) -> tuple[dict, list[dict], Path]:
         target = gold.get(case_id)
         if target is None:
             raise ValueError(f"Benchmark case is missing from gold: {case_id}")
-        if (row.get("split") != "test" or row.get("split_group") != target.get("split_group")
-                or target.get("split") != "test"):
+        if (row.get("split_group") != target.get("split_group") or target.get("split") != split):
             raise ValueError(f"Case split identity mismatch: {case_id}")
         program_path = _resolve_inside(root, row.get("program"), f"program for {case_id}")
         reference_program_path = _resolve_inside(
@@ -132,10 +149,11 @@ def _load_benchmark(benchmark: Path) -> tuple[dict, list[dict], Path]:
         })
     if seen != set(gold):
         raise ValueError("Benchmark and gold case IDs differ")
-    if (len(variants_by_group) != 20
+    if (len(variants_by_group) != object_count
             or any(variants != {"clean", "axis", "offset"}
                    for variants in variants_by_group.values())):
-        raise ValueError("Expected clean/axis/offset exactly once for each of 20 split groups")
+        raise ValueError(
+            f"Expected clean/axis/offset exactly once for each of {object_count} split groups")
     return manifest, loaded, gold_path
 
 
@@ -152,6 +170,7 @@ def run(
     output: Path,
     env_file: Path,
     *,
+    split: str = "test",
     policy: str = "active",
     budget: int = 8,
     seed: int = 0,
@@ -166,7 +185,7 @@ def run(
 ) -> dict:
     if output.exists() and any(output.iterdir()):
         raise ValueError(f"Batch output directory is not empty: {output}")
-    benchmark_manifest, cases, gold_path = _load_benchmark(benchmark)
+    benchmark_manifest, cases, gold_path = _load_benchmark(benchmark, split)
     config = VerifyConfig(budget=budget, mode=policy, seed=seed, action_types=action_types,
                           max_triangles=max_triangles, max_draw_calls=max_draw_calls)
     config.validate()
@@ -186,17 +205,18 @@ def run(
         "benchmark": str(benchmark.resolve()),
         "benchmark_manifest_sha256": _sha256(benchmark.resolve() / "manifest.json"),
         "catalog_sha256": benchmark_manifest["catalog_sha256"],
+        "splits_sha256": benchmark_manifest.get("splits_sha256"),
         "model": model.public() if model else {
             "kind": "local_qwen" if local_model else "offline",
             "name": local_model.name if local_model else None,
         },
         "config": {
-            "policy": policy, "budget": budget, "seed": seed, "size": size,
+            "split": split, "policy": policy, "budget": budget, "seed": seed, "size": size,
             "views": str(views_path.resolve()), "action_types": list(action_types),
             "max_triangles": max_triangles, "max_draw_calls": max_draw_calls,
         },
         "tasks": [{
-            "id": case["id"], "status": "pending", "split": "test",
+            "id": case["id"], "status": "pending", "split": split,
             "split_group": case["split_group"], "program_sha": case["program"].sha,
             "reference_sha": case["reference_program"].sha,
             "reference_image_sha256": [_sha256(path) for path in case["references"]],
@@ -259,6 +279,7 @@ def main() -> None:
                         default=Path("data/benchmarks/uniphys-verifier-60-catalog-v1"))
     parser.add_argument("--out", type=Path, default=Path("output/uniphys-verifier-60"))
     parser.add_argument("--env-file", type=Path, default=Path(".env"))
+    parser.add_argument("--split", choices=SPLITS, default="test")
     parser.add_argument("--policy", choices=("active", "fixed", "random", "runtime"), default="active")
     parser.add_argument("--budget", type=int, default=8)
     parser.add_argument("--seed", type=int, default=0)
@@ -271,7 +292,8 @@ def main() -> None:
     parser.add_argument("--local-model", type=Path)
     args = parser.parse_args()
     report = run(
-        args.benchmark.resolve(), args.out.resolve(), args.env_file.resolve(), policy=args.policy,
+        args.benchmark.resolve(), args.out.resolve(), args.env_file.resolve(), split=args.split,
+        policy=args.policy,
         budget=args.budget, seed=args.seed, size=args.size, views_path=args.views.resolve(),
         action_types=tuple(args.actions), max_triangles=args.max_triangles,
         max_draw_calls=args.max_draw_calls,
