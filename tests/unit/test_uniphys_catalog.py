@@ -2,8 +2,12 @@ import dataclasses
 import hashlib
 import json
 
+import pytest
+
 from scripts import convert_uniphys
+from scripts.prepare_uniphys_verifier_benchmark import _load_frozen_catalog
 from turnitover.assets.catalog import CatalogSource
+from turnitover.core.serde import to_dict
 
 
 def test_convert_uniphys_freezes_provenance_and_evaluation_split_group(tmp_path, toy_spec, monkeypatch):
@@ -47,3 +51,27 @@ def test_convert_uniphys_freezes_provenance_and_evaluation_split_group(tmp_path,
     assert report["status"] == "complete" and report["role"] == "evaluation_only"
     assert report["assets"][0]["asset_sha256"]
     assert report["assets"][0]["continuous_joints_fixed_at_zero"] == ["spin"]
+
+
+def test_benchmark_catalog_is_the_only_20_object_identity_source(tmp_path, toy_spec):
+    assets = []
+    for index in range(20):
+        asset_id = f"UPB_{index:08d}"
+        spec_path = tmp_path / f"{asset_id}.json"
+        spec_path.write_text(json.dumps(to_dict(dataclasses.replace(
+            toy_spec, asset_id=asset_id, category=f"category-{index}"))))
+        assets.append({"spec": spec_path.name, "split_group": f"uniphys:test:{asset_id}",
+                       "origin": "fixture", "license": "fixture"})
+    catalog = {"version": 1, "source_id": "uniphys-test", "dataset_revision": "a" * 40,
+               "evaluation_only": True, "assets": assets}
+    catalog_path = tmp_path / "catalog.json"
+    catalog_path.write_text(json.dumps(catalog))
+
+    _, _, specs = _load_frozen_catalog(catalog_path)
+    assert [spec.asset_id for spec in specs] == sorted(spec.asset_id for spec in specs)
+    assert specs[0].category == "category-0"
+
+    catalog["assets"].pop()
+    catalog_path.write_text(json.dumps(catalog))
+    with pytest.raises(ValueError, match="Expected 20 catalog assets"):
+        _load_frozen_catalog(catalog_path)

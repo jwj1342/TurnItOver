@@ -24,19 +24,27 @@ from turnitover.verifier.contracts import VERIFIER_SCHEMA_VERSION
 from turnitover.verifier.gt_validator import validate_code
 
 
-OBJECT_IDS = (
-    "UPB_00000000", "UPB_00000002", "UPB_00000004", "UPB_00000006",
-    "UPB_00000007", "UPB_00000009", "UPB_00000010", "UPB_00000012",
-    "UPB_00000014", "UPB_00000015", "UPB_00000016", "UPB_00000017",
-    "UPB_00000018", "UPB_00000019", "UPB_00000020", "UPB_00000021",
-    "UPB_00000022", "UPB_00000025", "UPB_00000026", "UPB_00000027",
-)
+OBJECT_COUNT = 20
 MAX_TRIANGLES = 1_000_000
 MAX_DRAW_CALLS = 1_024
 
 
-def run(root: Path, catalog_path: Path, output: Path, *, seed: int = 20261010, size: int = 384,
-        object_ids: tuple[str, ...] = OBJECT_IDS) -> dict:
+def _load_frozen_catalog(catalog_path: Path) -> tuple[dict, CatalogSource, tuple]:
+    record = json.loads(catalog_path.read_text(encoding="utf-8"))
+    if not record.get("evaluation_only") or not record.get("dataset_revision"):
+        raise ValueError("Expected a pinned evaluation-only UniPhys catalog")
+    source = CatalogSource(str(catalog_path))
+    specs = tuple(source)
+    split_groups = [source.metadata(spec.asset_id)["split_group"] for spec in specs]
+    if len(specs) != OBJECT_COUNT:
+        raise ValueError(f"Expected {OBJECT_COUNT} catalog assets, got {len(specs)}")
+    if len(set(split_groups)) != len(split_groups):
+        raise ValueError("Each catalog asset must have a unique split_group")
+    return record, source, specs
+
+
+def run(catalog_path: Path, output: Path, *, seed: int = 20261010, size: int = 384) -> dict:
+    catalog_record, source, specs = _load_frozen_catalog(catalog_path)
     if output.exists():
         raise ValueError(f"Benchmark output already exists: {output}")
     output.mkdir(parents=True)
@@ -46,10 +54,6 @@ def run(root: Path, catalog_path: Path, output: Path, *, seed: int = 20261010, s
     preflight_dir.mkdir()
     views = load_views(REPO_ROOT / "configs/views.yaml")
     render = RenderConfig(REPO_ROOT / "web/dist", REPO_ROOT / "web/node_modules/.bin/esbuild", size, size)
-    catalog_record = json.loads(catalog_path.read_text(encoding="utf-8"))
-    if not catalog_record.get("evaluation_only") or not catalog_record.get("dataset_revision"):
-        raise ValueError("Expected a pinned evaluation-only UniPhys catalog")
-    source = CatalogSource(str(catalog_path))
     axis = get_corruption("kinematics.joint_axis", min_deg=45.0, max_deg=45.0)
     offset = get_corruption("structure.part_offset", min_m=0.05, max_m=0.05)
     cases, gold, objects = [], [], []
@@ -64,10 +68,8 @@ def run(root: Path, catalog_path: Path, output: Path, *, seed: int = 20261010, s
                 "git": git_state(REPO_ROOT), "objects": objects, "cases": cases}
     write_json_atomic(output / "manifest.json", manifest)
     try:
-        for index, object_id in enumerate(object_ids):
-            folder = root / "data" / object_id
-            metadata = json.loads((folder / "meta_data.json").read_text(encoding="utf-8"))
-            spec = source.get(object_id)
+        for index, spec in enumerate(specs):
+            object_id = spec.asset_id
             split_group = source.metadata(object_id)["split_group"]
             clean = ObjectProgram.from_spec(spec)
             if not axis.applicable(clean):
@@ -82,8 +84,8 @@ def run(root: Path, catalog_path: Path, output: Path, *, seed: int = 20261010, s
                 session.load(clean, framing=None)
                 image_path = object_dir / "reference.png"
                 image_path.write_bytes(session.request_view("oblique_fr").png)
-            objects.append({"id": object_id, "name": metadata["object"]["object_name"],
-                            "category": metadata["object"]["category"], "reference_sha": clean.sha,
+            objects.append({"id": object_id, "name": object_id,
+                            "category": spec.category, "reference_sha": clean.sha,
                             "split_group": split_group, "split": "test"})
 
             variants = (("clean", clean, None), ("axis", axis_program, axis_label),
@@ -127,7 +129,6 @@ def run(root: Path, catalog_path: Path, output: Path, *, seed: int = 20261010, s
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", type=Path, default=Path("data/assets/uniphys"))
     parser.add_argument("--catalog", type=Path,
                         default=Path("data/assets/uniphys-catalog-v1/catalog.json"))
     parser.add_argument("--out", type=Path,
@@ -135,8 +136,7 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=20261010)
     parser.add_argument("--size", type=int, default=384)
     args = parser.parse_args()
-    result = run(args.root.resolve(), args.catalog.resolve(), args.out.resolve(),
-                 seed=args.seed, size=args.size)
+    result = run(args.catalog.resolve(), args.out.resolve(), seed=args.seed, size=args.size)
     print(json.dumps({"status": result["status"], "objects": result["object_count"],
                       "cases": result["case_count"], "output": str(args.out.resolve())}))
 
