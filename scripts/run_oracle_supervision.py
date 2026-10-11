@@ -18,6 +18,7 @@ from turnitover.config import load_generate_config
 from turnitover.core.program import ObjectProgram
 from turnitover.dataset.prepare import records, SPLITS
 from turnitover.oracle.evidence import ExposureThresholds, exposure_matrix, pixels, render_grid, replay_corruptions
+from turnitover.oracle.episodes import episode_examples
 from turnitover.oracle.supervision import action_examples, action_json
 from turnitover.oracle.witnesses import plan, witness_grid
 from turnitover.policy.loop import execute_observation
@@ -25,11 +26,24 @@ from turnitover.render.session import ObservationSession
 from turnitover.render.views import load_views
 
 
+def _benchmark_provenance(benchmark):
+    prepared = benchmark / "prepared/manifest.json"
+    prepared_record = json.loads(prepared.read_text())
+    if prepared_record.get("status") != "complete":
+        raise ValueError("Complete prepared dataset required")
+    manifests = sorted((benchmark / "raw").glob("*.manifest.json"))
+    if not manifests or any(json.loads(path.read_text()).get("status") != "complete" for path in manifests):
+        raise ValueError("Complete raw shards required")
+    top = benchmark / "benchmark.json"
+    if top.exists() and json.loads(top.read_text()).get("status") != "complete":
+        raise ValueError("Complete benchmark required")
+    return [prepared, *manifests, *([top] if top.exists() else [])]
+
+
 def run(benchmark, config, output, budget=6, per_asset=None):
     if budget < 1 or (per_asset is not None and per_asset < 1):
         raise ValueError("Positive budget and per-asset limit required")
-    if json.loads((benchmark / "benchmark.json").read_text())["status"] != "complete":
-        raise ValueError("Complete benchmark required")
+    benchmark_files = _benchmark_provenance(benchmark)
     cfg = load_generate_config(config)
     source = make_source(**cfg.asset_source)
     inputs = {}
@@ -53,19 +67,20 @@ def run(benchmark, config, output, budget=6, per_asset=None):
     root = Path(__file__).resolve().parents[1]
     provenance_files = [config, cfg.views_path, *sorted((root / "turnitover").rglob("*.py")),
                         Path(__file__), root / "turnitover/verifier/prompt.txt",
-                        benchmark / "splits.json", benchmark / "prepared/manifest.json"]
+                        *benchmark_files]
     report["source_hashes"] = {str(p.resolve()): hashlib.sha256(p.read_bytes()).hexdigest()
                                for p in provenance_files}
     report["render_resolution"] = [cfg.render.width, cfg.render.height]
     report["fixed_order"] = "Each view at rest, then each joint's unique nonzero detents for front/oblique views"
-    counts, samples = Counter(), Counter()
+    counts, episode_counts, samples = Counter(), Counter(), Counter()
     curves = {mode: np.zeros(budget, dtype=int) for mode in ("oracle", "fixed", "random")}
     total_labels, teacher_renders = 0, 0
     reference_cache = {}
-    streams = {}
+    streams, episode_streams = {}, {}
     try:
         for split in SPLITS:
             streams[split] = (output / f"{split}.actions.jsonl").open("w")
+            episode_streams[split] = (output / f"{split}.episodes.jsonl").open("w")
         with (output / "annotations.private.jsonl").open("w") as annotations, ObservationSession(cfg.render, load_views(cfg.views_path)) as session:
             for sample, _ in records(sorted((benchmark / "raw").glob("*.tar"))):
                 uid = hashlib.sha256(f"{sample.source_id}:{sample.sample_id}".encode()).hexdigest()[:24]
@@ -121,9 +136,16 @@ def run(benchmark, config, output, budget=6, per_asset=None):
                 for example in action_examples(uid, model_input["context"], reference_path.as_posix(), trajectories["oracle"]["history"], budget):
                     streams[split].write(json.dumps(example)+"\n")
                     counts[split] += 1
+                oracle = trajectories["oracle"]
+                labels = [asdict(c) for c in sample.corruptions]
+                for example in episode_examples(
+                        uid, model_input["context"], reference_path.as_posix(), oracle["history"],
+                        oracle["witness_indices"], exposures, labels, budget):
+                    episode_streams[split].write(json.dumps(example)+"\n")
+                    episode_counts[split] += 1
                 annotations.write(json.dumps({"id": uid, "split": split, "asset_id": sample.asset_id,
                     "split_group": sample.dataset["split_group"], "reference_sha": reference.sha,
-                    "candidate_sha": candidate.sha, "labels": [asdict(c) for c in sample.corruptions],
+                    "candidate_sha": candidate.sha, "labels": labels,
                     "grid": [asdict(w) for w in grid], "exposures": exposures, "signals": signals,
                     "trajectories": trajectories})+"\n")
                 samples[sample.asset_id] += 1
@@ -132,6 +154,7 @@ def run(benchmark, config, output, budget=6, per_asset=None):
         if not samples:
             raise ValueError("No eligible samples")
         report.update(status="complete", samples=dict(samples), action_examples=dict(counts),
+                      episode_examples=dict(episode_counts),
                       total_labels=total_labels, teacher_renders=teacher_renders,
                       exposed_counts={k: v.tolist() for k, v in curves.items()},
                       exposure_recall={k: (v/total_labels).tolist() if total_labels else None for k, v in curves.items()},
@@ -141,6 +164,8 @@ def run(benchmark, config, output, budget=6, per_asset=None):
         raise
     finally:
         for stream in streams.values():
+            stream.close()
+        for stream in episode_streams.values():
             stream.close()
         (output / "manifest.json").write_text(json.dumps(report, indent=2))
     return report
