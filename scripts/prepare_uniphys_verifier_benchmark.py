@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -12,7 +13,7 @@ import numpy as np
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
-from turnitover.assets.urdf import UrdfModel
+from turnitover.assets.catalog import CatalogSource
 from turnitover.core.jsonio import write_json_atomic
 from turnitover.core.program import ObjectProgram
 from turnitover.corruptions import get_corruption
@@ -34,7 +35,8 @@ MAX_TRIANGLES = 1_000_000
 MAX_DRAW_CALLS = 1_024
 
 
-def run(root: Path, output: Path, *, seed: int = 20261010, size: int = 384) -> dict:
+def run(root: Path, catalog_path: Path, output: Path, *, seed: int = 20261010, size: int = 384,
+        object_ids: tuple[str, ...] = OBJECT_IDS) -> dict:
     if output.exists():
         raise ValueError(f"Benchmark output already exists: {output}")
     output.mkdir(parents=True)
@@ -44,22 +46,29 @@ def run(root: Path, output: Path, *, seed: int = 20261010, size: int = 384) -> d
     preflight_dir.mkdir()
     views = load_views(REPO_ROOT / "configs/views.yaml")
     render = RenderConfig(REPO_ROOT / "web/dist", REPO_ROOT / "web/node_modules/.bin/esbuild", size, size)
+    catalog_record = json.loads(catalog_path.read_text(encoding="utf-8"))
+    if not catalog_record.get("evaluation_only") or not catalog_record.get("dataset_revision"):
+        raise ValueError("Expected a pinned evaluation-only UniPhys catalog")
+    source = CatalogSource(str(catalog_path))
     axis = get_corruption("kinematics.joint_axis", min_deg=45.0, max_deg=45.0)
     offset = get_corruption("structure.part_offset", min_m=0.05, max_m=0.05)
     cases, gold, objects = [], [], []
     manifest = {"version": 1, "status": "building", "created_at": now_iso(),
                 "verifier_schema_version": VERIFIER_SCHEMA_VERSION, "seed": seed,
                 "dataset": "breezexian/UniPhys-Bench-Part2",
-                "dataset_revision": "ea633b5c2b1cf9fefb24fb8c30c3703cc75ae7c4",
+                "dataset_revision": catalog_record["dataset_revision"],
+                "catalog": str(catalog_path),
+                "catalog_sha256": hashlib.sha256(catalog_path.read_bytes()).hexdigest(),
+                "source_id": source.source_id,
                 "constraints": {"max_triangles": MAX_TRIANGLES, "max_draw_calls": MAX_DRAW_CALLS},
                 "git": git_state(REPO_ROOT), "objects": objects, "cases": cases}
     write_json_atomic(output / "manifest.json", manifest)
     try:
-        for index, object_id in enumerate(OBJECT_IDS):
+        for index, object_id in enumerate(object_ids):
             folder = root / "data" / object_id
             metadata = json.loads((folder / "meta_data.json").read_text(encoding="utf-8"))
-            spec = UrdfModel(folder / "model.urdf", continuous_joint_policy="fixed").spec(
-                object_id, metadata["object"]["category"])
+            spec = source.get(object_id)
+            split_group = source.metadata(object_id)["split_group"]
             clean = ObjectProgram.from_spec(spec)
             if not axis.applicable(clean):
                 raise ValueError(f"Selected object has no finite joint: {object_id}")
@@ -74,7 +83,8 @@ def run(root: Path, output: Path, *, seed: int = 20261010, size: int = 384) -> d
                 image_path = object_dir / "reference.png"
                 image_path.write_bytes(session.request_view("oblique_fr").png)
             objects.append({"id": object_id, "name": metadata["object"]["object_name"],
-                            "category": metadata["object"]["category"], "reference_sha": clean.sha})
+                            "category": metadata["object"]["category"], "reference_sha": clean.sha,
+                            "split_group": split_group, "split": "test"})
 
             variants = (("clean", clean, None), ("axis", axis_program, axis_label),
                         ("offset", offset_program, offset_label))
@@ -95,8 +105,10 @@ def run(root: Path, output: Path, *, seed: int = 20261010, size: int = 384) -> d
                 cases.append({"id": case_id, "program": program_path.relative_to(output).as_posix(),
                               "reference_program": clean_path.relative_to(output).as_posix(),
                               "reference_images": [image_path.relative_to(output).as_posix()],
+                              "split_group": split_group, "split": "test",
                               "task": "Verify the articulated candidate against the reference image."})
                 gold.append({"id": case_id, "program_sha": program.sha, "reference_sha": clean.sha,
+                             "split_group": split_group, "split": "test",
                              "target": {"status": "pass" if expected_correct else "fail",
                                         "findings": finding}})
             write_json_atomic(output / "manifest.json", manifest)
@@ -116,11 +128,15 @@ def run(root: Path, output: Path, *, seed: int = 20261010, size: int = 384) -> d
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path("data/assets/uniphys"))
-    parser.add_argument("--out", type=Path, default=Path("data/benchmarks/uniphys-verifier-60"))
+    parser.add_argument("--catalog", type=Path,
+                        default=Path("data/assets/uniphys-catalog-v1/catalog.json"))
+    parser.add_argument("--out", type=Path,
+                        default=Path("data/benchmarks/uniphys-verifier-60-catalog-v1"))
     parser.add_argument("--seed", type=int, default=20261010)
     parser.add_argument("--size", type=int, default=384)
     args = parser.parse_args()
-    result = run(args.root.resolve(), args.out.resolve(), seed=args.seed, size=args.size)
+    result = run(args.root.resolve(), args.catalog.resolve(), args.out.resolve(),
+                 seed=args.seed, size=args.size)
     print(json.dumps({"status": result["status"], "objects": result["object_count"],
                       "cases": result["case_count"], "output": str(args.out.resolve())}))
 
