@@ -276,8 +276,8 @@ def run(
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--benchmark", type=Path,
-                        default=Path("data/benchmarks/uniphys-verifier-60-catalog-v1"))
-    parser.add_argument("--out", type=Path, default=Path("output/uniphys-verifier-60"))
+                        default=Path("data/benchmarks/uniphys-verifier-test"))
+    parser.add_argument("--out", type=Path, default=Path("output/uniphys-verifier-test"))
     parser.add_argument("--env-file", type=Path, default=Path(".env"))
     parser.add_argument("--split", choices=SPLITS, default="test")
     parser.add_argument("--policy", choices=("active", "fixed", "random", "runtime"), default="active")

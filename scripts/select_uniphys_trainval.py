@@ -145,7 +145,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path("data/assets/uniphys"))
     parser.add_argument("--test-splits", type=Path,
-                        default=Path("data/assets/uniphys-catalog-v1/test-splits.json"))
+                        default=Path("data/assets/uniphys-dev-catalog/test-splits.json"))
     parser.add_argument("--out", type=Path, default=Path("configs/uniphys-trainval-v1.json"))
     parser.add_argument("--train-objects", type=int, default=100)
     parser.add_argument("--validation-objects", type=int, default=20)

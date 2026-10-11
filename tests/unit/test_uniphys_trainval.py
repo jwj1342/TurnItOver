@@ -4,11 +4,12 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts import convert_uniphys, prepare_uniphys_verifier_benchmark, select_uniphys_trainval
+from scripts import (convert_uniphys, prepare_uniphys_verifier_benchmark,
+                     select_uniphys_test, select_uniphys_trainval)
 from turnitover.core.serde import to_dict
 
 
-def _write_asset(root, object_id, category="fixture"):
+def _write_asset(root, object_id, category="fixture", *, name=None, geometry=None):
     folder = root / "data" / object_id
     folder.mkdir(parents=True)
     (folder / "model.urdf").write_text("""<robot name="fixture">
@@ -16,7 +17,12 @@ def _write_asset(root, object_id, category="fixture"):
       <joint name="hinge" type="revolute"><parent link="base"/><child link="door"/>
         <limit lower="0" upper="1"/></joint>
     </robot>""")
-    (folder / "meta_data.json").write_text(json.dumps({"object": {"category": category}}))
+    (folder / "meta_data.json").write_text(json.dumps({
+        "source": {"dataset": "fixture", "original_id": object_id},
+        "object": {"category": category, "object_name": name or object_id},
+    }))
+    (folder / "full_model").mkdir()
+    (folder / "full_model/model.obj").write_bytes(geometry or object_id.encode())
 
 
 def test_selects_disjoint_deterministic_train_validation_objects(tmp_path):
@@ -107,3 +113,44 @@ def test_rejects_duplicate_candidate_sha_before_completing_benchmark():
 
     with pytest.raises(ValueError, match="candidate program SHAs must be unique"):
         prepare_uniphys_verifier_benchmark._validate_case_identity(cases, gold)
+
+
+def test_selects_formal_test_away_from_development_trainval_and_near_duplicates(
+        tmp_path, monkeypatch):
+    root = tmp_path / "source"
+    revision = "e" * 40
+    root.mkdir()
+    (root / "download-manifest.json").write_text(json.dumps({
+        "dataset": "breezexian/UniPhys-Bench-Part2", "revision": revision,
+        "license": "CC-BY-NC-4.0",
+    }))
+    for index in range(20):
+        _write_asset(root, f"UPB_{index:08d}", geometry=f"dev-{index}".encode())
+    _write_asset(root, "UPB_00000020", geometry=b"old-test")
+    _write_asset(root, "UPB_00000030", geometry=b"train")
+    _write_asset(root, "UPB_00000040", name="UPB_00000000", geometry=b"name-duplicate")
+    _write_asset(root, "UPB_00000041", geometry=b"dev-1")
+    _write_asset(root, "UPB_00000042", geometry=b"new-42")
+    _write_asset(root, "UPB_00000043", geometry=b"new-43")
+    previous = tmp_path / "previous.json"
+    previous.write_text(json.dumps({"version": 1, "unit": "split_group", "groups": {
+        f"uniphys:{revision}:UPB_00000020": "test"}}))
+    trainval_splits = tmp_path / "trainval-splits.json"
+    trainval_splits.write_text(json.dumps({"version": 1, "unit": "split_group", "groups": {
+        f"uniphys:{revision}:UPB_00000030": "train"}}))
+    trainval_plan = tmp_path / "trainval.json"
+    trainval_plan.write_text(json.dumps({"dataset_revision": revision,
+                                         "objects": [{"id": "UPB_00000030"}]}))
+    monkeypatch.setattr(select_uniphys_test, "_convertible", lambda *args: (True, None))
+
+    output = tmp_path / "test.json"
+    report = select_uniphys_test.select(
+        root, previous, trainval_splits, trainval_plan, output,
+        objects=2, seed=7)
+
+    assert {row["id"] for row in report["objects"]} == {"UPB_00000042", "UPB_00000043"}
+    assert report["rejected"]["near_duplicate_name_key"] == 1
+    assert report["rejected"]["near_duplicate_geometry_sha256"] == 1
+    ids, assignments, _ = convert_uniphys._load_split_plan(output)
+    assert set(ids) == set(assignments) == {"UPB_00000042", "UPB_00000043"}
+    assert set(assignments.values()) == {"test"}

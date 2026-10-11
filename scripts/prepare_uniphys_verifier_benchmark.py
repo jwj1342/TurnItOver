@@ -192,11 +192,11 @@ def run(catalog_path: Path, output: Path, *, splits_path: Path | None = None,
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--catalog", type=Path,
-                        default=Path("data/assets/uniphys-catalog-v1/catalog.json"))
+                        default=Path("data/assets/uniphys-test-catalog/catalog.json"))
     parser.add_argument("--splits", type=Path,
                         help="train/validation split manifest; omitted for the frozen test catalog")
     parser.add_argument("--out", type=Path,
-                        default=Path("data/benchmarks/uniphys-verifier-60-catalog-v1"))
+                        default=Path("data/benchmarks/uniphys-verifier-test"))
     parser.add_argument("--seed", type=int, default=20261010)
     parser.add_argument("--size", type=int, default=384)
     args = parser.parse_args()
