@@ -17,6 +17,8 @@
 
 **已实现：资产身份与 test-only 评测边界。** [`convert_uniphys.py`](../scripts/convert_uniphys.py) 将选定 URDF 固化为可由 `CatalogSource` 加载的 `AssetSpec` catalog，逐资产记录数据集 revision、转换输入哈希、许可证、continuous joint 零位固定策略和唯一 `split_group`，并输出全部映射到 test 的显式清单。旧下载清单可逐文件验证其中 14 个资产；其余 6 个资产记录本次实际转换输入哈希，不冒充旧清单已覆盖。60-case 构造器只遍历该 catalog 中的20个 `AssetSpec`，不再重复维护对象 ID 或读取可变的原始 `meta_data.json`，并在 object、case 和 private gold 中记录 `split_group` 与 `split=test`；catalog 版完整产物位于 `data/benchmarks/uniphys-verifier-60-catalog-v1/`。复现命令为 `python scripts/convert_uniphys.py`，随后运行 `python scripts/prepare_uniphys_verifier_benchmark.py`。
 
+**已实现：UniPhys Train/Validation case 收集。** [`select_uniphys_trainval.py`](../scripts/select_uniphys_trainval.py) 排除冻结的20个 Test 对象，按固定 seed 对其余对象执行 URDF 条件检查和完整 Mesh 转换预检，收集100个 Train 与20个 Validation 对象；[`convert_uniphys.py`](../scripts/convert_uniphys.py) 和 [`prepare_uniphys_verifier_benchmark.py`](../scripts/prepare_uniphys_verifier_benchmark.py) 仅在显式提供 split plan 时生成独立 train/validation catalog。正式产物含300个 Train case、60个 Validation case和360份完成的逐案例预检；两者及 Test 的原始物体交集均为空。默认调用仍只复现原有 Test。
+
 **可复用的既有基础。** ReplicaCAD 数据引擎已支持按原始资产分组、腐蚀样本和私有真值隔离；Oracle 动作/成对诊断导出、Qwen3-VL 处理器适配及 assistant-only loss 已存在，见 [`dataset-pipeline.md`](dataset-pipeline.md) 和 [`oracle-supervision.md`](oracle-supervision.md)。这些是可复用组件，**不是 UniPhys 新数据已接通或模型已完成微调**。
 
 ## 关键缺口
@@ -28,7 +30,7 @@
 ## 下一步（按优先级）
 
 1. **P0｜执行冻结的60-case评测。** 固定 judge 模型、预算、策略和 seed，运行 `python scripts/run_uniphys_verifier_batch.py`；保留逐案例结果、批次清单和 `metrics.json`，中断时以清单中已完成记录为准。**完成标准：**60 个 case 均有终态结果且评分成功，不把脚本存在当作已完成实验。
-2. **P0｜做一批有资格的候选与证据标签。** 先复用 clean / axis / offset，补少量多缺陷与自然生成错误；先定义检查范围和需要的证据，再注入或采集错误。独立校验缺陷生效、部件/关节对应关系及 `pass / fail / uncertain`，不要仅凭像素差或 Verifier `pass` 标 gold。**完成标准：**每个候选有可审计的 private gold、证据资格及失败原因。
+2. **P0｜补齐训练案例的证据资格。** 在已冻结的300/60案例上定义所需观察范围，独立确认缺陷可由可见历史识别，并补齐 `pass / fail / uncertain`、证据充分性及停止条件；不要仅凭像素差或 Verifier `pass` 标 gold。**完成标准：**每个训练案例都有可审计的 private gold、证据资格及失败原因。
 3. **P0｜统一 Episode 并导出训练监督。** 关联候选版本、可见参考、动作、观察、预算、诊断/停止和独立真值；分别导出「历史 → 下一动作」与「历史 → 诊断或停止」，补齐 `pass`、`uncertain`、停止目标，处理同观测多教师动作。**完成标准：**按资产隔离的数据可直接送入现有 Qwen 处理器，private gold 不进入输入。
 4. **P1｜先跑通最小 SFT，再比较监督方案。** 用 Qwen3-VL-2B 优先训练结构化诊断与停止，再加入动作选择；在相同底座、输入、数据规模与预算下比较未微调、普通 SFT、证据约束 SFT。**完成标准：**有可重跑训练入口、配置、曲线、validation 选出的 checkpoint 和训练前后结果。
 5. **P1｜完成留出评测与归因。** 先固定观察比较诊断/定位/误放行/停止，再按统一成本比较 fixed、random、active；消融证据约束、停止监督、自然错误数据。闭环固定 Generator，每轮修复后重取证据并独立评分。**完成标准：**结果按原始物体汇总，报告观察成本与波动，能区分诊断、取证、停止及实际修复收益。
@@ -37,4 +39,4 @@
 
 ---
 
-最近同步：**2026-10-11 · 本次60-case评测准备**；构造器已去除原始元数据与重复对象列表依赖，新增冻结身份/变体去重校验及增量批跑评分入口；相关6项单元测试通过，真实模型全量评测尚未运行，未涉及 ReplicaCAD、训练数据或 SFT。
+最近同步：**2026-10-11 · Train/Validation case 已生成**；冻结100/20个对象并生成300/60个 case，360份预检全部完成，Train、Validation、Test 原始物体无交叉；尚未导出训练 Episode 或运行 SFT。

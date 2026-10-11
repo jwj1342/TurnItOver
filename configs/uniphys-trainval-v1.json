@@ -1,0 +1,642 @@
+{
+  "version": 1,
+  "dataset": "breezexian/UniPhys-Bench-Part2",
+  "dataset_revision": "ea633b5c2b1cf9fefb24fb8c30c3703cc75ae7c4",
+  "license": "CC-BY-NC-4.0",
+  "seed": 20261011,
+  "test_splits_sha256": "4808211f3883c1cedb32d92af80450089db94ee6d66a68a02869a3bbe2fc04c7",
+  "test_object_ids": [
+    "UPB_00000000",
+    "UPB_00000002",
+    "UPB_00000004",
+    "UPB_00000006",
+    "UPB_00000007",
+    "UPB_00000009",
+    "UPB_00000010",
+    "UPB_00000012",
+    "UPB_00000014",
+    "UPB_00000015",
+    "UPB_00000016",
+    "UPB_00000017",
+    "UPB_00000018",
+    "UPB_00000019",
+    "UPB_00000020",
+    "UPB_00000021",
+    "UPB_00000022",
+    "UPB_00000025",
+    "UPB_00000026",
+    "UPB_00000027"
+  ],
+  "expected_object_counts": {
+    "train": 100,
+    "validation": 20
+  },
+  "eligible_non_test_objects": 342,
+  "conversion_candidates_checked": 162,
+  "rejected": {
+    "no_finite_joint": 92,
+    "conversion_TypeError": 42
+  },
+  "objects": [
+    {
+      "id": "UPB_00000035",
+      "category": "Furniture/StorageFurniture",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000092",
+      "category": "KitchenDining/KitchenAppliance",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000359",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000046",
+      "category": "ContainersStorage/GeneralContainer",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000105",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000220",
+      "category": "LightingElectrical/OutdoorLighting",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000041",
+      "category": "Furniture/StorageFurniture",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000244",
+      "category": "KitchenDining/TablewareDrinkware",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000339",
+      "category": "Furniture/TableFurniture",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000087",
+      "category": "KitchenDining/KitchenStorage",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000261",
+      "category": "PlumbingSanitary/SanitationEquipment",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000040",
+      "category": "KitchenDining/KitchenAppliance",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000167",
+      "category": "Furniture/StorageFurniture",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000444",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000448",
+      "category": "ApparelWearables/LuggageBag",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000296",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000122",
+      "category": "ElectronicsDevices/ConsumerElectronics",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000047",
+      "category": "LightingElectrical/IndoorLighting",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000173",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000163",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "validation"
+    },
+    {
+      "id": "UPB_00000309",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000208",
+      "category": "KitchenDining/KitchenAppliance",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000341",
+      "category": "Furniture/TableFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000182",
+      "category": "ToolsEquipment/PowerTool",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000197",
+      "category": "ContainersStorage/GeneralContainer",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000187",
+      "category": "LightingElectrical/ElectricalFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000083",
+      "category": "ElectronicsDevices/ConsumerElectronics",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000430",
+      "category": "ElectronicsDevices/ConsumerElectronics",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000050",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000106",
+      "category": "SportsFitnessRecreation/SportsEquipment",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000067",
+      "category": "ContainersStorage/GeneralContainer",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000133",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000089",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000164",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000090",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000212",
+      "category": "KitchenDining/CookwareUtensil",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000054",
+      "category": "ContainersStorage/GeneralContainer",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000104",
+      "category": "PlumbingSanitary/BathroomAccessory",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000152",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000078",
+      "category": "VehiclesMobility/VehicleComponent",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000214",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000422",
+      "category": "KitchenDining/CookwareUtensil",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000392",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000100",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000325",
+      "category": "Furniture/TableFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000143",
+      "category": "ContainersStorage/WasteRecyclingContainer",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000048",
+      "category": "KitchenDining/KitchenAppliance",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000342",
+      "category": "Furniture/TableFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000210",
+      "category": "LightingElectrical/IndoorLighting",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000155",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000190",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000247",
+      "category": "ElectronicsDevices/AudioEquipment",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000064",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000084",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000102",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000317",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000103",
+      "category": "Furniture/OfficeFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000101",
+      "category": "KitchenDining/KitchenAppliance",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000071",
+      "category": "KitchenDining/KitchenAppliance",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000096",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000095",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000202",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000172",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000058",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000157",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000414",
+      "category": "ElectronicsDevices/ConsumerElectronics",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000254",
+      "category": "ElectronicsDevices/ConsumerElectronics",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000276",
+      "category": "ElectronicsDevices/ConsumerElectronics",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000112",
+      "category": "PlumbingSanitary/BathroomAccessory",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000169",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000337",
+      "category": "Furniture/TableFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000278",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000077",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000158",
+      "category": "ArchitecturalBuilding/ArchitecturalFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000063",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000056",
+      "category": "ContainersStorage/GeneralContainer",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000075",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000319",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000199",
+      "category": "ElectronicsDevices/ConsumerElectronics",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000183",
+      "category": "PublicInfrastructure/SafetySecurityEquipment",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000184",
+      "category": "SportsFitnessRecreation/SportsEquipment",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000403",
+      "category": "ElectronicsDevices/ConsumerElectronics",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000281",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000049",
+      "category": "ContainersStorage/GeneralContainer",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000168",
+      "category": "LightingElectrical/ElectricalFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000053",
+      "category": "KitchenDining/KitchenAppliance",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000218",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000074",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000142",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000265",
+      "category": "ElectronicsDevices/ComputerPeripheral",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000192",
+      "category": "KitchenDining/KitchenAppliance",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000072",
+      "category": "Furniture/TableFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000232",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000161",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000180",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000039",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000176",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000238",
+      "category": "KitchenDining/TablewareDrinkware",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000066",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000147",
+      "category": "PlumbingSanitary/BathroomAccessory",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000115",
+      "category": "PublicInfrastructure/PublicFacilityComponent",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000094",
+      "category": "LightingElectrical/IndoorLighting",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000073",
+      "category": "Furniture/OfficeFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000233",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000156",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000268",
+      "category": "ContainersStorage/WasteRecyclingContainer",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000285",
+      "category": "LightingElectrical/IndoorLighting",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000243",
+      "category": "KitchenDining/CookwareUtensil",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000315",
+      "category": "Furniture/TableFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000242",
+      "category": "ElectronicsDevices/AudioEquipment",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000030",
+      "category": "Furniture/SeatingFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000298",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000175",
+      "category": "ApparelWearables/PersonalAccessory",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000200",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000203",
+      "category": "ArchitecturalBuilding/ArchitecturalFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000329",
+      "category": "Furniture/TableFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000145",
+      "category": "Furniture/StorageFurniture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000113",
+      "category": "KitchenDining/KitchenAppliance",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000153",
+      "category": "PlantsGardenOutdoor/OutdoorFixture",
+      "split": "train"
+    },
+    {
+      "id": "UPB_00000051",
+      "category": "LightingElectrical/IndoorLighting",
+      "split": "train"
+    }
+  ]
+}

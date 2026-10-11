@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build 20 UniPhys objects x clean/axis/offset as a frozen verifier benchmark."""
+"""Build frozen UniPhys clean/axis/offset verifier cases from a split-aware catalog."""
 from __future__ import annotations
 
 import argparse
@@ -43,8 +43,35 @@ def _load_frozen_catalog(catalog_path: Path) -> tuple[dict, CatalogSource, tuple
     return record, source, specs
 
 
-def run(catalog_path: Path, output: Path, *, seed: int = 20261010, size: int = 384) -> dict:
-    catalog_record, source, specs = _load_frozen_catalog(catalog_path)
+def _load_catalog(catalog_path: Path, splits_path: Path | None):
+    if splits_path is None:
+        record, source, specs = _load_frozen_catalog(catalog_path)
+        return record, source, specs, {
+            source.metadata(spec.asset_id)["split_group"]: "test" for spec in specs}
+    record = json.loads(catalog_path.read_text(encoding="utf-8"))
+    if (record.get("evaluation_only") is not False or record.get("role") != "train_validation"
+            or not record.get("dataset_revision")):
+        raise ValueError("Expected a pinned train/validation UniPhys catalog")
+    source = CatalogSource(str(catalog_path))
+    specs = tuple(source)
+    split_record = json.loads(splits_path.read_text(encoding="utf-8"))
+    groups = split_record.get("groups")
+    if (split_record.get("version") != 1 or split_record.get("unit") != "split_group"
+            or not isinstance(groups, dict) or set(groups.values()) != {"train", "validation"}):
+        raise ValueError("Expected a train/validation split-group manifest")
+    catalog_groups = {source.metadata(spec.asset_id)["split_group"] for spec in specs}
+    if set(groups) != catalog_groups or len(catalog_groups) != len(specs):
+        raise ValueError("Catalog and split manifest groups differ or are not unique")
+    actual = {split: sum(value == split for value in groups.values())
+              for split in ("train", "validation")}
+    if split_record.get("expected_object_counts") != actual:
+        raise ValueError("Train/validation object counts disagree with the split manifest")
+    return record, source, specs, groups
+
+
+def run(catalog_path: Path, output: Path, *, splits_path: Path | None = None,
+        seed: int = 20261010, size: int = 384) -> dict:
+    catalog_record, source, specs, assignments = _load_catalog(catalog_path, splits_path)
     if output.exists():
         raise ValueError(f"Benchmark output already exists: {output}")
     output.mkdir(parents=True)
@@ -56,13 +83,15 @@ def run(catalog_path: Path, output: Path, *, seed: int = 20261010, size: int = 3
     render = RenderConfig(REPO_ROOT / "web/dist", REPO_ROOT / "web/node_modules/.bin/esbuild", size, size)
     axis = get_corruption("kinematics.joint_axis", min_deg=45.0, max_deg=45.0)
     offset = get_corruption("structure.part_offset", min_m=0.05, max_m=0.05)
-    cases, gold, objects = [], [], []
+    cases, gold, objects = [], {split: [] for split in sorted(set(assignments.values()))}, []
     manifest = {"version": 1, "status": "building", "created_at": now_iso(),
                 "verifier_schema_version": VERIFIER_SCHEMA_VERSION, "seed": seed,
                 "dataset": "breezexian/UniPhys-Bench-Part2",
                 "dataset_revision": catalog_record["dataset_revision"],
                 "catalog": str(catalog_path),
                 "catalog_sha256": hashlib.sha256(catalog_path.read_bytes()).hexdigest(),
+                "splits": str(splits_path) if splits_path else None,
+                "splits_sha256": hashlib.sha256(splits_path.read_bytes()).hexdigest() if splits_path else None,
                 "source_id": source.source_id,
                 "constraints": {"max_triangles": MAX_TRIANGLES, "max_draw_calls": MAX_DRAW_CALLS},
                 "git": git_state(REPO_ROOT), "objects": objects, "cases": cases}
@@ -71,6 +100,7 @@ def run(catalog_path: Path, output: Path, *, seed: int = 20261010, size: int = 3
         for index, spec in enumerate(specs):
             object_id = spec.asset_id
             split_group = source.metadata(object_id)["split_group"]
+            split = assignments[split_group]
             clean = ObjectProgram.from_spec(spec)
             if not axis.applicable(clean):
                 raise ValueError(f"Selected object has no finite joint: {object_id}")
@@ -86,7 +116,7 @@ def run(catalog_path: Path, output: Path, *, seed: int = 20261010, size: int = 3
                 image_path.write_bytes(session.request_view("oblique_fr").png)
             objects.append({"id": object_id, "name": object_id,
                             "category": spec.category, "reference_sha": clean.sha,
-                            "split_group": split_group, "split": "test"})
+                            "split_group": split_group, "split": split})
 
             variants = (("clean", clean, None), ("axis", axis_program, axis_label),
                         ("offset", offset_program, offset_label))
@@ -107,16 +137,21 @@ def run(catalog_path: Path, output: Path, *, seed: int = 20261010, size: int = 3
                 cases.append({"id": case_id, "program": program_path.relative_to(output).as_posix(),
                               "reference_program": clean_path.relative_to(output).as_posix(),
                               "reference_images": [image_path.relative_to(output).as_posix()],
-                              "split_group": split_group, "split": "test",
+                              "split_group": split_group, "split": split,
                               "task": "Verify the articulated candidate against the reference image."})
-                gold.append({"id": case_id, "program_sha": program.sha, "reference_sha": clean.sha,
-                             "split_group": split_group, "split": "test",
-                             "target": {"status": "pass" if expected_correct else "fail",
-                                        "findings": finding}})
+                gold[split].append({
+                    "id": case_id, "program_sha": program.sha, "reference_sha": clean.sha,
+                    "split_group": split_group, "split": split,
+                    "target": {"status": "pass" if expected_correct else "fail", "findings": finding},
+                })
             write_json_atomic(output / "manifest.json", manifest)
-        (output / "test.gold.jsonl").write_text(
-            "".join(json.dumps(row, sort_keys=True) + "\n" for row in gold), encoding="utf-8")
+        for split, rows in gold.items():
+            (output / f"{split}.gold.jsonl").write_text(
+                "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows), encoding="utf-8")
+        object_counts = {split: sum(row["split"] == split for row in objects) for split in gold}
+        case_counts = {split: len(rows) for split, rows in gold.items()}
         manifest.update(status="complete", object_count=len(objects), case_count=len(cases),
+                        object_counts=object_counts, case_counts=case_counts,
                         preflight={"status": "complete", "validated_cases": len(cases)},
                         finished_at=now_iso())
         write_json_atomic(output / "manifest.json", manifest)
@@ -131,12 +166,16 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--catalog", type=Path,
                         default=Path("data/assets/uniphys-catalog-v1/catalog.json"))
+    parser.add_argument("--splits", type=Path,
+                        help="train/validation split manifest; omitted for the frozen test catalog")
     parser.add_argument("--out", type=Path,
                         default=Path("data/benchmarks/uniphys-verifier-60-catalog-v1"))
     parser.add_argument("--seed", type=int, default=20261010)
     parser.add_argument("--size", type=int, default=384)
     args = parser.parse_args()
-    result = run(args.catalog.resolve(), args.out.resolve(), seed=args.seed, size=args.size)
+    result = run(args.catalog.resolve(), args.out.resolve(),
+                 splits_path=args.splits.resolve() if args.splits else None,
+                 seed=args.seed, size=args.size)
     print(json.dumps({"status": result["status"], "objects": result["object_count"],
                       "cases": result["case_count"], "output": str(args.out.resolve())}))
 
