@@ -3,6 +3,8 @@
   "dataset": "breezexian/UniPhys-Bench-Part2",
   "dataset_revision": "ea633b5c2b1cf9fefb24fb8c30c3703cc75ae7c4",
   "license": "CC-BY-NC-4.0",
+  "role": "episode_engineering_validation",
+  "formal_training": false,
   "seed": 20261011,
   "test_splits_sha256": "4808211f3883c1cedb32d92af80450089db94ee6d66a68a02869a3bbe2fc04c7",
   "test_object_ids": [

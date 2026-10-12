@@ -17,7 +17,7 @@
 
 **已实现：正式 Test 身份与未见边界。** [`select_uniphys_test.py`](../scripts/select_uniphys_test.py) 排除 `UPB_00000000–UPB_00000019`、旧 Test 全部对象和现有 Train/Validation，再按固定 seed、来源身份、完整模型 SHA 与规范化对象名称筛选20个对象；选择过程不渲染或人工查看候选。冻结清单位于 [`uniphys-test.json`](../configs/uniphys-test.json)，[`convert_uniphys.py`](../scripts/convert_uniphys.py) 默认从该清单生成 `data/assets/uniphys-test-catalog/`，记录 revision、输入哈希、许可证、continuous joint 策略和唯一 `split_group`。程序化审计确认正式 Test 与开发、Train、Validation 的对象交集均为0，三类近重复信号交集也均为0。
 
-**已实现：UniPhys Train/Validation case 收集。** [`select_uniphys_trainval.py`](../scripts/select_uniphys_trainval.py) 按固定 seed 执行 URDF 条件检查和完整 Mesh 转换预检，收集100个 Train 与20个 Validation 对象；正式 Test 随后以这120个对象为排除集合，保证三者无交叉。[`convert_uniphys.py`](../scripts/convert_uniphys.py) 和 [`prepare_uniphys_verifier_benchmark.py`](../scripts/prepare_uniphys_verifier_benchmark.py) 仅在显式提供 split plan 时生成独立 train/validation catalog，并在完成前统一校验 case ID、候选 SHA 及每物体 `clean / axis / offset` 三种变体。正式产物含300个 Train case、60个 Validation case和360份完成的逐案例预检；[`run_uniphys_verifier_batch.py`](../scripts/run_uniphys_verifier_batch.py) 通过 `--split train|validation|test` 对三者复用相同的冻结身份检查、逐案例落盘和评分流程。
+**已实现：UniPhys Part 2 Episode 工程验证划分。** [`select_uniphys_trainval.py`](../scripts/select_uniphys_trainval.py) 按固定 seed 执行 URDF 条件检查和完整 Mesh 转换预检，收集内部仍标作100个 Train 与20个 Validation 的对象；这两个名称只用于验证 Episode 生成、隔离与加载链路，冻结配置标记为 `episode_engineering_validation`、`formal_training=false`，**不作为正式 SFT 训练数据**。正式 Test 随后以这120个对象为排除集合，保证对象无交叉。现有工程产物含300个 Train case、60个 Validation case和360份逐案例预检；[`run_uniphys_verifier_batch.py`](../scripts/run_uniphys_verifier_batch.py) 可复用冻结身份检查，但结果只用于工程验证。
 
 **已实现：无模型的统一 Episode 导出代码。** [`generate_uniphys_supervision.yaml`](../configs/generate_uniphys_supervision.yaml) 复用既有生成器与 checker，配置 clean、单缺陷及最多两个组合缺陷；[`episodes.py`](../turnitover/oracle/episodes.py) 将既有 Oracle 轨迹导出为同一 `episode_id` 下的下一动作监督和唯一终止 verdict，按反事实像素暴露产生 `complete / partial / none` 证据资格，并覆盖受限 `pass`、`fail` 与 `uncertain`。[`run_oracle_supervision.py`](../scripts/run_oracle_supervision.py) 仅在既有动作/观察生成之后追加 `*.episodes.jsonl`，不改变生成器、quality、Oracle 规划、Verifier 或 tokenizer。相关单元测试已通过；480样本 UniPhys 数据尚未实际生成。
 
@@ -25,20 +25,20 @@
 
 ## 关键缺口
 
-**Episode 数据尚未实际生成。** 正式 Test 已重新冻结且未运行模型；旧20物体批次及其60案例只作开发回归，不进入正式指标。代码现已支持可控组合缺陷、证据资格和统一 Episode，但尚未在 UniPhys train/validation catalog 上执行并核验实际分层计数。自然生成错误不属于本次无模型闭环；其部件 ID 与参考不同时，现有几何比对仍不能直接充当独立 gold。
+**Episode 数据尚未实际生成。** 正式 Test 已重新冻结且未运行模型；旧20物体批次及其60案例只作开发回归，不进入正式指标。代码现已支持可控组合缺陷、证据资格和统一 Episode，但尚未在 UniPhys Part 2 工程验证划分上执行并核验实际分层计数。该120物体划分即使生成成功也不升级为正式训练集。自然生成错误不属于本次无模型闭环；其部件 ID 与参考不同时，现有几何比对仍不能直接充当独立 gold。
 
-**训练与研究对照尚未完成。** 旧动作导出缺停止监督，成对诊断缺 `pass`，且部分相同可见历史对应不同的特权教师动作；`evidence_steps` 引用有效步骤不等于证据足以识别缺陷。尚无实际 SFT 训练入口及 checkpoint，也没有同底座未微调 / 普通 SFT / 证据约束 SFT 比较、fixed / random / active 统一预算实验、监督消融或按物体留出的修复收益结果。
+**正式训练来源尚未确定。** UniPhys-Bench Part 2 与 PR #4 Roadmap 的 evaluation-only 定位一致，只用于 Test、开发回归或 Episode 工程验证。正式训练数据需等待 UniPhys-40K 的许可证、数据结构、资产身份与划分策略调研及接入完成后再确定；当前没有正式 SFT 训练入口、数据集或 checkpoint。
 
 ## 下一步（按优先级）
 
 1. **P0｜执行正式 Test 的60-case评测。** 固定 judge 模型、预算、策略和 seed，运行 `python scripts/run_uniphys_verifier_batch.py`；保留逐案例结果、批次清单和 `metrics.json`，中断时以清单中已完成记录为准。**完成标准：**60 个 case 均有终态结果且评分成功，不混入开发回归结果。
-2. **P0｜生成并验收 UniPhys Episode。** 先以少量对象 smoke，再通过 Slurm 执行冻结的480样本配置；核对 clean / offset / axis / combined 分层、隔离原因、证据资格、每条轨迹唯一终止目标及 train/validation 资产隔离。**完成标准：**产物清单 complete，所有公开 messages 不含 private gold，并可由现有 Qwen 处理器读取。
+2. **P0｜生成并验收 Part 2 工程验证 Episode。** 先以少量对象 smoke，再通过 Slurm 执行冻结的480样本配置；核对 clean / offset / axis / combined 分层、隔离原因、证据资格、每条轨迹唯一终止目标及内部 train/validation 资产隔离。**完成标准：**产物清单 complete，所有公开 messages 不含 private gold，并可由现有 Qwen 处理器读取；该结果不作为正式 SFT 数据。
 3. **P0｜处理同观测多教师动作。** 在新 Episode 上按实际图像 SHA 和可见上下文重新审计动作歧义，复用既有经验分布导出或建立仅使用可见信息的教师。**完成标准：**训练时不会把相同输入的冲突动作当作彼此排斥的唯一标签。
-4. **P1｜先跑通最小 SFT，再比较监督方案。** 用 Qwen3-VL-2B 优先训练结构化诊断与停止，再加入动作选择；在相同底座、输入、数据规模与预算下比较未微调、普通 SFT、证据约束 SFT。**完成标准：**有可重跑训练入口、配置、曲线、validation 选出的 checkpoint 和训练前后结果。
+4. **P1｜调研并接入 UniPhys-40K 正式训练来源。** 先核验许可证、资产结构、与 Part 2/Test 的身份及近重复关系，再冻结正式训练与 validation 划分；只有来源和隔离边界通过审计后，才实现最小 SFT 并比较普通监督与证据约束监督。
 5. **P1｜完成留出评测与归因。** 先固定观察比较诊断/定位/误放行/停止，再按统一成本比较 fixed、random、active；消融证据约束、停止监督、自然错误数据。闭环固定 Generator，每轮修复后重取证据并独立评分。**完成标准：**结果按原始物体汇总，报告观察成本与波动，能区分诊断、取证、停止及实际修复收益。
 
 优先跑通**小规模且可信的完整链路**，不要在训练前追求覆盖全部 29 种缺陷或扩大到不可审计的数据规模。
 
 ---
 
-最近同步：**2026-10-11 · 正式 Test 重新冻结**；旧20物体/60案例归为开发回归，重新选择20个未参与开发且与 Train/Validation 无交集的对象，完成来源身份、完整模型 SHA、规范化名称近重复审计及60案例预检；正式 Test 与480样本 Episode 均未运行模型。
+最近同步：**2026-10-12 · Part 2 训练用途取消**；100 Train / 20 Validation 仅保留为 Episode 工程验证划分，显式标记为非正式训练数据；正式训练来源等待 UniPhys-40K 调研与接入，正式 Test 与480样本 Episode 均未运行模型。

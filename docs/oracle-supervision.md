@@ -91,7 +91,8 @@ sbatch --account=def-zhouyang scripts/slurm/run_portable.sbatch env OPENBLAS_NUM
 HF_HUB_OFFLINE=1 .venv-qwen/bin/python scripts/validate_training_export.py --dataset data/benchmarks/oracle-new --out output/tokenizer-new.json
 ```
 
-UniPhys 使用冻结的 train/validation catalog，不需要模型或人工标注：
+UniPhys-Bench Part 2 使用内部仍名为 train/validation 的冻结划分做 Episode 工程验证，
+不需要模型或人工标注，也不作为正式 SFT 训练数据；正式训练来源等待 UniPhys-40K 调研与接入：
 
 ```bash
 python -m turnitover generate --config configs/generate_uniphys_supervision.yaml
