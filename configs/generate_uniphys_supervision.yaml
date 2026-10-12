@@ -3,7 +3,7 @@ seed: 20261011
 n_samples: 480
 asset_source:
   kind: catalog
-  manifest: data/assets/uniphys-trainval-catalog-v1/catalog.json
+  manifest: data/assets/uniphys40k-trainval-v1/catalog.json
 clean_fraction: 0.25
 max_corruptions: 2
 corruptions: [structure.part_offset, kinematics.joint_axis]
