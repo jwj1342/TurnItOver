@@ -27,18 +27,18 @@
 
 **Episode 数据尚未实际生成。** 正式 Test 已重新冻结且未运行模型；旧20物体批次及其60案例只作开发回归，不进入正式指标。代码现已支持可控组合缺陷、证据资格和统一 Episode，但尚未在 UniPhys Part 2 工程验证划分上执行并核验实际分层计数。该120物体划分即使生成成功也不升级为正式训练集。自然生成错误不属于本次无模型闭环；其部件 ID 与参考不同时，现有几何比对仍不能直接充当独立 gold。
 
-**正式训练来源尚未确定。** UniPhys-Bench Part 2 与 PR #4 Roadmap 的 evaluation-only 定位一致，只用于 Test、开发回归或 Episode 工程验证。正式训练数据需等待 UniPhys-40K 的许可证、数据结构、资产身份与划分策略调研及接入完成后再确定；当前没有正式 SFT 训练入口、数据集或 checkpoint。
+**UniPhys-40K 第一阶段已建立首批合格训练资产，但覆盖仍很小。** 官方 `UniPhysGen@3f1bb2d` 代码确认发布 OBJ 为 `qpos=0`、轴/枢轴使用 OBJ 坐标、旋转范围为弧度、滑动范围为 OBJ 单位；[`convert_uniphys40k.py`](../scripts/convert_uniphys40k.py) 据此逐资产推导尺度，按三角形坐标多重集验证完整模型闭合，并核验来源许可及正式 Test 的来源/OBJ SHA/名称重叠。对40个简单可动候选的严格预检得到5个 structural candidate、35个拒绝；三视图真实浏览器运动检查后，`UP_00015016`、`UP_00015020`、`UP_00039007`、`UP_00039025` 共4个晋级首批 formal Train/Validation catalog（3 Train、1 Validation），`UP_00023000` 因发布打开姿态再旋转135°穿到机身下方而保留为运动失败。所有失败原因及 smoke SHA 均保留；HSSD 网格为 CC BY-NC 4.0，PartNet/ShapeNet 网格受非商业条款约束，均未被 UniPhys 注释的 CC BY 4.0 覆盖。
 
 ## 下一步（按优先级）
 
 1. **P0｜执行正式 Test 的60-case评测。** 固定 judge 模型、预算、策略和 seed，运行 `python scripts/run_uniphys_verifier_batch.py`；保留逐案例结果、批次清单和 `metrics.json`，中断时以清单中已完成记录为准。**完成标准：**60 个 case 均有终态结果且评分成功，不混入开发回归结果。
 2. **P0｜生成并验收 Part 2 工程验证 Episode。** 先以少量对象 smoke，再通过 Slurm 执行冻结的480样本配置；核对 clean / offset / axis / combined 分层、隔离原因、证据资格、每条轨迹唯一终止目标及内部 train/validation 资产隔离。**完成标准：**产物清单 complete，所有公开 messages 不含 private gold，并可由现有 Qwen 处理器读取；该结果不作为正式 SFT 数据。
 3. **P0｜处理同观测多教师动作。** 在新 Episode 上按实际图像 SHA 和可见上下文重新审计动作歧义，复用既有经验分布导出或建立仅使用可见信息的教师。**完成标准：**训练时不会把相同输入的冲突动作当作彼此排斥的唯一标签。
-4. **P1｜调研并接入 UniPhys-40K 正式训练来源。** 先核验许可证、资产结构、与 Part 2/Test 的身份及近重复关系，再冻结正式训练与 validation 划分；只有来源和隔离边界通过审计后，才实现最小 SFT 并比较普通监督与证据约束监督。
+4. **P1｜扩充 UniPhys-40K 正式 Train/Validation。** 复用现有40资产预检与多视图审核门槛扩大来源/机制覆盖，保持 structural candidate 与 training eligible 分离；不得用轴反转、截断范围或未审核资产补数量。首批4资产只证明链路可行，不足以支持大规模训练。
 5. **P1｜完成留出评测与归因。** 先固定观察比较诊断/定位/误放行/停止，再按统一成本比较 fixed、random、active；消融证据约束、停止监督、自然错误数据。闭环固定 Generator，每轮修复后重取证据并独立评分。**完成标准：**结果按原始物体汇总，报告观察成本与波动，能区分诊断、取证、停止及实际修复收益。
 
 优先跑通**小规模且可信的完整链路**，不要在训练前追求覆盖全部 29 种缺陷或扩大到不可审计的数据规模。
 
 ---
 
-最近同步：**2026-10-12 · Part 2 训练用途取消**；100 Train / 20 Validation 仅保留为 Episode 工程验证划分，显式标记为非正式训练数据；正式训练来源等待 UniPhys-40K 调研与接入，正式 Test 与480样本 Episode 均未运行模型。
+最近同步：**2026-10-12 · UniPhys-40K 首批正式 Train/Validation**；核对官方关节语义并完成40资产严格预检、5个结构候选三视图 Smoke，4个运动验证通过并形成3 Train/1 Validation catalog；未生成腐蚀或 Episode，正式 Test 与480样本 Episode 均未运行模型。
