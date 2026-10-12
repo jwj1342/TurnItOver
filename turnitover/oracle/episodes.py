@@ -9,6 +9,9 @@ from turnitover.taxonomy import load_taxonomy
 from turnitover.verifier.contracts import Context, parse_decision
 
 
+TRAINING_OBJECTIVES = ("first_failure", "comprehensive_within_budget")
+
+
 def _coverage(labels, exposures, witness_indices):
     covered = set()
     for index in witness_indices:
@@ -18,7 +21,9 @@ def _coverage(labels, exposures, witness_indices):
     expected = set(range(len(labels)))
     if not covered <= expected:
         raise ValueError("Exposure references an unknown label")
-    status = "complete" if covered == expected else "partial" if covered else "none"
+    # An empty injected-label set is private truth, not positive visible evidence
+    # that the candidate is clean.
+    status = "complete" if expected and covered == expected else "partial" if covered else "none"
     return {"status": status, "covered_label_indices": sorted(covered),
             "uncovered_label_indices": sorted(expected - covered),
             "proxy": "counterfactual_pixel_exposure"}
@@ -62,13 +67,26 @@ def _terminal_verdict(labels, exposures, history, witness_indices):
                    "summary": "The trajectory does not expose the injected defects.",
                    "limitations": ["No injected defect reached the configured pixel-exposure threshold."]}
     else:
-        verdict = {"status": "pass", "confidence": 1.0, "findings": [],
-                   "summary": "No defect exists within the configured synthetic constraints.",
-                   "limitations": ["Pass is limited to the acquired observations and configured constraints."]}
+        verdict = {"status": "uncertain", "confidence": 0.0, "findings": [],
+                   "summary": "The observations do not expose a defect, but do not establish that the candidate is clean.",
+                   "limitations": ["Absence of injected private labels is not model-visible evidence for pass."]}
     return verdict, evidence
 
 
-def episode_examples(uid, context, reference, history, witness_indices, exposures, labels, budget):
+def _termination(labels, exposures, witness_indices, budget, objective):
+    """Apply one explicit stopping objective without claiming hidden completeness."""
+    if objective not in TRAINING_OBJECTIVES:
+        raise ValueError(f"Unknown Episode training objective: {objective}")
+    if objective == "first_failure" and labels:
+        for length in range(1, len(witness_indices) + 1):
+            if _coverage(labels, exposures, witness_indices[:length])["covered_label_indices"]:
+                return length, "evidence_sufficient"
+    reason = "budget_exhausted" if len(witness_indices) >= budget else "observation_space_exhausted"
+    return len(witness_indices), reason
+
+
+def episode_examples(uid, context, reference, history, witness_indices, exposures, labels, budget,
+                     objective="first_failure"):
     """Return tokenizer-compatible decisions grouped by one privileged teacher episode.
 
     Private labels and exposure tables remain outside the model messages. The final
@@ -76,9 +94,20 @@ def episode_examples(uid, context, reference, history, witness_indices, exposure
     """
     if len(history) != len(witness_indices):
         raise ValueError("One witness index per observation is required")
+    observations_used, termination_reason = _termination(labels, exposures, witness_indices, budget, objective)
+    history = history[:observations_used]
+    witness_indices = witness_indices[:observations_used]
     rows = []
     for decision_index, row in enumerate(action_examples(uid, context, reference, history, budget)):
-        rows.append({**row, "episode_id": uid, "decision_index": decision_index,
+        protocol, payload_text = row["messages"][0]["content"].rsplit("\n", 1)
+        action_payload = json.loads(payload_text)
+        action_payload["training_objective"] = objective
+        action_messages = [
+            {"role": "user", "content": protocol + "\n" + json.dumps(action_payload)},
+            row["messages"][1],
+        ]
+        rows.append({**row, "messages": action_messages, "episode_id": uid,
+                     "training_objective": objective, "decision_index": decision_index,
                      "terminal": False,
                      "evidence": _coverage(labels, exposures, witness_indices[:decision_index])})
 
@@ -87,12 +116,15 @@ def episode_examples(uid, context, reference, history, witness_indices, exposure
     parse_decision(target, Context(**context), {row["step"] for row in history}, final_only=True)
     images = [reference] + [row["image_ref"] for row in history]
     payload = {"context": context, "remaining": max(0, budget - len(history)),
-               "history": history, "image_order": images, "taxonomy_ids": load_taxonomy().ids}
+               "history": history, "image_order": images, "taxonomy_ids": load_taxonomy().ids,
+               "training_objective": objective}
     protocol = (Path(__file__).parents[1] / "verifier/prompt.txt").read_text(encoding="utf-8")
     rows.append({
-        "id": f"{uid}:verdict", "episode_id": uid, "decision_index": len(history),
+        "id": f"{uid}:verdict", "episode_id": uid, "training_objective": objective,
+        "decision_index": len(history),
         "condition": "single_reference_episode_terminal", "terminal": True,
-        "termination_target": "verdict", "evidence": evidence, "images": images,
+        "termination_target": "verdict", "termination_reason": termination_reason,
+        "evidence": evidence, "images": images,
         "messages": [
             {"role": "user", "content": protocol + "\n" + json.dumps(payload)},
             {"role": "assistant", "content": json.dumps(target)},

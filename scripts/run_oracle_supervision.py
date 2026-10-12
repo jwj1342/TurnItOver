@@ -40,7 +40,7 @@ def _benchmark_provenance(benchmark):
     return [prepared, *manifests, *([top] if top.exists() else [])]
 
 
-def run(benchmark, config, output, budget=6, per_asset=None):
+def run(benchmark, config, output, budget=6, per_asset=None, episode_objective="first_failure"):
     if budget < 1 or (per_asset is not None and per_asset < 1):
         raise ValueError("Positive budget and per-asset limit required")
     benchmark_files = _benchmark_provenance(benchmark)
@@ -58,11 +58,13 @@ def run(benchmark, config, output, budget=6, per_asset=None):
     report = {"version": 1, "status": "incomplete", "budget": budget,
               "thresholds": asdict(thresholds), "benchmark": str(benchmark.resolve()),
               "condition": "privileged_counterfactual_pixel_exposure",
+              "episode_objective": episode_objective,
               "limitations": ["Pixel exposure is a proxy, not human or VLM recognition.",
                               "Greedy finite-grid oracle is not a global optimal policy.",
                               "Fixed/random controls order witnesses, not arbitrary atomic actions.",
                               "Teacher render costs are excluded from learner action budget.",
                               "Action targets use privileged truth; inputs contain only a static reference and past observations.",
+                              "Episode stopping semantics are explicit and included in every model-visible payload.",
                               "No diagnosis SFT or model capability claim is made by this export."]}
     root = Path(__file__).resolve().parents[1]
     provenance_files = [config, cfg.views_path, *sorted((root / "turnitover").rglob("*.py")),
@@ -72,7 +74,7 @@ def run(benchmark, config, output, budget=6, per_asset=None):
                                for p in provenance_files}
     report["render_resolution"] = [cfg.render.width, cfg.render.height]
     report["fixed_order"] = "Each view at rest, then each joint's unique nonzero detents for front/oblique views"
-    counts, episode_counts, samples = Counter(), Counter(), Counter()
+    counts, episode_counts, episode_terminations, samples = Counter(), Counter(), Counter(), Counter()
     curves = {mode: np.zeros(budget, dtype=int) for mode in ("oracle", "fixed", "random")}
     total_labels, teacher_renders = 0, 0
     reference_cache = {}
@@ -138,9 +140,11 @@ def run(benchmark, config, output, budget=6, per_asset=None):
                     counts[split] += 1
                 oracle = trajectories["oracle"]
                 labels = [asdict(c) for c in sample.corruptions]
-                for example in episode_examples(
+                episodes = episode_examples(
                         uid, model_input["context"], reference_path.as_posix(), oracle["history"],
-                        oracle["witness_indices"], exposures, labels, budget):
+                        oracle["witness_indices"], exposures, labels, budget, episode_objective)
+                episode_terminations[next(row for row in episodes if row["terminal"])["termination_reason"]] += 1
+                for example in episodes:
                     episode_streams[split].write(json.dumps(example)+"\n")
                     episode_counts[split] += 1
                 annotations.write(json.dumps({"id": uid, "split": split, "asset_id": sample.asset_id,
@@ -155,6 +159,7 @@ def run(benchmark, config, output, budget=6, per_asset=None):
             raise ValueError("No eligible samples")
         report.update(status="complete", samples=dict(samples), action_examples=dict(counts),
                       episode_examples=dict(episode_counts),
+                      episode_termination_reasons=dict(episode_terminations),
                       total_labels=total_labels, teacher_renders=teacher_renders,
                       exposed_counts={k: v.tolist() for k, v in curves.items()},
                       exposure_recall={k: (v/total_labels).tolist() if total_labels else None for k, v in curves.items()},
@@ -178,5 +183,8 @@ if __name__ == "__main__":
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--budget", type=int, default=6)
     parser.add_argument("--per-asset", type=int)
+    parser.add_argument("--episode-objective", choices=("first_failure", "comprehensive_within_budget"),
+                        default="first_failure")
     args = parser.parse_args()
-    print(json.dumps(run(args.benchmark, args.config, args.out, args.budget, args.per_asset), indent=2))
+    print(json.dumps(run(args.benchmark, args.config, args.out, args.budget, args.per_asset,
+                         args.episode_objective), indent=2))

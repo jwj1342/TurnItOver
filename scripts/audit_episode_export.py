@@ -8,6 +8,8 @@ import json
 from pathlib import Path
 
 from turnitover.assets.catalog import CatalogSource
+from turnitover.oracle.ambiguity import observable_key
+from turnitover.oracle.pass_evidence import assess_single_reference_pass
 
 
 SPLITS = ("train", "validation", "test")
@@ -15,7 +17,8 @@ PRIVATE_INPUT_KEYS = {
     "candidate_program", "candidate_sha", "exposures", "labels", "privileged",
     "program_sha", "reference_program", "reference_sha", "signals",
 }
-MODEL_INPUT_KEYS = {"context", "remaining", "history", "image_order", "taxonomy_ids"}
+MODEL_INPUT_KEYS = {"context", "remaining", "history", "image_order", "taxonomy_ids", "training_objective"}
+TRAINING_OBJECTIVES = ("first_failure", "comprehensive_within_budget")
 
 
 def _rows(path: Path) -> list[dict]:
@@ -64,10 +67,18 @@ def audit(benchmark: Path, oracle: Path, catalog: Path) -> dict:
         "terminal_verdicts": Counter(),
         "evidence": Counter(),
         "action_steps": Counter(),
+        "termination_reasons": Counter(),
+        "training_objectives": Counter(),
+        "evidence_limited_cases": [],
+        "unsupported_pass_cases": [],
+        "single_reference_pass_reasons": Counter(),
+        "single_reference_public_facts": Counter(),
     }
     split_ids, split_groups, split_references = {}, {}, {}
     image_paths: set[Path] = set()
     episode_rows = defaultdict(list)
+    observable_actions = defaultdict(list)
+    observable_image_hashes = {}
 
     for split in SPLITS:
         inputs = _rows(prepared / f"{split}.inputs.jsonl")
@@ -92,6 +103,9 @@ def audit(benchmark: Path, oracle: Path, catalog: Path) -> dict:
             if row["episode_id"] not in input_ids:
                 raise ValueError(f"Episode not present in its prepared split: {row['episode_id']}")
             episode_rows[row["episode_id"]].append(row)
+            if not row["terminal"]:
+                key = observable_key(row, oracle, observable_image_hashes)
+                observable_actions[(split, key)].append(row)
 
     for left_index, left in enumerate(SPLITS):
         for right in SPLITS[left_index + 1:]:
@@ -125,6 +139,9 @@ def audit(benchmark: Path, oracle: Path, catalog: Path) -> dict:
             leaked = _keys(payload) & PRIVATE_INPUT_KEYS
             if leaked:
                 raise ValueError(f"Private ground-truth keys leaked into model input: {sorted(leaked)}")
+            objective = row.get("training_objective")
+            if objective not in TRAINING_OBJECTIVES or payload["training_objective"] != objective:
+                raise ValueError(f"Missing or inconsistent model-visible training objective: {row['id']}")
             if len(payload["history"]) != row["decision_index"] or len(row["images"]) != 1 + len(payload["history"]):
                 raise ValueError(f"Image/action history mismatch: {row['id']}")
             for image in row["images"]:
@@ -134,33 +151,104 @@ def audit(benchmark: Path, oracle: Path, catalog: Path) -> dict:
                 image_paths.add(path)
 
         final = terminal[0]
+        final_payload = _payload(final["messages"][0]["content"])
+        pass_assessment = assess_single_reference_pass(final_payload, oracle)
+        report["single_reference_pass_reasons"][pass_assessment["reason"]] += 1
+        for fact in ("front_rest_exact_match", "runtime_stats_complete"):
+            if pass_assessment.get(fact):
+                report["single_reference_public_facts"][fact] += 1
         verdict = json.loads(final["messages"][1]["content"])["verdict"]
+        reason = final.get("termination_reason")
+        objective = final["training_objective"]
+        if objective != oracle_manifest.get("episode_objective"):
+            raise ValueError(f"Episode objective differs from its manifest: {uid}")
         report["terminal_verdicts"][verdict["status"]] += 1
         report["evidence"][final["evidence"]["status"]] += 1
+        report["termination_reasons"][reason] += 1
+        report["training_objectives"][objective] += 1
         trajectory = annotation["trajectories"]["oracle"]
         for finding, label_index in zip(verdict["findings"], final["evidence"]["covered_label_indices"], strict=True):
+            label = labels[label_index]
+            expected_joint = label.get("params", {}).get("joint") if label["defect_id"] == "kinematics.joint_axis" else None
+            if (finding["defect_id"] != label["defect_id"] or finding["parts"] != list(label["parts"])
+                    or finding["joint_id"] != expected_joint):
+                raise ValueError(f"Finding identity does not match its exposed label: {uid}")
             expected_steps = [observation["step"] for observation, witness in zip(
-                trajectory["history"], trajectory["witness_indices"], strict=True
+                trajectory["history"][:final["decision_index"]],
+                trajectory["witness_indices"][:final["decision_index"]], strict=True
             ) if label_index in annotation["exposures"][witness]]
             if finding["evidence_steps"] != expected_steps:
                 raise ValueError(f"Finding evidence steps do not match private exposure audit: {uid}")
-        expected_status = "pass" if not labels else "fail" if verdict["findings"] else "uncertain"
+        expected_status = (
+            "fail" if verdict["findings"] else "pass" if pass_assessment["eligible"] else "uncertain"
+        )
         if verdict["status"] != expected_status:
             raise ValueError(f"Terminal verdict contradicts evidence-qualified labels: {uid}")
+        first_exposure = next((index + 1 for index, witness in enumerate(trajectory["witness_indices"])
+                               if annotation["exposures"][witness]), None)
+        exhausted_reason = ("budget_exhausted" if len(trajectory["history"]) >= oracle_manifest["budget"]
+                            else "observation_space_exhausted")
+        expected_reason = ("evidence_sufficient" if objective == "first_failure" and verdict["findings"]
+                           else exhausted_reason)
+        expected_step = first_exposure if objective == "first_failure" and verdict["findings"] else len(trajectory["history"])
+        if reason != expected_reason or final["decision_index"] != expected_step:
+            raise ValueError(f"Terminal reason or stopping step is inconsistent: {uid}")
+        if verdict["status"] == "pass" and not pass_assessment["eligible"]:
+            report["unsupported_pass_cases"].append(uid)
+        if final["evidence"]["status"] != "complete":
+            report["evidence_limited_cases"].append({
+                "id": uid, "asset_id": annotation["asset_id"], "split": annotation["split"],
+                "labels": [label["defect_id"] for label in labels],
+                "evidence": final["evidence"]["status"], "verdict": verdict["status"],
+                "termination_reason": reason,
+            })
 
     if episode_rows:
         raise ValueError(f"Episode rows without private annotations: {sorted(episode_rows)}")
+    conflicts = []
+    for (split, key), rows in observable_actions.items():
+        targets = Counter(row["messages"][1]["content"] for row in rows)
+        if len(targets) > 1:
+            conflicts.append({"split": split, "observable_key": key, "examples": len(rows),
+                              "distinct_actions": len(targets), "ids": [row["id"] for row in rows]})
+    singleton_groups = sum(len(rows) == 1 for rows in observable_actions.values())
     report.update(
         status="complete",
         samples=dict(report["samples"]), strata=dict(report["strata"]),
         quality=dict(report["quality"]), terminal_verdicts=dict(report["terminal_verdicts"]),
-        evidence=dict(report["evidence"]), action_steps=dict(report["action_steps"]), episode_rows=sum(
+        evidence=dict(report["evidence"]), action_steps=dict(report["action_steps"]),
+        termination_reasons=dict(report["termination_reasons"]),
+        training_objectives=dict(report["training_objectives"]), episode_rows=sum(
             len(_rows(oracle / f"{split}.episodes.jsonl")) for split in SPLITS),
         referenced_pngs=len(image_paths),
         referenced_png_sha256=len({hashlib.sha256(path.read_bytes()).hexdigest() for path in image_paths}),
         split_isolation="IDs, split groups, source assets, and reference SHAs are disjoint",
         private_ground_truth="No private keys occur in model-facing JSON payloads; evidence remains row metadata",
+        observable_action_audit={
+            "groups": len(observable_actions),
+            "source_examples": sum(len(rows) for rows in observable_actions.values()),
+            "conflicting_groups": len(conflicts), "affected_examples": sum(row["examples"] for row in conflicts),
+            "singleton_groups": singleton_groups,
+            "non_singleton_groups": len(observable_actions) - singleton_groups,
+            "conflicts": conflicts,
+            "learnability": "unresolved: exact-match conflicts are absent, but singleton privileged targets remain",
+        },
+        teacher_policy={
+            "condition": oracle_manifest.get("condition"),
+            "uses_private_counterfactual_exposure": True,
+            "safe_use": "Action targets require a visible-only teacher or an explicit privileged-teacher limitation.",
+        },
+        single_reference_pass_audit={
+            "eligible": sum(count for reason, count in report["single_reference_pass_reasons"].items()
+                            if reason == "complete_public_scope"),
+            "reasons": dict(report["single_reference_pass_reasons"]),
+            "public_facts": dict(report["single_reference_public_facts"]),
+            "rule": "Only an explicitly model-visible front/rest-only or runtime-budget-only scope can pass.",
+            "full_articulated_object": "unsupported without matched reference motion/views",
+        },
     )
+    if report["unsupported_pass_cases"]:
+        raise ValueError(f"Pass targets lack a model-visible negative-evidence mechanism: {report['unsupported_pass_cases']}")
     return report
 
 
@@ -169,9 +257,16 @@ if __name__ == "__main__":
     parser.add_argument("--benchmark", type=Path, required=True)
     parser.add_argument("--oracle", type=Path, required=True)
     parser.add_argument("--catalog", type=Path, required=True)
+    parser.add_argument("--baseline", type=Path)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     result = audit(args.benchmark, args.oracle, args.catalog)
+    if args.baseline:
+        before = json.loads(args.baseline.read_text())
+        result["before_after"] = {
+            key: {"before": before.get(key), "after": result.get(key)}
+            for key in ("terminal_verdicts", "evidence", "action_steps", "termination_reasons", "episode_rows")
+        }
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))

@@ -19,7 +19,15 @@
 
 **已实现：UniPhys Part 2 Episode 工程验证划分。** [`select_uniphys_trainval.py`](../scripts/select_uniphys_trainval.py) 按固定 seed 执行 URDF 条件检查和完整 Mesh 转换预检，收集内部仍标作100个 Train 与20个 Validation 的对象；这两个名称只用于验证 Episode 生成、隔离与加载链路，冻结配置标记为 `episode_engineering_validation`、`formal_training=false`，**不作为正式 SFT 训练数据**。正式 Test 随后以这120个对象为排除集合，保证对象无交叉。现有工程产物含300个 Train case、60个 Validation case和360份逐案例预检；[`run_uniphys_verifier_batch.py`](../scripts/run_uniphys_verifier_batch.py) 可复用冻结身份检查，但结果只用于工程验证。
 
-**已实现：4资产无模型 Episode Smoke。** [`generate_uniphys_supervision.yaml`](../configs/generate_uniphys_supervision.yaml) 复用既有生成器与独立 checker；[`episodes.py`](../turnitover/oracle/episodes.py) 将 Oracle 轨迹导出为下一动作监督和唯一终止 verdict。真实执行得到12个样本（clean / 单缺陷 / 组合缺陷为3/6/3），12个均通过编译和逐缺陷隔离 checker，0 quarantine、0生成失败；prepared 为9 Train / 3 Validation。Oracle 对每个样本执行6步，连续动作图像与独立 witness 逐像素一致；导出84行 Episode（63/21），终止标签为3 pass、8 fail、1 uncertain，证据为10 complete、1 partial、1 none。12个注入标签中10个达到像素暴露阈值；未暴露的两个 `part_offset` 不进入 findings。[`audit_episode_export.py`](../scripts/audit_episode_export.py) 进一步核对4资产白名单、图像闭包、动作历史、证据步骤、唯一终止目标、split/参考 SHA 隔离及 model-facing JSON 字段白名单。产物位于 `data/benchmarks/uniphys40k-episode-smoke-v1/`、`data/benchmarks/uniphys40k-oracle-smoke-v1/` 和 `output/uniphys40k-episode-smoke-v1-audit.json`；这是链路 Smoke，**不是正式训练集或模型能力结果**。
+**已实现：4资产无模型 Episode Smoke 与监督质量修复。** [`generate_uniphys_supervision.yaml`](../configs/generate_uniphys_supervision.yaml) 复用既有生成器与独立 checker；真实执行得到12个样本（clean / 单缺陷 / 组合缺陷为3/6/3），12个均通过编译和逐缺陷隔离 checker，0 quarantine、0生成失败；prepared 为9 Train / 3 Validation。初版84行 Episode 错把3个 clean 的隐藏“无注入标签”当成 `pass` 证据，且12/12都机械执行满6步。修复后 [`episodes.py`](../turnitover/oracle/episodes.py) 不再由私有标签空集产生 `pass`：3个 clean 与1个未暴露 offset 均在预算耗尽后输出 `uncertain`；8个有可见 finding 的样本在首个证据步骤终止，得到51行 Episode、8 fail / 4 uncertain，终止原因为8 `evidence_sufficient` / 4 `budget_exhausted`，步骤分布为1步3个、2步3个、3步2个、6步4个。所有 finding 的身份和 `evidence_steps` 均与实际公开历史前缀一致，未暴露缺陷不进入目标。
+
+[`audit_episode_export.py`](../scripts/audit_episode_export.py) 还按图像 SHA、公开 context 与历史对下一动作分组：修复版39个动作目标形成25个精确可见前缀组，0组存在不同动作，但15组为单例；Oracle 明确使用私有 counterfactual exposure，因此“未发现精确冲突”不能证明目标可由模型输入识别，动作监督仍是特权教师且可学习性未解决。修复前后产物为 `output/uniphys40k-episode-quality-before.json`、`output/uniphys40k-episode-quality-after.json`，新版 Episode 位于 `data/benchmarks/uniphys40k-oracle-smoke-v2/`。这是监督链路 Smoke，**不是正式训练集或模型能力结果**。
+
+**停止目标现已显式区分。** `first_failure` 面向快速拒绝，在首个有证据 finding 后停止；12样本导出51行，8个 fail 在1–3步停止，组合缺陷允许 `partial`。`comprehensive_within_budget` 面向预算内尽可能完整诊断，保留完整轨迹并只输出所有已暴露 finding；导出84行，7 complete / 1 partial / 4 none，但不声称找全隐藏缺陷。目标名称同时写入 manifest、每行元数据和模型可见 payload，审计拒绝缺失或混用；两份实跑产物分别位于 `data/benchmarks/uniphys40k-oracle-first-failure-v3/` 与 `data/benchmarks/uniphys40k-oracle-comprehensive-v3/`。
+
+**单参考 `pass` 仅在显式受限 scope 下可审计。** [`pass_evidence.py`](../turnitover/oracle/pass_evidence.py) 只读取模型可见的 task、参考图、观察历史与 runtime payload：`front_rest_appearance_only` 仅在关节动作前取得 front 图且与唯一 front/rest 参考逐像素一致时通过；`runtime_budget_only` 仅在公开、有限、非负的 triangle/draw-call 数值均不超公开阈值时通过。二者都明确排除关节、遮挡面和其他未观察属性，不能解释为整个 articulated object 正确。当前12条的 task 是广义 articulated verification，故可通过数为0；虽然7/12的 front/rest 完全一致，事后质量分析显示其中只有3个 clean，另有3个 joint-axis 和1个未暴露 offset，证明单图相等不足以支持广义 `pass`。12/12也没有 runtime 查询。因此3个 clean 继续为 `uncertain`，规则不读取 `labels=[]`、私有程序或 Checker 结果。
+
+**配对参考图是广义运动判断的必要独立实验条件，但不是充分条件。** 现有每资产固定 witness grid 为16状态，6步轨迹只到达5–6个唯一状态；为当前12条轨迹逐观察加入同状态 reference，终态图像输入会从7张增至13张（+86%），全套 Episode 行累计图像槽位从336增至588（+75%），需要72个配对槽位、按资产缓存后27张唯一 reference。若只把预渲染 reference 作为输入，观察动作预算仍为6；若配对也计入动作预算，则最多只能比较3个状态。现有 Oracle 已为4资产私下渲染64张完整 reference grid（总 teacher render 448），但未按状态公开给模型；即使导出，6步仍覆盖不了16状态。因此下一实验应固定较小的必查 scope 或单独提高预算，并公开 state key、成功状态和同状态图像对；缺失配对、覆盖未完成或预算耗尽一律 `uncertain`，不得把私有全网格审计当作模型证据。
 
 实际成功命令如下；同参数直接运行 `python scripts/run_oracle_supervision.py --benchmark data/benchmarks/uniphys40k-episode-smoke-v1 --config configs/generate_uniphys_supervision.yaml --out data/benchmarks/uniphys40k-oracle-smoke-v1` 曾因当前环境未 editable-install 而在导入阶段失败，改用模块入口后成功，未产生失败样本：
 
@@ -28,13 +36,19 @@ python -m turnitover generate --config configs/generate_uniphys_supervision.yaml
 python -m turnitover prepare-dataset --shards data/benchmarks/uniphys40k-episode-smoke-v1/raw/shard-0000.tar --splits data/assets/uniphys40k-trainval-v1/splits.json --out data/benchmarks/uniphys40k-episode-smoke-v1/prepared
 python -m scripts.run_oracle_supervision --benchmark data/benchmarks/uniphys40k-episode-smoke-v1 --config configs/generate_uniphys_supervision.yaml --out data/benchmarks/uniphys40k-oracle-smoke-v1
 python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-episode-smoke-v1 --oracle data/benchmarks/uniphys40k-oracle-smoke-v1 --catalog data/assets/uniphys40k-trainval-v1/catalog.json --out output/uniphys40k-episode-smoke-v1-audit.json
+python -m scripts.run_oracle_supervision --benchmark data/benchmarks/uniphys40k-episode-smoke-v1 --config configs/generate_uniphys_supervision.yaml --out data/benchmarks/uniphys40k-oracle-smoke-v2
+python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-episode-smoke-v1 --oracle data/benchmarks/uniphys40k-oracle-smoke-v2 --catalog data/assets/uniphys40k-trainval-v1/catalog.json --baseline output/uniphys40k-episode-quality-before.json --out output/uniphys40k-episode-quality-after.json
+python -m scripts.run_oracle_supervision --benchmark data/benchmarks/uniphys40k-episode-smoke-v1 --config configs/generate_uniphys_supervision.yaml --out data/benchmarks/uniphys40k-oracle-first-failure-v3 --episode-objective first_failure
+python -m scripts.run_oracle_supervision --benchmark data/benchmarks/uniphys40k-episode-smoke-v1 --config configs/generate_uniphys_supervision.yaml --out data/benchmarks/uniphys40k-oracle-comprehensive-v3 --episode-objective comprehensive_within_budget
+python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-episode-smoke-v1 --oracle data/benchmarks/uniphys40k-oracle-first-failure-v3 --catalog data/assets/uniphys40k-trainval-v1/catalog.json --out output/uniphys40k-first-failure-v3-audit.json
+python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-episode-smoke-v1 --oracle data/benchmarks/uniphys40k-oracle-comprehensive-v3 --catalog data/assets/uniphys40k-trainval-v1/catalog.json --out output/uniphys40k-comprehensive-v3-audit.json
 ```
 
 **可复用的既有基础。** ReplicaCAD 数据引擎已支持按原始资产分组、腐蚀样本和私有真值隔离；Oracle 动作/成对诊断导出、Qwen3-VL 处理器适配及 assistant-only loss 已存在，见 [`dataset-pipeline.md`](dataset-pipeline.md) 和 [`oracle-supervision.md`](oracle-supervision.md)。这些是可复用组件，**不是 UniPhys 新数据已接通或模型已完成微调**。
 
 ## 关键缺口
 
-**正式规模 Episode 尚未生成。** 上述4资产/12样本只验证 UniPhys-40K 转换资产可进入完整链路；480样本配置未执行，也未启动 Qwen SFT。扩大前仍需增加经真实运动审核且许可适用的资产，改善有限 witness 网格对 `part_offset` 的暴露率，并审计同可见输入的教师动作歧义。自然生成错误不属于本次无模型闭环；其部件 ID 与参考不同时，现有几何比对仍不能直接充当独立 gold。
+**正式规模 Episode 尚未生成。** 上述4资产/12样本只验证 UniPhys-40K 转换资产可进入完整链路；480样本配置未执行，也未启动 Qwen SFT。扩大前仍需增加经真实运动审核且许可适用的资产，改善有限 witness 网格对 `part_offset` 的暴露率，并以仅使用模型可见信息的教师替代或约束当前特权动作目标；本次0个精确冲突不能排除15个单例目标依赖私有 exposure。当前也没有足以支持 clean `pass` 的匹配参考运动证据，因此只能保留 `uncertain`。自然生成错误不属于本次无模型闭环；其部件 ID 与参考不同时，现有几何比对仍不能直接充当独立 gold。
 
 **UniPhys-40K 第一阶段已建立首批运动合格候选，但覆盖仍很小。** 官方 `UniPhysGen@3f1bb2d` 代码确认发布 OBJ 为 `qpos=0`、轴/枢轴使用 OBJ 坐标、旋转范围为弧度、滑动范围为 OBJ 单位；[`convert_uniphys40k.py`](../scripts/convert_uniphys40k.py) 据此逐资产推导尺度，按三角形坐标多重集验证完整模型闭合，并核验来源许可及正式 Test 的来源/OBJ SHA/名称重叠。对40个简单可动候选的严格预检得到5个 structural candidate、35个拒绝；三视图真实浏览器运动检查后，`UP_00015016`、`UP_00015020`、`UP_00039007`、`UP_00039025` 共4个进入3 Train / 1 Validation 的小规模候选 catalog，`UP_00023000` 因发布打开姿态再旋转135°穿到机身下方而保留为运动失败。所有失败原因及 smoke SHA 均保留；HSSD 网格为 CC BY-NC 4.0，PartNet/ShapeNet 网格受非商业条款约束，均未被 UniPhys 注释的 CC BY 4.0 覆盖。这4个对象只证明转换与 Episode 链路可行，不构成正式训练集。
 
@@ -42,7 +56,7 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 1. **P0｜执行正式 Test 的60-case评测。** 固定 judge 模型、预算、策略和 seed，运行 `python scripts/run_uniphys_verifier_batch.py`；保留逐案例结果、批次清单和 `metrics.json`，中断时以清单中已完成记录为准。**完成标准：**60 个 case 均有终态结果且评分成功，不混入开发回归结果。
 2. **P0｜扩充并冻结正式 Train/Validation 资产。** 复用40资产预检与多视图审核门槛扩大来源、类别和机制覆盖，保持 structural candidate、motion failed 与 eligible 分离，并在非商业许可边界内确定训练用途。**完成标准：**资产级隔离和来源重叠审计通过，规模足以支持按类别/机制留出；不得用未审核资产补数量。
-3. **P0｜处理同观测多教师动作。** 在新 Episode 上按实际图像 SHA 和可见上下文重新审计动作歧义，复用既有经验分布导出或建立仅使用可见信息的教师。**完成标准：**训练时不会把相同输入的冲突动作当作彼此排斥的唯一标签。
+3. **P0｜消除特权动作教师依赖。** 精确重复前缀未发现冲突，但大多数前缀没有可比较反事实，不能据此证明动作可学习；需建立仅使用可见信息的教师或明确降权/剔除不可识别目标。**完成标准：**动作选择不读取私有 label/exposure，或训练目标显式表示可观测条件下的动作分布。
 4. **P1｜正式规模 Episode 与处理器预检。** 在扩充资产上通过 Slurm 执行冻结配置，复查腐蚀分层、隔离率、`part_offset` 暴露率、终止分布和 Train/Validation 隔离，再用现有 Qwen 处理器做只读可加载性验证；在此之前不启动 SFT。
 5. **P1｜完成留出评测与归因。** 先固定观察比较诊断/定位/误放行/停止，再按统一成本比较 fixed、random、active；消融证据约束、停止监督、自然错误数据。闭环固定 Generator，每轮修复后重取证据并独立评分。**完成标准：**结果按原始物体汇总，报告观察成本与波动，能区分诊断、取证、停止及实际修复收益。
 
@@ -50,4 +64,4 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 ---
 
-最近同步：**2026-10-12 · UniPhys-40K 4资产 Episode Smoke**；本地提交第一阶段 `1e47621` 后，以仅含4个运动合格资产的候选 catalog 生成12个腐蚀样本并完成 prepare、Oracle 与 Episode 审计；12/12 checker accepted，84行 Episode、0数据失败，两个 offset 标签未被有限视角暴露。未启动 SFT，未修改或运行 Part 2 正式 Test，未执行480样本正式规模生成。
+最近同步：**2026-10-12 · 单参考 `pass` 可行性审计**；在不改 Verifier 输入协议的前提下实现并测试两个严格受限的公开证据 scope。12条现有广义任务均不满足；7条 front/rest 完全一致仍混有4条缺陷样本，且无 runtime 观察，故 clean 保持 uncertain。配对参考可补足同状态比较，但6步预算覆盖不了16状态网格，需作为独立条件验证。未提交本轮代码，未启动 SFT、扩大数据或改动 Part 2 正式 Test。
