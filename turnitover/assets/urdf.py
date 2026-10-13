@@ -41,7 +41,9 @@ def xyz_angles(matrix):
 
 
 class UrdfModel:
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, *, continuous_joint_policy: str = "reject"):
+        if continuous_joint_policy not in ("reject", "fixed"):
+            raise ValueError("continuous_joint_policy must be 'reject' or 'fixed'")
         self.path = path.resolve()
         self.root = ET.parse(path).getroot()
         if self.root.tag != "robot":
@@ -50,6 +52,12 @@ class UrdfModel:
         self.joints = {e.attrib["name"]: e for e in self.root.findall("joint")}
         if len(self.links) != len(self.root.findall("link")) or len(self.joints) != len(self.root.findall("joint")):
             raise ValueError("Duplicate URDF link or joint")
+        fixed_continuous = []
+        for name, joint in self.joints.items():
+            if joint.get("type") == "continuous" and continuous_joint_policy == "fixed":
+                joint.set("type", "fixed")
+                fixed_continuous.append(name)
+        self.continuous_joints_fixed_at_zero = tuple(fixed_continuous)
         self.by_child = {}
         for name, joint in self.joints.items():
             if joint.get("type") not in ("fixed", "revolute", "prismatic") or joint.find("mimic") is not None:

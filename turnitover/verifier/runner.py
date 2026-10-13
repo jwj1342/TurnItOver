@@ -77,6 +77,8 @@ def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tu
                 "references": image_metadata, "git": git_state(Path(__file__).resolve().parents[2]),
                 "model": model.public() if model else {"kind": "local_qwen" if local_model else "offline",
                                                        "name": local_model.name if local_model else None}}
+    if reference_program is not None:
+        metadata["reference_program_sha"] = reference_program.sha
     if local_model and (local_model / "download-manifest.json").exists():
         metadata["local_weights"] = json.loads((local_model / "download-manifest.json").read_text())
     write_json_atomic(output / "result.json", metadata)
@@ -135,11 +137,15 @@ def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tu
     write_json_atomic(output / "feedback.json", {"verdict": metadata["verdict"], "termination": episode.termination,
                                      "program_sha": program.sha, "evidence_file": "trajectory.jsonl"})
     if reference_program:
-        from turnitover.verifier.audit import audit
+        from turnitover.verifier.gt_validator import validate_code
 
         (output / "reference-program.ts").write_text(reference_program.source)
-        metadata["audit"] = audit(program, reference_program, render, views, cfg.max_triangles, cfg.max_draw_calls)
-        write_json_atomic(output / "audit.json", metadata["audit"])
+        validation = validate_code(program, reference_program, render, views,
+                                   cfg.max_triangles, cfg.max_draw_calls)
+        metadata["gt_validation"] = validation
+        metadata["audit"] = validation  # Backward-compatible report field.
+        write_json_atomic(output / "gt_validation.json", validation)
+        write_json_atomic(output / "audit.json", validation)
         write_json_atomic(output / "result.json", metadata)
     write_report(output, metadata, episode.trajectory)
     return metadata

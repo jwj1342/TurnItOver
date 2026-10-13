@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "role": "formal_train_validation",
+  "dataset": "breezexian/UniPhys-40K",
+  "dataset_revision": "107daf3dc2a088a83b77520b94e19674a81c7e80",
+  "download": {
+    "existing_archives": 183,
+    "new_archives": 60,
+    "total_archives": 243,
+    "new_groups": [4, 12, 20, 28, 36, 41],
+    "max_archive_mb": 15,
+    "sampling": "round_robin_first_10_per_group"
+  },
+  "screening": {
+    "max_parts": 20,
+    "candidate": 64,
+    "no_usable_B_or_C_joint": 144,
+    "less_than_two_parts": 21,
+    "too_many_parts_for_pilot": 14
+  },
+  "structural_preflight": {
+    "selected": 64,
+    "structural_candidates": 8,
+    "unsupported": 56,
+    "rejection_reasons": {
+      "no part or full-model AABB validates a uniform OBJ-to-metre scale": 26,
+      "joint axis must contain 3 numbers": 21,
+      "overlapping or nested motion dependency groups are unsupported": 6,
+      "unsupported upstream license_ref: Objaverse": 3
+    }
+  },
+  "failure_audit": "configs/uniphys40k-v2-failure-audit.json",
+  "license_scope": "Research-only candidate pool; each upstream restriction still applies. 3D-FUTURE use additionally requires accepting its Data Sets Use License Agreement.",
+  "motion_failures": [
+    {
+      "asset_id": "UP_00000015",
+      "reason": "Mechanical smoke failed: joint_part_11 has zero changed pixels in the opposite view, so the two-joint asset does not meet the existing three-view visibility gate."
+    }
+  ],
+  "assets": [
+    {
+      "asset_id": "UP_00015016",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/uniphys40k-40-smoke/UP_00015016/smoke.json",
+      "smoke_sha256": "539fcfd29b362d43362aeaf3beccac264557c46be68bdeff1c56d54fef3aa16f",
+      "reason": "Three views show the drawer front and handle translating together by 0.30 m along the annotated slide axis while all housing parts remain fixed."
+    },
+    {
+      "asset_id": "UP_00015020",
+      "decision": "passed",
+      "split": "validation",
+      "smoke_json": "output/uniphys40k-40-smoke/UP_00015020/smoke.json",
+      "smoke_sha256": "6abf29ce83d7f7d53ba1e9d8b650ea2d4af7328b28531ce81b93d8c92b232750",
+      "reason": "Three views show the lower drawer dependency group translating together by 0.25 m, matching the released movement description, while all cabinet parts remain fixed."
+    },
+    {
+      "asset_id": "UP_00023000",
+      "decision": "failed",
+      "smoke_json": "output/uniphys40k-40-smoke/UP_00023000/smoke.json",
+      "smoke_sha256": "c72314d3ce9803a5b58748b495e23a91b9607989e4135289a55252b35327f376",
+      "reason": "All three views show the released open laptop lid rotating another 2.35619 rad below the chassis; the source range is inconsistent with a physically valid motion from the released zero pose."
+    },
+    {
+      "asset_id": "UP_00039007",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/uniphys40k-40-smoke/UP_00039007/smoke.json",
+      "smoke_sha256": "8db797498705576431086c0df8824ecd8fbaa150d8685b93754bede2fb10f608",
+      "reason": "Three views show the clock body and screen tilting together by 0.69813 rad around the side support with the base fixed, matching the released movement description."
+    },
+    {
+      "asset_id": "UP_00039025",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/uniphys40k-40-smoke/UP_00039025/smoke.json",
+      "smoke_sha256": "997f269ad9ff2ca77618172e33bfcfc536c7eb6569cf25afb5114b6047658fd6",
+      "reason": "Three views show only the top button translating 0.003 m along the annotated vertical axis, matching the released few-millimeter movement description."
+    },
+    {
+      "asset_id": "UP_00011006",
+      "decision": "passed",
+      "split": "validation",
+      "smoke_json": "output/uniphys40k-expanded-smoke-v2/UP_00011006/smoke.json",
+      "smoke_sha256": "b01a4040fe1cc88e6efb4840f6704a9c71b7d48ee0487a34b55c1c4eb1bc49e5",
+      "reason": "Three views show only the removable lid translating 0.32257 m vertically while the bin stays fixed, matching the released no-hinge movement description."
+    },
+    {
+      "asset_id": "UP_00035009",
+      "decision": "failed",
+      "smoke_json": "output/uniphys40k-expanded-smoke-v2/UP_00035009/smoke.json",
+      "smoke_sha256": "f86934988afdc0b15d20f0e45843bdc63fb1d20ce4eb0d64ae546f17c996bcd1",
+      "reason": "The released positive 1.74533 rad endpoint rotates the folding leg base through the chair instead of folding it under the seat; axis sign or range reinterpretation would be a guess."
+    }
+  ]
+}
