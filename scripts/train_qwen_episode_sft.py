@@ -13,7 +13,7 @@ import sys
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
-from turnitover.oracle.supervision import load_examples
+from turnitover.oracle.sft_data import SUPERVISION_MODES, load_terminal_training_examples
 from turnitover.oracle.training import tokenize_example
 
 
@@ -29,7 +29,8 @@ def _write_log(path: Path, row: dict) -> None:
 
 
 def train(dataset: Path, model_path: Path, output: Path, *, seed: int, epochs: int,
-          learning_rate: float, lora_rank: int, lora_alpha: int) -> dict:
+          learning_rate: float, lora_rank: int, lora_alpha: int,
+          supervision: str = "evidence") -> dict:
     import torch
     from peft import LoraConfig, get_peft_model
     from transformers import AutoProcessor, Qwen3VLForConditionalGeneration
@@ -47,13 +48,13 @@ def train(dataset: Path, model_path: Path, output: Path, *, seed: int, epochs: i
     torch.cuda.manual_seed_all(seed)
     torch.use_deterministic_algorithms(True, warn_only=True)
 
-    examples = list(load_examples(dataset, "train", "episodes",
-                                  require_formal_training=True, terminal_only=True))
+    examples = list(load_terminal_training_examples(dataset, "train", supervision))
     if not examples:
         raise ValueError("No formal terminal training examples")
     manifest = {
         "version": 1, "status": "running", "scope": "terminal_diagnosis_and_stop_only",
         "seed": seed, "epochs": epochs, "learning_rate": learning_rate,
+        "supervision": supervision,
         "lora": {"rank": lora_rank, "alpha": lora_alpha, "dropout": 0.0,
                  "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj"]},
         "dataset": str(dataset), "dataset_manifest_sha256": _sha256(dataset / "manifest.json"),
@@ -67,6 +68,8 @@ def train(dataset: Path, model_path: Path, output: Path, *, seed: int, epochs: i
             "This small run validates the training path; it does not establish generalization.",
         ],
     }
+    if supervision == "ordinary":
+        manifest["private_annotations_sha256"] = _sha256(dataset / "annotations.private.jsonl")
     (output / "run.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     _write_log(log_path, {"event": "load", "examples": len(examples), "gpu": manifest["gpu"]})
     try:
@@ -137,10 +140,12 @@ def main() -> None:
     parser.add_argument("--learning-rate", type=float, default=2e-4)
     parser.add_argument("--lora-rank", type=int, default=8)
     parser.add_argument("--lora-alpha", type=int, default=16)
+    parser.add_argument("--supervision", choices=SUPERVISION_MODES, default="evidence")
     args = parser.parse_args()
     report = train(args.dataset.resolve(), args.model.resolve(), args.out.resolve(),
                    seed=args.seed, epochs=args.epochs, learning_rate=args.learning_rate,
-                   lora_rank=args.lora_rank, lora_alpha=args.lora_alpha)
+                   lora_rank=args.lora_rank, lora_alpha=args.lora_alpha,
+                   supervision=args.supervision)
     print(json.dumps(report, indent=2))
 
 

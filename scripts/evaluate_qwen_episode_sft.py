@@ -26,6 +26,11 @@ def _signature(verdict) -> set[tuple[str, str | None, tuple[str, ...]]]:
     return {(row.defect_id, row.joint_id, tuple(sorted(row.parts))) for row in verdict.findings}
 
 
+def _finding_evidence(verdict):
+    return {(row.defect_id, row.joint_id, tuple(sorted(row.parts))): set(row.evidence_steps)
+            for row in verdict.findings}
+
+
 def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | None,
              max_new_tokens: int) -> dict:
     import torch
@@ -49,6 +54,7 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
     model.eval()
     counts = Counter(n=len(examples))
     per_reason = {}
+    per_asset = {}
     started = time.perf_counter()
     try:
         with (output / "predictions.jsonl").open("w", encoding="utf-8") as stream:
@@ -75,10 +81,27 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
                     counts["invalid"] += 1
                 expected_signature = _signature(target)
                 predicted_signature = _signature(prediction) if prediction else set()
+                expected_evidence = _finding_evidence(target)
+                predicted_evidence = _finding_evidence(prediction) if prediction else {}
+                unsupported = sum(
+                    signature not in expected_evidence
+                    or not steps <= expected_evidence.get(signature, set())
+                    for signature, steps in predicted_evidence.items())
                 counts["status_correct"] += int(prediction is not None and prediction.status == target.status)
+                if prediction is not None:
+                    counts[f"predicted_status:{prediction.status}"] += 1
                 counts["exact_verdict"] += int(prediction is not None and prediction.status == target.status
                                                 and predicted_signature == expected_signature)
                 counts["stop_correct"] += int(prediction is not None)
+                counts["unsupported_findings"] += unsupported
+                counts["predicted_findings"] += len(predicted_signature)
+                evidence_consistent = (prediction is not None and unsupported == 0
+                                       and not (prediction.status == "pass" and target.status != "pass"))
+                counts["evidence_consistent"] += int(evidence_consistent)
+                counts["false_fail"] += int(prediction is not None and prediction.status == "fail"
+                                             and target.status != "fail")
+                counts["false_pass"] += int(prediction is not None and prediction.status == "pass"
+                                             and target.status != "pass")
                 for label in expected_signature | predicted_signature:
                     counts["tp" if label in expected_signature & predicted_signature else
                            "fp" if label in predicted_signature else "fn"] += 1
@@ -87,12 +110,26 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
                 bucket["n"] += 1
                 bucket["valid"] += int(prediction is not None)
                 bucket["status_correct"] += int(prediction is not None and prediction.status == target.status)
+                asset = record["data_identity"]["asset_id"]
+                asset_bucket = per_asset.setdefault(asset, Counter())
+                asset_bucket["n"] += 1
+                asset_bucket["valid"] += int(prediction is not None)
+                asset_bucket["status_correct"] += int(
+                    prediction is not None and prediction.status == target.status)
+                asset_bucket["exact_verdict"] += int(
+                    prediction is not None and prediction.status == target.status
+                    and predicted_signature == expected_signature)
+                asset_bucket["false_fail"] += int(
+                    prediction is not None and prediction.status == "fail" and target.status != "fail")
+                asset_bucket["unsupported_findings"] += unsupported
                 row = {"id": record["id"], "episode_id": record["episode_id"],
                        "data_identity": record["data_identity"], "termination_reason": reason,
                        "expected_status": target.status,
                        "expected_findings": [list(item) for item in sorted(expected_signature)],
                        "predicted_status": prediction.status if prediction else None,
                        "predicted_findings": [list(item) for item in sorted(predicted_signature)],
+                       "unsupported_findings": unsupported,
+                       "evidence_consistent": evidence_consistent,
                        "error": error, "raw": text,
                        "input_tokens": int(inputs["input_ids"].shape[1]),
                        "output_tokens": int(generated.shape[1]),
@@ -108,6 +145,7 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
             "validation_episodes_sha256": _sha256(dataset / "validation.episodes.jsonl"),
             "max_new_tokens": max_new_tokens, "n": counts["n"],
             "valid_output_rate": counts["stop_correct"] / counts["n"],
+            "final_verdict_rate": counts["stop_correct"] / counts["n"],
             "stop_accuracy": counts["stop_correct"] / counts["n"],
             "status_accuracy": counts["status_correct"] / counts["n"],
             "exact_verdict_accuracy": counts["exact_verdict"] / counts["n"],
@@ -115,12 +153,22 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
                 "precision": tp / (tp + fp) if tp + fp else None,
                 "recall": tp / (tp + fn) if tp + fn else None,
                 "f1": 2 * tp / (2 * tp + fp + fn) if 2 * tp + fp + fn else None},
+            "false_fail_rate": counts["false_fail"] / counts["n"],
+            "false_pass_rate": counts["false_pass"] / counts["n"],
+            "evidence_consistency": {
+                "consistent_output_rate": counts["evidence_consistent"] / counts["n"],
+                "unsupported_findings": counts["unsupported_findings"],
+                "predicted_findings": counts["predicted_findings"],
+            },
             "expected_statuses": dict(Counter(json.loads(record["messages"][1]["content"])["verdict"]["status"]
                                               for record, _ in examples)),
+            "predicted_statuses": {status: counts[f"predicted_status:{status}"]
+                                   for status in ("pass", "fail", "uncertain")},
             "per_termination_reason": {key: dict(value) for key, value in per_reason.items()},
+            "per_asset": {key: dict(value) for key, value in sorted(per_asset.items())},
             "elapsed_seconds": time.perf_counter() - started,
             "limitations": [
-                "Validation contains two held-out assets from the same five-asset engineering pool.",
+                "Validation contains seven held-out PartNet-Mobility assets.",
                 "Inputs use frozen teacher-acquired observations; active action selection is not evaluated.",
                 "No pass-qualified example exists, so pass behavior cannot be measured.",
             ],

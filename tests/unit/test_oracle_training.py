@@ -64,3 +64,42 @@ def test_tokenize_example_masks_real_image_prompt_tokens():
     batch = tokenize_example(Processor(), record, [Image.new('RGB', (2, 2), 'blue')])
     assert batch['pixel_values'].shape == (1, 3, 2, 2)
     assert batch['labels'].tolist() == [[-100, -100, -100, 3, 4]]
+
+
+def test_ordinary_and_evidence_training_views_keep_inputs_equal(tmp_path):
+    Image = pytest.importorskip('PIL.Image')
+    from turnitover.oracle.sft_data import load_terminal_training_examples
+
+    image_path = tmp_path / 'images/example.png'
+    image_path.parent.mkdir()
+    Image.new('RGB', (2, 2), 'red').save(image_path)
+    digest = hashlib.sha256(image_path.read_bytes()).hexdigest()
+    identity = {key: 'a' * 64 for key in ('source_identity_sha256', 'source_content_sha256')}
+    identity.update(reference_sha='b' * 16, candidate_sha='c' * 16, formal_training=True,
+                    asset_id='asset', source_dataset='fixture')
+    context = {'task': 'inspect', 'parts': ['door'], 'joints': ['door'], 'views': ['front'],
+               'runtime_properties': [], 'action_types': [], 'max_triangles': 1, 'max_draw_calls': 1}
+    payload = {'context': context, 'history': [{'step': 0}], 'remaining': 0}
+    evidence_target = {'verdict': {'status': 'uncertain', 'confidence': 0., 'findings': [],
+                                   'summary': 'No visible evidence.', 'limitations': ['Incomplete.']}}
+    row = {'id': 'episode:verdict', 'episode_id': 'episode', 'terminal': True,
+           'condition': 'single_reference_episode_terminal', 'images': ['images/example.png'],
+           'image_sha256': [digest], 'data_identity': identity,
+           'messages': [{'role': 'user', 'content': 'protocol\n' + json.dumps(payload)},
+                        {'role': 'assistant', 'content': json.dumps(evidence_target)}]}
+    (tmp_path / 'manifest.json').write_text(json.dumps({'status': 'complete', 'formal_training': True}))
+    for split in ('train', 'validation', 'test'):
+        (tmp_path / f'{split}.episodes.jsonl').write_text(json.dumps(row) + '\n')
+    annotation = {'id': 'episode', 'split': 'train', 'reference_sha': 'b' * 16,
+                  'candidate_sha': 'c' * 16, 'data_identity': {'source_dataset': 'fixture'},
+                  'labels': [{'defect_id': 'kinematics.joint_axis', 'parts': ['door'],
+                              'severity': .5, 'params': {'joint': 'door'}}]}
+    (tmp_path / 'annotations.private.jsonl').write_text(json.dumps(annotation) + '\n')
+
+    evidence = list(load_terminal_training_examples(tmp_path, 'train', 'evidence'))[0][0]
+    ordinary = list(load_terminal_training_examples(tmp_path, 'train', 'ordinary'))[0][0]
+    assert evidence['images'] == ordinary['images']
+    assert evidence['messages'][0] == ordinary['messages'][0]
+    assert json.loads(evidence['messages'][1]['content'])['verdict']['status'] == 'uncertain'
+    target = json.loads(ordinary['messages'][1]['content'])['verdict']
+    assert target['status'] == 'fail' and target['findings'][0]['evidence_steps'] == [0]

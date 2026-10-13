@@ -1,0 +1,21 @@
+{
+  "run_id": "partnet_mobility_qwen3vl2b_controlled_sft_v1",
+  "dataset": "data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3",
+  "base_model": "../TurnItOver/models/Qwen3-VL-2B-Instruct",
+  "train_split": "train",
+  "validation_split": "validation",
+  "train_examples": 110,
+  "validation_examples": 28,
+  "supervision": ["ordinary", "evidence"],
+  "terminal_only": true,
+  "seed": 20261013,
+  "epochs": 3,
+  "learning_rate": 0.0002,
+  "lora_rank": 8,
+  "lora_alpha": 16,
+  "lora_dropout": 0.0,
+  "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj"],
+  "max_new_tokens": 512,
+  "action_supervision": false,
+  "hidden_clean_pass": false
+}
