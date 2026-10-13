@@ -17,6 +17,8 @@ from turnitover.oracle.supervision import load_examples
 from turnitover.oracle.training import tokenize_prompt
 from turnitover.verifier.contracts import Context, parse_decision, parse_json
 
+STATUSES = ("fail", "uncertain", "pass")
+
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -29,6 +31,29 @@ def _signature(verdict) -> set[tuple[str, str | None, tuple[str, ...]]]:
 def _finding_evidence(verdict):
     return {(row.defect_id, row.joint_id, tuple(sorted(row.parts))): set(row.evidence_steps)
             for row in verdict.findings}
+
+
+def _prf(tp: int, fp: int, fn: int) -> dict:
+    return {"tp": tp, "fp": fp, "fn": fn,
+            "precision": tp / (tp + fp) if tp + fp else None,
+            "recall": tp / (tp + fn) if tp + fn else None,
+            "f1": 2 * tp / (2 * tp + fp + fn) if 2 * tp + fp + fn else None}
+
+
+def _status_metrics(confusion: dict[str, Counter]) -> dict:
+    """Macro-F1 over observed Gold classes; pass has no support in this dataset."""
+    labels = [status for status in STATUSES if sum(confusion[status].values())]
+    per_class = {}
+    for status in labels:
+        tp = confusion[status][status]
+        fp = sum(confusion[other][status] for other in STATUSES if other != status)
+        fn = sum(value for predicted, value in confusion[status].items() if predicted != status)
+        per_class[status] = _prf(tp, fp, fn)
+    return {"labels": labels, "macro_f1": sum(row["f1"] for row in per_class.values()) / len(labels),
+            "per_class": per_class,
+            "confusion": {expected: {predicted: confusion[expected][predicted]
+                                      for predicted in (*STATUSES, "invalid")}
+                          for expected in STATUSES}}
 
 
 def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | None,
@@ -53,6 +78,11 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
         model = PeftModel.from_pretrained(model, adapter, local_files_only=True)
     model.eval()
     counts = Counter(n=len(examples))
+    status_confusion = {status: Counter() for status in STATUSES}
+    defect_counts = Counter()
+    part_counts = Counter()
+    per_defect = {}
+    unsupported_by_defect = Counter()
     per_reason = {}
     per_asset = {}
     started = time.perf_counter()
@@ -87,6 +117,12 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
                     signature not in expected_evidence
                     or not steps <= expected_evidence.get(signature, set())
                     for signature, steps in predicted_evidence.items())
+                unsupported_signatures = {
+                    signature for signature, steps in predicted_evidence.items()
+                    if signature not in expected_evidence
+                    or not steps <= expected_evidence.get(signature, set())}
+                predicted_status = prediction.status if prediction else "invalid"
+                status_confusion[target.status][predicted_status] += 1
                 counts["status_correct"] += int(prediction is not None and prediction.status == target.status)
                 if prediction is not None:
                     counts[f"predicted_status:{prediction.status}"] += 1
@@ -105,6 +141,26 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
                 for label in expected_signature | predicted_signature:
                     counts["tp" if label in expected_signature & predicted_signature else
                            "fp" if label in predicted_signature else "fn"] += 1
+                expected_defects = {label[0] for label in expected_signature}
+                predicted_defects = {label[0] for label in predicted_signature}
+                expected_parts = {(label[0], label[2]) for label in expected_signature}
+                predicted_parts = {(label[0], label[2]) for label in predicted_signature}
+                for label in expected_defects | predicted_defects:
+                    defect_counts["tp" if label in expected_defects & predicted_defects else
+                                  "fp" if label in predicted_defects else "fn"] += 1
+                for label in expected_parts | predicted_parts:
+                    part_counts["tp" if label in expected_parts & predicted_parts else
+                                "fp" if label in predicted_parts else "fn"] += 1
+                for defect_id in expected_defects | predicted_defects:
+                    bucket = per_defect.setdefault(defect_id, Counter())
+                    expected_rows = {row for row in expected_signature if row[0] == defect_id}
+                    predicted_rows = {row for row in predicted_signature if row[0] == defect_id}
+                    bucket["expected_cases"] += int(bool(expected_rows))
+                    bucket["predicted_cases"] += int(bool(predicted_rows))
+                    bucket["tp"] += len(expected_rows & predicted_rows)
+                    bucket["fp"] += len(predicted_rows - expected_rows)
+                    bucket["fn"] += len(expected_rows - predicted_rows)
+                unsupported_by_defect.update(row[0] for row in unsupported_signatures)
                 reason = record["termination_reason"]
                 bucket = per_reason.setdefault(reason, Counter())
                 bucket["n"] += 1
@@ -138,6 +194,9 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
                 stream.flush()
                 print(json.dumps({key: value for key, value in row.items() if key != "raw"}), flush=True)
         tp, fp, fn = (counts[key] for key in ("tp", "fp", "fn"))
+        finding_micro = _prf(tp, fp, fn)
+        non_fail = sum(sum(status_confusion[status].values())
+                       for status in STATUSES if status != "fail")
         report = {
             "version": 1, "status": "complete", "scope": "fixed_observation_terminal_diagnosis_and_stop",
             "model": str(model_path), "adapter": str(adapter) if adapter else None,
@@ -149,11 +208,18 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
             "stop_accuracy": counts["stop_correct"] / counts["n"],
             "status_accuracy": counts["status_correct"] / counts["n"],
             "exact_verdict_accuracy": counts["exact_verdict"] / counts["n"],
-            "finding_micro": {"tp": tp, "fp": fp, "fn": fn,
-                "precision": tp / (tp + fp) if tp + fp else None,
-                "recall": tp / (tp + fn) if tp + fn else None,
-                "f1": 2 * tp / (2 * tp + fp + fn) if 2 * tp + fp + fn else None},
+            "status_classification": _status_metrics(status_confusion),
+            "finding_micro": finding_micro,
+            "defect_type_micro": _prf(defect_counts["tp"], defect_counts["fp"], defect_counts["fn"]),
+            "part_localization_micro": _prf(part_counts["tp"], part_counts["fp"], part_counts["fn"]),
+            "finding_per_defect": {
+                defect_id: {**_prf(bucket["tp"], bucket["fp"], bucket["fn"]),
+                            "expected_cases": bucket["expected_cases"],
+                            "predicted_cases": bucket["predicted_cases"],
+                            "unsupported": unsupported_by_defect[defect_id]}
+                for defect_id, bucket in sorted(per_defect.items())},
             "false_fail_rate": counts["false_fail"] / counts["n"],
+            "fail_false_positive_rate": counts["false_fail"] / non_fail if non_fail else None,
             "false_pass_rate": counts["false_pass"] / counts["n"],
             "evidence_consistency": {
                 "consistent_output_rate": counts["evidence_consistent"] / counts["n"],
@@ -171,7 +237,11 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
                 "Validation contains seven held-out PartNet-Mobility assets.",
                 "Inputs use frozen teacher-acquired observations; active action selection is not evaluated.",
                 "No pass-qualified example exists, so pass behavior cannot be measured.",
+                "Stop accuracy only means a legal final verdict at a forced terminal prefix; early stopping is not evaluated.",
             ],
+            "stop_behavior": {"evaluation_point": "terminal_prefix_only",
+                              "legal_final_verdicts": counts["stop_correct"],
+                              "early_stop_evaluated": False},
         }
     except Exception as exc:
         report = {"version": 1, "status": "incomplete", "error_type": type(exc).__name__, "error": str(exc)}

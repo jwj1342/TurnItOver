@@ -71,7 +71,7 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 ## 关键缺口
 
-**已完成正式 PartNet 第一轮受控 SFT。** 同一110条 Train terminal Episode、相同输入/seed/330步下，普通 SFT 监督111个完整注入 finding，证据组只监督74个可见 finding；两组均不训练特权动作或隐藏 clean `pass`。在7个独立原物体、28例 Validation 上，底座/普通/证据组 exact verdict 为7/9/13，finding F1 为0/0.351/0.419；证据组相对普通组把 unsupported finding 从33降至15。完整命令、逐物体结果和限制见 [`sft-experiments.md`](sft-experiments.md)。有限 witness 网格、自然错误、多 seed 及仅依赖可见信息的动作教师仍待完成。
+**已完成正式 PartNet 第一轮受控 SFT。** 同一110条 Train terminal Episode、相同输入/seed/330步下，普通 SFT 监督111个完整 Gold finding，其中37个 axis finding 超出当前可见证据；证据组只监督74个可见 finding。两组均不训练特权动作或隐藏 clean `pass`。新版三组 Validation 重跑全部完成且逐案例复现：底座/普通/证据组 exact verdict 为7/9/13，finding F1 为0/0.351/0.419；证据组把 unsupported finding 从33降至15，主要将 axis FP 从15降至3，但 offset 定位 F1 从0.353降至0.313。两组 status macro-F1 虽均为1.0，却受 terminal 步数与 `remaining` 完全相关的捷径混淆，不代表视觉提前停止。完整设计、命令、逐物体结果和限制见 [`training-dataset-expansion.md`](training-dataset-expansion.md#第一轮-qwen3-vl-2b-正式-sft-受控对照)。有限 witness 网格、自然错误、多 seed 及仅依赖可见信息的动作教师仍待完成。
 
 **UniPhys-40K Train/Validation 资产池已做一次有界扩充，但覆盖仍很小。** 官方 `UniPhysGen@3f1bb2d` 代码确认发布 OBJ 为 `qpos=0`、轴/枢轴使用 OBJ 坐标、旋转范围为弧度、滑动范围为 OBJ 单位；[`convert_uniphys40k.py`](../scripts/convert_uniphys40k.py) 据此逐资产推导尺度，按三角形坐标多重集验证完整模型闭合，并核验来源许可及正式 Test 的来源/OBJ SHA/名称重叠。本轮先提交 Episode 修复 `66e8eb6`，再从此前未覆盖的6个分片各轮询10个、下载60个 ZIP；本地总计243个 ZIP，经轻量检查得到64候选。完整预检为8 structural candidate / 56拒绝：尺度无法验证26、关节轴字段不完整21、运动依赖重叠6、Objaverse 上游许可无法统一确认3。
 
@@ -103,4 +103,4 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 ---
 
-最近同步：**2026-10-13 · PartNet 正式 SFT 第一轮**；110 Train / 28 Validation terminal Episode 完成底座、普通 SFT、证据约束 SFT 对照。证据组 exact verdict 13/28、finding F1 0.419，优于普通组9/28和0.351，并把 unsupported finding 从33降至15；仍只有7个 Validation 原物体、0个合格 pass、0自然错误，Part 2 冻结 Test 未修改。
+最近同步：**2026-10-13 · PartNet 正式 SFT 第一轮指标复核**；三组28例 Validation 逐案例预测重跑一致。证据组减少 axis/unsupported 幻觉并提高总体定位 F1，但 offset 定位退化；terminal status 满分存在长度捷径，不能解释为提前停止能力。仍只有单 seed、7个 Validation 原物体、0个合格 pass、0自然错误，Part 2 冻结 Test 未使用或修改。

@@ -3,6 +3,8 @@ import json
 
 import pytest
 
+from scripts.evaluate_qwen_episode_sft import _status_metrics
+
 
 def test_weighted_loss_excludes_prompt_and_matches_empirical_distribution():
     torch = pytest.importorskip('torch')
@@ -103,3 +105,18 @@ def test_ordinary_and_evidence_training_views_keep_inputs_equal(tmp_path):
     assert json.loads(evidence['messages'][1]['content'])['verdict']['status'] == 'uncertain'
     target = json.loads(ordinary['messages'][1]['content'])['verdict']
     assert target['status'] == 'fail' and target['findings'][0]['evidence_steps'] == [0]
+
+
+def test_status_macro_f1_uses_only_supported_gold_classes():
+    from collections import Counter
+    confusion = {status: Counter() for status in ('fail', 'uncertain', 'pass')}
+    confusion['fail'].update(fail=2, uncertain=1)
+    confusion['uncertain'].update({'uncertain': 1, 'pass': 1})
+    metrics = _status_metrics(confusion)
+    assert metrics['labels'] == ['fail', 'uncertain']
+    assert metrics['per_class']['fail']['f1'] == pytest.approx(0.8)
+    assert metrics['per_class']['uncertain']['f1'] == pytest.approx(0.5)
+    assert metrics['macro_f1'] == pytest.approx(0.65)
+    assert metrics['confusion']['uncertain']['pass'] == 1
+    assert sum(sum(metrics['confusion'][status].values())
+               for status in ('uncertain', 'pass')) == 2

@@ -111,6 +111,77 @@ CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.audit_sft_
   --out output/partnet-mobility-sft-readiness-v1.json
 ```
 
+## 第一轮 Qwen3-VL-2B 正式 SFT 受控对照
+
+### 设计与监督差异
+
+三组均使用同一 Qwen3-VL-2B-Instruct、同一 110 Train / 28 Validation terminal Episode、相同公开输入图像与历史，以及 Validation `max_new_tokens=512` 的 greedy decode。两组 LoRA 都用 seed `20261013`、3 epochs、330 optimizer steps、AdamW `2e-4`、rank 8、alpha 16、dropout 0，并只训练 `q/k/v/o_proj`。训练配置保存在 [`partnet-mobility-sft-v1.json`](../configs/partnet-mobility-sft-v1.json)。底座 config SHA 与上述就绪审计一致，Train/Validation JSONL SHA 分别为 `a04446c7…80ca1` / `0e9eeeab…9405`。
+
+两组 110 条样本的用户消息、图像、历史和 terminal 前缀逐条完全相同，差异只在 assistant verdict。普通组用独立 corruption Gold 构造完整诊断，共 111 个 finding；证据组只保留当前公开观察下通过既有 exposure 门禁的 74 个 finding。机器审计 `output/partnet-qwen3vl2b-supervision-audit-v1.json` 逐 ID 列出 **37 条普通组独有的 finding，全部为 `kinematics.joint_axis`**；它们是合法 Gold，但超出冻结可见证据。两组都不读取未来观察或把 annotation/Oracle 信号放进模型输入，不训练401条特权动作，也不把 hidden-clean 变成 `pass`。没有使用不同 Episode 前缀或另造停止标签。
+
+两组训练均已完成，`run.json` 为 `complete`，`loss.jsonl` 各有连续330步，checkpoint 完整：
+
+| 训练 | finding | epoch mean loss 0 / 1 / 2 | adapter SHA-256 |
+| --- | ---: | --- | --- |
+| 普通 SFT | 111 | 0.391 / 0.181 / 0.180 | `dd473181652e370dbe7d6e5d7a7e0852bfe0e30bb6cb0be4dfe69b77b51b227c` |
+| 证据约束 SFT | 74 | 0.382 / 0.166 / 0.161 | `58ed2f0f3b246ffae5781104be11209333b5af232717315b3ccf10847b1be37f` |
+
+训练 loss 只用于产物完整性检查，不作为监督更优的证据。checkpoint、配置、逐步曲线分别位于 `output/partnet-qwen3vl2b-{ordinary,evidence}-sft-v1/`，按仓库规则不提交大型权重。
+
+### 三组 Validation 实际结果
+
+三组各28条逐案例推理全部完成且合法，重跑结果与此前预测逐字段一致。macro-F1 只在有 Gold 支持的 `fail/uncertain` 两类上计算，不能扩展成三分类或 `pass` 校准结论。定位 finding 以 `(defect_id, joint_id, parts)` 精确匹配。
+
+| 指标 | 底座 | 普通 SFT | 证据约束 SFT |
+| --- | ---: | ---: | ---: |
+| 合法输出 / terminal verdict | 28/28 | 28/28 | 28/28 |
+| status accuracy | 25.0% | 100% | 100% |
+| status macro-F1 (`fail/uncertain`) | 0.200 | 1.000 | 1.000 |
+| Gold `fail` → `fail/uncertain/pass` | 0 / 19 / 0 | 19 / 0 / 0 | 19 / 0 / 0 |
+| Gold `uncertain` → `fail/uncertain/pass` | 0 / 7 / 2 | 0 / 9 / 0 | 0 / 9 / 0 |
+| fail false-positive rate | 0% | 0% | 0% |
+| exact verdict + 定位 | 7/28 | 9/28 | 13/28 |
+| finding precision / recall / F1 | n/a / 0 / 0 | 0.263 / 0.526 / 0.351 | 0.375 / 0.474 / 0.419 |
+| defect-type F1 | 0 | 0.667 | 0.837 |
+| exact part/joint localization F1 | 0 | 0.351 | 0.419 |
+| unsupported / predicted findings | 0 / 0 | 33 / 38 | 15 / 24 |
+
+status 的满分存在明确捷径：19个 `fail` Validation 例都在第1/2步因 `evidence_sufficient` 形成 terminal，9个 `uncertain` 都在第6步预算耗尽，而 `history/remaining` 是合法公开输入。因此两组的 100% status/macro-F1 只能说明学会当前 terminal 数据分布，**不能说明学会视觉提前停止**。本轮只在强制 terminal 前缀要求最终 verdict，所谓 terminal stop=28/28 等价于合法输出率；没有非 terminal 停止标签，也未评测提前停止。
+
+证据约束的实际收益集中在抑制过度诊断：unsupported finding 减少18个（33→15），exact 提高4例，finding precision/F1 与 defect-type F1 上升。普通组对19个 `fail` 全都预测 axis，实际 axis Gold 仅4例；证据组把 axis 预测从19例降到7例，axis FP 从15降到3。退化也存在：总体 TP 从10降到9、recall 从0.526降到0.474；offset 精确定位 TP 从6降到5、F1 从0.353降到0.313。证据组仍在17例中预测 offset（Gold 15例），所以此前的 `fail/offset` 模板化倾向没有消失。
+
+按7个独立 Validation 原始物体汇总如下，单元格为 `status正确 / exact / unsupported findings`：
+
+| 原始物体 | 底座 | 普通 SFT | 证据约束 SFT |
+| --- | --- | --- | --- |
+| PM_100202 | 2 / 2 / 0 | 4 / 2 / 4 | 4 / 2 / 2 |
+| PM_102252 | 0 / 0 / 0 | 4 / 0 / 7 | 4 / 2 / 2 |
+| PM_102590 | 1 / 1 / 0 | 4 / 1 / 4 | 4 / 1 / 3 |
+| PM_10797 | 1 / 1 / 0 | 4 / 3 / 1 | 4 / 3 / 1 |
+| PM_1280 | 0 / 0 / 0 | 4 / 0 / 7 | 4 / 1 / 3 |
+| PM_34610 | 0 / 0 / 0 | 4 / 0 / 8 | 4 / 1 / 3 |
+| PM_45759 | 3 / 3 / 0 | 4 / 3 / 2 | 4 / 3 / 1 |
+
+正式产物为 `base-val-v5`、`ordinary-val-v4`、`evidence-val-v3` 的 `predictions.jsonl/metrics.json` 及 `output/partnet-qwen3vl2b-controlled-comparison-v5.json`；对照报告 SHA-256 为 `92e8abc8f8d420c0e30bf9fb7107be45c5af30e09d4d9922da16ff6d30f062e5`。两次新增指标初跑在完成推理后因汇总代码错误标记为 incomplete，目录 `base-val-v4` / `ordinary-val-v3` 明确不属于正式结果。
+
+### 实际命令、局限与下一步
+
+```bash
+python -m scripts.audit_sft_supervision \
+  --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3 \
+  --out output/partnet-qwen3vl2b-supervision-audit-v1.json
+
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python scripts/train_qwen_episode_sft.py --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3 --model ../TurnItOver/models/Qwen3-VL-2B-Instruct --out output/partnet-qwen3vl2b-ordinary-sft-v1 --supervision ordinary --seed 20261013 --epochs 3 --learning-rate 2e-4 --lora-rank 8 --lora-alpha 16
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python scripts/train_qwen_episode_sft.py --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3 --model ../TurnItOver/models/Qwen3-VL-2B-Instruct --out output/partnet-qwen3vl2b-evidence-sft-v1 --supervision evidence --seed 20261013 --epochs 3 --learning-rate 2e-4 --lora-rank 8 --lora-alpha 16
+
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python scripts/evaluate_qwen_episode_sft.py --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3 --model ../TurnItOver/models/Qwen3-VL-2B-Instruct --out output/partnet-qwen3vl2b-base-val-v5 --max-new-tokens 512
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python scripts/evaluate_qwen_episode_sft.py --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3 --model ../TurnItOver/models/Qwen3-VL-2B-Instruct --adapter output/partnet-qwen3vl2b-ordinary-sft-v1/checkpoint --out output/partnet-qwen3vl2b-ordinary-val-v4 --max-new-tokens 512
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python scripts/evaluate_qwen_episode_sft.py --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3 --model ../TurnItOver/models/Qwen3-VL-2B-Instruct --adapter output/partnet-qwen3vl2b-evidence-sft-v1/checkpoint --out output/partnet-qwen3vl2b-evidence-val-v3 --max-new-tokens 512
+python scripts/compare_qwen_sft.py --base output/partnet-qwen3vl2b-base-val-v5/metrics.json --ordinary output/partnet-qwen3vl2b-ordinary-val-v4/metrics.json --evidence output/partnet-qwen3vl2b-evidence-val-v3/metrics.json --out output/partnet-qwen3vl2b-controlled-comparison-v5.json
+```
+
+三组对照已真正完成，但只有单 seed、7个 Validation 原物体、两类合成缺陷和0个可信 `pass`；既不能估计方差或跨来源泛化，也不能声称 pass 校准。下一轮先做多 seed、按 assistant token 匹配预算和单/组合缺陷分层，并设计不让 terminal 长度直接泄露 status 的停止消融；方案冻结前继续不使用 Part 2 Test。
+
 ## 复现命令
 
 以下命令要求已获官方访问权、已构建 `web/dist`，且各输出目录不存在：
