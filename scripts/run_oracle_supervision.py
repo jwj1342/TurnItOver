@@ -26,6 +26,25 @@ from turnitover.render.session import ObservationSession
 from turnitover.render.views import load_views
 
 
+IDENTITY_KEYS = (
+    "formal_training", "catalog_role", "dataset_revision", "source_dataset", "source_asset_id",
+    "source_identity_sha256", "source_content_sha256", "spec_sha256",
+)
+
+
+def _attach_identity(example, output, sample, reference, candidate):
+    identity = {
+        "source_id": sample.source_id, "asset_id": sample.asset_id,
+        "split_group": sample.dataset["split_group"],
+        "reference_sha": reference.sha, "candidate_sha": candidate.sha,
+        **{key: sample.dataset[key] for key in IDENTITY_KEYS if key in sample.dataset},
+    }
+    example["data_identity"] = identity
+    example["image_sha256"] = [hashlib.sha256((output / path).read_bytes()).hexdigest()
+                               for path in example["images"]]
+    return example
+
+
 def _benchmark_provenance(benchmark):
     prepared = benchmark / "prepared/manifest.json"
     prepared_record = json.loads(prepared.read_text())
@@ -44,6 +63,7 @@ def run(benchmark, config, output, budget=6, per_asset=None, episode_objective="
     if budget < 1 or (per_asset is not None and per_asset < 1):
         raise ValueError("Positive budget and per-asset limit required")
     benchmark_files = _benchmark_provenance(benchmark)
+    prepared_manifest = json.loads((benchmark / "prepared/manifest.json").read_text())
     cfg = load_generate_config(config)
     source = make_source(**cfg.asset_source)
     inputs = {}
@@ -56,6 +76,7 @@ def run(benchmark, config, output, budget=6, per_asset=None, episode_objective="
     output.mkdir(parents=True, exist_ok=False)
     thresholds = ExposureThresholds()
     report = {"version": 1, "status": "incomplete", "budget": budget,
+              "formal_training": prepared_manifest.get("formal_training", False),
               "thresholds": asdict(thresholds), "benchmark": str(benchmark.resolve()),
               "condition": "privileged_counterfactual_pixel_exposure",
               "episode_objective": episode_objective,
@@ -95,6 +116,9 @@ def run(benchmark, config, output, budget=6, per_asset=None, episode_objective="
                 candidate = replay_corruptions(reference, sample.corruptions)
                 if reference.sha != sample.reference_sha or candidate.sha != sample.program_sha:
                     raise ValueError(f"Stale reference or corruption replay mismatch: {uid}")
+                source_metadata = source.metadata(sample.asset_id)
+                if any(source_metadata.get(key) != sample.dataset.get(key) for key in IDENTITY_KEYS):
+                    raise ValueError(f"Asset provenance changed since generation: {uid}")
                 joints = {j.id: j.limits for j in reference.spec.joints}
                 grid = witness_grid(model_input["context"]["views"], joints)
                 cache_key = (reference.sha, sample.framing)
@@ -136,6 +160,7 @@ def run(benchmark, config, output, budget=6, per_asset=None, episode_objective="
                     curves[mode] += curve
                     trajectories[mode] = {"history": history, "witness_indices": [i for _, i in trajectory], "exposure_curve": curve}
                 for example in action_examples(uid, model_input["context"], reference_path.as_posix(), trajectories["oracle"]["history"], budget):
+                    _attach_identity(example, output, sample, reference, candidate)
                     streams[split].write(json.dumps(example)+"\n")
                     counts[split] += 1
                 oracle = trajectories["oracle"]
@@ -145,11 +170,13 @@ def run(benchmark, config, output, budget=6, per_asset=None, episode_objective="
                         oracle["witness_indices"], exposures, labels, budget, episode_objective)
                 episode_terminations[next(row for row in episodes if row["terminal"])["termination_reason"]] += 1
                 for example in episodes:
+                    _attach_identity(example, output, sample, reference, candidate)
                     episode_streams[split].write(json.dumps(example)+"\n")
                     episode_counts[split] += 1
                 annotations.write(json.dumps({"id": uid, "split": split, "asset_id": sample.asset_id,
                     "split_group": sample.dataset["split_group"], "reference_sha": reference.sha,
                     "candidate_sha": candidate.sha, "labels": labels,
+                    "data_identity": {key: sample.dataset[key] for key in IDENTITY_KEYS if key in sample.dataset},
                     "grid": [asdict(w) for w in grid], "exposures": exposures, "signals": signals,
                     "trajectories": trajectories})+"\n")
                 samples[sample.asset_id] += 1

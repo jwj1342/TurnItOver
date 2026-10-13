@@ -39,12 +39,16 @@ def score_verifier(gold_path: Path, results_root: Path, output_path: Path) -> di
                 raise ValueError(f"Verifier schema mismatch for {case_id}; rerun under v{VERIFIER_SCHEMA_VERSION}")
             if result.get("program_sha") != target["program_sha"]:
                 raise ValueError(f"Candidate program SHA mismatch for {case_id}")
+            if result.get("reference_program_sha") != target["reference_sha"]:
+                raise ValueError(f"Reference program SHA mismatch for {case_id}")
             validation, validation_error = _read_validation(results_root / case_id / "gt_validation.json")
             if validation is not None:
                 if validation.get("schema_version") != GT_VALIDATION_SCHEMA_VERSION:
                     raise ValueError(f"GT validation schema mismatch for {case_id}")
                 if validation.get("candidate_sha") != target["program_sha"]:
                     raise ValueError(f"GT validation candidate SHA mismatch for {case_id}")
+                if validation.get("reference_sha") != target["reference_sha"]:
+                    raise ValueError(f"GT validation reference SHA mismatch for {case_id}")
                 code_correct = validation.get("code_correct")
                 if validation.get("status") != "complete" or type(code_correct) is not bool:
                     validation_error = "incomplete_gt_validation"
@@ -149,8 +153,9 @@ def _read_gold(path: Path) -> dict[str, dict]:
                 raise ValueError(f"Invalid case id on gold line {line_number}")
             if case_id in rows:
                 raise ValueError(f"Duplicate gold case id: {case_id}")
-            if not isinstance(row.get("program_sha"), str) or not row["program_sha"]:
-                raise ValueError(f"Missing candidate program SHA for {case_id}")
+            if any(not isinstance(row.get(key), str) or not row[key]
+                   for key in ("program_sha", "reference_sha")):
+                raise ValueError(f"Missing candidate or reference program SHA for {case_id}")
             target = row.get("target")
             if not isinstance(target, dict) or target.get("status") not in {"pass", "fail"}:
                 raise ValueError(f"Invalid target for {case_id}")
@@ -158,7 +163,8 @@ def _read_gold(path: Path) -> dict[str, dict]:
             if not isinstance(findings, list) or (target["status"] == "pass") != (not findings):
                 raise ValueError(f"Target status/findings disagree for {case_id}")
             _signatures(findings)
-            rows[case_id] = {"program_sha": row["program_sha"], "findings": findings}
+            rows[case_id] = {"program_sha": row["program_sha"], "reference_sha": row["reference_sha"],
+                             "findings": findings}
     if not rows:
         raise ValueError("Gold file contains no cases")
     return rows
