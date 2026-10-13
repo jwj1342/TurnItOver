@@ -15,9 +15,7 @@ def write_report(output: Path, data: dict, observations):
     refs = "".join(f'<figure><img src="{esc(r["path"])}"><figcaption>Reference input</figcaption></figure>'
                    for r in data["references"])
     limitations = "".join(f"<li>{esc(x)}</li>" for x in verdict["limitations"])
-    audit_link = ('<a href="gt_validation.json">GT code validation</a>'
-                  if "gt_validation" in data else
-                  '<a href="audit.json">Privileged gold audit</a>' if "audit" in data else "")
+    audit_link = '<a href="audit.json">Privileged gold audit</a>' if "audit" in data else ""
     validation = f'<p>Validation: {esc(data["error_message"])}</p>' if data.get("error_message") else ""
     calls = "".join(f'<li><a href="{esc(c["path"])}/prompt.txt">Call {i}: prompt</a> · '
                     f'<a href="{esc(c["path"])}/response.txt">raw response</a> · '

@@ -5,7 +5,6 @@ import pytest
 from turnitover.core.program import ObjectProgram
 from turnitover.models.client import ModelResult
 from turnitover.verifier.runner import VerifyConfig, verify
-from turnitover.verifier.gt_validator import validate_code
 
 pytestmark = pytest.mark.browser
 
@@ -17,10 +16,7 @@ def test_runtime_verifier_detects_budget_violation(tmp_path, toy_spec, render_co
                     reference_program=ObjectProgram.from_spec(toy_spec))
     assert result["verdict"]["status"] == "fail" and result["spent"] == 2
     assert result["verdict"]["findings"][0]["evidence_steps"] == (0,)
-    assert result["gt_validation"]["status"] == "complete"
-    assert result["gt_validation"]["code_correct"] is False
-    assert not result["gt_validation"]["used_by_verifier"]
-    assert (out / "gt_validation.json").is_file()
+    assert result["audit"]["status"] == "complete" and not result["audit"]["used_by_judge"]
     assert (out / "observations/001.png").exists() and (out / "index.html").exists()
     assert json.loads((out / "feedback.json").read_text())["verdict"]["status"] == "fail"
 
@@ -45,14 +41,3 @@ def test_active_model_browser_roundtrip(tmp_path, toy_program, render_config, vi
     result = verify(toy_program, tmp_path / "active", render_config, views, VerifyConfig(budget=1), model_call=judge)
     assert len(calls) == 2 and len(calls[1]) == 1
     assert result["termination"] == "budget_exhausted" and result["spent"] == 1
-
-
-def test_gt_validator_detects_wrong_joint_axis(tmp_path, toy_spec, render_config, views):
-    candidate = ObjectProgram.from_spec(toy_spec.replace_joint("door", axis=(1.0, 0.0, 0.0)))
-    reference = ObjectProgram.from_spec(toy_spec)
-
-    result = validate_code(candidate, reference, render_config, views, 5000, 32)
-
-    assert result["status"] == "complete" and result["code_correct"] is False
-    geometry = next(check for check in result["checks"] if check["checker_id"] == "geometry.alignment")
-    assert not geometry["passed"]

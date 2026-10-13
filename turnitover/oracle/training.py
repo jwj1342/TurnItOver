@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 
-def tokenize_prompt(processor, record, images):
-    """Build the model-visible multimodal prefix shared by training and evaluation."""
+def tokenize_example(processor, record, images):
+    """One example; prefix includes all image tokens and must remain unsupervised."""
+    import torch
     if len(images) != len(record["images"]):
         raise ValueError("Image roster mismatch")
     user, assistant = record["messages"]
@@ -12,15 +13,8 @@ def tokenize_prompt(processor, record, images):
     content = [{"type": "image", "image": image} for image in images]
     content.append({"type": "text", "text": user["content"]})
     prompt = [{"role": "user", "content": content}]
-    return prompt, processor.apply_chat_template(
-        prompt, tokenize=True, add_generation_prompt=True, return_dict=True, return_tensors="pt")
-
-
-def tokenize_example(processor, record, images):
-    """One example; prefix includes all image tokens and must remain unsupervised."""
-    import torch
-    prompt, prefix = tokenize_prompt(processor, record, images)
-    assistant = record["messages"][1]
+    prefix = processor.apply_chat_template(prompt, tokenize=True, add_generation_prompt=True,
+                                          return_dict=True, return_tensors="pt")
     full = processor.apply_chat_template(prompt + [{"role": "assistant", "content": [{"type": "text", "text": assistant["content"]}]}],
                                         tokenize=True, add_generation_prompt=False,
                                         return_dict=True, return_tensors="pt")

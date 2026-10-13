@@ -32,9 +32,7 @@ def paired_example(annotation, context, mode, candidate_paths, reference_paths):
             fix = "Correct the part placement relative to its parent."
         else:
             raise ValueError("Unsupported evidence-qualified diagnosis")
-        joint_id = label.get("params", {}).get("joint") if label["defect_id"] == "kinematics.joint_axis" else None
-        findings.append(dict(defect_id=label["defect_id"], parts=label["parts"], joint_id=joint_id,
-                             severity=label["severity"],
+        findings.append(dict(defect_id=label["defect_id"], parts=label["parts"], severity=label["severity"],
                              confidence=1., evidence_steps=steps, description=description, suggested_fix=fix))
     verdict = dict(status="fail" if findings else "uncertain", confidence=1. if findings else 0.,
                    findings=findings, summary="Observed deviations from paired references." if findings else "No qualified defect evidence in the acquired observations.",

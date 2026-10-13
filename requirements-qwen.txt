@@ -5,4 +5,3 @@ torchvision==0.22.1
 transformers==4.57.6
 accelerate==1.11.0
 huggingface_hub==0.36.0
-peft==0.18.0

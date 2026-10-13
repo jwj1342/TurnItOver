@@ -24,4 +24,3 @@ __pycache__/
 # web build
 web/node_modules/
 web/dist/
-.aris/

@@ -109,8 +109,7 @@ class RuntimePolicy:
                                        ("draw_calls", context.max_draw_calls, "runtime.draw_calls")):
                 value = (obs.payload or {}).get(key)
                 if isinstance(value, (int, float)) and value > limit:
-                    findings.append({"defect_id": defect, "parts": [], "joint_id": None,
-                        "severity": min(1, (value-limit)/limit),
+                    findings.append({"defect_id": defect, "parts": [], "severity": min(1, (value-limit)/limit),
                         "confidence": 1.0, "evidence_steps": [obs.step],
                         "description": f"{key}={value} exceeds limit {limit}.",
                         "suggested_fix": "Reduce subdivisions or consolidate draw calls, then recheck."})
