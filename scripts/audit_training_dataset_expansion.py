@@ -33,7 +33,7 @@ def audit(asset_root: Path, benchmark_root: Path, test_plan: Path) -> dict:
     splits = _json(asset_root / "splits.json")
     conversion = _json(asset_root / "conversion.json")
     prepared = benchmark_root / "prepared"
-    episode_root = benchmark_root / "oracle-first-failure-v2"
+    episode_root = benchmark_root / "oracle-first-failure-v3"
     raw_manifest = _json(benchmark_root / "raw/shard-0000.manifest.json")
     prepared_manifest = _json(prepared / "manifest.json")
     episode_manifest = _json(episode_root / "manifest.json")

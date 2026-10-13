@@ -21,6 +21,14 @@ MODEL_INPUT_KEYS = {"context", "remaining", "history", "image_order", "taxonomy_
 TRAINING_OBJECTIVES = ("first_failure", "comprehensive_within_budget")
 
 
+def _action_learnability(conflicts: list[dict], singleton_groups: int) -> str:
+    if conflicts:
+        return "unsafe: identical model-visible prefixes have conflicting privileged action targets"
+    if singleton_groups:
+        return "unresolved: no exact-match conflicts, but singleton privileged targets remain"
+    return "no exact-match conflict or singleton limitation detected"
+
+
 def _rows(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 
@@ -231,7 +239,7 @@ def audit(benchmark: Path, oracle: Path, catalog: Path) -> dict:
             "singleton_groups": singleton_groups,
             "non_singleton_groups": len(observable_actions) - singleton_groups,
             "conflicts": conflicts,
-            "learnability": "unresolved: exact-match conflicts are absent, but singleton privileged targets remain",
+            "learnability": _action_learnability(conflicts, singleton_groups),
         },
         teacher_policy={
             "condition": oracle_manifest.get("condition"),

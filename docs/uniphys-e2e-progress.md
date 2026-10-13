@@ -65,7 +65,9 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 **可复用的既有基础。** ReplicaCAD 数据引擎已支持按原始资产分组、腐蚀样本和私有真值隔离；Oracle 动作/成对诊断导出、Qwen3-VL 处理器适配及 assistant-only loss 见 [`dataset-pipeline.md`](dataset-pipeline.md) 和 [`oracle-supervision.md`](oracle-supervision.md)。正式 PartNet terminal Episode 的普通/证据约束 SFT 已完成；可见信息动作教师仍未完成。
 
-**已实现：PartNet-Mobility 正式 Train/Validation 增量。** 官方批准后固定上游 revision，从160个确定性抽样 ZIP 中得到94个结构候选；48个优先候选经真实浏览器运动门禁与人工三视图/端点复核后35个通过（72.9%），形成28 Train / 7 Validation，覆盖21类、42 revolute / 18 prismatic、15个多关节物体。140条 corruption 样本中138条通过独立 checker、2条隔离；对应 Episode 已完整导出并通过逐像素重渲染复核。来源、许可、拒绝原因、隔离策略、命令和扩量成本见 [`training-dataset-expansion.md`](training-dataset-expansion.md)。自然生成错误仍为0且单独登记，未用注入标签冒充人工 Gold；PartNet 增量尚未用于训练，冻结 Test 未修改。
+**已实现：PartNet-Mobility 正式 Train/Validation 增量。** 官方批准后固定上游 revision，从160个确定性抽样 ZIP 中得到94个结构候选；48个优先候选经真实浏览器运动门禁与人工三视图/端点复核后35个通过（72.9%），形成28 Train / 7 Validation，覆盖21类、42 revolute / 18 prismatic、15个多关节物体。140条 corruption 样本中138条通过独立 checker、2条隔离；对应 Episode 已完整导出并通过逐像素重渲染复核。来源、许可、拒绝原因、隔离策略、命令和扩量成本见 [`training-dataset-expansion.md`](training-dataset-expansion.md)。自然生成错误仍为0且单独登记，未用注入标签冒充人工 Gold；数据建设阶段本身未启动训练，后续既有 SFT 记录见下文，冻结 Test 未修改。
+
+**已完成：正式 SFT 前数据就绪性验证。** 全部138个 terminal Episode 及539行因果前缀通过 production loader、图像/身份 SHA、划分和隐藏信息审计，138/138 再经真实 Qwen processor；Train/Validation 各一条7图 batch 完成无梯度前向 loss。目标为91 `fail` / 47 `uncertain` / 0 `pass`，401条特权动作全部排除；动作审计另发现4组相同可见前缀的冲突目标。结论仅为结构化诊断/停止 SFT 管线就绪，不代表动作可学习或泛化，详见 [`training-dataset-expansion.md`](training-dataset-expansion.md#sft-数据就绪性验证)。
 
 ## 关键缺口
 
