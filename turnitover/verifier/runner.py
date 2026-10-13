@@ -77,6 +77,8 @@ def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tu
                 "references": image_metadata, "git": git_state(Path(__file__).resolve().parents[2]),
                 "model": model.public() if model else {"kind": "local_qwen" if local_model else "offline",
                                                        "name": local_model.name if local_model else None}}
+    if reference_program is not None:
+        metadata["reference_program_sha"] = reference_program.sha
     if local_model and (local_model / "download-manifest.json").exists():
         metadata["local_weights"] = json.loads((local_model / "download-manifest.json").read_text())
     write_json_atomic(output / "result.json", metadata)

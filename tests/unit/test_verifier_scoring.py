@@ -12,6 +12,8 @@ def _finding(defect_id, parts, joint_id=None):
 
 
 def _gold(path, rows):
+    for row in rows:
+        row.setdefault("reference_sha", "reference")
     path.write_text("".join(json.dumps(row) + "\n" for row in rows))
 
 
@@ -19,6 +21,7 @@ def _result(root, case_id, program_sha, status, findings, *, schema=VERIFIER_SCH
     folder = root / case_id
     folder.mkdir(parents=True)
     value = {"schema_version": schema, "status": "complete", "program_sha": program_sha,
+             "reference_program_sha": "reference",
              "spent": 2, "trajectory": [{"step": 0}, {"step": 1}],
              "verdict": {"status": status, "findings": findings},
              "model_calls": [{"usage": {"input_tokens": 8, "output_tokens": 2, "total_tokens": 10},
@@ -94,6 +97,14 @@ def test_rejects_old_schema_and_candidate_mismatch(tmp_path):
     _result(tmp_path / "wrong", "case", "different", "pass", [])
     with pytest.raises(ValueError, match="SHA mismatch"):
         score_verifier(gold, tmp_path / "wrong", tmp_path / "wrong-metrics.json")
+
+    _result(tmp_path / "wrong-reference", "case", "expected", "pass", [])
+    result_path = tmp_path / "wrong-reference/case/result.json"
+    result = json.loads(result_path.read_text())
+    result["reference_program_sha"] = "different"
+    result_path.write_text(json.dumps(result))
+    with pytest.raises(ValueError, match="Reference program SHA mismatch"):
+        score_verifier(gold, tmp_path / "wrong-reference", tmp_path / "wrong-reference-metrics.json")
 
 
 def test_requires_validated_code_and_rejects_label_disagreement(tmp_path):

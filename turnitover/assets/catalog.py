@@ -1,6 +1,7 @@
 """Local, provenance-bearing AssetSpec catalog. Mesh/URDF conversion is a separate step."""
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import re
@@ -102,16 +103,66 @@ class CatalogSource:
         if raw.get("version") != 1 or not raw.get("source_id") or not raw.get("assets"):
             raise ValueError("Catalog requires version=1, source_id and nonempty assets")
         self.source_id = raw["source_id"]
+        self.role = raw.get("role")
+        self.formal_training = raw.get("formal_training", False)
+        if type(self.formal_training) is not bool:
+            raise ValueError("Catalog formal_training must be boolean")
+        if self.formal_training and self.role != "formal_train_validation":
+            raise ValueError("Formal training catalog requires role=formal_train_validation")
+        self.dataset_revision = raw.get("dataset_revision")
+        if self.formal_training and self.dataset_revision is None:
+            revisions = {entry.get("dataset_revision") for entry in raw["assets"]}
+            if len(revisions) == 1:
+                self.dataset_revision = revisions.pop()
+        if self.formal_training and not isinstance(self.dataset_revision, str):
+            raise ValueError("Formal training catalog requires a dataset revision")
         self._specs, self._metadata = {}, {}
         for entry in raw["assets"]:
             if any(not isinstance(entry.get(k), str) or not entry[k].strip()
                    for k in ("spec", "split_group", "origin", "license")):
                 raise ValueError("Each asset requires spec, split_group, origin and license strings")
-            spec = decode_spec(json.loads((path.parent / entry["spec"]).read_text()))
+            spec_path = path.parent / entry["spec"]
+            spec_bytes = spec_path.read_bytes()
+            if entry.get("spec_sha256") is not None and hashlib.sha256(spec_bytes).hexdigest() != entry["spec_sha256"]:
+                raise ValueError(f"Catalog spec SHA mismatch: {entry['spec']}")
+            if self.formal_training:
+                canonical = all(isinstance(entry.get(key), str) for key in (
+                    "source_dataset", "source_asset_id", "source_identity_sha256", "source_content_sha256"))
+                partnet = all(isinstance(entry.get(key), str) for key in (
+                    "dataset", "source_identity", "archive_sha256", "annotation_id", "model_id"))
+                if (entry.get("formal_training") is not True
+                        or not isinstance(entry.get("dataset_revision"), str)
+                        or not isinstance(entry.get("spec_sha256"), str)
+                        or not (canonical or partnet)):
+                    raise ValueError("Formal training asset requires complete source identity and content SHA metadata")
+                identity = (f"{entry['source_dataset']}:{entry['source_asset_id']}"
+                            if canonical else entry["source_identity"])
+                identity_sha = entry.get("source_identity_sha256", hashlib.sha256(identity.encode()).hexdigest())
+                content_sha = entry.get("source_content_sha256", entry.get("archive_sha256"))
+                if hashlib.sha256(identity.encode()).hexdigest() != identity_sha:
+                    raise ValueError(f"Catalog source identity SHA mismatch: {entry['spec']}")
+                if entry["dataset_revision"] != self.dataset_revision:
+                    raise ValueError(f"Catalog dataset revision mismatch: {entry['spec']}")
+                hashes = {"dataset_revision": entry["dataset_revision"],
+                          "source_identity_sha256": identity_sha,
+                          "source_content_sha256": content_sha,
+                          "spec_sha256": entry["spec_sha256"]}
+                for key, value in hashes.items():
+                    if not re.fullmatch(r"[0-9a-f]{40}" if key == "dataset_revision" else r"[0-9a-f]{64}", value):
+                        raise ValueError(f"Invalid {key}: {entry['spec']}")
+            spec = decode_spec(json.loads(spec_bytes))
             if spec.asset_id in self._specs:
                 raise ValueError(f"Duplicate asset ID: {spec.asset_id}")
             self._specs[spec.asset_id] = spec
-            self._metadata[spec.asset_id] = {k: v for k, v in entry.items() if k != "spec"}
+            metadata = {k: v for k, v in entry.items() if k != "spec"}
+            if self.formal_training:
+                metadata.setdefault("source_dataset", entry.get("dataset"))
+                metadata.setdefault("source_asset_id", entry.get("source_identity", "").split(":", 1)[-1])
+                metadata.setdefault("source_identity_sha256", identity_sha)
+                metadata.setdefault("source_content_sha256", content_sha)
+            metadata["formal_training"] = entry.get("formal_training", self.formal_training)
+            metadata["catalog_role"] = self.role
+            self._metadata[spec.asset_id] = metadata
 
     def __iter__(self):
         return iter(self._specs[k] for k in sorted(self._specs))

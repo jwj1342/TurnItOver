@@ -1,6 +1,6 @@
 # UniPhys E2E：分支进度与后续工作
 
-> 分支：`laq/uniphys-e2e`｜核对基线：`0ebc025`（2026-10-11）
+> 分支：`laq/sft-dataset`（合并 `laq/uniphys-e2e`）｜核对日期：2026-10-13
 > 依据：[Issue #4 Roadmap](https://github.com/jwj1342/TurnItOver/issues/4#issuecomment-6098267539)及[训练与评测补充](https://github.com/jwj1342/TurnItOver/issues/4#issuecomment-6098859780)。本文记录已证实的实现，不把计划、脚本存在或 Verifier 接受等同于研究成果。
 
 ## 给后续 Coding Agent 的约束（必须遵守）
@@ -9,7 +9,7 @@
 
 ## 目标与现状
 
-本分支要把现有 3D 资产变成**交互式 Verifier 的训练与评测数据**，最终验证：证据约束监督能否让小型视觉模型在有限观察预算下更好地选择视角/关节动作、定位缺陷并及时停止。主线是「资产 → 合格候选与独立真值 → 观察 Episode → 训练监督 → SFT → 留出评测」。**目前工程运行与评测基础已具备，训练—评测研究闭环尚未打通。**
+本分支要把现有 3D 资产变成**交互式 Verifier 的训练与评测数据**，最终验证：证据约束监督能否让小型视觉模型在有限观察预算下更好地选择视角/关节动作、定位缺陷并及时停止。主线是「资产 → 合格候选与独立真值 → 观察 Episode → 训练监督 → SFT → 留出评测」。**正式资产池现有40个独立物体；模型训练仍只有5资产的工程 Smoke，数据规模与评测条件不足以形成研究结论。**
 
 **已实现：资产与运行入口。** [`download_uniphys.py`](../scripts/download_uniphys.py) 下载并校验 UniPhys-Bench Part 2 的指定资产，记录版本和文件哈希；[`render_uniphys_references.py`](../scripts/render_uniphys_references.py) 从 URDF 构造内存 `AssetSpec`，导出多视角参考图，并注明 continuous joint 固定零位、不计作已验证运动覆盖。[`run_uniphys_iterate_batch.py`](../scripts/run_uniphys_iterate_batch.py) 接入 Generator → Render Gate → Verifier → Repair，保留任务状态、调用与 token 统计。已有一次 20 物体真实模型批量运行，**4 个被 Verifier 接受**；这不是独立正确率，详细条件见 [`uniphys-e2e.md`](uniphys-e2e.md)。
 
@@ -24,6 +24,25 @@
 [`audit_episode_export.py`](../scripts/audit_episode_export.py) 还按图像 SHA、公开 context 与历史对下一动作分组：修复版39个动作目标形成25个精确可见前缀组，0组存在不同动作，但15组为单例；Oracle 明确使用私有 counterfactual exposure，因此“未发现精确冲突”不能证明目标可由模型输入识别，动作监督仍是特权教师且可学习性未解决。修复前后产物为 `output/uniphys40k-episode-quality-before.json`、`output/uniphys40k-episode-quality-after.json`，新版 Episode 位于 `data/benchmarks/uniphys40k-oracle-smoke-v2/`。这是监督链路 Smoke，**不是正式训练集或模型能力结果**。
 
 **停止目标现已显式区分。** `first_failure` 面向快速拒绝，在首个有证据 finding 后停止；12样本导出51行，8个 fail 在1–3步停止，组合缺陷允许 `partial`。`comprehensive_within_budget` 面向预算内尽可能完整诊断，保留完整轨迹并只输出所有已暴露 finding；导出84行，7 complete / 1 partial / 4 none，但不声称找全隐藏缺陷。目标名称同时写入 manifest、每行元数据和模型可见 payload，审计拒绝缺失或混用；两份实跑产物分别位于 `data/benchmarks/uniphys40k-oracle-first-failure-v3/` 与 `data/benchmarks/uniphys40k-oracle-comprehensive-v3/`。
+
+**已完成：5 资产最小 SFT 与独立 Validation 对照。** 正式 catalog 现在逐资产保存并校验 `formal_training`、上游 revision/source ID、源 ZIP SHA、转换 spec SHA；prepared、Episode loader 和评分链路继续核对候选与参考程序身份及图像 SHA。15 个真实样本全部通过独立 checker，按原始资产隔离为 Train 3资产/9样本、Validation 2资产/6样本；62 行 Episode 的15个 terminal 目标为9 `fail` / 6 `uncertain`、0 `pass`。Qwen3-VL-2B LoRA 只训练9个 terminal 诊断/停止样本，不使用特权动作，seed `20261013`、3 epochs、27步，loss 由2.418降至0.261；adapter SHA-256 为 `c9ddf61f86cf40f208933e0aee6c8abe930435a52d7ecf43b262c9ce32a69bb7`。
+
+同一6样本 Validation、同一图像/历史、`max_new_tokens=512` 下，底座→SFT 的合法终止输出为5/6→6/6，status accuracy 均为3/6；exact verdict 为3/6→0/6，finding 均为0 TP，SFT 另产生6 FP。SFT 在3个有证据 fail 上都停止并判 fail，但把3个应为 uncertain 的预算耗尽案例全部误报为 fail，说明小数据训练产生了明显 fail/offset 偏置。它只验证 checkpoint 可训练、可加载、可受控比较，**不支持泛化、pass 判断或主动取证能力主张**。
+
+复现命令与主要产物：
+
+```bash
+python scripts/convert_uniphys40k.py --root data/uniphys40k-pilot --out data/assets/uniphys40k-trainval-v3 --ids UP_00011006,UP_00015016,UP_00015020,UP_00039007,UP_00039025 --motion-reviews configs/uniphys40k-trainval-v2.json
+python -m turnitover generate --config configs/generate_uniphys40k_sft_smoke.yaml
+python -m turnitover prepare-dataset --shards data/benchmarks/uniphys40k-sft-smoke-v1/raw/shard-0000.tar --splits data/assets/uniphys40k-trainval-v3/splits.json --out data/benchmarks/uniphys40k-sft-smoke-v1/prepared
+python scripts/run_oracle_supervision.py --benchmark data/benchmarks/uniphys40k-sft-smoke-v1 --config configs/generate_uniphys40k_sft_smoke.yaml --out data/benchmarks/uniphys40k-sft-oracle-v1 --budget 6 --episode-objective first_failure
+CUDA_VISIBLE_DEVICES=1 .venv-qwen/bin/python scripts/train_qwen_episode_sft.py --dataset data/benchmarks/uniphys40k-sft-oracle-v1 --model models/Qwen3-VL-2B-Instruct --out output/uniphys40k-qwen3vl2b-terminal-sft-v1 --seed 20261013 --epochs 3
+CUDA_VISIBLE_DEVICES=1 .venv-qwen/bin/python scripts/evaluate_qwen_episode_sft.py --dataset data/benchmarks/uniphys40k-sft-oracle-v1 --model models/Qwen3-VL-2B-Instruct --out output/uniphys40k-qwen3vl2b-base-val-v1
+CUDA_VISIBLE_DEVICES=1 .venv-qwen/bin/python scripts/evaluate_qwen_episode_sft.py --dataset data/benchmarks/uniphys40k-sft-oracle-v1 --model models/Qwen3-VL-2B-Instruct --adapter output/uniphys40k-qwen3vl2b-terminal-sft-v1/checkpoint --out output/uniphys40k-qwen3vl2b-sft-val-v1
+python scripts/compare_qwen_sft.py --base output/uniphys40k-qwen3vl2b-base-val-v1/metrics.json --sft output/uniphys40k-qwen3vl2b-sft-val-v1/metrics.json --out output/uniphys40k-qwen3vl2b-controlled-comparison-v1.json
+```
+
+关键产物为 `data/benchmarks/uniphys40k-sft-oracle-v1/manifest.json`、`output/uniphys40k-sft-data-audit-v1.json`、`output/uniphys40k-sft-processor-validation-v1.json`、`output/uniphys40k-qwen3vl2b-terminal-sft-v1/{run.json,loss.jsonl,train.log.jsonl,checkpoint/}`、两份逐案例 `predictions.jsonl` 和 `output/uniphys40k-qwen3vl2b-controlled-comparison-v1.json`；均为运行产物，不进入代码提交。
 
 **单参考 `pass` 仅在显式受限 scope 下可审计。** [`pass_evidence.py`](../turnitover/oracle/pass_evidence.py) 只读取模型可见的 task、参考图、观察历史与 runtime payload：`front_rest_appearance_only` 仅在关节动作前取得 front 图且与唯一 front/rest 参考逐像素一致时通过；`runtime_budget_only` 仅在公开、有限、非负的 triangle/draw-call 数值均不超公开阈值时通过。二者都明确排除关节、遮挡面和其他未观察属性，不能解释为整个 articulated object 正确。当前12条的 task 是广义 articulated verification，故可通过数为0；虽然7/12的 front/rest 完全一致，事后质量分析显示其中只有3个 clean，另有3个 joint-axis 和1个未暴露 offset，证明单图相等不足以支持广义 `pass`。12/12也没有 runtime 查询。因此3个 clean 继续为 `uncertain`，规则不读取 `labels=[]`、私有程序或 Checker 结果。
 
@@ -44,13 +63,13 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-episode-smoke-v1 --oracle data/benchmarks/uniphys40k-oracle-comprehensive-v3 --catalog data/assets/uniphys40k-trainval-v1/catalog.json --out output/uniphys40k-comprehensive-v3-audit.json
 ```
 
-**可复用的既有基础。** ReplicaCAD 数据引擎已支持按原始资产分组、腐蚀样本和私有真值隔离；Oracle 动作/成对诊断导出、Qwen3-VL 处理器适配及 assistant-only loss 已存在，见 [`dataset-pipeline.md`](dataset-pipeline.md) 和 [`oracle-supervision.md`](oracle-supervision.md)。这些是可复用组件，**不是 UniPhys 新数据已接通或模型已完成微调**。
+**可复用的既有基础。** ReplicaCAD 数据引擎已支持按原始资产分组、腐蚀样本和私有真值隔离；Oracle 动作/成对诊断导出、Qwen3-VL 处理器适配及 assistant-only loss 见 [`dataset-pipeline.md`](dataset-pipeline.md) 和 [`oracle-supervision.md`](oracle-supervision.md)。本轮仅接通 terminal Episode SFT；普通 SFT baseline、证据约束消融和可见信息动作教师仍未完成。
 
-**已实现：PartNet-Mobility 正式 Train/Validation 增量。** 官方批准后固定上游 revision，从160个确定性抽样 ZIP 中得到94个结构候选；48个优先候选经真实浏览器运动门禁与人工三视图/端点复核后35个通过（72.9%），形成28 Train / 7 Validation，覆盖21类、42 revolute / 18 prismatic、15个多关节物体。140条 corruption 样本中138条通过独立 checker、2条隔离；对应 Episode 已完整导出并通过逐像素重渲染复核。来源、许可、拒绝原因、隔离策略、命令和扩量成本见 [`training-dataset-expansion.md`](training-dataset-expansion.md)。自然生成错误仍为0且单独登记，未用注入标签冒充人工 Gold；未启动训练，冻结 Test 未修改。
+**已实现：PartNet-Mobility 正式 Train/Validation 增量。** 官方批准后固定上游 revision，从160个确定性抽样 ZIP 中得到94个结构候选；48个优先候选经真实浏览器运动门禁与人工三视图/端点复核后35个通过（72.9%），形成28 Train / 7 Validation，覆盖21类、42 revolute / 18 prismatic、15个多关节物体。140条 corruption 样本中138条通过独立 checker、2条隔离；对应 Episode 已完整导出并通过逐像素重渲染复核。来源、许可、拒绝原因、隔离策略、命令和扩量成本见 [`training-dataset-expansion.md`](training-dataset-expansion.md)。自然生成错误仍为0且单独登记，未用注入标签冒充人工 Gold；PartNet 增量尚未用于训练，冻结 Test 未修改。
 
 ## 关键缺口
 
-**原计划的 UniPhys-40K 480样本 Episode 尚未生成。** 上述4资产/12样本只验证 UniPhys-40K 转换资产可进入完整链路；PartNet-Mobility 增量已另行生成138条合格样本及 Episode，但尚未启动 Qwen SFT。扩大前仍需改善有限 witness 网格对 `part_offset` 的暴露率，并以仅使用模型可见信息的教师替代或约束当前特权动作目标；本次0个精确冲突不能排除15个单例目标依赖私有 exposure。当前也没有足以支持 clean `pass` 的匹配参考运动证据，因此只能保留 `uncertain`。自然生成错误仍未收集；其部件 ID 与参考不同时，现有几何比对不能直接充当独立 gold。
+**正式数据尚未进入受控训练比较。** UniPhys 的 Qwen3-VL-2B LoRA 仅使用5资产、9条 Train terminal 目标，且0个合格 `pass`；原计划480样本未执行。PartNet-Mobility 已有35资产、138条合格样本及 Episode，但尚未用于 SFT。有限 witness 网格、自然错误、普通 SFT baseline、证据约束消融及仅依赖可见信息的动作教师仍待完成；现有特权动作目标未进入 SFT。自然生成程序的部件 ID 与参考不同时，现有几何比对不能直接充当独立 gold。
 
 **UniPhys-40K Train/Validation 资产池已做一次有界扩充，但覆盖仍很小。** 官方 `UniPhysGen@3f1bb2d` 代码确认发布 OBJ 为 `qpos=0`、轴/枢轴使用 OBJ 坐标、旋转范围为弧度、滑动范围为 OBJ 单位；[`convert_uniphys40k.py`](../scripts/convert_uniphys40k.py) 据此逐资产推导尺度，按三角形坐标多重集验证完整模型闭合，并核验来源许可及正式 Test 的来源/OBJ SHA/名称重叠。本轮先提交 Episode 修复 `66e8eb6`，再从此前未覆盖的6个分片各轮询10个、下载60个 ZIP；本地总计243个 ZIP，经轻量检查得到64候选。完整预检为8 structural candidate / 56拒绝：尺度无法验证26、关节轴字段不完整21、运动依赖重叠6、Objaverse 上游许可无法统一确认3。
 
@@ -72,14 +91,14 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 ## 下一步（按优先级）
 
-1. **P0｜执行正式 Test 的60-case评测。** 固定 judge 模型、预算、策略和 seed，运行 `python scripts/run_uniphys_verifier_batch.py`；保留逐案例结果、批次清单和 `metrics.json`，中断时以清单中已完成记录为准。**完成标准：**60 个 case 均有终态结果且评分成功，不混入开发回归结果。
-2. **P0｜按实测漏斗扩充 PartNet-Mobility。** 首批35个正式物体证明来源可用；下一批优先补 Train 混合关节、未覆盖类别和更大的独立 Validation，持续监测结构与运动通过率漂移。GAPartNet 仅在取得完整官方包和额外许可后接入。**完成标准：**正式池达到80–100个合格原物体，所有新增项保留许可、哈希、真实运动审核及与冻结 Test 的来源/几何去重证据。
-3. **P0｜消除特权动作教师依赖。** 精确重复前缀未发现冲突，但大多数前缀没有可比较反事实，不能据此证明动作可学习；需建立仅使用可见信息的教师或明确降权/剔除不可识别目标。**完成标准：**动作选择不读取私有 label/exposure，或训练目标显式表示可观测条件下的动作分布。
-4. **P1｜自然错误独立 Gold 与处理器预检。** 当前138条合格样本和Episode均来自可控 corruption；另行运行固定 Generator 并由不读取注入标签的人工依据真实渲染标注自然错误，再用现有 Qwen 处理器做只读可加载性验证。本任务不启动 SFT。
-5. **P1｜完成留出评测与归因。** 先固定观察比较诊断/定位/误放行/停止，再按统一成本比较 fixed、random、active；消融证据约束、停止监督、自然错误数据。闭环固定 Generator，每轮修复后重取证据并独立评分。**完成标准：**结果按原始物体汇总，报告观察成本与波动，能区分诊断、取证、停止及实际修复收益。
+1. **P0｜在正式 PartNet 数据上补普通 SFT 与证据约束对照。** 保持同底座、原始物体划分、图像、预算和训练步数，区分普通最终诊断、证据筛选与停止监督；先处理当前 fail/offset 偏置与缺失 pass。
+2. **P0｜按实测漏斗继续扩充 PartNet-Mobility。** 优先补 Train 混合关节、未覆盖类别和更大的独立 Validation；达到80–100个合格原物体前持续保存许可、来源/内容 SHA、运动审核及冻结 Test 去重证据。
+3. **P0｜消除特权动作教师依赖。** 动作选择不读取私有 label/exposure，或显式学习可观测条件下的动作分布；完成前不把 terminal SFT 解释为主动取证训练。
+4. **P1｜收集自然错误独立人工 Gold。** 固定 Generator，由不读取注入标签的人工依据真实渲染标注；GAPartNet 仅在取得完整官方包和额外许可后接入。
+5. **P1｜冻结方案后执行60-case Test 与归因。** Test 不参与调参；统一模型、预算、策略和 seed，并按原始物体报告诊断、取证、停止及修复收益。
 
 优先跑通**小规模且可信的完整链路**，不要在训练前追求覆盖全部 29 种缺陷或扩大到不可审计的数据规模。
 
 ---
 
-最近同步：**2026-10-13 · PartNet-Mobility 正式数据增量**；新增35个合格原物体（28 Train / 7 Validation）、138条通过质量门禁的监督样本及完整 Episode，许可、哈希、拒绝原因和隔离审计可复现。自然错误仍为0并显式登记，未启动 SFT，Part 2 正式 Test 未修改。
+最近同步：**2026-10-13 · 正式数据与最小 SFT 合并**；PartNet-Mobility 新增35个合格原物体、138条合格样本及完整 Episode；UniPhys 5资产完成9条 terminal 监督的 Qwen3-VL-2B LoRA Smoke 和6案例 Validation 对照，但诊断/定位未改善且出现 fail 偏置。PartNet 尚未训练，自然错误仍为0，Part 2 冻结 Test 未修改。

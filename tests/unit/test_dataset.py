@@ -1,4 +1,5 @@
 import dataclasses
+import hashlib
 import json
 
 import pytest
@@ -58,6 +59,56 @@ def test_catalog_never_silently_discards_meshes_or_vector_entries(toy_spec):
     raw["parts"][0]["origin"].append(4)
     with pytest.raises(ValueError, match="vector length"):
         decode_spec(raw)
+
+
+def test_formal_catalog_verifies_source_identity_and_spec_content(tmp_path, toy_spec):
+    spec_path = tmp_path / "asset.json"
+    spec_path.write_text(json.dumps(to_dict(toy_spec)))
+    source_identity = "PartNet:fixture"
+    entry = {
+        "spec": spec_path.name, "spec_sha256": hashlib.sha256(spec_path.read_bytes()).hexdigest(),
+        "split_group": "uniphys40k:PartNet:fixture", "origin": "fixture", "license": "fixture",
+        "dataset_revision": "1" * 40, "source_dataset": "PartNet", "source_asset_id": "fixture",
+        "source_identity_sha256": hashlib.sha256(source_identity.encode()).hexdigest(),
+        "source_content_sha256": "2" * 64, "formal_training": True,
+    }
+    catalog = tmp_path / "catalog.json"
+    catalog.write_text(json.dumps({"version": 1, "source_id": "formal", "role": "formal_train_validation",
+                                   "formal_training": True, "dataset_revision": "1" * 40, "assets": [entry]}))
+    assert CatalogSource(str(catalog)).metadata(toy_spec.asset_id)["formal_training"] is True
+
+    entry["source_identity_sha256"] = "0" * 64
+    catalog.write_text(json.dumps({"version": 1, "source_id": "formal", "role": "formal_train_validation",
+                                   "formal_training": True, "dataset_revision": "1" * 40, "assets": [entry]}))
+    with pytest.raises(ValueError, match="source identity SHA mismatch"):
+        CatalogSource(str(catalog))
+
+    entry["source_identity_sha256"] = hashlib.sha256(source_identity.encode()).hexdigest()
+    spec_path.write_text(json.dumps({**to_dict(toy_spec), "asset_id": "tampered"}))
+    with pytest.raises(ValueError, match="spec SHA mismatch"):
+        CatalogSource(str(catalog))
+
+
+def test_formal_catalog_normalizes_partnet_provenance(tmp_path, toy_spec):
+    spec_path = tmp_path / "PM_42.json"
+    spec_path.write_text(json.dumps(to_dict(toy_spec)))
+    entry = {
+        "spec": spec_path.name, "spec_sha256": hashlib.sha256(spec_path.read_bytes()).hexdigest(),
+        "split_group": "PartNet-Mobility:42", "origin": "fixture", "license": "fixture",
+        "formal_training": True, "dataset": "sapien-sim/PartNetMobility",
+        "dataset_revision": "1" * 40, "source_identity": "PartNet-Mobility:42",
+        "annotation_id": "42", "model_id": "model-42", "archive_sha256": "2" * 64,
+    }
+    catalog = tmp_path / "catalog.json"
+    catalog.write_text(json.dumps({"version": 1, "source_id": "partnet", "role": "formal_train_validation",
+                                   "formal_training": True, "dataset_revision": "1" * 40,
+                                   "assets": [entry]}))
+    metadata = CatalogSource(str(catalog)).metadata(toy_spec.asset_id)
+    assert metadata["source_dataset"] == "sapien-sim/PartNetMobility"
+    assert metadata["source_asset_id"] == "42"
+    assert metadata["source_content_sha256"] == entry["archive_sha256"]
+    assert metadata["source_identity_sha256"] == hashlib.sha256(
+        entry["source_identity"].encode()).hexdigest()
 
 
 def _write_shard(tmp_path, *, leak=False, bad_quality=False):

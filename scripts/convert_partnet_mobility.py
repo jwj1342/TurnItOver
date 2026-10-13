@@ -196,6 +196,9 @@ def convert(root: Path, output: Path, test_plan: Path, test_root: Path,
                 "dataset": DATASET, "dataset_revision": manifest["dataset_revision"],
                 "source_identity": report["source_identity"],
                 "annotation_id": report["annotation_id"], "model_id": report["model_id"],
+                "source_dataset": DATASET, "source_asset_id": asset_id,
+                "source_identity_sha256": hashlib.sha256(f"{DATASET}:{asset_id}".encode()).hexdigest(),
+                "source_content_sha256": row["sha256"],
                 "archive_sha256": row["sha256"], "spec_sha256": report["spec_sha256"],
             }
             candidate_entries.append(base_entry)
@@ -211,6 +214,7 @@ def convert(root: Path, output: Path, test_plan: Path, test_root: Path,
     role = "formal_train_validation" if reviews_path is not None else "structural_candidates"
     write_json_atomic(output / "catalog.json", {
         "version": 1, "source_id": f"partnet-mobility-{manifest['dataset_revision'][:12]}",
+        "dataset": DATASET, "dataset_revision": manifest["dataset_revision"],
         "role": role, "formal_training": reviews_path is not None,
         "assets": entries if reviews_path is not None else candidate_entries,
     })

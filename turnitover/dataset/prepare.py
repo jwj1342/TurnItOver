@@ -73,6 +73,7 @@ def prepare(shards, splits_path: Path, output: Path):
     output.mkdir(parents=True)
     counts, defects, quality_counts, groups = Counter(), Counter(), Counter(), {}
     references = {}
+    formal_training_values = set()
     streams = {}
     try:
         for split in SPLITS:
@@ -81,6 +82,10 @@ def prepare(shards, splits_path: Path, output: Path):
         with (output / "quarantine.jsonl").open("w") as quarantine:
             for sample, members in records(shards):
                 meta = sample.dataset
+                formal_training = meta.get("formal_training", False)
+                if type(formal_training) is not bool:
+                    raise ValueError("Sample formal_training must be boolean")
+                formal_training_values.add(formal_training)
                 group = meta["split_group"]
                 if group not in assignment:
                     raise ValueError(f"Missing split assignment: {group}")
@@ -120,9 +125,10 @@ def prepare(shards, splits_path: Path, output: Path):
                                "history": [{"step": o.step, "action": to_dict(o.action),
                                             "image_ref": image_map.get(o.image_ref), "payload": o.payload}
                                            for o in observations]}
-                provenance_keys = ("origin", "license", "formal_training", "dataset",
-                                   "dataset_revision", "source_identity", "annotation_id", "model_id",
-                                   "archive_sha256", "spec_sha256")
+                provenance_keys = (
+                    "origin", "license", "formal_training", "catalog_role", "dataset", "dataset_revision",
+                    "source_identity", "annotation_id", "model_id", "archive_sha256", "source_dataset",
+                    "source_asset_id", "source_identity_sha256", "source_content_sha256", "spec_sha256")
                 gold = {"id": uid, "source_id": sample.source_id, "sample_id": sample.sample_id,
                         "asset_id": sample.asset_id, "category": meta["category"], "split_group": group,
                         "program_sha": sample.program_sha, "reference_sha": sample.reference_sha,
@@ -133,7 +139,10 @@ def prepare(shards, splits_path: Path, output: Path):
                 streams[split, "gold"].write(json.dumps(gold) + "\n")
                 counts[split] += 1
                 defects.update(c.defect_id for c in sample.corruptions)
-        manifest = {"version": 1, "status": "complete", "counts": dict(counts), "quality_counts": dict(quality_counts),
+        if len(formal_training_values) != 1:
+            raise ValueError("Prepared dataset cannot mix formal and engineering-only samples")
+        manifest = {"version": 1, "status": "complete", "formal_training": formal_training_values.pop(),
+                    "counts": dict(counts), "quality_counts": dict(quality_counts),
                     "defects": dict(defects), "groups": groups, "split_manifest": raw,
                     "shards": [{"path": str(Path(p).resolve()),
                                 "manifest": json.loads(Path(p).with_suffix(".manifest.json").read_text())} for p in shards],

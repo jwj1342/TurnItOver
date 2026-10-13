@@ -201,11 +201,19 @@ def convert(root: Path, output: Path, test_plan: Path, test_root: Path,
             spec_name = f"{converted.spec.asset_id}.json"
             write_json_atomic(output / spec_name, to_dict(converted.spec))
             source_key = f"{source['dataset']}:{source['original_id']}"
+            source_identity_sha256 = hashlib.sha256(source_key.encode()).hexdigest()
             entries.append({
                 "spec": spec_name,
+                "spec_sha256": hashlib.sha256((output / spec_name).read_bytes()).hexdigest(),
                 "split_group": f"uniphys40k:{source_key}",
                 "origin": f"{DATASET}@{revision}:{converted.spec.asset_id}; upstream {source_key}",
                 "license": license_record["catalog"],
+                "dataset_revision": revision,
+                "source_dataset": source["dataset"],
+                "source_asset_id": source["original_id"],
+                "source_identity_sha256": source_identity_sha256,
+                "source_content_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+                "formal_training": eligible,
             })
         except (OSError, TypeError, ValueError, KeyError) as exc:
             rows.append({"asset_id": archive.stem, "archive": str(archive.resolve()),
@@ -229,7 +237,8 @@ def convert(root: Path, output: Path, test_plan: Path, test_root: Path,
     role = "formal_train_validation" if reviews is not None else "diagnostic_conversion_candidates"
     write_json_atomic(output / "catalog.json", {
         "version": 1, "source_id": f"uniphys40k-{revision[:12]}",
-        "role": role, "assets": entries,
+        "role": role, "formal_training": reviews is not None,
+        "dataset": DATASET, "dataset_revision": revision, "assets": entries,
     })
     if reviews is not None:
         groups = {entry["split_group"]: reviews[Path(entry["spec"]).stem]["split"]
