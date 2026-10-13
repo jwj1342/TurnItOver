@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "role": "natural_generation_error_gold",
+  "formal_training": true,
+  "status": "not_collected",
+  "assets": [],
+  "gold": [],
+  "count": 0,
+  "reason": "本轮未获授权启动付费模型生成；不以合成 corruption 标签冒充自然生成错误或独立人工 Gold。",
+  "admission": "后续自然生成程序必须由独立人工依据渲染证据标注，且不得读取注入标签。"
+}

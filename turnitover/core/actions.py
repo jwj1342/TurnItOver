@@ -15,6 +15,7 @@ class Detent(StrEnum):
     ZERO = "zero"
     MID = "mid"
     LIMIT = "limit"
+    REST = "rest"
 
 
 class RuntimeProperty(StrEnum):
@@ -85,6 +86,8 @@ def detent_value(detent: Detent, limits: tuple[float, float]) -> float:
             return 0.5 * (lo + hi)
         case Detent.LIMIT:
             return hi
+        case Detent.REST:
+            return 0.0
     raise ValueError(detent)
 
 

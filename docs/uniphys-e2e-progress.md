@@ -46,9 +46,11 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 **可复用的既有基础。** ReplicaCAD 数据引擎已支持按原始资产分组、腐蚀样本和私有真值隔离；Oracle 动作/成对诊断导出、Qwen3-VL 处理器适配及 assistant-only loss 已存在，见 [`dataset-pipeline.md`](dataset-pipeline.md) 和 [`oracle-supervision.md`](oracle-supervision.md)。这些是可复用组件，**不是 UniPhys 新数据已接通或模型已完成微调**。
 
+**已实现：PartNet-Mobility 正式 Train/Validation 增量。** 官方批准后固定上游 revision，从160个确定性抽样 ZIP 中得到94个结构候选；48个优先候选经真实浏览器运动门禁与人工三视图/端点复核后35个通过（72.9%），形成28 Train / 7 Validation，覆盖21类、42 revolute / 18 prismatic、15个多关节物体。140条 corruption 样本中138条通过独立 checker、2条隔离；对应 Episode 已完整导出并通过逐像素重渲染复核。来源、许可、拒绝原因、隔离策略、命令和扩量成本见 [`training-dataset-expansion.md`](training-dataset-expansion.md)。自然生成错误仍为0且单独登记，未用注入标签冒充人工 Gold；未启动训练，冻结 Test 未修改。
+
 ## 关键缺口
 
-**正式规模 Episode 尚未生成。** 上述4资产/12样本只验证 UniPhys-40K 转换资产可进入完整链路；480样本配置未执行，也未启动 Qwen SFT。扩大前仍需增加经真实运动审核且许可适用的资产，改善有限 witness 网格对 `part_offset` 的暴露率，并以仅使用模型可见信息的教师替代或约束当前特权动作目标；本次0个精确冲突不能排除15个单例目标依赖私有 exposure。当前也没有足以支持 clean `pass` 的匹配参考运动证据，因此只能保留 `uncertain`。自然生成错误不属于本次无模型闭环；其部件 ID 与参考不同时，现有几何比对仍不能直接充当独立 gold。
+**原计划的 UniPhys-40K 480样本 Episode 尚未生成。** 上述4资产/12样本只验证 UniPhys-40K 转换资产可进入完整链路；PartNet-Mobility 增量已另行生成138条合格样本及 Episode，但尚未启动 Qwen SFT。扩大前仍需改善有限 witness 网格对 `part_offset` 的暴露率，并以仅使用模型可见信息的教师替代或约束当前特权动作目标；本次0个精确冲突不能排除15个单例目标依赖私有 exposure。当前也没有足以支持 clean `pass` 的匹配参考运动证据，因此只能保留 `uncertain`。自然生成错误仍未收集；其部件 ID 与参考不同时，现有几何比对不能直接充当独立 gold。
 
 **UniPhys-40K Train/Validation 资产池已做一次有界扩充，但覆盖仍很小。** 官方 `UniPhysGen@3f1bb2d` 代码确认发布 OBJ 为 `qpos=0`、轴/枢轴使用 OBJ 坐标、旋转范围为弧度、滑动范围为 OBJ 单位；[`convert_uniphys40k.py`](../scripts/convert_uniphys40k.py) 据此逐资产推导尺度，按三角形坐标多重集验证完整模型闭合，并核验来源许可及正式 Test 的来源/OBJ SHA/名称重叠。本轮先提交 Episode 修复 `66e8eb6`，再从此前未覆盖的6个分片各轮询10个、下载60个 ZIP；本地总计243个 ZIP，经轻量检查得到64候选。完整预检为8 structural candidate / 56拒绝：尺度无法验证26、关节轴字段不完整21、运动依赖重叠6、Objaverse 上游许可无法统一确认3。
 
@@ -71,13 +73,13 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 ## 下一步（按优先级）
 
 1. **P0｜执行正式 Test 的60-case评测。** 固定 judge 模型、预算、策略和 seed，运行 `python scripts/run_uniphys_verifier_batch.py`；保留逐案例结果、批次清单和 `metrics.json`，中断时以清单中已完成记录为准。**完成标准：**60 个 case 均有终态结果且评分成功，不混入开发回归结果。
-2. **P0｜改用结构可靠的候选来源做小规模准入试验。** v2 的26个尺度失败和21个字段缺失均无安全转换器修复，层状关节支持也净增0；不再盲目增加同分布下载。优先在接受非商业条款后小规模审核 PartNet-Mobility 原始 URDF，GAPartNet 仅作派生备选，AKB-48 在明确资产许可前不纳入。所有来源仍须按 source ID、几何 SHA 与名称对冻结 Test 去重并真实渲染验收。**完成标准：**先证明新来源能稳定通过尺度、结构、许可和运动门禁，再决定是否扩量。
+2. **P0｜按实测漏斗扩充 PartNet-Mobility。** 首批35个正式物体证明来源可用；下一批优先补 Train 混合关节、未覆盖类别和更大的独立 Validation，持续监测结构与运动通过率漂移。GAPartNet 仅在取得完整官方包和额外许可后接入。**完成标准：**正式池达到80–100个合格原物体，所有新增项保留许可、哈希、真实运动审核及与冻结 Test 的来源/几何去重证据。
 3. **P0｜消除特权动作教师依赖。** 精确重复前缀未发现冲突，但大多数前缀没有可比较反事实，不能据此证明动作可学习；需建立仅使用可见信息的教师或明确降权/剔除不可识别目标。**完成标准：**动作选择不读取私有 label/exposure，或训练目标显式表示可观测条件下的动作分布。
-4. **P1｜正式规模 Episode 与处理器预检。** 在扩充资产上通过 Slurm 执行冻结配置，复查腐蚀分层、隔离率、`part_offset` 暴露率、终止分布和 Train/Validation 隔离，再用现有 Qwen 处理器做只读可加载性验证；在此之前不启动 SFT。
+4. **P1｜自然错误独立 Gold 与处理器预检。** 当前138条合格样本和Episode均来自可控 corruption；另行运行固定 Generator 并由不读取注入标签的人工依据真实渲染标注自然错误，再用现有 Qwen 处理器做只读可加载性验证。本任务不启动 SFT。
 5. **P1｜完成留出评测与归因。** 先固定观察比较诊断/定位/误放行/停止，再按统一成本比较 fixed、random、active；消融证据约束、停止监督、自然错误数据。闭环固定 Generator，每轮修复后重取证据并独立评分。**完成标准：**结果按原始物体汇总，报告观察成本与波动，能区分诊断、取证、停止及实际修复收益。
 
 优先跑通**小规模且可信的完整链路**，不要在训练前追求覆盖全部 29 种缺陷或扩大到不可审计的数据规模。
 
 ---
 
-最近同步：**2026-10-13 · v2 低通过率根因审计**；26个尺度、21个字段缺失和6个依赖案例已逐项复核，仅确认并实现层状依赖树转换，但两个可表示案例均另因尺度失败，合格数仍为5（Train 3 / Validation 2）。8个 structural candidate 已重跑真实运动检查，许可与正式 Test 去重重验通过；未扩大下载、Episode 或 SFT，单参考保守规则与 Part 2 正式 Test 均未修改。
+最近同步：**2026-10-13 · PartNet-Mobility 正式数据增量**；新增35个合格原物体（28 Train / 7 Validation）、138条通过质量门禁的监督样本及完整 Episode，许可、哈希、拒绝原因和隔离审计可复现。自然错误仍为0并显式登记，未启动 SFT，Part 2 正式 Test 未修改。

@@ -39,12 +39,14 @@ def test_catalog_rejects_bad_hierarchy_and_keeps_variant_group(tmp_path, toy_spe
     for name in ("a", "b"):
         spec = dataclasses.replace(toy_spec, asset_id=name)
         (tmp_path / f"{name}.json").write_text(json.dumps(to_dict(spec)))
-        entries.append({"spec": f"{name}.json", "split_group": "same-original", "origin": "unit test", "license": "fixture"})
+        entries.append({"spec": f"{name}.json", "split_group": "same-original", "origin": "unit test",
+                        "license": "fixture", "formal_training": True})
     path = tmp_path / "catalog.json"
     path.write_text(json.dumps({"version": 1, "source_id": "fixtures", "assets": entries}))
     source = CatalogSource(str(path))
     assert [s.asset_id for s in source] == ["a", "b"]
     assert source.metadata("a")["split_group"] == source.metadata("b")["split_group"]
+    assert source.metadata("a")["formal_training"] is True
 
 
 def test_catalog_never_silently_discards_meshes_or_vector_entries(toy_spec):
@@ -64,6 +66,9 @@ def _write_shard(tmp_path, *, leak=False, bad_quality=False):
             s = _sample()
             s = dataclasses.replace(s, sample_id=f"fixture-{i}", asset_id=f"asset-{i}", reference_sha="same" if leak else f"ref-{i}",
                 corruptions=(), dataset={"category": "fixture", "split_group": f"group-{i}", "origin": "unit test", "license": "fixture",
+                    "formal_training": True, "dataset": "fixture-set", "dataset_revision": "revision-1",
+                    "source_identity": f"fixture:{i}", "annotation_id": str(i), "model_id": f"model-{i}",
+                    "archive_sha256": f"archive-{i}", "spec_sha256": f"spec-{i}",
                     "quality": {"status": "quarantined" if bad_quality and i == 0 else "accepted"},
                     "reference_images": ["reference/00.png"], "parts": ["door"], "joints": ["door"], "views": ["front"],
                     "constraints": {}, "reference_program_source": "SECRET_REFERENCE"})
@@ -84,6 +89,10 @@ def test_splits_export_privilege_boundary_quarantine_and_evaluation(tmp_path):
     public = "".join(p.read_text() for p in output.glob("*.inputs.jsonl"))
     for forbidden in ("SECRET_REFERENCE", "program_source", "corruptions", "split_group", "severity"):
         assert forbidden not in public
+    gold = [json.loads(line) for p in output.glob("*.gold.jsonl") for line in p.read_text().splitlines()]
+    assert all(row["provenance"]["formal_training"] is True for row in gold)
+    assert all(row["provenance"]["dataset_revision"] == "revision-1" for row in gold)
+    assert all(row["provenance"]["source_identity"].startswith("fixture:") for row in gold)
     split = mapping["group-1"]
     metrics = evaluate_runtime(output, split, tmp_path / "metrics")
     assert metrics["n"] == 1 and metrics["uncertain_rate"] == 1

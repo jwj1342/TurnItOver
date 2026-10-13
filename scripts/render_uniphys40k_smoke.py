@@ -34,10 +34,11 @@ def _descendants(spec, root: str) -> set[str]:
     return result
 
 
-def run(catalog: Path, output: Path, asset_id: str, *, size: int = 512) -> Path:
+def run(catalog: Path, output: Path, asset_id: str, *, size: int = 512,
+        source: CatalogSource | None = None) -> Path:
     if output.exists():
         raise ValueError(f"Output must not exist: {output}")
-    source = CatalogSource(str(catalog))
+    source = source or CatalogSource(str(catalog))
     spec = source.get(asset_id)
     if not spec.joints:
         raise ValueError("Smoke test requires at least one joint")

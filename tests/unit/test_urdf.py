@@ -58,3 +58,17 @@ def test_continuous_joint_policy_rejects_unknown_value(tmp_path):
     path.write_text(URDF)
     with pytest.raises(ValueError, match="continuous_joint_policy"):
         UrdfModel(path, continuous_joint_policy="unknown")
+
+
+def test_mesh_without_diffuse_color_uses_neutral_fallback(tmp_path):
+    (tmp_path / "mesh.obj").write_text(
+        "mtllib mesh.mtl\nusemtl missing_diffuse\n"
+        "v 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n"
+    )
+    (tmp_path / "mesh.mtl").write_text("newmtl missing_diffuse\n")
+    path = tmp_path / "mesh.urdf"
+    path.write_text('''<robot name="fixture"><link name="root"><visual><geometry>
+<mesh filename="mesh.obj"/></geometry></visual></link></robot>''')
+    spec = UrdfModel(path).spec("fixture", "fixture")
+    assert len(spec.part("root").mesh.colors) == 3
+    assert all(np.isfinite(spec.part("root").mesh.colors[0]))

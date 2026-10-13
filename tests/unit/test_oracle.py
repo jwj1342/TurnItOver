@@ -1,15 +1,13 @@
 import json
 
 import numpy as np
-import pytest
-
 from turnitover.core.actions import ActuateJoint, Detent
 from turnitover.oracle.evidence import ExposureThresholds, pixel_signal
 from turnitover.oracle.supervision import action_examples
 from turnitover.oracle.witnesses import Witness, next_witness, plan, recipe, witness_grid, zero_detent
 
 
-def test_negative_limits_restore_at_upper_limit_and_count_cost():
+def test_joint_ranges_restore_at_exact_rest_and_count_cost():
     joints = {"a": (-1., 0.), "b": (0., 1.)}
     current = Witness("front", "a", Detent.ZERO)
     target = Witness("oblique_fr", "b", Detent.LIMIT)
@@ -19,8 +17,7 @@ def test_negative_limits_restore_at_upper_limit_and_count_cost():
     for action in actions:
         current = next_witness(current, action, joints)
     assert current == target
-    with pytest.raises(ValueError, match="free reset"):
-        zero_detent((-.3, 1.))
+    assert zero_detent((-.3, 1.)) is Detent.REST
 
 
 def test_planner_budget_and_state_match_each_observation():

@@ -1,8 +1,8 @@
 # 关节资产库调研与接入建议
 
-核查日期：2026-09-12。建议用 ReplicaCAD Interactive 验证第一条真实网格转换链路，
+核查日期：2026-10-13。建议用 ReplicaCAD Interactive 验证第一条真实网格转换链路，
 以 PartNet-Mobility 作为规模化数据主来源，GAPartNet 作为部件标注补充。
-以下下载与许可状态来自官方发布页；ReplicaCAD 已有转换实测，其他数据源的接入判断尚待实测。
+PartNet-Mobility 已完成首批正式转换与验收，详见[正式训练数据集扩充记录](training-dataset-expansion.md)。
 
 | 资产库 | 对本项目的价值 | 获取与许可 | 接入判断 |
 | --- | --- | --- | --- |
@@ -32,7 +32,9 @@
 - 后续已转换六个资产族并完成 102 状态审计；详见 [真实网格 benchmark](mesh-benchmark.md)。
 
 复现时默认目录必须不存在；可用 `--out` 指定新目录。无需安装 Habitat，无需账号。
-PartNet-Mobility 和 GAPartNet 尚未申请或下载，也未通过第三方镜像绕过官方访问流程。
+PartNet-Mobility 已通过官方审批并从官方 Hugging Face revision
+`ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f` 获取首批160个确定性样本；GAPartNet 完整数据尚未申请，
+仅核对官方仓库公开示例，未通过第三方镜像绕过访问流程。
 
 ## 从原始资产到当前仓库的缺口
 

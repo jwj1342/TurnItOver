@@ -111,7 +111,7 @@ class CatalogSource:
             if spec.asset_id in self._specs:
                 raise ValueError(f"Duplicate asset ID: {spec.asset_id}")
             self._specs[spec.asset_id] = spec
-            self._metadata[spec.asset_id] = {k: entry[k] for k in ("split_group", "origin", "license")}
+            self._metadata[spec.asset_id] = {k: v for k, v in entry.items() if k != "spec"}
 
     def __iter__(self):
         return iter(self._specs[k] for k in sorted(self._specs))

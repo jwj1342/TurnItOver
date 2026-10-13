@@ -84,7 +84,7 @@ def _validation_feedback(error: DecisionError, raw: dict | None, context: Contex
             "action_types": context.action_types,
             "view_ids": context.views,
             "joint_ids": context.joints,
-            "detents": ("zero", "mid", "limit"),
+            "detents": ("zero", "mid", "limit", "rest"),
             "runtime_properties": context.runtime_properties,
             "observed_steps": tuple(o.step for o in history),
         },

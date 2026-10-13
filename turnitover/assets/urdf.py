@@ -174,8 +174,13 @@ class UrdfModel:
                 offset = len(vertices)
                 vertices.extend(tuple(float(x) for x in v) for v in mesh.vertices)
                 faces.extend(tuple(int(x) + offset for x in f) for f in mesh.faces)
-                visual = mesh.visual.to_color() if mesh.visual.kind == "texture" else mesh.visual
-                rgb = np.asarray(visual.vertex_colors)[:, :3] / 255.
+                try:
+                    visual = mesh.visual.to_color() if mesh.visual.kind == "texture" else mesh.visual
+                    rgb = np.asarray(visual.vertex_colors)[:, :3] / 255.
+                except (TypeError, ValueError):
+                    # Some official PartNet-Mobility MTLs omit Kd. Geometry and
+                    # kinematics remain usable; use a neutral fallback color.
+                    rgb = np.full((len(mesh.vertices), 3), 200 / 255.)
                 rgb = np.where(rgb <= .04045, rgb / 12.92, ((rgb + .055) / 1.055) ** 2.4)
                 colors.extend(tuple(float(x) for x in c) for c in rgb)
             parts.append(PartSpec(name, parent, tuple(float(x) for x in frame[:3, 3]),

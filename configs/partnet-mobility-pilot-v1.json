@@ -1,0 +1,368 @@
+{
+  "version": 1,
+  "role": "formal_train_validation",
+  "formal_training": true,
+  "dataset": "sapien-sim/PartNetMobility",
+  "dataset_revision": "ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f",
+  "sampling": {
+    "download_count": 160,
+    "download_seed": 20261013,
+    "max_archive_mb": 5,
+    "structural_candidates": 94,
+    "motion_pilot_count": 48,
+    "motion_selection": "每类别先取固定哈希最小项，再按混合关节、多关节优先补齐；每类别先封顶2项，再放宽到3项"
+  },
+  "license": {
+    "scope": "仅限非商业研究/教育；同时遵守 ShapeNet 条款",
+    "partnet_mobility": "https://huggingface.co/datasets/sapien-sim/PartNetMobility",
+    "shapenet": "https://huggingface.co/datasets/ShapeNet/ShapeNetCore"
+  },
+  "split_policy": "原始 ZIP/PartNet-Mobility archive ID 为 split_group；同一物体的全部变体和 Episode 继承同一划分",
+  "assets": [
+    {
+      "asset_id": "PM_100202",
+      "decision": "passed",
+      "split": "validation",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_100202/smoke.json",
+      "smoke_sha256": "b39b87e2d5369d54810f445b7c7c2419322085a2827adfbffd3bb115194375de",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Box 的 4 个关节（revolute×4）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_103129",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_0 did not visibly and geometrically move every dependency part"
+    },
+    {
+      "asset_id": "PM_12594",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_12594/smoke.json",
+      "smoke_sha256": "b979a632f73f6aea5300a8ef2d0be59114da328c3a8a4b01fffebdf67a9b57fa",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Dishwasher 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_103419",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_0 did not visibly and geometrically move every dependency part"
+    },
+    {
+      "asset_id": "PM_5088",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_5088/smoke.json",
+      "smoke_sha256": "4cd6d027228e5f5deaa1cbd85bf83ec64d79e8028f1d15b7be47acd0b931865a",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Display 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_8867",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_8867/smoke.json",
+      "smoke_sha256": "714c8518cb828c1d17c4d00a4d65a56cb68a40889371d61e65096c82848ae520",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Door 的 2 个关节（revolute×2）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_102590",
+      "decision": "passed",
+      "split": "validation",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_102590/smoke.json",
+      "smoke_sha256": "e7e53998e02bfe40af2eb03dbe56008975acc039e1837a3e592a50baf701ff41",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Eyeglasses 的 2 个关节（revolute×2）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_1280",
+      "decision": "passed",
+      "split": "validation",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_1280/smoke.json",
+      "smoke_sha256": "3aeb69973b94a1cc23d2751d8c0ee91bb3419d1580bbe59bd4dbab3b54e7d60f",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Faucet 的 2 个关节（revolute×2）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_102314",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_102314/smoke.json",
+      "smoke_sha256": "70596796a248ab32ed87d40390aaec90561d2ce1a8466b8666b1445a73bc2f5d",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 FoldingChair 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_3971",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_3971/smoke.json",
+      "smoke_sha256": "9eb3694d9a8b13f10feff5481ed56ffd3702ff293da54c293842dc1d47e81b76",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Kettle 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_100054",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_100054/smoke.json",
+      "smoke_sha256": "b55158dca78b30889fd8579575a6fc4ac784f9ba6cdc56fb5d766ef4072e39b6",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 KitchenPot 的 1 个关节（prismatic×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_101054",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_0 did not visibly and geometrically move every dependency part"
+    },
+    {
+      "asset_id": "PM_14306",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_14306/smoke.json",
+      "smoke_sha256": "2cafe54daf92c189a2b64204ef12f9c5fc6d28ca0dc783f773a9ec349e5c970a",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Lamp 的 3 个关节（revolute×3）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_10697",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_10697/smoke.json",
+      "smoke_sha256": "a731ce82f718301e8bc31eeacf2f7c63ea5c1df3e2ff5eb17a6fc88ea5dad906",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Laptop 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_101714",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_101714/smoke.json",
+      "smoke_sha256": "20915d78dd319cf8ea1c2acf61d293093d0a485ab1998387a527bb54284b34bf",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Pen 的 1 个关节（prismatic×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_102292",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_102292/smoke.json",
+      "smoke_sha256": "6d7ce9e3a5f8def05e0d27f758c06c84f6625996a40d0567d8793ad37b8fb88f",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Pliers 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_10797",
+      "decision": "passed",
+      "split": "validation",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_10797/smoke.json",
+      "smoke_sha256": "66b37841b5171747edc26ce19b1389d304d855a95e8d4eba17e3ea52495d396d",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Refrigerator 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_10902",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_10902/smoke.json",
+      "smoke_sha256": "3073d13c634685dfaad384e90f44dcb266e73c828ae29a0bcdc585b6a90e8753",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Scissors 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_103275",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_103275/smoke.json",
+      "smoke_sha256": "568ed21b888a7a7072de2eb9720f3cf701144df95d4bff84496878da03d30aac",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Stapler 的 2 个关节（revolute×2）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_48686",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_48686/smoke.json",
+      "smoke_sha256": "fd240199703a6b2fdaa18ec41f01af7c4fa2dcee2c5e8abd35a48dfc2e4fd724",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 StorageFurniture 的 1 个关节（prismatic×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_100934",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_100934/smoke.json",
+      "smoke_sha256": "b48c21553b0ae8d3549483a14c5b75991a2e06dfd84daa3051984249c849b301",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Switch 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_34610",
+      "decision": "passed",
+      "split": "validation",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_34610/smoke.json",
+      "smoke_sha256": "ea0f34fd8ca372db8b842b6fd64413095068fb7d2874f97a2b5b8aa1f92850d1",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Table 的 5 个关节（prismatic×5）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_103549",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_0 did not visibly and geometrically move every dependency part"
+    },
+    {
+      "asset_id": "PM_102639",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_0 did not visibly and geometrically move every dependency part"
+    },
+    {
+      "asset_id": "PM_102252",
+      "decision": "passed",
+      "split": "validation",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_102252/smoke.json",
+      "smoke_sha256": "7eb75ee7e8ea47047674bc742db9ce4302e042bfce361d36d54a77a3d5af68a6",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 TrashCan 的 2 个关节（prismatic×1, revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_102016",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_102016/smoke.json",
+      "smoke_sha256": "bf875a8c932f767a8244aa7dc330df1be541f554174ec7e65949a236c94823b4",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 USB 的 1 个关节（prismatic×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_103319",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_2 did not visibly and geometrically move every dependency part"
+    },
+    {
+      "asset_id": "PM_47254",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_1 did not visibly and geometrically move every dependency part"
+    },
+    {
+      "asset_id": "PM_103234",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_0 did not visibly and geometrically move every dependency part"
+    },
+    {
+      "asset_id": "PM_101870",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_101870/smoke.json",
+      "smoke_sha256": "2c24a47a12168e00a95267f7ecf80bc3c58077aa53c18d951b9f89b81eb16d90",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Eyeglasses 的 2 个关节（revolute×2）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_19836",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_19836/smoke.json",
+      "smoke_sha256": "41e6108e7d50a52253e9191ea535371de5a0ffe9a6d557e44e2d4c61e0043681",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Table 的 3 个关节（prismatic×3）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_12036",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_12036/smoke.json",
+      "smoke_sha256": "0a67676a1142c9fdfad6d78e5ebed5a0961390c2de4bfaa76af0b6d84947e35a",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Refrigerator 的 2 个关节（revolute×2）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_100846",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_0 did not visibly and geometrically move every dependency part"
+    },
+    {
+      "asset_id": "PM_15084",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_15084/smoke.json",
+      "smoke_sha256": "950c39afe0e84381f9450ec81410ebea2c87ea86f8031fb5c03519b9e02145cb",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Lamp 的 3 个关节（revolute×3）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_8893",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_1 did not visibly and geometrically move every dependency part"
+    },
+    {
+      "asset_id": "PM_102288",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_102288/smoke.json",
+      "smoke_sha256": "90dbc07edebb62ebe7c6a77f527f48c7955596c3db69f16472b9a130662c94f8",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Pliers 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_11103",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_11103/smoke.json",
+      "smoke_sha256": "56bfc91a2a84bb263ba83e10c4a3fe6ec5934b5b8af88a545f14f9edff78c50c",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Scissors 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_102379",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_102379/smoke.json",
+      "smoke_sha256": "2125fb0425f8539856ae9199eb6cf57a44227ba134175167253ddadbf8949db6",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Box 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_102257",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_102257/smoke.json",
+      "smoke_sha256": "c1376af0635ba51bec976fb6bcaecea0d6c9675abd7eea8ed4b2640e7767b1c8",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 TrashCan 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_103735",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_0 did not visibly and geometrically move every dependency part"
+    },
+    {
+      "asset_id": "PM_102961",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_102961/smoke.json",
+      "smoke_sha256": "00b527df7d2921fa64607f2f02d960c73db952cfa6ebdc05767203f790ab952e",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Pen 的 1 个关节（prismatic×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_102080",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_102080/smoke.json",
+      "smoke_sha256": "4359e5464216972b52eaf29526a4bb90d149ad2ce64b3804b0410ca83bcfcc3a",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 KitchenPot 的 1 个关节（prismatic×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_1288",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_1288/smoke.json",
+      "smoke_sha256": "308404c33edaf9f0f561462ef73747e89707bbe8e3112946e6e6a731d3224df3",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Faucet 的 1 个关节（revolute×1）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_45759",
+      "decision": "passed",
+      "split": "validation",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_45759/smoke.json",
+      "smoke_sha256": "0c1f1ffb27301294dc06a37eda929412531a65f8fbae50532816e1501701a1eb",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 StorageFurniture 的 4 个关节（prismatic×1, revolute×3）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_102632",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_0 did not visibly and geometrically move every dependency part"
+    },
+    {
+      "asset_id": "PM_102569",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_102569/smoke.json",
+      "smoke_sha256": "c39ad655b8a1d660117934780143ea840ebc0dd310b08bb0f5e29ad76ed3ef9f",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Eyeglasses 的 2 个关节（revolute×2）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_25308",
+      "decision": "passed",
+      "split": "train",
+      "smoke_json": "output/partnet-mobility-motion-audit-v1/PM_25308/smoke.json",
+      "smoke_sha256": "79f9e635accf4a40f6c91af5e44657a0c2f263fe6a53fe499bc3a602af07a6c9",
+      "reason": "自动几何/三视图运动门禁通过；人工复核 Table 的 2 个关节（prismatic×2）在官方 upper 端点运动方向合理，未见明显穿模或静态部件误动。"
+    },
+    {
+      "asset_id": "PM_100907",
+      "decision": "failed",
+      "reason": "自动真实浏览器运动门禁拒绝：joint joint_0 did not visibly and geometrically move every dependency part"
+    }
+  ]
+}

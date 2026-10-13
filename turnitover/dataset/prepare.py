@@ -120,10 +120,13 @@ def prepare(shards, splits_path: Path, output: Path):
                                "history": [{"step": o.step, "action": to_dict(o.action),
                                             "image_ref": image_map.get(o.image_ref), "payload": o.payload}
                                            for o in observations]}
+                provenance_keys = ("origin", "license", "formal_training", "dataset",
+                                   "dataset_revision", "source_identity", "annotation_id", "model_id",
+                                   "archive_sha256", "spec_sha256")
                 gold = {"id": uid, "source_id": sample.source_id, "sample_id": sample.sample_id,
                         "asset_id": sample.asset_id, "category": meta["category"], "split_group": group,
                         "program_sha": sample.program_sha, "reference_sha": sample.reference_sha,
-                        "provenance": {k: meta[k] for k in ("origin", "license")},
+                        "provenance": {k: meta[k] for k in provenance_keys if k in meta},
                         "quality": meta["quality"], "target": diagnosis(sample), "checks": to_dict(sample.checks),
                         "candidate_program": sample.program_source, "reference_program": meta["reference_program_source"]}
                 streams[split, "inputs"].write(json.dumps(model_input) + "\n")
