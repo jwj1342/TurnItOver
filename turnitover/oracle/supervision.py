@@ -1,8 +1,10 @@
 """Causal action examples from privileged pixel-exposure teacher trajectories."""
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
+import re
 
 from turnitover.core.actions import ActuateJoint, RequestView
 from turnitover.verifier.contracts import Context, parse_decision
@@ -33,7 +35,7 @@ def action_examples(uid, context, reference, history, budget):
                    {"role": "assistant", "content": json.dumps(target)}]}
 
 
-def load_examples(root, split, kind="actions"):
+def load_examples(root, split, kind="actions", *, require_formal_training=False, terminal_only=False):
     """Read complete exports, resolving images for downstream multimodal processors."""
     from PIL import Image
     root = Path(root)
@@ -42,16 +44,39 @@ def load_examples(root, split, kind="actions"):
         raise ValueError("Refusing incomplete supervision")
     if split not in ("train", "validation", "test"):
         raise ValueError("Unknown split")
-    if kind not in ("actions", "diagnosis"):
+    if kind not in ("actions", "diagnosis", "episodes"):
         raise ValueError("Unknown supervision kind")
+    if require_formal_training and manifest.get("formal_training") is not True:
+        raise ValueError("Refusing non-formal training data")
     with (root / f"{split}.{kind}.jsonl").open() as stream:
         for line in stream:
             record = json.loads(line)
+            if terminal_only and not record.get("terminal"):
+                continue
+            identity = record.get("data_identity")
+            if kind == "episodes":
+                if not isinstance(identity, dict):
+                    raise ValueError("Episode is missing data identity")
+                if identity.get("formal_training") != manifest.get("formal_training"):
+                    raise ValueError("Episode data purpose differs from manifest")
+                for key in ("source_identity_sha256", "source_content_sha256"):
+                    value = identity.get(key)
+                    if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
+                        raise ValueError(f"Episode has invalid {key}")
+                for key in ("reference_sha", "candidate_sha"):
+                    value = identity.get(key)
+                    if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{16}", value):
+                        raise ValueError(f"Episode has invalid {key}")
             images = []
-            for relative in record["images"]:
+            image_hashes = record.get("image_sha256")
+            if kind == "episodes" and (not isinstance(image_hashes, list) or len(image_hashes) != len(record["images"])):
+                raise ValueError("Episode image hashes are missing")
+            for index, relative in enumerate(record["images"]):
                 path = (root / relative).resolve()
                 if not path.is_relative_to(root.resolve()):
                     raise ValueError("Image outside dataset")
+                if image_hashes is not None and hashlib.sha256(path.read_bytes()).hexdigest() != image_hashes[index]:
+                    raise ValueError("Episode image SHA mismatch")
                 with Image.open(path) as image:
                     images.append(image.convert("RGB"))
             yield record, images

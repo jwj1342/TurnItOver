@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from turnitover.core.actions import ActuateJoint, Detent, QueryRuntime, RequestView, RuntimeProperty, ViewId
 from turnitover.taxonomy import load_taxonomy
 
-VERIFIER_SCHEMA_VERSION = 1
+VERIFIER_SCHEMA_VERSION = 2
 
 
 class DecisionError(ValueError):
@@ -31,6 +31,7 @@ class Context:
 class Finding:
     defect_id: str
     parts: tuple[str, ...]
+    joint_id: str | None
     severity: float
     confidence: float
     evidence_steps: tuple[int, ...]
@@ -125,17 +126,24 @@ def parse_decision(value: dict, context: Context, observed_steps: set[int], *, f
         raise DecisionError("Invalid verdict status or findings")
     findings = []
     for f in v["findings"]:
-        _keys(f, ("defect_id", "parts", "severity", "confidence", "evidence_steps", "description", "suggested_fix"))
+        _keys(f, ("defect_id", "parts", "joint_id", "severity", "confidence", "evidence_steps",
+                  "description", "suggested_fix"))
         if f["defect_id"] not in load_taxonomy().ids:
             raise DecisionError("Unknown defect taxonomy ID")
         parts = _strings(f["parts"])
         if not set(parts) <= set(context.parts):
             raise DecisionError("Unknown part ID; describe a missing part in text and use parts=[]")
+        joint_id = f["joint_id"]
+        if f["defect_id"] == "kinematics.joint_axis":
+            if not isinstance(joint_id, str) or joint_id not in context.joints:
+                raise DecisionError("Joint-axis findings require a known joint_id")
+        elif joint_id is not None:
+            raise DecisionError("joint_id is only valid for joint-axis findings")
         evidence = f["evidence_steps"]
         if (not isinstance(evidence, list) or not evidence or any(type(i) is not int for i in evidence)
                 or not set(evidence) <= observed_steps):
             raise DecisionError("Findings must cite existing successful observation steps")
-        findings.append(Finding(f["defect_id"], parts, _unit(f["severity"]), _unit(f["confidence"]),
+        findings.append(Finding(f["defect_id"], parts, joint_id, _unit(f["severity"]), _unit(f["confidence"]),
                                 tuple(evidence), _text(f["description"]), _text(f["suggested_fix"])))
     if v["status"] == "pass" and (findings or not observed_steps):
         raise DecisionError("Pass requires observations and no findings")

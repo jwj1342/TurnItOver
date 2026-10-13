@@ -37,7 +37,7 @@ Oracle 未暴露的 5 项均为部件偏移；它们在整个有限网格内都�
 不是本次六步预算不足。684 项关节轴反事实静止状态检查的像素差分全部为零，
 符合轴错误不改变静止状态的预期。这些统计是全数据工程诊断，不是测试集模型成绩。
 
-## 两种独立训练条件
+## 训练条件与统一 Episode
 
 - `oracle-v1/{train,validation,test}.actions.jsonl`：384/96/96 条动作 BC。
   每条只含单张静态参考和此前已执行的候选观察，下一步图像和真值不进入 messages。
@@ -47,6 +47,11 @@ Oracle 未暴露的 5 项均为部件偏移；它们在整个有限网格内都�
   三种策略各一个最终诊断。输入额外获得每步同相机、同关节状态的正确参考，
   与动作 BC 的单参考条件不同。仅输出已暴露的缺陷；无暴露时为 uncertain。
   181 条 fail、107 条 uncertain，没有 pass 监督。严重程度来自注入真值，置信度未经校准。
+- 新运行的 `oracle-v1/{train,validation,test}.episodes.jsonl`：把同一条 Oracle 轨迹的
+  “历史 → 下一动作”和“完整历史 → 最终 verdict”放入同一 `episode_id` 下。每行仍保持现有
+  `images + messages` 两轮格式，可直接复用处理器；最后的 verdict 标记 `terminal=true`，即停止目标。
+  缺陷只在对应反事实像素暴露后进入 findings；未暴露时为 `uncertain`，无注入缺陷的合格样本
+  为仅限已观察状态和配置约束的 `pass`。证据资格放在 messages 外，不作为模型输入。
 
 `turnitover/oracle/training.py` 将导出记录适配为多模态处理器输入，并屏蔽全部用户/图像 token，
 只监督 assistant 答案。已使用本地 Qwen3-VL-2B-Instruct 处理器核对跨三个 split 的
@@ -85,6 +90,23 @@ sbatch --account=def-zhouyang scripts/slurm/run_portable.sbatch env OPENBLAS_NUM
 # 已安装的 Qwen 环境；只加载处理器，无需 GPU
 HF_HUB_OFFLINE=1 .venv-qwen/bin/python scripts/validate_training_export.py --dataset data/benchmarks/oracle-new --out output/tokenizer-new.json
 ```
+
+UniPhys-Bench Part 2 使用内部仍名为 train/validation 的冻结划分做 Episode 工程验证，
+不需要模型或人工标注，也不作为正式 SFT 训练数据；正式训练来源等待 UniPhys-40K 调研与接入：
+
+```bash
+python -m turnitover generate --config configs/generate_uniphys_supervision.yaml
+python -m turnitover prepare-dataset \
+  --shards data/benchmarks/uniphys-supervision-v1/raw/shard-*.tar \
+  --splits data/assets/uniphys-trainval-catalog-v1/trainval-splits.json \
+  --out data/benchmarks/uniphys-supervision-v1/prepared
+python scripts/run_oracle_supervision.py \
+  --benchmark data/benchmarks/uniphys-supervision-v1 \
+  --config configs/generate_uniphys_supervision.yaml \
+  --out data/benchmarks/uniphys-oracle-v1
+```
+
+完整配置为480个样本，应按本仓库约束通过 Slurm 执行；脚本存在与单元测试通过不代表该批数据已生成。
 
 `scripts/evaluate_oracle_qwen.py` 使用冻结的本地模型，对相同轨迹比较单参考和成对参考。
 完整测试是 16 个对象样本 × 3 种获取轨迹 × 2 种参考条件，共 96 次调用。

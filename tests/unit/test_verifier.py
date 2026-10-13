@@ -25,7 +25,8 @@ def final(status="uncertain", findings=None):
 
 
 def finding():
-    return {"defect_id": "runtime.triangle_budget", "parts": [], "severity": 0.5, "confidence": 1,
+    return {"defect_id": "runtime.triangle_budget", "parts": [], "joint_id": None,
+            "severity": 0.5, "confidence": 1,
             "evidence_steps": [0], "description": "Triangle budget exceeded", "suggested_fix": "Reduce triangles"}
 
 
@@ -104,6 +105,21 @@ def test_findings_validate_ranges_parts_and_actual_evidence(context, key, value)
 
 def test_valid_evidence_linked_finding(context):
     assert parse_decision(final("fail", [finding()]), context, {0}).findings[0].evidence_steps == (0,)
+
+
+def test_joint_axis_finding_requires_known_joint(context):
+    axis = {**finding(), "defect_id": "kinematics.joint_axis", "parts": ["door"], "joint_id": "hinge"}
+    assert parse_decision(final("fail", [axis]), context, {0}).findings[0].joint_id == "hinge"
+    axis["joint_id"] = "invented"
+    with pytest.raises(DecisionError, match="known joint_id"):
+        parse_decision(final("fail", [axis]), context, {0})
+
+
+def test_non_joint_finding_rejects_joint_id(context):
+    value = finding()
+    value["joint_id"] = "hinge"
+    with pytest.raises(DecisionError, match="only valid"):
+        parse_decision(final("fail", [value]), context, {0})
 
 
 def test_qwen_pass_with_findings_is_rejected_with_explanation(context):

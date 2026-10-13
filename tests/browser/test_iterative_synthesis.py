@@ -85,6 +85,7 @@ def test_iterative_pipeline_applies_repair_then_freshly_renders_and_verifies(
                     "status": "fail", "confidence": 1.0,
                     "findings": [{
                         "defect_id": "material.metalness", "parts": ["door"],
+                        "joint_id": None,
                         "severity": 0.5, "confidence": 1.0, "evidence_steps": [0],
                         "description": "The door metalness differs from the reference fixture.",
                         "suggested_fix": "Change the door material metalness.",
