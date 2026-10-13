@@ -36,10 +36,14 @@ LICENSE_BY_SOURCE = {
         ],
     },
     "3D-FUTURE": {
-        "catalog": "UniPhys annotations: CC-BY-4.0; mesh: 3D-FUTURE Data Sets Use License Agreement",
+        "catalog": (
+            "UniPhys annotations: CC-BY-4.0; mesh: 3D-FUTURE Data Sets Use License "
+            "Agreement (scientific research only; acceptance required; no commercial or external-service use)"
+        ),
         "urls": [
             "https://huggingface.co/datasets/breezexian/UniPhys-40K/blob/main/LICENSE",
             "https://github.com/3D-FRONT-FUTURE/3D-FUTURE-ToolBox",
+            "https://terms.aliyun.com/legal-agreement/terms/suit_bu1_ali_cloud/suit_bu1_ali_cloud202004171628_60052.html",
         ],
     },
     "HSSD": {

@@ -50,12 +50,28 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 **正式规模 Episode 尚未生成。** 上述4资产/12样本只验证 UniPhys-40K 转换资产可进入完整链路；480样本配置未执行，也未启动 Qwen SFT。扩大前仍需增加经真实运动审核且许可适用的资产，改善有限 witness 网格对 `part_offset` 的暴露率，并以仅使用模型可见信息的教师替代或约束当前特权动作目标；本次0个精确冲突不能排除15个单例目标依赖私有 exposure。当前也没有足以支持 clean `pass` 的匹配参考运动证据，因此只能保留 `uncertain`。自然生成错误不属于本次无模型闭环；其部件 ID 与参考不同时，现有几何比对仍不能直接充当独立 gold。
 
-**UniPhys-40K 第一阶段已建立首批运动合格候选，但覆盖仍很小。** 官方 `UniPhysGen@3f1bb2d` 代码确认发布 OBJ 为 `qpos=0`、轴/枢轴使用 OBJ 坐标、旋转范围为弧度、滑动范围为 OBJ 单位；[`convert_uniphys40k.py`](../scripts/convert_uniphys40k.py) 据此逐资产推导尺度，按三角形坐标多重集验证完整模型闭合，并核验来源许可及正式 Test 的来源/OBJ SHA/名称重叠。对40个简单可动候选的严格预检得到5个 structural candidate、35个拒绝；三视图真实浏览器运动检查后，`UP_00015016`、`UP_00015020`、`UP_00039007`、`UP_00039025` 共4个进入3 Train / 1 Validation 的小规模候选 catalog，`UP_00023000` 因发布打开姿态再旋转135°穿到机身下方而保留为运动失败。所有失败原因及 smoke SHA 均保留；HSSD 网格为 CC BY-NC 4.0，PartNet/ShapeNet 网格受非商业条款约束，均未被 UniPhys 注释的 CC BY 4.0 覆盖。这4个对象只证明转换与 Episode 链路可行，不构成正式训练集。
+**UniPhys-40K Train/Validation 资产池已做一次有界扩充，但覆盖仍很小。** 官方 `UniPhysGen@3f1bb2d` 代码确认发布 OBJ 为 `qpos=0`、轴/枢轴使用 OBJ 坐标、旋转范围为弧度、滑动范围为 OBJ 单位；[`convert_uniphys40k.py`](../scripts/convert_uniphys40k.py) 据此逐资产推导尺度，按三角形坐标多重集验证完整模型闭合，并核验来源许可及正式 Test 的来源/OBJ SHA/名称重叠。本轮先提交 Episode 修复 `66e8eb6`，再从此前未覆盖的6个分片各轮询10个、下载60个 ZIP；本地总计243个 ZIP，经轻量检查得到64候选。完整预检为8 structural candidate / 56拒绝：尺度无法验证26、关节轴字段不完整21、运动依赖重叠6、Objaverse 上游许可无法统一确认3。
+
+对上述失败逐例复核后，26个尺度失败在部件/整物体 AABB 与 OBB 下均无一满足8%三轴一致性，允许移动部件描述也没有新增证据；最接近的两个整物体 AABB 仍为8.40%和8.33%，故未放宽阈值。21个字段不完整资产都缺少 `axis/pos/range` 中至少一项；其中3个缺失组虽被完整组包含，但这不足以证明它是重复标注而非额外未知自由度，21个均保守拒绝。6个依赖案例中仅 `UP_00003008` 与 `UP_00023014` 是参数完整的层状依赖；转换器现只支持“任意两组互不相交或严格包含”的层状树，并把子关节锚点转到父坐标系，同时要求 revolute 枢轴由 owner 与父侧刚性部件共同支持。两者随后仍因独立尺度门禁失败，故修复前后均为8 structural candidate、5 eligible，Train 3 / Validation 2，关节4 prismatic / 1 revolute；64候选与冻结 Test 三种去重信号仍为0重叠。逐资产数值、21项分类、6项结论及备选来源评估见 [`uniphys40k-v2-failure-audit.json`](../configs/uniphys40k-v2-failure-audit.json)。本轮重新运行8个 structural candidate 的真实浏览器运动检查为7机械成功/1失败；成功项的程序及三视图渲染 SHA 与此前审核逐一相同，因此物理结论仍为5通过/3拒绝。
+
+三视图真实浏览器运动审核后，新增 `UP_00011006`（3D-FUTURE removable-lid prismatic）通过；`UP_00035009` 的折叠椅腿在发布正向终点穿过座椅，`UP_00000015` 的第二关节在 opposite 视图完全不可见，均拒绝且未猜测轴符号或放宽门槛。v2 catalog 因此为5资产、3 Train / 2 Validation，来源为 HSSD 2 / PartNet 2 / 3D-FUTURE 1，类别3种，关节为4 prismatic / 1 revolute；所有原始对象和 split group 唯一，冻结 Test 的来源、完整 OBJ SHA 和规范化名称重叠均为0。可复现审核输入见 [`uniphys40k-trainval-v2.json`](../configs/uniphys40k-trainval-v2.json)，产物位于 `data/assets/uniphys40k-trainval-v2/`。3D-FUTURE 只许可已接受协议者用于科研，禁止商业化及外部服务；HSSD 与 PartNet 也保留各自非商业条款，UniPhys 注释的 CC BY 4.0 不覆盖上游网格。这仍是小规模、研究用途受限的资产池，不是正式训练集或模型结果。
+
+本轮下载与最终 catalog 命令如下；`ids` 来自第二条命令生成的64条实际候选，而非手工补名单：
+
+```bash
+python data/uniphys40k-pilot/find_uniphys40k_articulated.py --root data/uniphys40k-pilot --download --max-download 60 --stop-after 10000 --max-parts 20 --groups 4 12 20 28 36 41 --output output/uniphys40k-new-download-candidates-v1.jsonl
+python data/uniphys40k-pilot/find_uniphys40k_articulated.py --root data/uniphys40k-pilot --local-only --stop-after 10000 --max-parts 20 --output output/uniphys40k-expanded-candidates-v3.jsonl
+ids=$(python -c "import json; from pathlib import Path; print(','.join(json.loads(x)['asset_id'] for x in Path('output/uniphys40k-expanded-candidates-v3.jsonl').read_text().splitlines()))")
+python scripts/convert_uniphys40k.py --root data/uniphys40k-pilot --out data/assets/uniphys40k-trainval-v2 --ids "$ids" --motion-reviews configs/uniphys40k-trainval-v2.json
+python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/uniphys40k-expanded-conversion-v6 --ids "$(jq -r '.assets[].asset_id' output/uniphys40k-expanded-conversion-v4/conversion.json | paste -sd, -)" --test-plan configs/uniphys-test.json --test-root data/assets/uniphys/data
+for asset in $(jq -r '.assets[] | select(.status=="structural_candidate") | .asset_id' output/uniphys40k-expanded-conversion-v5/conversion.json); do python -m scripts.render_uniphys40k_smoke --catalog output/uniphys40k-expanded-conversion-v5/catalog.json --asset-id "$asset" --out "output/uniphys40k-expanded-smoke-v5/$asset"; done
+python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/uniphys40k-trainval-v2-revalidated --ids "$(jq -r '.assets[].asset_id' output/uniphys40k-expanded-conversion-v4/conversion.json | paste -sd, -)" --test-plan configs/uniphys-test.json --test-root data/assets/uniphys/data --motion-reviews configs/uniphys40k-trainval-v2.json
+```
 
 ## 下一步（按优先级）
 
 1. **P0｜执行正式 Test 的60-case评测。** 固定 judge 模型、预算、策略和 seed，运行 `python scripts/run_uniphys_verifier_batch.py`；保留逐案例结果、批次清单和 `metrics.json`，中断时以清单中已完成记录为准。**完成标准：**60 个 case 均有终态结果且评分成功，不混入开发回归结果。
-2. **P0｜扩充并冻结正式 Train/Validation 资产。** 复用40资产预检与多视图审核门槛扩大来源、类别和机制覆盖，保持 structural candidate、motion failed 与 eligible 分离，并在非商业许可边界内确定训练用途。**完成标准：**资产级隔离和来源重叠审计通过，规模足以支持按类别/机制留出；不得用未审核资产补数量。
+2. **P0｜改用结构可靠的候选来源做小规模准入试验。** v2 的26个尺度失败和21个字段缺失均无安全转换器修复，层状关节支持也净增0；不再盲目增加同分布下载。优先在接受非商业条款后小规模审核 PartNet-Mobility 原始 URDF，GAPartNet 仅作派生备选，AKB-48 在明确资产许可前不纳入。所有来源仍须按 source ID、几何 SHA 与名称对冻结 Test 去重并真实渲染验收。**完成标准：**先证明新来源能稳定通过尺度、结构、许可和运动门禁，再决定是否扩量。
 3. **P0｜消除特权动作教师依赖。** 精确重复前缀未发现冲突，但大多数前缀没有可比较反事实，不能据此证明动作可学习；需建立仅使用可见信息的教师或明确降权/剔除不可识别目标。**完成标准：**动作选择不读取私有 label/exposure，或训练目标显式表示可观测条件下的动作分布。
 4. **P1｜正式规模 Episode 与处理器预检。** 在扩充资产上通过 Slurm 执行冻结配置，复查腐蚀分层、隔离率、`part_offset` 暴露率、终止分布和 Train/Validation 隔离，再用现有 Qwen 处理器做只读可加载性验证；在此之前不启动 SFT。
 5. **P1｜完成留出评测与归因。** 先固定观察比较诊断/定位/误放行/停止，再按统一成本比较 fixed、random、active；消融证据约束、停止监督、自然错误数据。闭环固定 Generator，每轮修复后重取证据并独立评分。**完成标准：**结果按原始物体汇总，报告观察成本与波动，能区分诊断、取证、停止及实际修复收益。
@@ -64,4 +80,4 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 ---
 
-最近同步：**2026-10-12 · 单参考 `pass` 可行性审计**；在不改 Verifier 输入协议的前提下实现并测试两个严格受限的公开证据 scope。12条现有广义任务均不满足；7条 front/rest 完全一致仍混有4条缺陷样本，且无 runtime 观察，故 clean 保持 uncertain。配对参考可补足同状态比较，但6步预算覆盖不了16状态网格，需作为独立条件验证。未提交本轮代码，未启动 SFT、扩大数据或改动 Part 2 正式 Test。
+最近同步：**2026-10-13 · v2 低通过率根因审计**；26个尺度、21个字段缺失和6个依赖案例已逐项复核，仅确认并实现层状依赖树转换，但两个可表示案例均另因尺度失败，合格数仍为5（Train 3 / Validation 2）。8个 structural candidate 已重跑真实运动检查，许可与正式 Test 去重重验通过；未扩大下载、Episode 或 SFT，单参考保守规则与 Part 2 正式 Test 均未修改。

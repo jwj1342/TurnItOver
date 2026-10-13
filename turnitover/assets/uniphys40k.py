@@ -172,8 +172,8 @@ def _derive_scale(object_record: dict, annotations: dict[str, dict],
     }
 
 
-def _motion(annotations: dict[str, dict]) -> tuple[str, JointType, np.ndarray, np.ndarray,
-                                                        tuple[float, float], set[str]]:
+def _motions(annotations: dict[str, dict]) -> tuple[
+        tuple[str, JointType, np.ndarray, np.ndarray, tuple[float, float], set[str]], ...]:
     motions = []
     for part_id, annotation in annotations.items():
         kinematic = annotation.get("kinematic_info") or {}
@@ -181,27 +181,55 @@ def _motion(annotations: dict[str, dict]) -> tuple[str, JointType, np.ndarray, n
         for code, joint_type in (("B", JointType.PRISMATIC), ("C", JointType.REVOLUTE)):
             if code in (kinematic.get("motion_types") or []) and isinstance(motion_info.get(code), dict):
                 motions.append((part_id, joint_type, motion_info[code], motion_info.get("dependency")))
-    if len(motions) != 1:
-        raise UnsupportedAsset(f"exactly one independent B/C motion is supported, found {len(motions)}")
-    owner, joint_type, raw, dependencies = motions[0]
-    if (not isinstance(dependencies, list) or not dependencies
-            or any(type(value) is not int or value <= 0 for value in dependencies)):
-        raise UnsupportedAsset("motion dependency must be a nonempty integer part list")
-    moving = {str(value) for value in dependencies}
-    if len(moving) != len(dependencies) or owner not in moving or not moving <= set(annotations):
-        raise UnsupportedAsset("motion dependency must uniquely include its owner and known parts")
-    axis = _finite_vector(raw.get("axis"), 3, "joint axis")
-    norm = float(np.linalg.norm(axis))
-    if norm <= 1e-12:
-        raise UnsupportedAsset("joint axis must be nonzero")
-    pivot = _finite_vector(raw.get("pos"), 3, "joint pivot")
-    travel = _finite_vector(raw.get("range"), 2, "joint range")
-    if not travel[0] <= 0 <= travel[1] or not travel[0] < travel[1]:
-        raise UnsupportedAsset("joint range must be nonzero and include rest=0")
-    return owner, joint_type, axis / norm, pivot, (float(travel[0]), float(travel[1])), moving
+    if not motions:
+        raise UnsupportedAsset("no independent B/C motion is available")
+    result = []
+    for owner, joint_type, raw, dependencies in motions:
+        if (not isinstance(dependencies, list) or not dependencies
+                or any(type(value) is not int or value <= 0 for value in dependencies)):
+            raise UnsupportedAsset("motion dependency must be a nonempty integer part list")
+        moving = {str(value) for value in dependencies}
+        if len(moving) != len(dependencies) or owner not in moving or not moving <= set(annotations):
+            raise UnsupportedAsset("motion dependency must uniquely include its owner and known parts")
+        axis = _finite_vector(raw.get("axis"), 3, "joint axis")
+        norm = float(np.linalg.norm(axis))
+        if norm <= 1e-12:
+            raise UnsupportedAsset("joint axis must be nonzero")
+        pivot = _finite_vector(raw.get("pos"), 3, "joint pivot")
+        travel = _finite_vector(raw.get("range"), 2, "joint range")
+        if not travel[0] <= 0 <= travel[1] or not travel[0] < travel[1]:
+            raise UnsupportedAsset("joint range must be nonzero and include rest=0")
+        result.append((owner, joint_type, axis / norm, pivot,
+                       (float(travel[0]), float(travel[1])), moving))
+    owners = [motion[0] for motion in result]
+    if len(set(owners)) != len(owners):
+        raise UnsupportedAsset("multiple motions on one owner part are unsupported")
+    for index, left in enumerate(result):
+        for right in result[index + 1:]:
+            left_group, right_group = left[5], right[5]
+            if not left_group & right_group:
+                continue
+            if left_group == right_group or not (
+                    left_group < right_group or right_group < left_group):
+                raise UnsupportedAsset(
+                    "motion dependency groups must be disjoint or strictly nested")
+            outer, inner = (left, right) if right_group < left_group else (right, left)
+            if outer[0] in inner[5]:
+                raise UnsupportedAsset("outer joint owner cannot belong to a nested motion group")
+    return tuple(sorted(result, key=lambda motion: int(motion[0])))
 
 
-def _pivot_evidence(pivot: np.ndarray, owner: str, moving: set[str],
+def _motion_parents(motions) -> dict[str, str | None]:
+    """Map each motion owner to the nearest enclosing dependency-group owner."""
+    result = {}
+    for motion in motions:
+        supersets = [candidate for candidate in motions if motion[5] < candidate[5]]
+        parent = min(supersets, key=lambda candidate: len(candidate[5])) if supersets else None
+        result[motion[0]] = parent[0] if parent else None
+    return result
+
+
+def _pivot_evidence(pivot: np.ndarray, owner: str, support_parts: set[str],
                     meshes: dict[str, trimesh.Trimesh]) -> dict:
     overall = np.ptp(np.vstack([mesh.vertices for mesh in meshes.values()]), axis=0)
     tolerance = max(float(np.max(overall)) * 0.01, 1e-8)
@@ -210,10 +238,11 @@ def _pivot_evidence(pivot: np.ndarray, owner: str, moving: set[str],
         bounds = meshes[part_id].bounds
         return bool(np.all(pivot >= bounds[0] - tolerance) and np.all(pivot <= bounds[1] + tolerance))
 
-    static_contacts = sorted(part_id for part_id in meshes if part_id not in moving and contains(part_id))
-    if not contains(owner) or not static_contacts:
-        raise UnsupportedAsset("joint pivot is not supported by both owner and static-part bounds")
-    return {"owner_contains_pivot": owner, "static_parts_containing_pivot": static_contacts,
+    support_contacts = sorted(part_id for part_id in support_parts if contains(part_id))
+    if not contains(owner) or not support_contacts:
+        raise UnsupportedAsset("joint pivot is not supported by both owner and parent-side part bounds")
+    return {"owner_contains_pivot": owner,
+            "parent_side_parts_containing_pivot": support_contacts,
             "aabb_tolerance_obj_units": tolerance}
 
 
@@ -236,7 +265,7 @@ def _mesh_spec(mesh: trimesh.Trimesh, *, scale: float, offset: np.ndarray) -> Me
 
 
 def convert_archive(path: Path) -> ConvertedUniPhys40K:
-    """Convert one verified single-joint UniPhys-40K archive."""
+    """Convert one UniPhys-40K archive with evidence-backed independent joints."""
     path = path.resolve()
     with zipfile.ZipFile(path) as zf:
         names = zf.namelist()
@@ -262,7 +291,8 @@ def convert_archive(path: Path) -> ConvertedUniPhys40K:
                    for key in ("dataset", "original_id", "license_ref")):
             raise UnsupportedAsset("source provenance is incomplete")
 
-        owner, joint_type, axis, pivot, limits, moving = _motion(annotations)
+        motions = _motions(annotations)
+        moving = set().union(*(motion[5] for motion in motions))
         with tempfile.TemporaryDirectory(prefix="turnitover-uniphys40k-") as temp:
             _safe_extract(zf, Path(temp))
             meshes = {part_id: _mesh(Path(temp) / name)
@@ -275,33 +305,74 @@ def convert_archive(path: Path) -> ConvertedUniPhys40K:
                 or not np.array_equal(part_triangles, full_triangles)):
             raise UnsupportedAsset("part meshes do not close to the released full model")
         if not set(meshes) - moving:
-            raise UnsupportedAsset("at least one static part is required")
+            raise UnsupportedAsset("at least one globally static part is required")
         scale, scale_report = _derive_scale(object_record, annotations, meshes, full_mesh, moving)
-        pivot_report = (_pivot_evidence(pivot, owner, moving, meshes)
-                        if joint_type is JointType.REVOLUTE
-                        else {"pivot_validation": "not_applicable_for_prismatic"})
-        anchor = pivot * scale
+        motion_records = []
+        motion_parents = _motion_parents(motions)
+        for owner, joint_type, axis, pivot, limits, group in motions:
+            parent_owner = motion_parents[owner]
+            parent_group = (next(motion[5] for motion in motions if motion[0] == parent_owner)
+                            if parent_owner is not None else None)
+            support_parts = ((parent_group - group) if parent_group is not None
+                             else set(meshes) - moving)
+            pivot_report = (_pivot_evidence(pivot, owner, support_parts, meshes)
+                            if joint_type is JointType.REVOLUTE
+                            else {"pivot_validation": "not_applicable_for_prismatic"})
+            motion_records.append((owner, joint_type, axis, pivot, limits, group,
+                                   pivot * scale, pivot_report))
 
         parts = []
         for part_id in sorted(meshes, key=int):
+            containing = [record for record in motion_records if part_id in record[5]]
+            motion = min(containing, key=lambda record: len(record[5])) if containing else None
+            owner = motion[0] if motion else None
+            global_anchor = motion[6] if motion else np.zeros(3)
             is_owner = part_id == owner
-            parent = None if part_id not in moving or is_owner else f"part_{owner}"
-            offset = anchor if part_id in moving else np.zeros(3)
+            parent_owner = motion_parents[owner] if is_owner else owner
+            parent = f"part_{parent_owner}" if parent_owner is not None else None
+            parent_anchor = (next(record[6] for record in motion_records
+                                  if record[0] == parent_owner)
+                             if is_owner and parent_owner is not None else np.zeros(3))
+            local_anchor = global_anchor - parent_anchor
+            offset = global_anchor if motion is not None else np.zeros(3)
             parts.append(PartSpec(
                 id=f"part_{part_id}", parent=parent,
-                origin=tuple(float(value) for value in (anchor if is_owner else np.zeros(3))),
+                origin=tuple(float(value) for value in (local_anchor if is_owner else np.zeros(3))),
                 mesh=_mesh_spec(meshes[part_id], scale=scale, offset=offset),
             ))
-        scaled_limits = limits if joint_type is JointType.REVOLUTE else tuple(value * scale for value in limits)
-        joint = JointSpec(
-            id=f"joint_part_{owner}", part=f"part_{owner}", type=joint_type,
-            axis=tuple(float(value) for value in axis),
-            anchor=tuple(float(value) for value in anchor), limits=scaled_limits,
-        )
+        joints, joint_reports = [], []
+        for owner, joint_type, axis, pivot, limits, group, anchor, pivot_report in motion_records:
+            parent_owner = motion_parents[owner]
+            parent_anchor = (next(record[6] for record in motion_records
+                                  if record[0] == parent_owner)
+                             if parent_owner is not None else np.zeros(3))
+            local_anchor = anchor - parent_anchor
+            scaled_limits = (limits if joint_type is JointType.REVOLUTE
+                             else tuple(value * scale for value in limits))
+            joints.append(JointSpec(
+                id=f"joint_part_{owner}", part=f"part_{owner}", type=joint_type,
+                axis=tuple(float(value) for value in axis),
+                anchor=tuple(float(value) for value in local_anchor), limits=scaled_limits,
+            ))
+            joint_reports.append({
+                "owner_part": owner,
+                "type": joint_type.value,
+                "axis": axis.tolist(),
+                "pivot_obj_units": pivot.tolist(),
+                "pivot_m": anchor.tolist(),
+                "asset_spec_anchor_in_parent_m": local_anchor.tolist(),
+                "parent_joint_owner": parent_owner,
+                "source_range": list(limits),
+                "asset_spec_limits": list(scaled_limits),
+                "range_mapping": "source_qpos_relative_to_released_obj_zero_pose",
+                "moving_parts": sorted(group, key=int),
+                "static_parts": sorted(set(meshes) - group, key=int),
+                **pivot_report,
+            })
         category = (metadata.get("object") or {}).get("category")
         if not isinstance(category, str) or not category:
             raise UnsupportedAsset("object category is missing")
-        spec = AssetSpec(asset_id, category, tuple(parts), (joint,), (MaterialSpec("default"),))
+        spec = AssetSpec(asset_id, category, tuple(parts), tuple(joints), (MaterialSpec("default"),))
         validate_spec(spec)
         full_bounds_m = full_mesh.bounds * scale
         report = {
@@ -316,23 +387,13 @@ def convert_archive(path: Path) -> ConvertedUniPhys40K:
             "full_model_vertices": len(full_mesh.vertices),
             "full_model_bounds_m": full_bounds_m.tolist(),
             "scale_validation": scale_report,
-            "joint_validation": {
-                "owner_part": owner,
-                "type": joint_type.value,
-                "axis": axis.tolist(),
-                "pivot_obj_units": pivot.tolist(),
-                "pivot_m": anchor.tolist(),
-                "source_range": list(limits),
-                "asset_spec_limits": list(scaled_limits),
-                "range_mapping": "source_qpos_relative_to_released_obj_zero_pose",
-                "moving_parts": sorted(moving, key=int),
-                "static_parts": sorted(set(meshes) - moving, key=int),
-                **pivot_report,
-            },
+            "joint_validations": joint_reports,
             "qualification": {
                 "geometry_scale_and_grouping": "passed",
                 "rendered_motion": "requires_review",
                 "formal_train_validation_eligible": False,
             },
         }
+        if len(joint_reports) == 1:
+            report["joint_validation"] = joint_reports[0]
         return ConvertedUniPhys40K(spec, report)
