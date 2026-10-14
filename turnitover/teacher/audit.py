@@ -9,7 +9,7 @@ from turnitover.core.jsonio import write_json_atomic
 from turnitover.verifier.contracts import Context, parse_decision
 
 
-VISIBLE_KEYS = {"context", "remaining", "image_order", "history"}
+VISIBLE_KEYS = {"context", "remaining", "stop_required", "image_order", "history"}
 
 
 def audit_episode(output: Path, private_gold: dict | None = None) -> dict:
@@ -63,6 +63,8 @@ def audit_episode(output: Path, private_gold: dict | None = None) -> dict:
                     break
         if request["remaining"] != episode["budget"] - len(request["history"]):
             errors.append("model-visible remaining budget is inconsistent with its causal history")
+        if request["stop_required"] is not (request["remaining"] == 0):
+            errors.append("model-visible stop instruction is inconsistent with remaining budget")
     if spent != episode["spent"] or spent > episode["budget"]:
         errors.append("saved budget accounting is inconsistent")
 
@@ -79,9 +81,16 @@ def audit_episode(output: Path, private_gold: dict | None = None) -> dict:
             evidence_reason = "Pixel novelty alone cannot establish semantic support; checker or human review is required."
     handled = {"budget_exhausted", "teacher_finished", "model_call_limit", "invalid_decision",
                "model_error", "observation_error"}
+    invalid_outputs = [item for item in episode["decisions"] if not item["valid"]]
+    invalid_actions = [item for item in invalid_outputs
+                       if isinstance(item.get("decision"), dict) and "action" in item["decision"]]
     audit = {"schema_version": 1, "episode_id": episode["episode_id"],
              "pipeline_ok": not errors and episode.get("termination") in handled,
-             "teacher_actions_legal": not any(not item["valid"] for item in episode["decisions"]),
+             "teacher_actions_legal": not invalid_actions,
+             "teacher_outputs_legal": not invalid_outputs,
+             "teacher_verdict_present": verdict is not None,
+             "budget_exhausted": bool(episode.get("budget_exhausted")),
+             "teacher_verdict_missing": bool(episode.get("teacher_verdict_missing")),
              "diagnosis_evidence_supported": evidence_supported,
              "diagnosis_evidence_reason": evidence_reason,
              "informative_observations": sum(informative), "observations": len(informative),

@@ -279,18 +279,18 @@ python -m scripts.analyze_qwen_episode_diagnostics \
 
 ## API 交互教师最小闭环
 
-[`run_interactive_teacher.py`](../scripts/run_interactive_teacher.py) 统一 Mock、本地 Qwen3-VL-2B 和 Kimi 的模型可见请求：仅包含参考图、已发生的观察历史、合法动作空间和剩余预算。动作在环境执行后才回填；每次原始输出、request JSON、图像顺序、token、预算和异常均原子保存。动作已选但环境中断时保存 `pending_action`，恢复会先重放既有状态再执行该动作，不重复调用教师。独立 `audit.json` 分开报告 Pipeline 完整性、教师输出合法性和诊断证据支持；私有 Gold 仅在结束后比较。
+[`run_interactive_teacher.py`](../scripts/run_interactive_teacher.py) 统一 Mock、本地 Qwen3-VL-2B 和 Kimi 的模型可见请求：仅包含参考图、已发生的观察历史、合法动作空间、`remaining` 和与其一致的 `stop_required`。动作在环境执行后才回填；每次原始输出、request JSON、图像顺序、token、预算和异常均原子保存。动作已选但环境中断时保存 `pending_action`，恢复会先重放既有状态再执行该动作，不重复调用教师。独立 `audit.json` 分开报告 Pipeline 完整性、教师动作/输出合法性、verdict 是否存在和诊断证据支持；私有 Gold 仅在结束后比较。预算归零仍未得到合法 verdict 时安全结束为 `budget_exhausted=true, teacher_verdict_missing=true`，Episode 不写入伪造 verdict。
 
-2026-10-14 在 Train Episode `f32240d5152e8b45fd0fcb02` 上停止于最小验证规模，全部图像为256×256。Mock 真实 Chromium 闭环执行 `joint_0→limit`，第二次请求按参考图、step 0 图顺序回填，`pipeline_ok=true`、动作合法、预算1/1；观察与参考 SHA 不同，但最终 `uncertain` 没有诊断主张。本地 Qwen 在预算2内先选 `front`，看到更新历史后再选 `joint_0→limit`，两次均合法执行且取得不同图像；预算归零后连续三次仍请求动作，被协议拒绝为 `invalid_decision`。因此 Pipeline 正常、两次已执行动作合法，但该模型的预算/停止能力失败，未产生可审核诊断。共5次本地推理，4,369 input + 86 output token，费用0元。
+2026-10-14 在 Train Episode `f32240d5152e8b45fd0fcb02` 上停止于最小验证规模，全部图像为256×256。Mock 真实 Chromium 闭环执行 `joint_0→limit`，随后在 `remaining=0, stop_required=true` 返回合法 `uncertain` verdict，`pipeline_ok=true`、预算1/1；观察与参考 SHA 不同，但 verdict 没有诊断 finding。本地 Qwen 在预算2内先选 `front`，看到更新历史后再选 `joint_0→limit`，两次均合法执行且取得不同图像；预算归零后连续三次仍请求 `joint_state`，因此安全收口为 `budget_exhausted`、明确缺失 verdict，未伪造诊断。Pipeline 与环境链路正常，但该模型的停止输出不合法、无诊断证据结论；共5次本地推理，4,662 input + 78 output token，费用0元。单测另覆盖教师提前合法停止、零预算合法 verdict、零预算缺失 verdict、非法/不可解析输出、执行异常，以及中断恢复不重复选动作。
 
-Kimi 阶段未调用。当前 catalog 只记录 PartNet-Mobility/ShapeNet 的非商业研究教育限制，没有明确授权把资产图像传给第三方 API；同时本机未配置并验证可用教师凭证、候选模型标识和当前计费来源。按门禁直接写入 skip 审计：真实付费调用0次、实际费用0元。机器汇总为 [`interactive-teacher-v1-results.json`](../output/interactive-teacher-v1-results.json)；逐调用 JSON 和图像留在被忽略的 `output/interactive-teacher/{mock-v1,local-qwen-v2,kimi-preflight-v1}/`，不进入提交。
+Kimi 阶段未调用。当前 catalog 只记录 PartNet-Mobility/ShapeNet 的非商业研究教育限制，没有明确授权把资产图像传给第三方 API；同时本机未配置并验证可用教师凭证、候选模型标识和当前计费来源。按门禁直接写入 skip 审计：真实付费调用0次、实际费用0元。机器汇总为 [`interactive-teacher-v1-results.json`](../output/interactive-teacher-v1-results.json)；逐调用 JSON 和图像留在被忽略的 `output/interactive-teacher/{mock-v2,local-qwen-v3,kimi-preflight-v1}/`，不进入提交。
 
 ```bash
-python -m scripts.run_interactive_teacher --mode mock --budget 1 --out output/interactive-teacher/mock-v1
+python -m scripts.run_interactive_teacher --mode mock --budget 1 --out output/interactive-teacher/mock-v2
 CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python \
   -m scripts.run_interactive_teacher --mode local-qwen --budget 2 --max-tokens 384 \
   --playwright-site-packages /home/laq/anaconda3/lib/python3.12/site-packages \
-  --out output/interactive-teacher/local-qwen-v2
+  --out output/interactive-teacher/local-qwen-v3
 python -m scripts.run_interactive_teacher --mode kimi --out output/interactive-teacher/kimi-preflight-v1
 ```
 

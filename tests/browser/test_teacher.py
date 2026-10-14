@@ -33,6 +33,8 @@ def test_teacher_real_browser_observation_is_returned_in_causal_order(
     second_request = json.loads((tmp_path / "model_calls/001/request.json").read_text())
 
     assert episode["termination"] == "budget_exhausted" and audit["pipeline_ok"]
+    assert episode["budget_exhausted"] and not episode["teacher_verdict_missing"]
     assert (tmp_path / "observations/000.png").is_file()
     assert second_request["remaining"] == 0 and second_request["history"][0]["step"] == 0
+    assert second_request["stop_required"] is True
     assert second_request["image_order"][-1]["kind"] == "observation"

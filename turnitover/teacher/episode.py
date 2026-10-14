@@ -15,7 +15,7 @@ from turnitover.policy.loop import SessionLike, execute_observation
 from turnitover.render.session import HarnessError
 from turnitover.teacher.policy import TeacherPolicy
 from turnitover.telemetry import now_iso
-from turnitover.verifier.contracts import Context, DecisionError, Verdict, parse_decision, uncertain
+from turnitover.verifier.contracts import Context, DecisionError, Verdict, parse_decision
 from turnitover.verifier.loop import MAX_DECISION_ATTEMPTS, _validation_feedback
 
 
@@ -92,7 +92,8 @@ def run_teacher_episode(session: SessionLike, policy: TeacherPolicy, context: Co
                  "created_at": now_iso(), "budget": budget, "spent": 0,
                  "context": dataclasses.asdict(context), "teacher": policy.teacher.public(),
                  "trajectory": [], "decisions": [], "pending_action": None,
-                 "model_calls": [], "token_usage": _totals([])}
+                 "model_calls": [], "token_usage": _totals([]),
+                 "budget_exhausted": False, "teacher_verdict_missing": True}
         history = []
         _checkpoint(result_path, state, policy)
 
@@ -124,7 +125,9 @@ def run_teacher_episode(session: SessionLike, policy: TeacherPolicy, context: Co
         while True:
             remaining = budget - state["spent"]
             if max_model_calls is not None and len(policy.calls) >= max_model_calls:
-                state.update(status="complete", termination="model_call_limit", finished_at=now_iso())
+                state.update(status="complete", termination="model_call_limit",
+                             budget_exhausted=remaining == 0, teacher_verdict_missing=True,
+                             finished_at=now_iso())
                 break
             feedback = None
             for attempt in range(decision_attempts):
@@ -141,18 +144,24 @@ def run_teacher_episode(session: SessionLike, policy: TeacherPolicy, context: Co
                                                "valid": False, "decision": raw, "error": str(exc)})
                     _checkpoint(result_path, state, policy)
                     if attempt == decision_attempts - 1:
-                        state.update(status="error", termination="invalid_decision",
-                                     verdict=dataclasses.asdict(uncertain("Teacher returned an invalid decision.")),
-                                     error_type="DecisionError", error_message=str(exc), finished_at=now_iso())
+                        exhausted = remaining == 0
+                        state.update(status="complete" if exhausted else "error",
+                                     termination="budget_exhausted" if exhausted else "invalid_decision",
+                                     budget_exhausted=exhausted, teacher_verdict_missing=True,
+                                     error_type="DecisionError", error_message=str(exc),
+                                     finished_at=now_iso())
                         return _finish(result_path, state, policy)
                     feedback = _validation_feedback(exc, raw, context, history, remaining)
                 except ModelError as exc:
                     state.update(status="error", termination="model_error", error_type="ModelError",
-                                 error_message=str(exc), finished_at=now_iso())
+                                 error_message=str(exc), budget_exhausted=remaining == 0,
+                                 teacher_verdict_missing=True, finished_at=now_iso())
                     return _finish(result_path, state, policy)
             if isinstance(decision, Verdict):
-                state.update(status="complete", termination="budget_exhausted" if remaining == 0 else "teacher_finished",
-                             verdict=dataclasses.asdict(decision), finished_at=now_iso())
+                exhausted = remaining == 0
+                state.update(status="complete", termination="budget_exhausted" if exhausted else "teacher_finished",
+                             verdict=dataclasses.asdict(decision), budget_exhausted=exhausted,
+                             teacher_verdict_missing=False, finished_at=now_iso())
                 break
             state["spent"] += action_cost(decision)
             state["pending_action"] = raw["action"]
@@ -173,5 +182,7 @@ def run_teacher_episode(session: SessionLike, policy: TeacherPolicy, context: Co
 
 
 def _finish(path: Path, state: dict, policy: TeacherPolicy) -> dict:
+    state["budget_exhausted"] = bool(state.get("budget_exhausted") or state["spent"] >= state["budget"])
+    state["teacher_verdict_missing"] = "verdict" not in state
     _checkpoint(path, state, policy)
     return state

@@ -28,6 +28,7 @@ class TeacherPolicy:
                 order.append({"image": len(images), "kind": "observation", "step": observation.step})
                 images.append(self.output / observation.image_ref)
         visible = {"context": dataclasses.asdict(context), "remaining": remaining,
+                   "stop_required": remaining == 0,
                    "image_order": order, "history": [to_dict(o) for o in history]}
         protocol = resources.files("turnitover.teacher").joinpath("prompt.txt").read_text()
         prompt = protocol + "\nVisible task state:\n" + json.dumps(visible, ensure_ascii=False)

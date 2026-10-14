@@ -61,10 +61,33 @@ def test_mock_episode_closes_budget_and_audits_visible_request(tmp_path, context
     audit = audit_episode(tmp_path)
     request = json.loads((tmp_path / "model_calls/001/request.json").read_text())
     assert episode["termination"] == "budget_exhausted" and episode["spent"] == 1
+    assert episode["budget_exhausted"] and not episode["teacher_verdict_missing"]
     assert request["remaining"] == 0 and len(request["history"]) == 1
+    assert request["stop_required"] is True
     assert request["image_order"][-1] == {"image": 1, "kind": "observation", "step": 0}
-    assert set(request) == {"context", "remaining", "image_order", "history"}
+    assert set(request) == {"context", "remaining", "stop_required", "image_order", "history"}
     assert audit["pipeline_ok"] and audit["teacher_actions_legal"]
+    assert audit["teacher_outputs_legal"] and audit["teacher_verdict_present"]
+
+
+def test_teacher_can_stop_before_budget_is_exhausted(tmp_path, context):
+    episode = run_teacher_episode(Session(), make_policy(tmp_path, [verdict()]), context, 2,
+                                  tmp_path, episode_id="case")
+    request = json.loads((tmp_path / "model_calls/000/request.json").read_text())
+    assert episode["termination"] == "teacher_finished" and episode["spent"] == 0
+    assert not episode["budget_exhausted"] and not episode["teacher_verdict_missing"]
+    assert request["remaining"] == 2 and request["stop_required"] is False
+
+
+def test_budget_exhaustion_without_valid_verdict_is_explicit_and_not_fabricated(tmp_path, context):
+    episode = run_teacher_episode(Session(), make_policy(tmp_path, [action(), action()]), context, 1,
+                                  tmp_path, episode_id="case", decision_attempts=1)
+    audit = audit_episode(tmp_path)
+    assert episode["status"] == "complete" and episode["termination"] == "budget_exhausted"
+    assert episode["budget_exhausted"] and episode["teacher_verdict_missing"]
+    assert "verdict" not in episode
+    assert audit["pipeline_ok"] and not audit["teacher_outputs_legal"]
+    assert not audit["teacher_verdict_present"] and audit["teacher_verdict_missing"]
 
 
 @pytest.mark.parametrize("responses", [
@@ -75,9 +98,10 @@ def test_invalid_or_unparseable_actions_are_audited_without_budget_charge(tmp_pa
     episode = run_teacher_episode(Session(), make_policy(tmp_path, responses), context, 1,
                                   tmp_path, episode_id="case")
     assert episode["termination"] == "invalid_decision" and episode["spent"] == 0
+    assert episode["teacher_verdict_missing"] and "verdict" not in episode
     assert len(episode["decisions"]) == 3 and not any(item["valid"] for item in episode["decisions"])
     audit = audit_episode(tmp_path)
-    assert audit["pipeline_ok"] and not audit["teacher_actions_legal"]
+    assert audit["pipeline_ok"] and not audit["teacher_outputs_legal"]
 
 
 def test_execution_failure_is_charged_and_saved(tmp_path, context):
@@ -103,9 +127,11 @@ def test_resume_executes_pending_action_without_second_teacher_selection(tmp_pat
     resumed_session = Session()
     resumed = run_teacher_episode(resumed_session, policy, context, 2, tmp_path,
                                   episode_id="case", resume=True)
+    audit = audit_episode(tmp_path)
     assert resumed["status"] == "complete" and resumed["spent"] == 2
     assert len(resumed["model_calls"]) == 3 and len(resumed["trajectory"]) == 2
     assert resumed_session.actions == ["front", "side"]
+    assert audit["pipeline_ok"] and audit["teacher_verdict_present"]
 
 
 def test_kimi_requires_allowlisted_model_permission_and_bounded_cost():
