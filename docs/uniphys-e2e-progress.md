@@ -93,6 +93,8 @@ for asset in $(jq -r '.assets[] | select(.status=="structural_candidate") | .ass
 python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/uniphys40k-trainval-v2-revalidated --ids "$(jq -r '.assets[].asset_id' output/uniphys40k-expanded-conversion-v4/conversion.json | paste -sd, -)" --test-plan configs/uniphys-test.json --test-root data/assets/uniphys/data --motion-reviews configs/uniphys40k-trainval-v2.json
 ```
 
+**v5 证据驱动停止数据已实际生成与审核（2026-10-14）。** 主数据138个候选执行三种含关节驱动/回零的固定顺序，得到414条真实轨迹、2,484次观察；隔离43个模糊前缀、去重434条后保留Train1,618 / Validation389条。严格同物体、参考、动作历史和预算的对照为359 / 102对，独立Validation评测204行；另有同候选不同顺序的10 / 3个正反分组，涉及10 / 2个物体。全部processor检查和30项相关测试通过。停止专项数据可用；八张公开参考姿态协议、首关节覆盖和较少的顺序敏感案例仍限制完整第三轮多任务SFT，未启动训练。详见[训练数据记录](training-dataset-expansion.md)。
+
 ## 下一步（按优先级）
 
 1. **P0｜补可识别的停止与视觉对照。** 构造保持 step、remaining、历史结构和动作类型不变、只改变真实可见证据的合法反事实对；分别冻结 `first_failure` / `comprehensive_within_budget`，并补更多物体和多 seed。有公开证据前继续禁止 clean `pass`。
@@ -105,4 +107,4 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 ---
 
-最近同步：**2026-10-14 · PartNet v4 第二轮真实训练与受控评测**；两组新 LoRA 已完成1617步训练。证据组只减少4个 unsupported 并改善类型 F1，未改善 exact/定位；停止准确率低于普通组和无图像基线，首次停止仍18/28提前，因此不支持更准确利用视觉证据或停止能力真正改善。Part 2 冻结 Test 未使用或修改。
+最近同步：**2026-10-14 · v5 真实交互停止数据**；视觉配对与同候选顺序对照已生成，完整多任务训练条件仍有缺口，第三轮SFT未启动。v4第二轮提前停止结论不变；冻结Part 2 Test未修改。

@@ -384,3 +384,86 @@ python -m scripts.audit_training_dataset_expansion
 - 35 个转换 catalog 约 420 MiB；最终 raw、prepared、Episode 和审计合计约 1.1 GiB。首跑及失败导出在干净提交重跑通过后移入系统回收站，最终目录不混入旧版本。
 
 按本次漏斗，160 个下载得到 94 个结构候选；优先审核的 48 个中 35 个通过。若后续仍维持相近分布，新增 100 个合格物体约需下载 **230–250 个**、浏览器与人工审核约 **140 个**结构候选；由于本次审核是优先抽样，这只是规划下限，不是通过率承诺。干净提交上140条真实渲染与 checker 生成耗时10分32秒，即当前硬件约4.5秒/样本；按每物体4条监督样本，100个新物体的生成阶段约30分钟，Episode 的教师渲染仍是另一项主要成本。下一批先扩到 80–100 个合格原物体并观察通过率漂移，再决定是否全量扫描；GAPartNet 只在取得官方完整包和许可记录后作为类别/部件标注补充。
+
+## v5：证据驱动交互决策数据（2026-10-14）
+
+**已经实际生成并审核依赖可见证据、不能由预算阶段决定的停止训练样本。停止专项数据可用，但完整第三轮多任务SFT尚未就绪，本轮未训练。** 资产和v4数据只读复用 `../TurnItOver-dataset`，浏览器依赖只读复用 `../TurnItOver`；所有新数据位于当前worktree。未调用付费API、未启动或停止另一worktree的Kimi采集、未修改冻结Part 2 Test，未新建文档。
+
+### 实际轨迹与标签来源
+
+主产物为 `data/partnet-motion-decisions-v5/`。[`build_visual_decisions.py`](../scripts/build_visual_decisions.py) 对原有110 Train / 28 Validation候选执行三种固定顺序，每条六步，共414条真实轨迹、2,484次真实观察。每个物体只选择公开关节列表的第一个关节，取非零端点（优先upper，否则lower）；没有按Gold选择关节或动作。令F/L/T/B为front/left/top/back，M为驱动到端点，R为真实回零：三种顺序是 `F,M,L,R,T,B`、`M,L,R,F,T,B`、`L,M,F,R,T,B`。回零也消耗一步并保存真实观察，未重排旧图冒充执行。
+
+学生预先获得八张真实参考图：六视角静止态，以及front/left下所选关节端点态。`context.reference_states` 明确各图的视角与关节状态，历史记录当前观察对应的参考索引。**这些都是公开任务输入，不是事后借用学生不可见的参考运动。** 相机、灯光、framing和其余关节状态相同；每个前缀保存实际PNG/SHA、动作、实际关节值或相机、可见历史、证据步骤、差异bbox和停止依据。消息里的图像名使用位置别名，避免候选ID/路径捷径。
+
+[`visual_decisions.py`](../turnitover/oracle/visual_decisions.py) 的标签函数只接收对应参考PNG、已观察PNG和预算；不接收Gold、程序、exposure表或未来候选图像。轮廓差异须同时达到64像素、物体投影并集的1%、最大连通区域16像素，才标作可定位的姿态形状不一致证据。没有充分证据时，只有当前所有观察与对应参考逐像素相同才标 `continue`；其余不明确差异隔离。预算归零且没有证据为 `stop/uncertain`，不标pass、不猜缺陷类型或部件定位。Gold/corruption仅用于重建既有候选并核验SHA，不参与这些标签决策。这是保守的程序化视觉审核，不等于独立人工缺陷Gold。
+
+采集策略执行完整六步，因此也包含已有充分证据后的离线探索前缀；它们合法，但不冒充最优first-failure策略。预算剩余时的证据停止标 `termination_kind=active`；第六步一律 `forced`，结果可为fail或uncertain。另导出 `*.first-stop.stopping.jsonl`，去除首次充分证据之后的延续前缀。
+
+### 全量审核与数据规模
+
+[`audit_visual_decisions.py`](../scripts/audit_visual_decisions.py) 从PNG重算全部标签/bbox和因果历史，逐字段核对输出，复用生产 `load_examples` 检查身份、图像闭合与SHA；从动作重建参考状态，检查跨顺序同候选同状态的真实PNG一致性。2,484个前缀中隔离43个（Train22 / Validation21），去掉434条完全相同的公开文本及图像内容序列，保留2,007条。`prefix-aliases.audit.jsonl` 保留原始轨迹前缀到去重训练行的映射，避免丢失同候选对照来源，也不将重复输入计作新增样本。
+
+| 主数据，去重后 | Train | Validation |
+| --- | ---: | ---: |
+| 原物体 / 原候选 / 真实轨迹 | 28 / 110 / 330 | 7 / 28 / 84 |
+| 决策行 | 1,618 | 389 |
+| stop/fail / continue / stop/uncertain | 1,164 / 379 / 75 | 263 / 105 / 21 |
+| 主动停止 / 预算强制终止 | 963 / 276 | 215 / 69 |
+| 首次充分证据后的延续前缀 | 963 | 215 |
+| 去除上述延续后的首停子集 | 655 | 174 |
+| 同物体、同动作等公开字段匹配对 | 359 | 102 |
+| 上述对照涉及物体 / 行数 | 26 / 718 | 7 / 204 |
+| 首停子集中的严格匹配对 | 97 | 31 |
+| 同候选、同阶段、不同观察顺序的正反分组 | 10 | 3 |
+| 上述不同顺序分组涉及原物体 | 10 | 2 |
+
+两类对照各有独立清单：
+
+- `*.pairs.jsonl`：同原物体、八张参考SHA、完整公开context、动作序列、相机/关节值、步数、预算及图像数均相同；两侧来自分别实际执行的不同候选，只有观察像素不同，一侧stop/fail、一侧continue。每行最多参加一对。Train在step1–5为72/71/72/72/72对，Validation为18/21/21/21/21对。`validation.matched.stopping.jsonl` 是冻结的204行同预算评测集，仅使用原有7个留出物体。
+- `*.order-pairs.jsonl`：同一真实候选和相同预算，仅动作顺序不同；Train10组均在step1，Validation在step1有2组、step2有1组。清单同时给出原始前缀ID和去重后训练行ID，供沿真实轨迹复核。它本身允许动作历史不同，因此还需要上一类严格匹配对排除动作阶段捷径。
+
+Train/Validation物体组与完整公开输入交集均为0；相同公开输入的标签冲突为0。v4的该冲突指标也为0，不宣称此项进一步提升。对12个具有step1同候选正反对照的原物体逐图进行了助手目视复核，`order-review-0.png` 至 `order-review-2.png` 显示一致的静止/侧视状态与明显不一致的运动状态；这不是全体正例独立人工Gold。阈值未根据Validation调优。
+
+### 相对v4的实际变化与覆盖缺口
+
+v4按同一严格匹配原则可找到Train38 / Validation9对，仅覆盖step1/2；v5主数据扩展到359 / 102对及step1–5。首停子集仍有97 / 31对，不能把大量已有证据后的延续前缀都算成新取证事件。完整轨迹首次充分证据的Train分布为step1/2/3：164/32/5，另外129条无充分证据；Validation为step1/2/3/5：35/7/3/3，另外36条无充分证据。真正较晚首次获得证据仍有限，同候选顺序敏感对照只有10个Train、2个Validation物体。
+
+仅用step/remaining/image_count在Train拟合多数查找，实际Validation为v4 `91/110=82.73%`、v5 `263/389=67.61%`。严格匹配集内所有非图像公开字段相同而标签相反，故任意仅依赖这些字段的确定性分类器上限为50%。这证明配对标签不能由预算或动作字段决定，**不证明模型已经学会视觉停止**。v5公开参考图更多、任务限定为匹配姿态形状一致性，和v4不是等输入等任务的效果实验。
+
+此前还完成了静态六参考图试点 `data/partnet-visual-decisions-v5/`：414条真实轨迹、2,484次观察，隔离88个模糊前缀、去重581条后得到Train1,455 / Validation360条和373 / 97个严格匹配对。它保留供审核，不与主数据直接相加宣称独立样本或物体扩量；主数据补入真实关节观察以覆盖仅改变顺序的取证差异。两套数据总计约102 MiB，均复用同一35个原物体。
+
+### 下一步动作审核与训练条件
+
+[`motion_decisions.py`](../turnitover/oracle/motion_decisions.py) 逐前缀枚举公开视角与所选关节的回零/端点动作，记录合法性、对应参考是否存在、新状态覆盖和eligible；重复已观察状态不作为有效下一步，预算归零时不可用。未观察图像的信息增益保持 `unknown_without_execution`；`action-outcomes.audit.jsonl` 另记录真实执行后是否首次出现充分证据及新状态覆盖，只用于审核，不倒灌学生标签或构造特权动作目标。未覆盖其余关节、runtime查询或最优动作监督。
+
+真实本地Qwen3-VL processor已检查全部1,618/389行：Train token长度1,218–2,441，Validation1,231–2,447，assistant监督35–40 token；多图输入、前缀遮罩与非空监督全部通过。未加载模型权重、未前向或训练。30项相关单测通过。
+
+**第三轮条件：停止专项数据已就绪，完整多任务训练尚未就绪。** 可用标准 `load_examples(root, split, 'stopping', require_formal_training=True)` 消费；优先考虑首停子集及严格配对集。现有训练入口强制同时提供diagnosis与stopping，本轮没有伪造diagnosis满足入口，也未改动训练脚本。正式第三轮前须确定八参考姿态输入协议和停止专项任务接入方式；若目标仍是原单参考图全关节验证，则本数据不能直接替代。全关节、多步顺序敏感覆盖、可信pass、自然错误人工Gold及多seed效果仍缺失，不以本轮的轮廓差异门禁冒充这些能力。
+
+### 复现与产物
+
+输出目录须不存在；使用本地SwiftShader单浏览器顺序执行，无需网络/API：
+
+```bash
+export PLAYWRIGHT_BROWSERS_PATH=/91004t2/laq/code/ThreejsJudge/TurnItOver/.cache/ms-playwright
+../TurnItOver/.venv-local/bin/python -m scripts.build_visual_decisions --motion \
+  --benchmark ../TurnItOver-dataset/data/benchmarks/partnet-mobility-formal-v1 \
+  --asset-workspace ../TurnItOver-dataset --harness-workspace ../TurnItOver \
+  --out data/partnet-motion-decisions-v5
+
+CUDA_VISIBLE_DEVICES='' OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 USE_TF=0 \
+  ../TurnItOver/.venv-qwen/bin/python -m scripts.audit_visual_decisions \
+  --dataset data/partnet-motion-decisions-v5 \
+  --baseline ../TurnItOver-dataset/data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v4 \
+  --processor-model ../TurnItOver/models/Qwen3-VL-2B-Instruct
+
+../TurnItOver/.venv-local/bin/python -m pytest \
+  tests/unit/test_visual_decisions.py tests/unit/test_oracle_episodes.py \
+  tests/unit/test_sft_diagnostics.py tests/unit/test_sft_readiness.py
+```
+
+静态试点去掉 `--motion`、更换输出目录即可复现；仅重导出标签可用 `--reexport <已完成目录>`，不重新生成图像。初次默认浏览器缓存版本不匹配的空失败目录为 `data/partnet-visual-decisions-v5-failed-browser/`，不计入正式数据。
+
+主目录的 `manifest.json` 保留来源与标签代码SHA，`trajectories.jsonl` 保存真实观察，`audit.json` 记录统计、逐阶段分布、文件SHA及processor结果；`*.matched.stopping.jsonl` 是严格配对子集，`*.first-stop.stopping.jsonl` 是首停子集。代码、测试和现有文档本地提交，不push；数据与PNG按现有约定本地保留。
+
+本次主数据冻结摘要：`audit.json` SHA-256为 `f9497dbf0dee2a1bd8b8b6ba3666c16fb3c62907eadb98681c5b74f57b9f3ecf`；`train.stopping.jsonl` 为 `10754f2a969e7f3f77adc629c47b9f7ce21d196c804ccca5b96fbf5e4fa3ca74`；独立204行 `validation.matched.stopping.jsonl` 为 `890fca8fc589d4cf343746cad4332ef65ca7237ec400a1a7d10f789b65055706`。其余文件SHA见审计报告。
