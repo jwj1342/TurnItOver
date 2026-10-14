@@ -277,6 +277,25 @@ python -m scripts.analyze_qwen_episode_diagnostics \
 
 下一次训练需要阶段线索匹配且跨物体平衡的证据充分/不足前缀、真实 `continue/stop` 样本、分别冻结的 `first_failure` 与 `comprehensive_within_budget` 策略，并补充 pass、自然错误、更多独立物体和多 seed。训练前应先证明同一 step、remaining、历史长度和图像数下目标仍可由可见内容区分；本轮不重新训练。
 
+## API 交互教师最小闭环
+
+[`run_interactive_teacher.py`](../scripts/run_interactive_teacher.py) 统一 Mock、本地 Qwen3-VL-2B 和 Kimi 的模型可见请求：仅包含参考图、已发生的观察历史、合法动作空间和剩余预算。动作在环境执行后才回填；每次原始输出、request JSON、图像顺序、token、预算和异常均原子保存。动作已选但环境中断时保存 `pending_action`，恢复会先重放既有状态再执行该动作，不重复调用教师。独立 `audit.json` 分开报告 Pipeline 完整性、教师输出合法性和诊断证据支持；私有 Gold 仅在结束后比较。
+
+2026-10-14 在 Train Episode `f32240d5152e8b45fd0fcb02` 上停止于最小验证规模，全部图像为256×256。Mock 真实 Chromium 闭环执行 `joint_0→limit`，第二次请求按参考图、step 0 图顺序回填，`pipeline_ok=true`、动作合法、预算1/1；观察与参考 SHA 不同，但最终 `uncertain` 没有诊断主张。本地 Qwen 在预算2内先选 `front`，看到更新历史后再选 `joint_0→limit`，两次均合法执行且取得不同图像；预算归零后连续三次仍请求动作，被协议拒绝为 `invalid_decision`。因此 Pipeline 正常、两次已执行动作合法，但该模型的预算/停止能力失败，未产生可审核诊断。共5次本地推理，4,369 input + 86 output token，费用0元。
+
+Kimi 阶段未调用。当前 catalog 只记录 PartNet-Mobility/ShapeNet 的非商业研究教育限制，没有明确授权把资产图像传给第三方 API；同时本机未配置并验证可用教师凭证、候选模型标识和当前计费来源。按门禁直接写入 skip 审计：真实付费调用0次、实际费用0元。机器汇总为 [`interactive-teacher-v1-results.json`](../output/interactive-teacher-v1-results.json)；逐调用 JSON 和图像留在被忽略的 `output/interactive-teacher/{mock-v1,local-qwen-v2,kimi-preflight-v1}/`，不进入提交。
+
+```bash
+python -m scripts.run_interactive_teacher --mode mock --budget 1 --out output/interactive-teacher/mock-v1
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python \
+  -m scripts.run_interactive_teacher --mode local-qwen --budget 2 --max-tokens 384 \
+  --playwright-site-packages /home/laq/anaconda3/lib/python3.12/site-packages \
+  --out output/interactive-teacher/local-qwen-v2
+python -m scripts.run_interactive_teacher --mode kimi --out output/interactive-teacher/kimi-preflight-v1
+```
+
+第二条命令只把已有 Playwright 安装追加到缺少该包的 Qwen 环境；Qwen 权重仍由原本环境离线加载。真实 Kimi 调用还必须显式提供第三方传输许可确认、输入 token 估计、计费单价/核验日期/来源、模型和凭证；适配器固定最多一次且不重试、不切换模型。本轮没有 Generator API 采集、训练、冻结 Test 访问或规模扩张。
+
 ## 复现命令
 
 以下命令要求已获官方访问权、已构建 `web/dist`，且各输出目录不存在：

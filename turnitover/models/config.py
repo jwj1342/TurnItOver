@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import urlsplit
 
-ROLES = ("generator", "judge", "diagnosis")
+ROLES = ("generator", "judge", "diagnosis", "teacher")
 PROVIDERS = {
     "openai": ("OPENAI", "https://api.openai.com/v1"),
     "anthropic": ("ANTHROPIC", "https://api.anthropic.com/v1"),

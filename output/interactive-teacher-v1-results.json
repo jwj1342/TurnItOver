@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-14",
+  "scope": "one PartNet-Mobility Train episode; no Generator collection, SFT, or frozen Test access",
+  "episode_id": "f32240d5152e8b45fd0fcb02",
+  "cases": [
+    {
+      "phase": "mock",
+      "artifact": "output/interactive-teacher/mock-v1",
+      "input_summary": {"reference_images": 1, "image_resolution": [256, 256], "budget": 1, "teacher_visible_private_gold": false},
+      "raw_outputs": [
+        "{\"action\": {\"type\": \"actuate_joint\", \"joint_id\": \"joint_0\", \"detent\": \"limit\"}}",
+        "{\"verdict\": {\"status\": \"uncertain\", \"confidence\": 0.0, \"findings\": [], \"summary\": \"The bounded observation does not establish a complete diagnosis.\", \"limitations\": [\"Only the acquired public observation was considered.\"]}}"
+      ],
+      "actions_legal": true,
+      "termination": "budget_exhausted",
+      "spent": 1,
+      "observation_sha256": ["d9d4dc2aecf2933c132d7ad9529c043057327eb435208caa2d9d7d3230cf0566"],
+      "pipeline_ok": true,
+      "diagnosis_evidence_supported": null,
+      "tokens": {"input": 0, "output": 0, "total": 0},
+      "cost_rmb": 0.0,
+      "episode_sha256": "ffe25e10d9c194bace8e90ac64c4e9830e8cf98e38d298a9f193998d1eb33806",
+      "audit_sha256": "ac1acfa8d38045fa21b2506f29ee31808adc8ed495b342153d5956bf2da05161"
+    },
+    {
+      "phase": "local_qwen",
+      "artifact": "output/interactive-teacher/local-qwen-v2",
+      "model": "Qwen3-VL-2B-Instruct",
+      "input_summary": {"reference_images": 1, "image_resolution": [256, 256], "budget": 2, "multi_image_counts": [1, 2, 3], "teacher_visible_private_gold": false},
+      "raw_outputs": [
+        "{\"action\":{\"type\":\"request_view\",\"view_id\":\"front\"}}",
+        "{\"action\":{\"type\":\"actuate_joint\",\"joint_id\":\"joint_0\",\"detent\":\"limit\"}}",
+        "{\"action\":{\"type\":\"query_runtime\",\"property\":\"joint_state\"}}",
+        "{\"action\":{\"type\":\"actuate_joint\",\"joint_id\":\"joint_0\",\"detent\":\"limit\"}}",
+        "{\"action\":{\"type\":\"query_runtime\",\"property\":\"joint_state\"}}"
+      ],
+      "executed_actions_legal": true,
+      "all_teacher_outputs_legal": false,
+      "termination": "invalid_decision",
+      "failure_reason": "At remaining=0 the model requested another observation on all three validation attempts instead of returning a verdict.",
+      "spent": 2,
+      "observation_sha256": [
+        "ed9c5f3cfaa25cb91910fba9fceeab62a38df7e5e0b5926177d8117709bab554",
+        "d9d4dc2aecf2933c132d7ad9529c043057327eb435208caa2d9d7d3230cf0566"
+      ],
+      "pipeline_ok": true,
+      "diagnosis_evidence_supported": null,
+      "tokens": {"input": 4369, "output": 86, "total": 4455},
+      "cost_rmb": 0.0,
+      "episode_sha256": "be1b5480e575f1d92b962f4a53560e12f8da2036287ee943fd36335611822b17",
+      "audit_sha256": "ceaf61c4451c82ccaa24635e5ae647a64098f94c2c525f77a3b3cbe012e9f311"
+    },
+    {
+      "phase": "kimi",
+      "artifact": "output/interactive-teacher/kimi-preflight-v1",
+      "status": "skipped",
+      "reason": "PartNet-Mobility terms in the catalog do not explicitly confirm third-party API image transmission; usable credentials/model ID and current pricing were also not configured and verified.",
+      "real_api_requests": 0,
+      "actual_cost_rmb": 0.0,
+      "episode_sha256": "213a3256e79450090f97eaf01c43663d8c04b1ad9aeb8a6a779547cd277ac0f8",
+      "audit_sha256": "6e293d02ea7b2cc453aee7b03a94acdccdccf5ed540d58f78f2407257de31f20"
+    }
+  ],
+  "totals": {"real_paid_api_requests": 0, "actual_api_cost_rmb": 0.0}
+}
