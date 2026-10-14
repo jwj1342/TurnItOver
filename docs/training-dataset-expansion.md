@@ -301,7 +301,36 @@ python -m scripts.run_interactive_teacher --mode kimi \
   --out output/interactive-teacher/kimi-partnet-real-compat-v2
 ```
 
-第二条命令只把已有 Playwright 安装追加到缺少该包的 Qwen 环境；Qwen 权重仍由原本环境离线加载。Kimi 模型和凭证由 `.env` 的独立 Teacher 配置提供；外发审阅依据显式进入 Episode。网关计费未知时不填人民币单价，费用记录为 `null`，不能写成0元。适配器固定最多一次且不重试、不切换模型。本轮没有 Generator API 采集、训练、冻结 Test 访问或规模扩张。
+第二条命令只把已有 Playwright 安装追加到缺少该包的 Qwen 环境；Qwen 权重仍由原本环境离线加载。Kimi 模型和凭证由 `.env` 的独立 Teacher 配置提供；外发审阅依据显式进入 Episode。网关计费未知时不填人民币单价，费用记录为 `null`，不能写成0元。适配器默认最多一次，并可为有界 Episode 显式提高上限；始终不重试、不切换模型。本轮没有 Generator API 采集、训练、冻结 Test 访问或规模扩张。
+
+### 第一轮 Kimi 交互教师采集（2026-10-14）
+
+按 Issue #4 的停止条件，从不同 PartNet-Mobility Train 原物体选择 clean `af10f7137bbe158aa03557b5`（`PM_100934`）与可控缺陷 `f32240d5152e8b45fd0fcb02`（`PM_100054`，part offset + joint axis）。两者均为 `formal_training=true`；本轮沿用已审阅的非商业研究外发边界，并将审阅依据写入 Episode。每条预算1、最多2次 Kimi 请求、非法输出不重试，两个 Episode 串行执行；累计第4次真实请求后停止。
+
+结果为 **0/2 完整 Episode、2/2 合法动作、1/2 合格动作、0 个有证据 finding、0 个 structured unsupported finding、2 个无效终判、2 个 unsupported terminal claim**。clean 条选择 `front`，所得图像与参考逐字节相同，没有新增信息；缺陷条选择 `oblique_fr` 并产生新图像，故保留为一条候选动作监督，但没有形成合格诊断。两次最终请求都返回了正常 HTTP/model response，却没有遵循 `Verdict(status, confidence, findings, summary, limitations)`：clean 使用顶层字符串 `verdict="pass"`，缺陷条使用 `label/corrupted/rationale`，均被既有 parser 拒绝并真实记为 `teacher_verdict_missing=true`。缺陷条还尝试判定 accept，与独立 Gold 相反；clean 的 pass 也不能由一次重复观察证明。两条因预算耗尽而停止是执行层合理收口，不代表终判合理。
+
+实际 token 为 clean 1,475 input + 1,928 output、缺陷 1,466 input + 3,524 output，合计 **8,393 token / 4次调用**；网关账单未知，费用保持 `null`。另用同一 Teacher runner 的 candidate auto-framing、相同资产和预算1离线执行仓库现有 fixed/random acquisition，模型调用为0：fixed 首步为 `runtime:stats`，random seed 0 为 `oblique_fr`。clean 上 Kimi 的重复 front 不如 random 的新视角；缺陷上 Kimi 与 random 的动作和图像 SHA 完全相同，未取得取证优势。离线对照不请求 verdict，因此不伪造诊断比较。既有特权 Oracle export 使用 sample framing，与本轮 Teacher 的 candidate auto-framing 不同，其 exposure lookup 只作背景信息，不作为严格像素匹配对照。两条终判均不可训练，因此本轮相对现有特权 Oracle **没有形成足以扩大采集的新增监督**。结论是暂不扩大付费采集；下一阶段先在离线测试中把完整 verdict JSON schema 显式放入教师 prompt 并验证结构化输出合同，再重复同规模门禁，而不是放宽 parser 或证据规则。
+
+完整 prompt、可见 request、图片顺序、原始 response、状态变化、token 和审计保存在本地忽略目录 `output/interactive-teacher/kimi-pilot-round1-{clean-pm100934,defect-pm100054}/`；可提交的逐文件 SHA、原始 JSON 输出、离线对照和汇总见 [`kimi-interactive-teacher-round1.json`](evidence/kimi-interactive-teacher-round1.json)。没有调用 Generator、训练 SFT、访问冻结 Test 或修改证据规则。
+
+独立审计分两层：确定性仓库审计与同 runner 离线回放已完成；额外启动的 fresh same-family 审计代理在确认“两条终判均不合法”“prompt 未展开 verdict schema”“Oracle/Teacher framing 不同”后触发用量上限，未完成 A–H 全项，因此机器记录为 `acceptance_status=blocked`，不冒充独立 PASS。
+
+```bash
+python -m scripts.run_interactive_teacher --mode kimi \
+  --sample-id af10f7137bbe158aa03557b5 --budget 1 --max-real-requests 2 \
+  --estimated-input-tokens 8192 --third-party-transmission-reviewed \
+  --transmission-review-basis partnet-approved-noncommercial-research-terms-no-explicit-render-api-prohibition \
+  --out output/interactive-teacher/kimi-pilot-round1-clean-pm100934
+python -m scripts.run_interactive_teacher --mode kimi \
+  --sample-id f32240d5152e8b45fd0fcb02 --budget 1 --max-real-requests 2 \
+  --estimated-input-tokens 8192 --third-party-transmission-reviewed \
+  --transmission-review-basis partnet-approved-noncommercial-research-terms-no-explicit-render-api-prohibition \
+  --out output/interactive-teacher/kimi-pilot-round1-defect-pm100054
+python -m scripts.compare_teacher_acquisition \
+  --sample-id af10f7137bbe158aa03557b5 \
+  --sample-id f32240d5152e8b45fd0fcb02 --seed 0 \
+  --out output/interactive-teacher/kimi-pilot-round1-baselines
+```
 
 ## 复现命令
 

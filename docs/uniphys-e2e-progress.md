@@ -71,6 +71,8 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 **已完成：可见信息 API 教师单步最小闭环。** 单个 PartNet Train Episode 已通过 Mock 真实浏览器闭环，并由本地 Qwen 根据参考图和因果历史依次选择 `front` 与 `joint_0→limit`；环境执行、图像回填、状态保持、预算和逐调用审计均正常。本地模型在预算归零后未能输出 verdict，故只支持“Pipeline 正常且两次动作合法”，不支持诊断能力结论。经外发条款审阅，Kimi `k3-256k` 已在同一正式 Train Episode 上完成一次真实请求，返回合法 `request_view(front)`，环境执行并生成有新增像素信息的观察；鉴权、多模态、结构化协议、执行和审计的单步兼容性为 `READY`。本次没有把新观察再次回传，故非空历史的后续多图调用仍未实测；网关账单费用未知。实现与复现见 [`training-dataset-expansion.md`](training-dataset-expansion.md)，机器结果见 [`interactive-teacher-v1-results.json`](../output/interactive-teacher-v1-results.json)，脱敏证据见 [`kimi-partnet-real-compat-v1.json`](evidence/kimi-partnet-real-compat-v1.json)；未做 Generator 采集、SFT 或冻结 Test 访问。
 
+**第一轮 Kimi 小规模采集已在4次真实请求上限停止，不建议直接扩量。** 两个不同 PartNet Train 原物体各运行预算1的观察决策与最终请求：动作均合法，缺陷条 `oblique_fr` 提供一条有新图像的可见信息候选动作，clean 条 `front` 与参考完全重复；但两个终判都不符合现有 verdict schema，故完整 Episode 0/2、有证据 finding 0、无效输出2。总用量8,393 token，费用未知。同 runner、同预算的离线 fixed/random 对照不调用模型：clean 上 Kimi 不如 random 的新视角，缺陷上 Kimi 与 random seed 0 的动作和图像完全相同；既有 Oracle 因 framing 不同不作严格像素对照。原始结果按失败真实保留，未补标签、未训练、未访问冻结 Test。下一步先离线修正 prompt 的显式 verdict 合同并复测同规模门禁，详见 [`training-dataset-expansion.md`](training-dataset-expansion.md) 与 [`kimi-interactive-teacher-round1.json`](evidence/kimi-interactive-teacher-round1.json)。
+
 ## 关键缺口
 
 **已完成正式 PartNet 第一轮受控 SFT，但只保留为旧 v3 checkpoint 分析。** 底座/普通/证据组 exact verdict 为7/9/13，finding F1 为0/.351/.419；证据组把 unsupported finding 从33降至15，并改善 axis/定位汇总，但 offset recall 下降。无图像预算基线在相同 Validation 上达到28/28 terminal status 和 defect-type F1 .737，完全解释 status 收益并覆盖大量类型表现；因此这些 checkpoint 不支持视觉依赖或修复后监督效果主张。

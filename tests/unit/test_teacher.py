@@ -177,3 +177,18 @@ def test_kimi_requires_allowlisted_model_transmission_review_and_bounded_cost():
     assert unknown.public()["estimated_max_cost_rmb"] is None
     assert unknown.public()["billing_basis"] == "unknown_gateway_or_membership_quota"
     assert teacher.public()["max_real_requests"] == 1
+
+
+def test_kimi_enforces_configured_real_request_cap(monkeypatch):
+    cfg = ModelConfig("teacher", "openai_compatible", "k3", "https://api.example/v1", "key", 100)
+    teacher = KimiTeacher(cfg, None, transmission_reviewed=True, estimated_input_tokens=100,
+                          max_real_requests=2)
+    calls = []
+    monkeypatch.setattr("turnitover.teacher.providers.complete", lambda *args: (
+        calls.append(args) or ModelResult("{}", "k3", {}, "stop", 0.0)))
+    teacher("prompt", [])
+    teacher("prompt", [])
+    with pytest.raises(RuntimeError, match="request cap"):
+        teacher("prompt", [])
+    assert len(calls) == 2
+    assert teacher.public()["max_real_requests"] == 2

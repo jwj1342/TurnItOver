@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-14",
+  "purpose": "Issue #4 first small Kimi interactive-teacher collection",
+  "status": "complete_at_real_request_cap",
+  "model": "k3-256k",
+  "limits": {
+    "episodes": 2,
+    "observation_budget_per_episode": 1,
+    "max_real_requests_per_episode": 2,
+    "max_real_requests_total": 4,
+    "decision_attempts": 1,
+    "automatic_retry": false,
+    "fallback_model": false,
+    "concurrent_calls": false
+  },
+  "transmission_review": {
+    "approved": true,
+    "basis": "PartNet-Mobility approved non-commercial research terms; no explicit prohibition on third-party inference over rendered images was identified",
+    "scope": "two formal Train rendered references and one causal observation per acted episode"
+  },
+  "episodes": [
+    {
+      "id": "af10f7137bbe158aa03557b5",
+      "asset_id": "PM_100934",
+      "split_group": "PartNet-Mobility:100934",
+      "case": "clean",
+      "termination": "budget_exhausted",
+      "real_api_requests": 2,
+      "token_usage": {"input_tokens": 1475, "output_tokens": 1928, "total_tokens": 3403},
+      "action": {"type": "request_view", "view_id": "front"},
+      "action_legal": true,
+      "observation_new_information": false,
+      "observation_note": "The acquired image is byte-identical to the supplied front reference.",
+      "final_output_valid": false,
+      "final_output_error": "Return exactly one action or verdict",
+      "teacher_verdict_present": false,
+      "raw_final_output": {"verdict": "pass", "confidence": 0.95, "rationale": "The available front observation is visually identical to the reference: same dark background, same vertical gray link position and length, and same small left protruding feature at mid-height. No missing or extra geometry and no visible constraint violation are apparent from the exhausted-budget evidence."},
+      "posthoc_audit": {
+        "structured_evidence_supported_findings": 0,
+        "structured_unsupported_findings": 0,
+        "unsupported_terminal_claims": 1,
+        "stop_reasonable": true,
+        "stop_reason": "The observation budget was exhausted, but the attempted pass claim was not justified as complete verification."
+      },
+      "sha256": {
+        "episode.json": "e938c7a729ed4f0dffedf949149887de043a015aef11fd64976f6b810b732e76",
+        "audit.json": "45ca02a81f856f978c4b2b2a83c3ef183535be199f225125b3c6fe8af436d588",
+        "request-000.json": "a1a00c1ea49dbbc0ebde0d35f6bb64fbc06207f51b7db74ecbea1cdb07da506d",
+        "response-000.txt": "429be40e384547c79a3dd4171882ea82eb344f5c4f3bfe3f40fcf9dd4cc0fb37",
+        "request-001.json": "945d2a16e9f581e012b3a75b3f6813be7c46accbcbd64a4b76479ca56a6c122d",
+        "response-001.txt": "f2e9a55464a2b0e387c9275291eadf15b4dc6b4eda9e36478cfc6a4e4356cc8e",
+        "reference-00.png": "0892a5637ad77a968d74ad54f4396d0f8e760c27dfb5ac26241d12d3a04b88be",
+        "observations/000.png": "0892a5637ad77a968d74ad54f4396d0f8e760c27dfb5ac26241d12d3a04b88be"
+      }
+    },
+    {
+      "id": "f32240d5152e8b45fd0fcb02",
+      "asset_id": "PM_100054",
+      "split_group": "PartNet-Mobility:100054",
+      "case": "controlled_defect",
+      "gold_defect_ids": ["kinematics.joint_axis", "structure.part_offset"],
+      "termination": "budget_exhausted",
+      "real_api_requests": 2,
+      "token_usage": {"input_tokens": 1466, "output_tokens": 3524, "total_tokens": 4990},
+      "action": {"type": "request_view", "view_id": "oblique_fr"},
+      "action_legal": true,
+      "observation_new_information": true,
+      "observation_note": "The observation differs from the supplied front reference. Its action and image SHA exactly match the same-runner random seed-0 baseline.",
+      "final_output_valid": false,
+      "final_output_error": "Decision fields do not match the required schema",
+      "teacher_verdict_present": false,
+      "raw_final_output": {"verdict": {"label": "accept", "corrupted": false, "confidence": 0.66, "rationale": "The available oblique render is consistent with the reference viewed off-axis: the rounded body, superior rectangular lug, and side/front feature appear explainable by camera perspective rather than missing or extra geometry. No obvious joint, part-count, or constraint violation is visible. Runtime stats and joint_state could not be confirmed because the observation budget is exhausted."}},
+      "posthoc_audit": {
+        "structured_evidence_supported_findings": 0,
+        "structured_unsupported_findings": 0,
+        "unsupported_terminal_claims": 1,
+        "stop_reasonable": true,
+        "stop_reason": "The observation budget was exhausted; the attempted accept claim contradicts the independent controlled-defect Gold and does not cite evidence."
+      },
+      "sha256": {
+        "episode.json": "6984420e0872ab0c40e9eeda7ade9cfac33d624d745ae2ad3420250b3ab23dce",
+        "audit.json": "de55cc795cc12c978322e4d276efc86f27911b6555bab71cd18422dfc729b657",
+        "request-000.json": "a1a00c1ea49dbbc0ebde0d35f6bb64fbc06207f51b7db74ecbea1cdb07da506d",
+        "response-000.txt": "99a7737cdc6d2e98ab5e0027c54bf59f08b7c48b2276a22496df5d13f8043773",
+        "request-001.json": "edc721369899c807a33e943b2ed5f2a2914c6c1a3aff8c54205b1d4f9408a0c2",
+        "response-001.txt": "e141e9db496994df239a2e45fef5be730e79f16086a8187e4debdbc73f315ec1",
+        "reference-00.png": "2d6df2cbada1189c1d6396cefe4aff68b00f20fc892112a93f166b9fdb8b96e8",
+        "observations/000.png": "f24c20526316f471e5db6e4a565d96609a6accf98a16bcb0dabdda5dc4ed103b"
+      }
+    }
+  ],
+  "offline_budget_one_comparison": {
+    "source": "scripts/compare_teacher_acquisition.py with candidate auto-framing matching the teacher runner",
+    "model_calls": 0,
+    "comparison_sha256": "071e37d3f37634f8dbea5cb277143c2abda8fe243d0750b46d8d38dfd853d8ee",
+    "clean": {
+      "kimi": {"action": "view:front", "observation_new_information": false},
+      "fixed": {"action": "runtime:stats", "observation_new_information": true},
+      "random_seed_0": {"action": "view:oblique_fr", "observation_new_information": true,
+                        "image_sha256": "fc1182abd706dfe1b19476a1a397f5875805cb44e90da7b00cea490e32db06aa"}
+    },
+    "controlled_defect": {
+      "kimi": {"action": "view:oblique_fr", "observation_new_information": true,
+               "image_sha256": "f24c20526316f471e5db6e4a565d96609a6accf98a16bcb0dabdda5dc4ed103b"},
+      "fixed": {"action": "runtime:stats", "observation_new_information": true},
+      "random_seed_0": {"action": "view:oblique_fr", "observation_new_information": true,
+                        "image_sha256": "f24c20526316f471e5db6e4a565d96609a6accf98a16bcb0dabdda5dc4ed103b"}
+    },
+    "result": "Kimi is worse than random on clean observation novelty and exactly matches random on the controlled-defect action and pixels; no acquisition advantage was observed.",
+    "diagnosis_comparison": "Not available: the offline controls execute acquisition only and make no model verdict call.",
+    "oracle_caveat": "The existing privileged Oracle export uses sample framing while the teacher runner uses candidate auto-framing; its exposure lookup is not treated as a strict pixel-matched comparison."
+  },
+  "summary": {
+    "complete_episodes": 0,
+    "legal_actions": 2,
+    "qualified_actions": 1,
+    "evidence_supported_findings": 0,
+    "unsupported_structured_findings": 0,
+    "unsupported_terminal_claims": 2,
+    "invalid_outputs": 2,
+    "real_api_requests": 4,
+    "token_usage": {"input_tokens": 2941, "output_tokens": 5452, "total_tokens": 8393},
+    "billing_cost_rmb": null,
+    "student_learnable_new_supervision": "One visible-only defect-view action is a candidate action label, but it exactly duplicates the random seed-0 action and pixels; both terminal outputs are unusable.",
+    "expand_collection": false,
+    "recommendation": "Do not expand paid collection until the full verdict JSON schema is explicit in the prompt and passes an offline structured-output contract test."
+  },
+  "raw_artifacts": {
+    "committed": false,
+    "local_paths": [
+      "output/interactive-teacher/kimi-pilot-round1-clean-pm100934",
+      "output/interactive-teacher/kimi-pilot-round1-defect-pm100054",
+      "output/interactive-teacher/kimi-pilot-round1-baselines"
+    ],
+    "contents": "Each directory retains prompt.txt, request.json, images.json, response.txt, metadata.json, episode.json, audit.json, reference image, and causal observation image."
+  },
+  "independent_review": {
+    "review_independence": "same-family",
+    "acceptance_status": "blocked",
+    "reason": "The fresh review agent reached its usage limit before completing checks A-H.",
+    "verified_before_block": [
+      "Both final outputs violate the parser contract and neither Episode contains a verdict.",
+      "The teacher prompt refers to the verifier schema without including the schema.",
+      "The privileged Oracle export and teacher runner use different framing, so Oracle exposure lookup is not a strict pixel-matched comparison."
+    ],
+    "deterministic_audit": "The repository audit plus same-runner fixed/random replay completed; the fresh-agent semantic verdict remains unavailable."
+  },
+  "frozen_test_used": false,
+  "generator_api_used": false,
+  "sft_run": false,
+  "evidence_rules_modified": false,
+  "claim_scope": "Two-episode pilot for a collection go/no-go decision only; no capability or generalization claim."
+}

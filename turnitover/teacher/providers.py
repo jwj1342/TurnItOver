@@ -64,10 +64,11 @@ class KimiPricing:
 
 
 class KimiTeacher:
-    """One-request Kimi adapter; callers enforce the episode call cap."""
+    """Bounded Kimi adapter; callers enforce the episode call cap."""
 
     def __init__(self, config: ModelConfig, pricing: KimiPricing | None, *, transmission_reviewed: bool,
-                 estimated_input_tokens: int, max_cost_rmb: float = 1.0):
+                 estimated_input_tokens: int, max_cost_rmb: float = 1.0,
+                 max_real_requests: int = 1):
         if config.model not in KIMI_MODELS:
             raise ValueError("Kimi teacher model is not in the Issue #4 tested candidate set")
         config.validate()
@@ -75,6 +76,8 @@ class KimiTeacher:
             raise ValueError("Third-party asset transmission terms were not reviewed")
         if pricing is not None and (pricing.verified_at != date.today().isoformat() or not pricing.source):
             raise ValueError("Kimi pricing must be verified today from an identified source")
+        if type(max_real_requests) is not int or max_real_requests < 1:
+            raise ValueError("Kimi real-request cap must be a positive integer")
         estimate = pricing.estimate(estimated_input_tokens, config.max_tokens) if pricing else None
         if estimate is not None and estimate > max_cost_rmb:
             raise ValueError("Estimated Kimi request cost exceeds the configured cap")
@@ -82,17 +85,19 @@ class KimiTeacher:
         self.estimated_input_tokens = estimated_input_tokens
         self.estimated_cost_rmb = estimate
         self.max_cost_rmb = max_cost_rmb
+        self.max_real_requests = max_real_requests
         self.calls = 0
 
     def __call__(self, prompt: str, images: list[Path]) -> ModelResult:
-        if self.calls:
-            raise RuntimeError("Kimi compatibility validation allows exactly one real request")
+        if self.calls >= self.max_real_requests:
+            raise RuntimeError("Kimi real-request cap reached")
         self.calls += 1
         return complete(self.config, prompt, images)
 
     def public(self) -> dict:
         return {"kind": "kimi", "model": self.config.model, "paid": True,
-                "max_real_requests": 1, "estimated_input_tokens": self.estimated_input_tokens,
+                "max_real_requests": self.max_real_requests,
+                "estimated_input_tokens": self.estimated_input_tokens,
                 "estimated_max_cost_rmb": self.estimated_cost_rmb,
                 "cost_cap_rmb": self.max_cost_rmb if self.pricing else None,
                 "pricing": self.pricing.__dict__ if self.pricing else None,

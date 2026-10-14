@@ -137,15 +137,16 @@ def run(args) -> dict:
                    if all(value is not None for value in pricing_values) else None)
         teacher = KimiTeacher(model, pricing, transmission_reviewed=True,
                               estimated_input_tokens=args.estimated_input_tokens,
-                              max_cost_rmb=args.max_cost_rmb)
+                              max_cost_rmb=args.max_cost_rmb,
+                              max_real_requests=args.max_real_requests)
         print(json.dumps({"phase": "kimi_preflight", "model": model.model,
                           "estimated_input_tokens": args.estimated_input_tokens,
                           "max_output_tokens": model.max_tokens,
                           "estimated_max_cost_rmb": teacher.estimated_cost_rmb,
-                          "real_request_cap": 1}), flush=True)
+                          "real_request_cap": args.max_real_requests}), flush=True)
 
     program = ObjectProgram(private["candidate_program"])
-    max_calls = 1 if args.mode == "kimi" else None
+    max_calls = args.max_real_requests if args.mode == "kimi" else None
     if args.mode == "kimi" and args.resume:
         saved = json.loads((args.out / "episode.json").read_text())
         if saved.get("model_calls"):
@@ -219,5 +220,6 @@ if __name__ == "__main__":
     parser.add_argument("--pricing-verified-at")
     parser.add_argument("--pricing-source")
     parser.add_argument("--max-cost-rmb", type=float, default=1.0)
+    parser.add_argument("--max-real-requests", type=int, default=1)
     arguments = parser.parse_args()
     print(json.dumps(run(arguments), indent=2))
