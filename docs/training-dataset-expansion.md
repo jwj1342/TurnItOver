@@ -279,11 +279,13 @@ python -m scripts.analyze_qwen_episode_diagnostics \
 
 ## API 交互教师最小闭环
 
-[`run_interactive_teacher.py`](../scripts/run_interactive_teacher.py) 统一 Mock、本地 Qwen3-VL-2B 和 Kimi 的模型可见请求：仅包含参考图、已发生的观察历史、合法动作空间、`remaining` 和与其一致的 `stop_required`。动作在环境执行后才回填；每次原始输出、request JSON、图像顺序、token、预算和异常均原子保存。动作已选但环境中断时保存 `pending_action`，恢复会先重放既有状态再执行该动作，不重复调用教师。独立 `audit.json` 分开报告 Pipeline 完整性、教师动作/输出合法性、verdict 是否存在和诊断证据支持；私有 Gold 仅在结束后比较。预算归零仍未得到合法 verdict 时安全结束为 `budget_exhausted=true, teacher_verdict_missing=true`，Episode 不写入伪造 verdict。
+[`run_interactive_teacher.py`](../scripts/run_interactive_teacher.py) 统一 Mock、本地 Qwen3-VL-2B 和 Kimi 的模型可见请求：仅包含参考图、已发生的观察历史、合法动作空间、`remaining` 和与其一致的 `stop_required`。动作在环境执行后才回填；每次原始输出、request JSON、图像顺序、token、预算和异常均保存，Episode ledger 原子落盘。动作已选但环境中断时保存 `pending_action`，恢复会先重放既有状态再执行该动作，不重复调用教师。独立 `audit.json` 分开报告 Pipeline 完整性、是否收到教师响应、教师动作/输出合法性、verdict 是否存在和诊断证据支持；私有 Gold 仅在结束后比较。预算归零仍未得到合法 verdict 时安全结束为 `budget_exhausted=true, teacher_verdict_missing=true`，Episode 不写入伪造 verdict。
 
 2026-10-14 在 Train Episode `f32240d5152e8b45fd0fcb02` 上停止于最小验证规模，全部图像为256×256。Mock 真实 Chromium 闭环执行 `joint_0→limit`，随后在 `remaining=0, stop_required=true` 返回合法 `uncertain` verdict，`pipeline_ok=true`、预算1/1；观察与参考 SHA 不同，但 verdict 没有诊断 finding。本地 Qwen 在预算2内先选 `front`，看到更新历史后再选 `joint_0→limit`，两次均合法执行且取得不同图像；预算归零后连续三次仍请求 `joint_state`，因此安全收口为 `budget_exhausted`、明确缺失 verdict，未伪造诊断。Pipeline 与环境链路正常，但该模型的停止输出不合法、无诊断证据结论；共5次本地推理，4,662 input + 78 output token，费用0元。单测另覆盖教师提前合法停止、零预算合法 verdict、零预算缺失 verdict、非法/不可解析输出、执行异常，以及中断恢复不重复选动作。
 
-Kimi 阶段未调用。当前 catalog 只记录 PartNet-Mobility/ShapeNet 的非商业研究教育限制，没有明确授权把资产图像传给第三方 API；同时本机未配置并验证可用教师凭证、候选模型标识和当前计费来源。按门禁直接写入 skip 审计：真实付费调用0次、实际费用0元。机器汇总为 [`interactive-teacher-v1-results.json`](../output/interactive-teacher-v1-results.json)；逐调用 JSON 和图像留在被忽略的 `output/interactive-teacher/{mock-v2,local-qwen-v3,kimi-preflight-v1}/`，不进入提交。
+PartNet-Mobility 官方条款允许获批研究者将数据库用于非商业研究与教育，并要求获得数据库访问的研究同事先同意相同条款；但没有明确禁止把单张渲染图提交给第三方模型做非商业研究推理（虽然这不等同于上游对云处理的专项书面许可）。按本轮采用的“无明确禁止即可做最小测试”边界，2026-10-14 从正式 Train split 选取 `f32240d5152e8b45fd0fcb02`（`PM_100054`，`formal_training=true`），未使用 Validation 或冻结 Test。Kimi `k3-256k` 成功接收一张 PartNet-Mobility 参考图、空观察历史、`remaining=2` 和 `stop_required=false`，以 `finish_reason=stop` 返回合法 `request_view(front)`；系统正确解析并执行动作，生成与参考图哈希不同的新观察，随后按单次请求上限停止，未重试或切换模型。该正式 Train 案例的单步鉴权、多模态、协议解析、环境执行和审计链路结论为 `READY`；非空观察历史的二次多图回传尚未实测。本次用量599 input、513 output tokens（其中487 reasoning），网关账单费用未知。
+
+此前项目自建 `toy_cabinet` compatibility fixture 用于定位兼容性问题：前四次用户授权请求纠正端点并定位 HTTP 401/403；后续 `/models` 探针将网关403归因为 Cloudflare Error 1010 对 Python `urllib` 默认 browser signature 的屏蔽。仅为 `openai_compatible` 增加稳定 User-Agent 后请求到达模型，放开输出上限后得到合法动作。累计真实请求7次。机器汇总为 [`interactive-teacher-v1-results.json`](../output/interactive-teacher-v1-results.json)，可提交的脱敏证据为 [`kimi-partnet-real-compat-v1.json`](evidence/kimi-partnet-real-compat-v1.json)；含图片的完整本地证据留在被忽略的 `output/interactive-teacher/`，不进入提交。
 
 ```bash
 python -m scripts.run_interactive_teacher --mode mock --budget 1 --out output/interactive-teacher/mock-v2
@@ -291,10 +293,15 @@ CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python \
   -m scripts.run_interactive_teacher --mode local-qwen --budget 2 --max-tokens 384 \
   --playwright-site-packages /home/laq/anaconda3/lib/python3.12/site-packages \
   --out output/interactive-teacher/local-qwen-v3
-python -m scripts.run_interactive_teacher --mode kimi --out output/interactive-teacher/kimi-preflight-v1
+python -m scripts.run_interactive_teacher --mode kimi \
+  --sample-id f32240d5152e8b45fd0fcb02 --budget 2 \
+  --third-party-transmission-reviewed \
+  --transmission-review-basis partnet-noncommercial-terms-no-explicit-render-api-prohibition \
+  --estimated-input-tokens 4096 \
+  --out output/interactive-teacher/kimi-partnet-real-compat-v2
 ```
 
-第二条命令只把已有 Playwright 安装追加到缺少该包的 Qwen 环境；Qwen 权重仍由原本环境离线加载。真实 Kimi 调用还必须显式提供第三方传输许可确认、输入 token 估计、计费单价/核验日期/来源、模型和凭证；适配器固定最多一次且不重试、不切换模型。本轮没有 Generator API 采集、训练、冻结 Test 访问或规模扩张。
+第二条命令只把已有 Playwright 安装追加到缺少该包的 Qwen 环境；Qwen 权重仍由原本环境离线加载。Kimi 模型和凭证由 `.env` 的独立 Teacher 配置提供；外发审阅依据显式进入 Episode。网关计费未知时不填人民币单价，费用记录为 `null`，不能写成0元。适配器固定最多一次且不重试、不切换模型。本轮没有 Generator API 采集、训练、冻结 Test 访问或规模扩张。
 
 ## 复现命令
 

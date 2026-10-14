@@ -84,10 +84,16 @@ def audit_episode(output: Path, private_gold: dict | None = None) -> dict:
     invalid_outputs = [item for item in episode["decisions"] if not item["valid"]]
     invalid_actions = [item for item in invalid_outputs
                        if isinstance(item.get("decision"), dict) and "action" in item["decision"]]
+    model_calls = episode.get("model_calls", [])
+    response_received = any(
+        item.get("status") == "received" or "finish_reason" in item for item in model_calls)
+    responses_accepted = bool(model_calls) and all(
+        item.get("status") == "received" for item in model_calls)
     audit = {"schema_version": 1, "episode_id": episode["episode_id"],
              "pipeline_ok": not errors and episode.get("termination") in handled,
              "teacher_actions_legal": not invalid_actions,
-             "teacher_outputs_legal": not invalid_outputs,
+             "teacher_outputs_legal": responses_accepted and not invalid_outputs,
+             "teacher_response_received": response_received,
              "teacher_verdict_present": verdict is not None,
              "budget_exhausted": bool(episode.get("budget_exhausted")),
              "teacher_verdict_missing": bool(episode.get("teacher_verdict_missing")),
@@ -97,6 +103,8 @@ def audit_episode(output: Path, private_gold: dict | None = None) -> dict:
              "observation_new_information": informative, "errors": errors,
              "reference_sha256": reference_sha256, "observation_sha256": observation_sha256,
              "scope": "integrity_and_observation_novelty_not_semantic_ground_truth"}
+    if "data_identity" in episode:
+        audit["data_identity"] = episode["data_identity"]
     if private_gold is not None:
         gold_ids = sorted(item["defect_id"] for item in private_gold.get("target", {}).get("findings", []))
         predicted = sorted(item["defect_id"] for item in (verdict or {}).get("findings", []))

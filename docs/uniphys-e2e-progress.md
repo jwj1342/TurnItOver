@@ -69,7 +69,7 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 **已完成：SFT 监督语义修复。** 后续审计推翻了 v3“语义已就绪”的结论：37/110 Train、10/28 Validation terminal 解释引用了 injected/private-label 等不可见状态。v4 只重导 assistant 与停止目标，复用全部观察、Gold 和像素；539行中401条动作不变、138条 terminal 解释变化，status/findings/evidence steps 均不变，修复后0条禁用措辞、0个精确公开前缀冲突。另增加539条 `continue/stop` 目标并分离 `first_failure` 与 `comprehensive_within_budget`；旧 checkpoint 仍是 v3 结果，不代表修复后训练。
 
-**已完成：可见信息 API 教师最小闭环。** 单个 PartNet Train Episode 已通过 Mock 真实浏览器闭环，并由本地 Qwen 根据参考图和因果历史依次选择 `front` 与 `joint_0→limit`；环境执行、图像回填、状态保持、预算和逐调用审计均正常。本地模型在预算归零后未能输出 verdict，故只支持“Pipeline 正常且两次动作合法”，不支持诊断能力结论。Kimi 因第三方图像传输许可、凭证/模型和当前计费未全部确认而跳过，真实付费调用0次、费用0元。实现与复现见 [`training-dataset-expansion.md`](training-dataset-expansion.md)，机器结果见 [`interactive-teacher-v1-results.json`](../output/interactive-teacher-v1-results.json)；未做 Generator 采集、SFT 或冻结 Test 访问。
+**已完成：可见信息 API 教师单步最小闭环。** 单个 PartNet Train Episode 已通过 Mock 真实浏览器闭环，并由本地 Qwen 根据参考图和因果历史依次选择 `front` 与 `joint_0→limit`；环境执行、图像回填、状态保持、预算和逐调用审计均正常。本地模型在预算归零后未能输出 verdict，故只支持“Pipeline 正常且两次动作合法”，不支持诊断能力结论。经外发条款审阅，Kimi `k3-256k` 已在同一正式 Train Episode 上完成一次真实请求，返回合法 `request_view(front)`，环境执行并生成有新增像素信息的观察；鉴权、多模态、结构化协议、执行和审计的单步兼容性为 `READY`。本次没有把新观察再次回传，故非空历史的后续多图调用仍未实测；网关账单费用未知。实现与复现见 [`training-dataset-expansion.md`](training-dataset-expansion.md)，机器结果见 [`interactive-teacher-v1-results.json`](../output/interactive-teacher-v1-results.json)，脱敏证据见 [`kimi-partnet-real-compat-v1.json`](evidence/kimi-partnet-real-compat-v1.json)；未做 Generator 采集、SFT 或冻结 Test 访问。
 
 ## 关键缺口
 

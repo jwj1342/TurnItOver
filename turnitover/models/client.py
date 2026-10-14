@@ -73,6 +73,8 @@ def request_payload(cfg: ModelConfig, prompt: str, images: list[Path]) -> tuple[
         content.append({"type": "input_text", "text": prompt})
         return cfg.base_url + "/responses", headers, {"model": cfg.model, "store": False,
             "max_output_tokens": cfg.max_tokens, "input": [{"role": "user", "content": content}]}
+    if cfg.provider == "openai_compatible":
+        headers["User-Agent"] = "TurnItOver/1.0 OpenAI-Compatible-Client"
     content = [{"type": "image_url", "image_url": {"url": f"data:{mime};base64,{data}"}} for mime, data in parts]
     content.append({"type": "text", "text": prompt})
     body = {"model": cfg.model, "max_tokens": cfg.max_tokens,

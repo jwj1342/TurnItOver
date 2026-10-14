@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-14",
+  "purpose": "sanitized one-request Kimi compatibility evidence; no credential, endpoint, or image bytes",
+  "model": "k3-256k",
+  "sample": {
+    "episode_id": "f32240d5152e8b45fd0fcb02",
+    "asset_id": "PM_100054",
+    "source_id": "partnet-mobility-ee0aa3ef1df1",
+    "split": "train",
+    "formal_training": true,
+    "third_party_transmission_reviewed": true,
+    "transmission_review_basis": "approved non-commercial research access; terms do not expressly prohibit third-party inference on one rendered image"
+  },
+  "request": {
+    "reference_images": 1,
+    "history": [],
+    "remaining": 2,
+    "stop_required": false,
+    "image_order": [{"image": 0, "kind": "reference"}],
+    "prompt_sha256": "28a25bc4cabc4860d84bfe095a2be4cb1a9b1498860230b426e844506f19849e",
+    "prompt_protocol_path": "turnitover/teacher/prompt.txt",
+    "prompt_protocol_sha256": "b6eeb2c9a435c8185330b2e0a4f7f0e35fdb9b808ec5afd201bd5575335b0764"
+  },
+  "response": {
+    "raw": "{\"action\":{\"type\":\"request_view\",\"view_id\":\"front\"}}",
+    "parseable": true,
+    "legal_decision": true,
+    "finish_reason": "stop",
+    "usage": {"input_tokens": 599, "output_tokens": 513, "total_tokens": 1112, "reasoning_tokens": 487},
+    "billing_cost_rmb": null
+  },
+  "execution": {
+    "action_executed": true,
+    "new_observation_generated": true,
+    "observation_informative_by_pixel_hash": true,
+    "termination": "model_call_limit"
+  },
+  "audit": {
+    "pipeline_ok": true,
+    "teacher_response_received": true,
+    "teacher_actions_legal": true,
+    "teacher_outputs_legal": true,
+    "teacher_verdict_present": false,
+    "scope": "integrity_and_observation_novelty_not_semantic_ground_truth"
+  },
+  "compatibility_status": "READY",
+  "ready_scope": "one-step reference-to-action-to-observation compatibility; non-empty-history follow-up untested",
+  "sha256": {
+    "request": "744dadd2fc1058a0597a26eb3232b5dfdb52c6c0853f741b61b69637c4f7fb6c",
+    "response": "429be40e384547c79a3dd4171882ea82eb344f5c4f3bfe3f40fcf9dd4cc0fb37",
+    "episode": "c99dd55aa54c5380689cc4cd0d4c3b19cf0979735066cddbc1b7cb780d92ca96",
+    "audit": "d632821fec64dfdf657f1d01c9f32cedf3846d3c4ca6ae59171f7cacf0265228",
+    "reference_image": "2d6df2cbada1189c1d6396cefe4aff68b00f20fc892112a93f166b9fdb8b96e8",
+    "observation_image": "ed9c5f3cfaa25cb91910fba9fceeab62a38df7e5e0b5926177d8117709bab554"
+  }
+}

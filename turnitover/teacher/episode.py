@@ -66,7 +66,8 @@ def _replay(session: SessionLike, output: Path, context: Context, records: Seque
 def run_teacher_episode(session: SessionLike, policy: TeacherPolicy, context: Context, budget: int,
                         output: Path, *, episode_id: str, resume: bool = False,
                         max_model_calls: int | None = None,
-                        decision_attempts: int = MAX_DECISION_ATTEMPTS) -> dict:
+                        decision_attempts: int = MAX_DECISION_ATTEMPTS,
+                        data_identity: dict | None = None) -> dict:
     """Run one episode. A pending action is durable before environment execution."""
     if type(budget) is not int or budget < 0:
         raise ValueError("Teacher observation budget must be a nonnegative integer")
@@ -81,6 +82,8 @@ def run_teacher_episode(session: SessionLike, policy: TeacherPolicy, context: Co
             raise ValueError("Only an interrupted episode can be resumed")
         if state["episode_id"] != episode_id or state["budget"] != budget:
             raise ValueError("Resume identity or budget differs from the saved episode")
+        if data_identity is not None and state.get("data_identity") != data_identity:
+            raise ValueError("Resume data identity differs from the saved episode")
         policy.calls = list(state.get("model_calls", []))
         history = _replay(session, output, context, state["trajectory"])
     else:
@@ -94,6 +97,8 @@ def run_teacher_episode(session: SessionLike, policy: TeacherPolicy, context: Co
                  "trajectory": [], "decisions": [], "pending_action": None,
                  "model_calls": [], "token_usage": _totals([]),
                  "budget_exhausted": False, "teacher_verdict_missing": True}
+        if data_identity is not None:
+            state["data_identity"] = data_identity
         history = []
         _checkpoint(result_path, state, policy)
 

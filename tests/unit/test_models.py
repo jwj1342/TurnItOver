@@ -61,6 +61,20 @@ def test_provider_vision_wire_formats(tmp_path, provider, suffix, image_key, tok
     assert "secret-key" in json.dumps(headers)
 
 
+def test_openai_compatible_sets_api_client_user_agent_only():
+    compatible = ModelConfig("teacher", "openai_compatible", "k3-256k",
+                             "https://test/v1", "secret-key")
+    openrouter = ModelConfig("teacher", "openrouter", "test-model",
+                             "https://test/v1", "secret-key")
+
+    url, headers, _ = request_payload(compatible, "inspect", [])
+    _, openrouter_headers, _ = request_payload(openrouter, "inspect", [])
+
+    assert url == "https://test/v1/chat/completions"
+    assert headers["User-Agent"] == "TurnItOver/1.0 OpenAI-Compatible-Client"
+    assert "User-Agent" not in openrouter_headers
+
+
 @pytest.mark.parametrize("configured,expected", [(False, False), (True, True)])
 def test_qwen37_plus_uses_configured_thinking_mode(configured, expected):
     qwen = ModelConfig("generator", "openai_compatible", "qwen3.7-plus",

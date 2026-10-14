@@ -66,17 +66,17 @@ class KimiPricing:
 class KimiTeacher:
     """One-request Kimi adapter; callers enforce the episode call cap."""
 
-    def __init__(self, config: ModelConfig, pricing: KimiPricing, *, permission_confirmed: bool,
+    def __init__(self, config: ModelConfig, pricing: KimiPricing | None, *, transmission_reviewed: bool,
                  estimated_input_tokens: int, max_cost_rmb: float = 1.0):
         if config.model not in KIMI_MODELS:
             raise ValueError("Kimi teacher model is not in the Issue #4 tested candidate set")
         config.validate()
-        if not permission_confirmed:
-            raise ValueError("Third-party asset transmission permission is not confirmed")
-        if pricing.verified_at != date.today().isoformat() or not pricing.source:
+        if not transmission_reviewed:
+            raise ValueError("Third-party asset transmission terms were not reviewed")
+        if pricing is not None and (pricing.verified_at != date.today().isoformat() or not pricing.source):
             raise ValueError("Kimi pricing must be verified today from an identified source")
-        estimate = pricing.estimate(estimated_input_tokens, config.max_tokens)
-        if estimate > max_cost_rmb:
+        estimate = pricing.estimate(estimated_input_tokens, config.max_tokens) if pricing else None
+        if estimate is not None and estimate > max_cost_rmb:
             raise ValueError("Estimated Kimi request cost exceeds the configured cap")
         self.config, self.pricing = config, pricing
         self.estimated_input_tokens = estimated_input_tokens
@@ -94,4 +94,6 @@ class KimiTeacher:
         return {"kind": "kimi", "model": self.config.model, "paid": True,
                 "max_real_requests": 1, "estimated_input_tokens": self.estimated_input_tokens,
                 "estimated_max_cost_rmb": self.estimated_cost_rmb,
-                "cost_cap_rmb": self.max_cost_rmb, "pricing": self.pricing.__dict__}
+                "cost_cap_rmb": self.max_cost_rmb if self.pricing else None,
+                "pricing": self.pricing.__dict__ if self.pricing else None,
+                "billing_basis": "token_pricing" if self.pricing else "unknown_gateway_or_membership_quota"}
