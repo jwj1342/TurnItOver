@@ -73,6 +73,8 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 **已完成正式 PartNet 第一轮受控 SFT。** 同一110条 Train terminal Episode、相同输入/seed/330步下，普通 SFT 监督111个完整 Gold finding，其中37个 axis finding 超出当前可见证据；证据组只监督74个可见 finding。两组均不训练特权动作或隐藏 clean `pass`。新版三组 Validation 重跑全部完成且逐案例复现：底座/普通/证据组 exact verdict 为7/9/13，finding F1 为0/0.351/0.419；证据组把 unsupported finding 从33降至15，主要将 axis FP 从15降至3，但 offset 定位 F1 从0.353降至0.313。两组 status macro-F1 虽均为1.0，却受 terminal 步数与 `remaining` 完全相关的捷径混淆，不代表视觉提前停止。完整设计、命令、逐物体结果和限制见 [`training-dataset-expansion.md`](training-dataset-expansion.md#第一轮-qwen3-vl-2b-正式-sft-受控对照)。有限 witness 网格、自然错误、多 seed 及仅依赖可见信息的动作教师仍待完成。
 
+**已完成第一轮收益/捷径诊断，未重新训练。** 三组模型实际跑完110条真实 Validation 因果前缀和28条删除 `remaining` 的 terminal 敏感性输入。同一 remaining 的 step 1/2 上，两组 SFT 对有无充分证据都一律判 `fail`；删除 `remaining` 后普通组5/9、证据组9/9个原 terminal `uncertain` 转为 `fail`。因此预算字段确实显著参与 status，但它与历史长度、图像数共线，独立贡献不可识别。证据组的 axis FP/unsupported 降低是真实配对差，offset TP/recall 同时下降；这只能证明输出约束改善，不能证明视觉证据识别。28条 Episode 实际覆盖7个 PartNet 原物体，正式池另2个 Validation 物体不在本评测。机器报告及下一步固定 horizon 对照见 [`training-dataset-expansion.md`](training-dataset-expansion.md#第一轮-sft-收益与预算捷径诊断)；冻结 Test 未参与。
+
 **UniPhys-40K Train/Validation 资产池已做一次有界扩充，但覆盖仍很小。** 官方 `UniPhysGen@3f1bb2d` 代码确认发布 OBJ 为 `qpos=0`、轴/枢轴使用 OBJ 坐标、旋转范围为弧度、滑动范围为 OBJ 单位；[`convert_uniphys40k.py`](../scripts/convert_uniphys40k.py) 据此逐资产推导尺度，按三角形坐标多重集验证完整模型闭合，并核验来源许可及正式 Test 的来源/OBJ SHA/名称重叠。本轮先提交 Episode 修复 `66e8eb6`，再从此前未覆盖的6个分片各轮询10个、下载60个 ZIP；本地总计243个 ZIP，经轻量检查得到64候选。完整预检为8 structural candidate / 56拒绝：尺度无法验证26、关节轴字段不完整21、运动依赖重叠6、Objaverse 上游许可无法统一确认3。
 
 对上述失败逐例复核后，26个尺度失败在部件/整物体 AABB 与 OBB 下均无一满足8%三轴一致性，允许移动部件描述也没有新增证据；最接近的两个整物体 AABB 仍为8.40%和8.33%，故未放宽阈值。21个字段不完整资产都缺少 `axis/pos/range` 中至少一项；其中3个缺失组虽被完整组包含，但这不足以证明它是重复标注而非额外未知自由度，21个均保守拒绝。6个依赖案例中仅 `UP_00003008` 与 `UP_00023014` 是参数完整的层状依赖；转换器现只支持“任意两组互不相交或严格包含”的层状树，并把子关节锚点转到父坐标系，同时要求 revolute 枢轴由 owner 与父侧刚性部件共同支持。两者随后仍因独立尺度门禁失败，故修复前后均为8 structural candidate、5 eligible，Train 3 / Validation 2，关节4 prismatic / 1 revolute；64候选与冻结 Test 三种去重信号仍为0重叠。逐资产数值、21项分类、6项结论及备选来源评估见 [`uniphys40k-v2-failure-audit.json`](../configs/uniphys40k-v2-failure-audit.json)。本轮重新运行8个 structural candidate 的真实浏览器运动检查为7机械成功/1失败；成功项的程序及三视图渲染 SHA 与此前审核逐一相同，因此物理结论仍为5通过/3拒绝。
@@ -103,4 +105,4 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 ---
 
-最近同步：**2026-10-13 · PartNet 正式 SFT 第一轮指标复核**；三组28例 Validation 逐案例预测重跑一致。证据组减少 axis/unsupported 幻觉并提高总体定位 F1，但 offset 定位退化；terminal status 满分存在长度捷径，不能解释为提前停止能力。仍只有单 seed、7个 Validation 原物体、0个合格 pass、0自然错误，Part 2 冻结 Test 未使用或修改。
+最近同步：**2026-10-14 · PartNet SFT 收益与预算捷径诊断**；三组110条真实因果前缀及28条预算字段消融均已完成。证据组减少 axis/unsupported 幻觉但未在同预算阶段区分证据充分性，且 offset 定位退化；`remaining` 对 terminal status 有显著影响，但与历史/图像数共线而不可独立归因。仍只有单 seed、7个实际 Episode Validation 原物体、0个合格 pass、0自然错误，Part 2 冻结 Test 未使用或修改。

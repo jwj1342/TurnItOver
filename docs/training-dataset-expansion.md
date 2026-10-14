@@ -182,6 +182,82 @@ python scripts/compare_qwen_sft.py --base output/partnet-qwen3vl2b-base-val-v5/m
 
 三组对照已真正完成，但只有单 seed、7个 Validation 原物体、两类合成缺陷和0个可信 `pass`；既不能估计方差或跨来源泛化，也不能声称 pass 校准。下一轮先做多 seed、按 assistant token 匹配预算和单/组合缺陷分层，并设计不让 terminal 长度直接泄露 status 的停止消融；方案冻结前继续不使用 Part 2 Test。
 
+## 第一轮 SFT 收益与预算捷径诊断
+
+### 评测设计与可识别边界
+
+2026-10-14 复用同一底座、普通 LoRA、证据约束 LoRA 和原28条 Validation Episode，未训练或修改任何 checkpoint。诊断脚本对导出的 **110条真实因果前缀**逐条推理；输入只含当时已经发生的历史及对应图像，不拼接未来观察。私有 label、exposure、witness index 与 Episode `evidence` 只在输出后评分，不进入 Qwen processor。另对28条原 terminal 前缀只删除公开 JSON 中的 `remaining` 键，历史、图像、顺序和其余文本保持不变；这是分布外敏感性测试，不是伪造预算值。
+
+这28条 Episode 实际只覆盖7个 PartNet Validation 原始物体，而不是正式资产池的9个 Validation 物体；另2个 UniPhys Validation 物体没有进入本批 PartNet Episode 或这三个 checkpoint 的评测。因此本节只按7个实际原物体汇总，不能补写成9物体结论。数据中还满足 `remaining = 6 - history_length` 且 `image_count = history_length + 1`，三种阶段线索完全共线。删除 `remaining` 后仍留下历史长度和图像数，所以各线索的独立因果贡献不可识别。
+
+### 同预算真实前缀与预算字段消融
+
+真实数据提供了两组合法的同预算比较：decision 1 / remaining 5 有证据10条、无充分证据18条；decision 2 / remaining 4 两边各9条。三组模型的 status/动作结果如下，括号为 unsupported finding 数：
+
+| 阶段 | 可见证据 | 底座 | 普通 SFT | 证据约束 SFT |
+| --- | --- | --- | --- | --- |
+| step 1 / remaining 5 | 充分，10条 | 10 uncertain（0） | 10 fail（15） | 10 fail（7） |
+| step 1 / remaining 5 | 不充分，18条 | 18 uncertain（0） | 18 fail（36） | 18 fail（18） |
+| step 2 / remaining 4 | 充分，9条 | 9 uncertain（0） | 9 fail（18） | 9 fail（8） |
+| step 2 / remaining 4 | 不充分，9条 | 9 uncertain（0） | 9 fail（18） | 9 fail（17） |
+
+两组 SFT 在相同预算阶段完全不按证据是否充分改变 status，证据组只是少输出了一部分 finding。更早的 step 0 上，底座给出23个合法动作、5个非法决定；两组 SFT 均为28/28非法 verdict，因为无观察却试图引用 finding。对9条一直无充分证据的长前缀，普通组在 step 3/4/5 分别产生2/5/6个 `fail`，其余因错误引用 evidence step 非法；证据组在 step 3–5 均为9/9 `fail`；两组只有到 step 6 / remaining 0 才全部变成 `uncertain`。因此 terminal-only 的“合法停止率”确实掩盖了前缀上的模板化提前 fail，不能解释为学会视觉停止。
+
+只删除 `remaining` 后，底座26/28保持相同输出，2个 `pass` 转为 `uncertain`；普通组只有4/28文本完全相同，5/9个原 `uncertain` 转为 `fail`，status正确从28降至23、unsupported 从33增至43；证据组只有3/28文本完全相同，9/9个原 `uncertain` 全转为 `fail`，status正确从28降至19、unsupported 从15增至33。这直接支持“`remaining` 字段显著参与两组 SFT 的 terminal status 决策”，但不能证明模型只读该字段，也不能区分历史长度、图像数量及历史内容的贡献。
+
+### 定位收益、代价与集中度
+
+原 terminal 输入上的结果与上一节一致。按当前可见 Gold finding 精确匹配，axis 与 offset 的分解为：
+
+| 模型 / finding | TP | FP | FN | Precision | Recall | F1 | 预测案例数 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 普通 / joint_axis | 4 | 15 | 0 | .211 | 1.000 | .348 | 19 |
+| 证据 / joint_axis | 4 | 3 | 0 | .571 | 1.000 | .727 | 7 |
+| 普通 / part_offset | 6 | 13 | 9 | .316 | .400 | .353 | 19 |
+| 证据 / part_offset | 5 | 12 | 10 | .294 | .333 | .313 | 17 |
+
+axis 改善来自保留4个 TP 同时去掉12个 FP，支持“证据约束抑制普通监督引入的 axis 过度诊断”；offset 则 TP 6→5、FN 9→10、F1 .353→.313，确认漏检代价。证据组仍在17例预测 offset，而且在同预算无充分证据前缀仍持续输出 fail/offset，因此 offset 模板偏置没有消失。预测总量下降本身不算能力提升；只有与 TP/FP/FN、unsupported 和配对 exact 一起解释。
+
+按 corruption 组合，普通→证据组分别为：clean 的 exact 均为9/9；axis-only 的 exact 0→1、TP/FP/FN 4/4/0→4/3/0、unsupported 8→3；axis+offset 的 exact 0→3、3/17/7→3/7/7、unsupported 17→7；offset-only 的 exact 仍为0、3/7/2→2/5/3、unsupported 8→5。收益主要来自压低组合缺陷里的额外 finding，不是 recall 增长。
+
+按原物体配对的“证据组减普通组”如下：
+
+| 原物体 | exact 差 | unsupported finding 差 |
+| --- | ---: | ---: |
+| PM_100202 | 0 | -2 |
+| PM_102252 | +2 | -5 |
+| PM_102590 | 0 | -1 |
+| PM_10797 | 0 | 0 |
+| PM_1280 | +1 | -4 |
+| PM_34610 | +1 | -5 |
+| PM_45759 | 0 | -1 |
+
+4个 exact 增益集中在3/7个物体，但 unsupported 降低覆盖6/7个物体，并非单一物体造成。以原物体为 cluster、seed `20261013` 做10,000次描述性 bootstrap，exact accuracy 配对差为 +.143，95% percentile 区间 `[+.036, +.286]`；每案例 unsupported 差为 -.643，区间 `[-1.000, -.286]`。只有7个 cluster、单一训练 seed，区间不稳定，不能替代多 seed 或更大独立 Validation。
+
+### 结论、产物与复现
+
+已证实：（1）terminal status 与 step/remaining 完全关联；（2）两组 SFT 在同预算前缀上均不区分证据充分性；（3）删除 `remaining` 会显著破坏两组 status，证据组尤其从9/9 terminal uncertain 全部转为 fail；（4）证据监督真实减少了 axis FP/unsupported，但以 offset TP 与总体 recall 下降为代价。尚不能识别：模型是否真正识别视觉证据、`remaining` 相对其他阶段线索的独立效应，以及缺席的2个正式 Validation 物体上的泛化。
+
+逐前缀预测与配置位于 `output/partnet-qwen3vl2b-diagnostic-{base,ordinary,evidence}-prefix-v1/`，预算消融位于对应 `-no-remaining-v1/`；机器汇总为 `output/partnet-qwen3vl2b-diagnostic-analysis-v1.json`，SHA-256 `4f968468be00586c7daa6da791027c3a56a7610a1399b33410a5d2491fcd1ed0`。报告包含逐物体、缺陷组合、可见 finding 类型、配对差、bootstrap 及全部输入预测 SHA；冻结 Part 2 Test 未读取，Gold/证据标准未修改。
+
+实际命令（普通/证据模型分别增加对应 `--adapter output/partnet-qwen3vl2b-{ordinary,evidence}-sft-v1/checkpoint`）：
+
+```bash
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python scripts/evaluate_qwen_episode_diagnostics.py --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3 --model ../TurnItOver/models/Qwen3-VL-2B-Instruct --out output/partnet-qwen3vl2b-diagnostic-base-prefix-v1 --condition causal_prefixes --max-new-tokens 512
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python scripts/evaluate_qwen_episode_diagnostics.py --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3 --model ../TurnItOver/models/Qwen3-VL-2B-Instruct --out output/partnet-qwen3vl2b-diagnostic-base-no-remaining-v1 --condition terminal_without_remaining --max-new-tokens 512
+
+python scripts/analyze_qwen_episode_diagnostics.py \
+  --base-prefix output/partnet-qwen3vl2b-diagnostic-base-prefix-v1/predictions.jsonl \
+  --ordinary-prefix output/partnet-qwen3vl2b-diagnostic-ordinary-prefix-v1/predictions.jsonl \
+  --evidence-prefix output/partnet-qwen3vl2b-diagnostic-evidence-prefix-v1/predictions.jsonl \
+  --base-no-remaining output/partnet-qwen3vl2b-diagnostic-base-no-remaining-v1/predictions.jsonl \
+  --ordinary-no-remaining output/partnet-qwen3vl2b-diagnostic-ordinary-no-remaining-v1/predictions.jsonl \
+  --evidence-no-remaining output/partnet-qwen3vl2b-diagnostic-evidence-no-remaining-v1/predictions.jsonl \
+  --out output/partnet-qwen3vl2b-diagnostic-analysis-v1.json --seed 20261013 --bootstrap-samples 10000
+```
+
+下一轮最值得做的是构造**固定 horizon、阶段线索匹配的视觉证据对照**：在相同 step、remaining、历史长度、图像数和动作类型下，收集证据充分/不充分且跨物体平衡的真实前缀；评测时同时提供原图与不改变合法历史的图像内容消融，训练时再用这些固定 horizon 的可见证据 verdict 做多 seed 对照。现有自然前缀只能匹配预算阶段，不能匹配历史内容，先补这个评测设计比直接扩大当前 terminal SFT 更能回答因果问题。
+
 ## 复现命令
 
 以下命令要求已获官方访问权、已构建 `web/dist`，且各输出目录不存在：
