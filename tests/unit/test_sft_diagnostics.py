@@ -6,6 +6,7 @@ from scripts.audit_sft_supervision import _integrity
 from scripts.analyze_qwen_episode_diagnostics import _stop_metrics, summarize, summarize_defect
 from scripts.evaluate_budget_baseline import MajorityLookup, features
 from scripts.evaluate_qwen_episode_diagnostics import remove_remaining, visible_findings
+from scripts.evaluate_qwen_stopping import _parse, _summarize
 
 
 def test_visible_findings_uses_only_causal_witness_prefix():
@@ -81,6 +82,39 @@ def test_stop_metrics_separate_prefix_accuracy_from_first_stop_timing():
     assert result["decision_accuracy"] == 2 / 3
     assert result["first_stop_early"] == 1
     assert result["first_stop_exact"] == 0
+
+
+def test_explicit_stop_evaluation_separates_timing_and_outcome():
+    rows = [
+        {"episode_id": "a", "decision_index": 0, "expected_decision": "continue",
+         "predicted_decision": "stop", "expected_outcome": None, "predicted_outcome": "fail",
+         "stop_reason": "further_evidence_required"},
+        {"episode_id": "a", "decision_index": 1, "expected_decision": "stop",
+         "predicted_decision": "stop", "expected_outcome": "fail", "predicted_outcome": "fail",
+         "stop_reason": "evidence_sufficient"},
+        {"episode_id": "b", "decision_index": 0, "expected_decision": "stop",
+         "predicted_decision": "continue", "expected_outcome": "uncertain", "predicted_outcome": None,
+         "stop_reason": "budget_exhausted_uncertain"},
+    ]
+    result = _summarize(rows)
+    assert result["decision_accuracy"] == 1 / 3
+    assert result["premature_stop"] == 1 and result["missed_stop"] == 1
+    assert result["timing_eligible_episodes"] == 2
+    assert result["first_stop_timing"] == {"early": 1, "missing": 1}
+    assert result["budget_exhausted"] == {"n": 1, "correct_uncertain_stop": 0}
+    assert _parse('{"stop_decision":{"decision":"stop","outcome":"fail","reason":"x"}}') == ("stop", "fail")
+    with pytest.raises(ValueError, match="Continue must have null outcome"):
+        _parse('{"stop_decision":{"decision":"continue","outcome":"fail"}}')
+
+
+def test_stop_stage_subset_without_terminal_has_no_timing_denominator():
+    result = _summarize([{
+        "episode_id": "a", "decision_index": 0, "expected_decision": "continue",
+        "predicted_decision": "continue", "expected_outcome": None, "predicted_outcome": None,
+        "stop_reason": "further_evidence_required",
+    }])
+    assert result["timing_eligible_episodes"] == 0
+    assert result["first_stop_timing"] == {}
 
 
 def _audit_row(uid, assistant, *, step=0, terminal=True):

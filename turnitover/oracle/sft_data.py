@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 from pathlib import Path
 
@@ -58,16 +59,16 @@ def _ordinary_target(record: dict, annotation: dict) -> dict:
         verdict = {
             "status": "fail", "confidence": 1.0,
             "findings": [_finding(label, observed_steps) for label in labels],
-            "summary": "The final diagnosis target contains the injected defects.",
+            "summary": "The final diagnosis identifies the annotated defects.",
             "limitations": [
-                "This ordinary SFT target is not filtered by visible counterfactual evidence."
+                "This ordinary diagnosis target is not filtered by the current visual evidence."
             ],
         }
     else:
         verdict = {
             "status": "uncertain", "confidence": 0.0, "findings": [],
             "summary": "The observations do not establish that the candidate is clean.",
-            "limitations": ["Absence of injected private labels is not model-visible evidence for pass."],
+            "limitations": ["The current observations are insufficient to support pass."],
         }
     target = {"verdict": verdict}
     context = Context(**payload["context"])
@@ -94,3 +95,31 @@ def load_terminal_training_examples(root, split, supervision="evidence"):
         yield record, images
     if annotations is not None and seen != set(annotations):
         raise ValueError("Private annotations and terminal Episode rows differ")
+
+
+def load_multitask_training_examples(root, split, supervision="evidence"):
+    """Load terminal diagnoses and every causal stop decision as separate tasks."""
+    for record, images in load_terminal_training_examples(root, split, supervision):
+        record = copy.deepcopy(record)
+        record["sft_objective"] = "diagnosis"
+        yield record, images
+    for record, images in load_examples(root, split, "stopping", require_formal_training=True):
+        record = copy.deepcopy(record)
+        record["sft_objective"] = "stopping"
+        yield record, images
+
+
+def supervision_digest(records) -> str:
+    """Hash public input and assistant target text without serializing image bytes."""
+    digest = hashlib.sha256()
+    for record in records:
+        payload = {
+            "id": record["id"],
+            "objective": record["sft_objective"],
+            "images": record["images"],
+            "image_sha256": record["image_sha256"],
+            "messages": record["messages"],
+        }
+        digest.update(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode())
+        digest.update(b"\n")
+    return digest.hexdigest()

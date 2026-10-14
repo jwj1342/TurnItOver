@@ -275,7 +275,64 @@ python -m scripts.analyze_qwen_episode_diagnostics \
   --out output/partnet-qwen3vl2b-diagnostic-analysis-v2.json --seed 20261013 --bootstrap-samples 10000
 ```
 
-下一次训练需要阶段线索匹配且跨物体平衡的证据充分/不足前缀、真实 `continue/stop` 样本、分别冻结的 `first_failure` 与 `comprehensive_within_budget` 策略，并补充 pass、自然错误、更多独立物体和多 seed。训练前应先证明同一 step、remaining、历史长度和图像数下目标仍可由可见内容区分；本轮不重新训练。
+## 第二轮 v4 监督训练与受控评测
+
+### 训练设置与 checkpoint
+
+2026-10-14 已在两张 RTX 4090D 上从同一 Qwen3-VL-2B-Instruct 重新训练普通/证据约束 LoRA。两组都用 v4 Train 的110条 terminal 诊断和429条逐前缀停止监督，共539样本、3 epochs、1617 optimizer steps；seed `20261013`、AdamW `2e-4`、rank 8、alpha 16、dropout 0、`q/k/v/o_proj` 完全一致。停止样本权重为 `110/429`，诊断为1，使每个 epoch 两类目标的标称总权重相等；每步日志分别记录任务、assistant-token mean CE、权重和加权 loss。普通组的110条诊断包含完整 annotation finding，证据组只保留当前可见前缀支持的 finding；429条停止目标和所有公开输入逐条相同。私有 Gold 只用于普通目标构造和离线评分，不进输入；证据目标不含隐藏缺陷、未来观察或未暴露错误，Oracle 动作不训练，预算耗尽只标 `stop/uncertain`。
+
+| 训练 | 样本 / 步数 | diagnosis raw loss mean | stopping raw loss mean | adapter SHA-256 |
+| --- | ---: | ---: | ---: | --- |
+| 普通 v4 | 539 / 1617 | .230 | .0261 | `9b77809f61156769e5074718cc58c74ef8d6b517d78f58a153158a9637b11e2b` |
+| 证据 v4 | 539 / 1617 | .213 | .0248 | `c1b7f3b1171cb94a180b11854b0c07ccfc7c1e5c7c827eb25773df5457e42dbd` |
+
+两份 `run.json` 均为 `complete`，checkpoint、逐步曲线、配置和 processor 位于 `output/partnet-qwen3vl2b-{ordinary,evidence}-sft-v4-round2/`。训练时 CUDA 对 CuBLAS/Flash Attention 发出 warn-only 非确定性警告，因此配置、seed 和顺序可复现，但不声称权重逐比特复现。loss 只用于训练完整性审计，不作为效果结论。
+
+### 留出诊断与停止结果
+
+评测实际覆盖28条 Validation Episode、110个因果前缀和7个独立 PartNet 物体（`PM_100202/102252/102590/10797/1280/34610/45759`）；正式 Validation 池另2个 UniPhys 物体没有 Episode。terminal 诊断使用相同图像、greedy decode 和 `max_new_tokens=512`：
+
+| 指标 | 未微调底座 | 普通 v4 | 证据 v4 | 无图像预算基线 |
+| --- | ---: | ---: | ---: | ---: |
+| status accuracy | 7/28 | 28/28 | 28/28 | 28/28 |
+| exact verdict + 定位 | 7/28 | 17/28 | 17/28 | 23/28 类型 exact；不定位部件 |
+| finding TP / FP / FN | 0 / 0 / 19 | 8 / 11 / 11 | 8 / 11 / 11 | 0 / 0 / 19 |
+| finding F1 | 0 | .421 | .421 | 0 |
+| defect-type F1 | 0 | .737 | .842 | .737 |
+| part/joint localization F1 | 0 | .421 | .421 | 不可测 |
+| unsupported / predicted | 0 / 0 | 15 / 19 | 11 / 19 | 0 / 0 |
+
+证据组相对普通组少4个 unsupported finding，defect-type F1 高 `.105`，主要是 axis FP 5→3；但 exact、精确 finding、部件定位以及 TP/FP/FN 完全相同，offset TP/FP/FN 为4/6/11→4/8/11，未显示漏检减少。两组的 `fail/uncertain` 都是19/9全对，但无图像基线也为28/28，故 status 仍被预算阶段完全解释，不能作为视觉收益。
+
+显式停止评测要求模型只返回 `stop_decision`，`max_new_tokens=128`：
+
+| 条件 | 合法输出 | decision accuracy | 提前 stop 前缀 | terminal 漏停 | 首停 exact / early / missing | 预算耗尽 uncertain |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 底座 | 0/110 | 0/110 | 0 | 28 | 0 / 0 / 28 | 0/9 |
+| 普通 v4 | 110/110 | 84/110 | 22 | 4 | 10 / 18 / 0 | 9/9 |
+| 证据 v4 | 110/110 | 80/110 | 27 | 3 | 10 / 18 / 0 | 9/9 |
+| 无图像预算基线 | n/a | 91/110 | 0 | 19 | 9 / 0 / 19 | 9/9 |
+
+逐前缀监督让两组学会了输出 schema 和预算耗尽的 `stop/uncertain`，但没有改善正确停止时机。step 1 / remaining 5 时，有证据10条与无证据18条，两组都100% stop；step 2 / remaining 4 时，普通组 stop rate 为有证据5/9、无证据4/9，证据组反而为有证据6/9、无证据9/9。证据组总体准确率低于普通组及无图像基线，提前 stop 更多，首次停止仍与第一轮相同为10 exact / 18 early。因此本轮不能回答“证据约束模型更准确利用视觉证据”为是，逐前缀停止能力也没有真正改善。
+
+机器审计为 `output/partnet-qwen3vl2b-round2-audit-v4.json`（SHA-256 `540072fd61c038f62edf56604fa5d1a3e67d9414313ace892b0facab3f5f63dd`）；监督审计 SHA-256 仍为 `2ccbdc…cd176`。逐案例预测分别在 `*-terminal-eval-v4-round2/` 与 `*-stopping-eval-v4-round2/`，训练曲线和 checkpoint 在 `*-sft-v4-round2/`。一次底座停止评测完成推理后因分层聚合器错误失败，原目录保留为 `partnet-qwen3vl2b-base-stopping-eval-v4-round2-failed-aggregate/`；修复单测后正式重跑完成。冻结 Part 2 Test 未读取或修改，未接入 API，未训练特权动作。
+
+```bash
+DATA=/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v4
+MODEL=../TurnItOver/models/Qwen3-VL-2B-Instruct
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.train_qwen_episode_sft --dataset "$DATA" --model "$MODEL" --out output/partnet-qwen3vl2b-ordinary-sft-v4-round2 --supervision ordinary --seed 20261013 --epochs 3 --learning-rate 0.0002 --lora-rank 8 --lora-alpha 16
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.train_qwen_episode_sft --dataset "$DATA" --model "$MODEL" --out output/partnet-qwen3vl2b-evidence-sft-v4-round2 --supervision evidence --seed 20261013 --epochs 3 --learning-rate 0.0002 --lora-rank 8 --lora-alpha 16
+python -m scripts.evaluate_budget_baseline --dataset "$DATA" --out output/partnet-no-image-budget-baseline-v4-round2
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_qwen_episode_sft --dataset "$DATA" --model "$MODEL" --out output/partnet-qwen3vl2b-base-terminal-eval-v4-round2 --max-new-tokens 512
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_qwen_episode_sft --dataset "$DATA" --model "$MODEL" --adapter output/partnet-qwen3vl2b-ordinary-sft-v4-round2/checkpoint --out output/partnet-qwen3vl2b-ordinary-terminal-eval-v4-round2 --max-new-tokens 512
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_qwen_episode_sft --dataset "$DATA" --model "$MODEL" --adapter output/partnet-qwen3vl2b-evidence-sft-v4-round2/checkpoint --out output/partnet-qwen3vl2b-evidence-terminal-eval-v4-round2 --max-new-tokens 512
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_qwen_stopping --dataset "$DATA" --model "$MODEL" --out output/partnet-qwen3vl2b-base-stopping-eval-v4-round2 --max-new-tokens 128
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_qwen_stopping --dataset "$DATA" --model "$MODEL" --adapter output/partnet-qwen3vl2b-ordinary-sft-v4-round2/checkpoint --out output/partnet-qwen3vl2b-ordinary-stopping-eval-v4-round2 --max-new-tokens 128
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_qwen_stopping --dataset "$DATA" --model "$MODEL" --adapter output/partnet-qwen3vl2b-evidence-sft-v4-round2/checkpoint --out output/partnet-qwen3vl2b-evidence-stopping-eval-v4-round2 --max-new-tokens 128
+python scripts/compare_qwen_sft.py --base output/partnet-qwen3vl2b-base-terminal-eval-v4-round2/metrics.json --ordinary output/partnet-qwen3vl2b-ordinary-terminal-eval-v4-round2/metrics.json --evidence output/partnet-qwen3vl2b-evidence-terminal-eval-v4-round2/metrics.json --base-stopping output/partnet-qwen3vl2b-base-stopping-eval-v4-round2/metrics.json --ordinary-stopping output/partnet-qwen3vl2b-ordinary-stopping-eval-v4-round2/metrics.json --evidence-stopping output/partnet-qwen3vl2b-evidence-stopping-eval-v4-round2/metrics.json --budget-baseline output/partnet-no-image-budget-baseline-v4-round2/metrics.json --ordinary-train output/partnet-qwen3vl2b-ordinary-sft-v4-round2/run.json --evidence-train output/partnet-qwen3vl2b-evidence-sft-v4-round2/run.json --out output/partnet-qwen3vl2b-round2-audit-v4.json
+```
+
+下一轮必须增加阶段匹配的合法图像反事实对：保持 step、remaining、历史结构和动作类型不变，只改变真实可见证据内容；并补多 seed、可信 pass、自然错误、更多独立物体及单独冻结的 `comprehensive_within_budget`。当前自然前缀不是图像反事实配对，因而即便某一指标改善，也不能排除物体、动作历史或阶段捷径。
 
 ## 复现命令
 
