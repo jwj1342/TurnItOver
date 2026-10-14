@@ -67,13 +67,13 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 **已实现：PartNet-Mobility 正式 Train/Validation 增量。** 官方批准后固定上游 revision，从160个确定性抽样 ZIP 中得到94个结构候选；48个优先候选经真实浏览器运动门禁与人工三视图/端点复核后35个通过（72.9%），形成28 Train / 7 Validation，覆盖21类、42 revolute / 18 prismatic、15个多关节物体。140条 corruption 样本中138条通过独立 checker、2条隔离；对应 Episode 已完整导出并通过逐像素重渲染复核。来源、许可、拒绝原因、隔离策略、命令和扩量成本见 [`training-dataset-expansion.md`](training-dataset-expansion.md)。自然生成错误仍为0且单独登记，未用注入标签冒充人工 Gold；数据建设阶段本身未启动训练，后续既有 SFT 记录见下文，冻结 Test 未修改。
 
-**已完成：正式 SFT 前数据就绪性验证。** 全部138个 terminal Episode 及539行因果前缀通过 production loader、图像/身份 SHA、划分和隐藏信息审计，138/138 再经真实 Qwen processor；Train/Validation 各一条7图 batch 完成无梯度前向 loss。目标为91 `fail` / 47 `uncertain` / 0 `pass`，401条特权动作全部排除；动作审计另发现4组相同可见前缀的冲突目标。结论仅为结构化诊断/停止 SFT 管线就绪，不代表动作可学习或泛化，详见 [`training-dataset-expansion.md`](training-dataset-expansion.md#sft-数据就绪性验证)。
+**已完成：SFT 监督语义修复。** 后续审计推翻了 v3“语义已就绪”的结论：37/110 Train、10/28 Validation terminal 解释引用了 injected/private-label 等不可见状态。v4 只重导 assistant 与停止目标，复用全部观察、Gold 和像素；539行中401条动作不变、138条 terminal 解释变化，status/findings/evidence steps 均不变，修复后0条禁用措辞、0个精确公开前缀冲突。另增加539条 `continue/stop` 目标并分离 `first_failure` 与 `comprehensive_within_budget`；旧 checkpoint 仍是 v3 结果，不代表修复后训练。
 
 ## 关键缺口
 
-**已完成正式 PartNet 第一轮受控 SFT。** 同一110条 Train terminal Episode、相同输入/seed/330步下，普通 SFT 监督111个完整 Gold finding，其中37个 axis finding 超出当前可见证据；证据组只监督74个可见 finding。两组均不训练特权动作或隐藏 clean `pass`。新版三组 Validation 重跑全部完成且逐案例复现：底座/普通/证据组 exact verdict 为7/9/13，finding F1 为0/0.351/0.419；证据组把 unsupported finding 从33降至15，主要将 axis FP 从15降至3，但 offset 定位 F1 从0.353降至0.313。两组 status macro-F1 虽均为1.0，却受 terminal 步数与 `remaining` 完全相关的捷径混淆，不代表视觉提前停止。完整设计、命令、逐物体结果和限制见 [`training-dataset-expansion.md`](training-dataset-expansion.md#第一轮-qwen3-vl-2b-正式-sft-受控对照)。有限 witness 网格、自然错误、多 seed 及仅依赖可见信息的动作教师仍待完成。
+**已完成正式 PartNet 第一轮受控 SFT，但只保留为旧 v3 checkpoint 分析。** 底座/普通/证据组 exact verdict 为7/9/13，finding F1 为0/.351/.419；证据组把 unsupported finding 从33降至15，并改善 axis/定位汇总，但 offset recall 下降。无图像预算基线在相同 Validation 上达到28/28 terminal status 和 defect-type F1 .737，完全解释 status 收益并覆盖大量类型表现；因此这些 checkpoint 不支持视觉依赖或修复后监督效果主张。
 
-**已完成第一轮收益/捷径诊断，未重新训练。** 三组模型实际跑完110条真实 Validation 因果前缀和28条删除 `remaining` 的 terminal 敏感性输入。同一 remaining 的 step 1/2 上，两组 SFT 对有无充分证据都一律判 `fail`；删除 `remaining` 后普通组5/9、证据组9/9个原 terminal `uncertain` 转为 `fail`。因此预算字段确实显著参与 status，但它与历史长度、图像数共线，独立贡献不可识别。证据组的 axis FP/unsupported 降低是真实配对差，offset TP/recall 同时下降；这只能证明输出约束改善，不能证明视觉证据识别。28条 Episode 实际覆盖7个 PartNet 原物体，正式池另2个 Validation 物体不在本评测。机器报告及下一步固定 horizon 对照见 [`training-dataset-expansion.md`](training-dataset-expansion.md#第一轮-sft-收益与预算捷径诊断)；冻结 Test 未参与。
+**已完成第一轮收益、预算捷径与停止诊断，未重新训练。** 同阶段 step 1/2 上两组 SFT 对有无充分证据都判 `fail`；两组逐前缀 stop-decision accuracy 均为28/110，并在18/28个 Episode 提前停止。合法输出率、诊断正确率和首次停止时机现已分开报告，不再把 `valid_output_rate` 称为 `stop_accuracy`。评测只有7个 PartNet 原物体、两类合成缺陷、0 pass、0自然错误，且只覆盖 `first_failure`；冻结 Test 未参与。
 
 **UniPhys-40K Train/Validation 资产池已做一次有界扩充，但覆盖仍很小。** 官方 `UniPhysGen@3f1bb2d` 代码确认发布 OBJ 为 `qpos=0`、轴/枢轴使用 OBJ 坐标、旋转范围为弧度、滑动范围为 OBJ 单位；[`convert_uniphys40k.py`](../scripts/convert_uniphys40k.py) 据此逐资产推导尺度，按三角形坐标多重集验证完整模型闭合，并核验来源许可及正式 Test 的来源/OBJ SHA/名称重叠。本轮先提交 Episode 修复 `66e8eb6`，再从此前未覆盖的6个分片各轮询10个、下载60个 ZIP；本地总计243个 ZIP，经轻量检查得到64候选。完整预检为8 structural candidate / 56拒绝：尺度无法验证26、关节轴字段不完整21、运动依赖重叠6、Objaverse 上游许可无法统一确认3。
 
@@ -95,7 +95,7 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 ## 下一步（按优先级）
 
-1. **P0｜扩展第一轮对照。** 补多 seed、token 匹配和单/组合缺陷分层，检验证据组减少 unsupported finding 的差异是否稳定；在有公开证据前继续禁止 clean `pass`。
+1. **P0｜用 v4 重新训练前先补可识别监督。** 在相同 step、remaining、历史长度和图像数下平衡证据充分/不足前缀，分别冻结 `first_failure` 与 `comprehensive_within_budget`，加入真实 `continue/stop`、更多物体和多 seed；有公开证据前继续禁止 clean `pass`。
 2. **P0｜按实测漏斗继续扩充 PartNet-Mobility。** 优先补 Train 混合关节、未覆盖类别和更大的独立 Validation；达到80–100个合格原物体前持续保存许可、来源/内容 SHA、运动审核及冻结 Test 去重证据。
 3. **P0｜消除特权动作教师依赖。** 动作选择不读取私有 label/exposure，或显式学习可观测条件下的动作分布；完成前不把 terminal SFT 解释为主动取证训练。
 4. **P1｜收集自然错误独立人工 Gold。** 固定 Generator，由不读取注入标签的人工依据真实渲染标注；GAPartNet 仅在取得完整官方包和额外许可后接入。
@@ -105,4 +105,4 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 ---
 
-最近同步：**2026-10-14 · PartNet SFT 收益与预算捷径诊断**；三组110条真实因果前缀及28条预算字段消融均已完成。证据组减少 axis/unsupported 幻觉但未在同预算阶段区分证据充分性，且 offset 定位退化；`remaining` 对 terminal status 有显著影响，但与历史/图像数共线而不可独立归因。仍只有单 seed、7个实际 Episode Validation 原物体、0个合格 pass、0自然错误，Part 2 冻结 Test 未使用或修改。
+最近同步：**2026-10-14 · PartNet v4 监督修复、无图像基线与停止诊断**；assistant 泄漏已从目标中移除，逐前缀 stop 监督已导出。旧证据 checkpoint 的 axis/unsupported 与定位改善仍是描述性配对结果，但 status 可被预算元数据完全解释，模型也未学会正确停止；本轮未重训，Part 2 冻结 Test 未使用或修改。

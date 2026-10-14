@@ -62,7 +62,7 @@ Validation 含 Box、Eyeglasses、Faucet、Refrigerator、StorageFurniture、Tab
 
 两条 `PM_100054` joint-axis 样本因扰动未真实违反目标约束而隔离，没有进入 gold 或 Episode。prepared 私有 gold 的 138 行全部保留 `formal_training=true`、source identity、archive/spec SHA 与许可。
 
-`oracle-first-failure-v3/` 为无模型、特权 counterfactual 教师的当前 Episode 导出：覆盖 138 个通过样本，Episode 行 Train/Validation 为 429/110；91 条因证据充分停止，47 条预算耗尽。全部保存图像均通过独立重渲染逐像素复核。该教师读取私有真值以选动作；下述就绪性验证发现 4 组相同可见前缀对应不同动作，因此这些动作标签明确不进入 SFT，**不是模型能力、人工 Gold 或可观测最优策略证明**。
+`oracle-first-failure-v3/` 是第一轮 checkpoint 使用的历史导出；`oracle-first-failure-v4/` 只重算 assistant 与逐前缀停止目标，复用同一 138 个样本、429/110 行 Train/Validation Episode、私有审计和全部图像。观察、Gold 与像素均未重生成。特权 counterfactual 教师仍只用于既有动作轨迹和私有审计，动作标签不进入 SFT，**不是模型能力、人工 Gold 或可观测最优策略证明**。
 
 自然生成错误单独登记在 [`partnet-mobility-natural-errors-v1.json`](../configs/partnet-mobility-natural-errors-v1.json)。本轮没有启动付费生成调用，故数量明确为 0、状态为 `not_collected`；没有用 corruption 注入标签冒充自然错误或独立人工 Gold。后续只有在人工不读取注入标签、依据真实渲染独立标注后，才可进入该集合。
 
@@ -72,7 +72,7 @@ Validation 含 Box、Eyeglasses、Faucet、Refrigerator、StorageFurniture、Tab
 
 ### 数据版本与输入协议
 
-本次只验证数据进入既有 Qwen3-VL-2B 管线，不创建优化器、不反向传播、不保存 checkpoint。审计对象为 PartNet `oracle-first-failure-v3`，manifest SHA-256 为 `f95302809fa135d2d161577dee9b44ff405a671287ae07bc1015f40a8e1f546b`；Qwen 配置 SHA-256 为 `bec4b3d446efa05807365c9e1cec03ac590836879d02f3a6da879971154bdd3b`。正式资产池仍为 PartNet 35 个加 UniPhys 5 个，共 Train 31 / Validation 9；当前数据工作树不复制被 Git 忽略的 UniPhys 大资产，联合身份审计读取相邻工作树中同一冻结 catalog，并把 catalog/splits SHA 写入报告。
+本节记录第一轮训练前对 `oracle-first-failure-v3` 的管线验证；其 manifest SHA-256 为 `f95302809fa135d2d161577dee9b44ff405a671287ae07bc1015f40a8e1f546b`。后续语义审计发现 v3 的 assistant 解释仍引用私有状态，因此“输入未含私有字段”并不等于“目标文本无泄漏”，v3 不再是新训练的数据版本。Qwen 配置 SHA-256 为 `bec4b3d446efa05807365c9e1cec03ac590836879d02f3a6da879971154bdd3b`；正式资产池仍为 PartNet 35 个加 UniPhys 5 个，共 Train 31 / Validation 9。
 
 SFT 输入严格为「参考图在前、截至当前停止点的历史观察图随后、公开 verifier 协议与 JSON payload」；payload 仅允许 `context/remaining/history/image_order/taxonomy_ids/training_objective`。审计逐行把公开 history 与私有轨迹的同长度前缀作精确比较，因此未来观察不可能进入输入；私有 corruption、exposure、候选程序、参考程序和 Oracle 信号均不在消息中。私有 annotation 只在离线审计侧核对 source、candidate/reference SHA 及可见证据，不传给 processor。训练 loader 只选择 terminal verdict，401 条特权 Oracle 动作目标全部排除；clean 隐藏真值也不生成 `pass`。
 
@@ -92,7 +92,7 @@ clean / 单缺陷 / 组合缺陷为 47 / 42 / 49；Episode 长度 1 / 2 / 6 分�
 
 真实 Qwen processor 对 Train 110 / Validation 28 全部成功，序列长度 1,438–2,574 token，assistant 监督 67–250 token；所有 prompt/image token 均为 `-100`，assistant 标签连续完整，无截断或多图错位。训练入口本身逐样本构造 batch（batch size 1、无 padding collator），本次复用完全相同的 `tokenize_example`，各取一条 7 图 Train/Validation 样本执行 `eval + inference_mode` 前向：loss 分别为 `2.3936724663` 与 `2.4154891968`，均有限。该数值只证明 batch 能进入模型和 loss，不作为训练或质量指标。
 
-机器可复核报告为 `output/partnet-mobility-sft-readiness-v1.json`，SHA-256 `256c83ad164a74034a6fde0d8eccd7c220a02dcb5e34aaf6b046f523490d280a`。结论是：**当前 138 条数据已达到“结构化诊断与停止判断”正式 SFT 的管线就绪标准**；不支持动作 SFT、`pass` 校准或泛化结论，正式训练前应把上述偏置作为固定实验边界。
+机器可复核报告 `output/partnet-mobility-sft-readiness-v1.json` 只证明 v3 可被 processor/loader 消费；其 SHA-256 为 `256c83ad164a74034a6fde0d8eccd7c220a02dcb5e34aaf6b046f523490d280a`。它不再构成监督语义就绪证明。修复后的 v4 语义审计见下文；仍不支持动作 SFT、`pass` 校准或泛化结论。
 
 复现命令（只读数据与模型；`--forward` 不训练）：
 
@@ -117,7 +117,7 @@ CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.audit_sft_
 
 三组均使用同一 Qwen3-VL-2B-Instruct、同一 110 Train / 28 Validation terminal Episode、相同公开输入图像与历史，以及 Validation `max_new_tokens=512` 的 greedy decode。两组 LoRA 都用 seed `20261013`、3 epochs、330 optimizer steps、AdamW `2e-4`、rank 8、alpha 16、dropout 0，并只训练 `q/k/v/o_proj`。训练配置保存在 [`partnet-mobility-sft-v1.json`](../configs/partnet-mobility-sft-v1.json)。底座 config SHA 与上述就绪审计一致，Train/Validation JSONL SHA 分别为 `a04446c7…80ca1` / `0e9eeeab…9405`。
 
-两组 110 条样本的用户消息、图像、历史和 terminal 前缀逐条完全相同，差异只在 assistant verdict。普通组用独立 corruption Gold 构造完整诊断，共 111 个 finding；证据组只保留当前公开观察下通过既有 exposure 门禁的 74 个 finding。机器审计 `output/partnet-qwen3vl2b-supervision-audit-v1.json` 逐 ID 列出 **37 条普通组独有的 finding，全部为 `kinematics.joint_axis`**；它们是合法 Gold，但超出冻结可见证据。两组都不读取未来观察或把 annotation/Oracle 信号放进模型输入，不训练401条特权动作，也不把 hidden-clean 变成 `pass`。没有使用不同 Episode 前缀或另造停止标签。
+两组 110 条样本的用户消息、图像、历史和 terminal 前缀逐条完全相同，差异只在 assistant verdict。普通组用独立 corruption Gold 构造完整诊断，共 111 个 finding；证据组只保留当前公开观察下通过既有 exposure 门禁的 74 个 finding。旧审计逐 ID 列出的37条普通组独有 finding 全为 `kinematics.joint_axis`。但最新逐字段复核还发现 v3 的 `summary/limitations` 会随私有 Gold 改变：无可见 finding 时仍写入 injected/private-label 等信息。因此以下两个 checkpoint 都是**旧监督**的分析对象，尤其证据 checkpoint 不能代表修复后目标的训练效果。
 
 两组训练均已完成，`run.json` 为 `complete`，`loss.jsonl` 各有连续330步，checkpoint 完整：
 
@@ -146,7 +146,7 @@ CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.audit_sft_
 | exact part/joint localization F1 | 0 | 0.351 | 0.419 |
 | unsupported / predicted findings | 0 / 0 | 33 / 38 | 15 / 24 |
 
-status 的满分存在明确捷径：19个 `fail` Validation 例都在第1/2步因 `evidence_sufficient` 形成 terminal，9个 `uncertain` 都在第6步预算耗尽，而 `history/remaining` 是合法公开输入。因此两组的 100% status/macro-F1 只能说明学会当前 terminal 数据分布，**不能说明学会视觉提前停止**。本轮只在强制 terminal 前缀要求最终 verdict，所谓 terminal stop=28/28 等价于合法输出率；没有非 terminal 停止标签，也未评测提前停止。
+status 的满分存在明确捷径：19个 `fail` Validation 例都在第1/2步形成 terminal，9个 `uncertain` 都在第6步预算耗尽，而 `history/remaining` 是公开输入。因此两组的 100% status/macro-F1 只能说明学会当前 terminal 数据分布，**不能说明学会视觉提前停止**。这里的28/28只称 `valid_output_rate`；真实停止时机由下文逐前缀指标单独评测，不再使用 `stop_accuracy` 指代合法输出率。
 
 证据约束的实际收益集中在抑制过度诊断：unsupported finding 减少18个（33→15），exact 提高4例，finding precision/F1 与 defect-type F1 上升。普通组对19个 `fail` 全都预测 axis，实际 axis Gold 仅4例；证据组把 axis 预测从19例降到7例，axis FP 从15降到3。退化也存在：总体 TP 从10降到9、recall 从0.526降到0.474；offset 精确定位 TP 从6降到5、F1 从0.353降到0.313。证据组仍在17例中预测 offset（Gold 15例），所以此前的 `fail/offset` 模板化倾向没有消失。
 
@@ -234,29 +234,48 @@ axis 改善来自保留4个 TP 同时去掉12个 FP，支持“证据约束抑�
 
 4个 exact 增益集中在3/7个物体，但 unsupported 降低覆盖6/7个物体，并非单一物体造成。以原物体为 cluster、seed `20261013` 做10,000次描述性 bootstrap，exact accuracy 配对差为 +.143，95% percentile 区间 `[+.036, +.286]`；每案例 unsupported 差为 -.643，区间 `[-1.000, -.286]`。只有7个 cluster、单一训练 seed，区间不稳定，不能替代多 seed 或更大独立 Validation。
 
+### 监督语义修复与停止目标
+
+v4 对539行 Episode 逐项重审 `verdict/reason/findings/evidence_steps`，只改 assistant 目标：401条动作不变，138条 terminal 解释变化；status、findings、evidence steps 均0变化，summary变化47条、limitations变化138条。修复后 assistant 中0条命中 `injected/private label/hidden defect/unexposed defect`，无证据 terminal 只剩1种公开事实解释，539个精确公开前缀组0冲突。私有 Gold、完整性和注入记录仍保留在 `annotations.private.jsonl`，不进入模型消息。审计报告为 `output/partnet-qwen3vl2b-supervision-audit-v2.json`（SHA-256 `2ccbdc354f5d7ef7a8625a124ab666fed4e9d3f2aef92bd96b2eab024e9cd176`）。
+
+另导出539条逐前缀停止监督：401 `continue`、91个有证据 `stop/fail`、47个预算或观察空间耗尽的 `stop/uncertain`。`first_failure` 在首个合格 finding 即可停止；`comprehensive_within_budget` 必须继续到该策略的最终前缀，二者不混用。当前 v4 实跑与下述评测只覆盖 `first_failure`；`comprehensive_within_budget` 尚无对应模型结果。预算特征并不能完美决定新 stop 标签：step 1/remaining 5 和 step 2/remaining 4 都同时含 `continue` 与 `stop`。
+
+### 无图像预算基线与停止时机
+
+无图像基线只使用 `step/remaining/history_length/image_count`，在 Train 拟合确定性多数查找并评测相同110条 Validation 前缀；脚本不读取图像字节。它的 terminal status 为28/28，已经完全复现两组 SFT 的 status 满分；terminal defect-type exact 为23/28、F1=.737，也说明缺陷类型结果很大一部分可能来自阶段分布。它不具备部件定位能力。逐案例位于 `output/partnet-no-image-budget-baseline-v1/predictions.jsonl`（SHA-256 `86650166…88a`）。
+
+| 条件 | terminal status | finding F1 | defect-type F1 | exact verdict | 首次停止 exact / early / missing |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 底座 | 7/28 | 0 | 0 | 7/28 | 10 / 18 / 0 |
+| 普通 SFT（旧 v3） | 28/28 | .351 | .667 | 9/28 | 10 / 18 / 0 |
+| 证据 SFT（旧 v3） | 28/28 | .419 | .837 | 13/28 | 10 / 18 / 0 |
+| 无图像预算基线 | 28/28 | 0 | .737 | 9/28 | 9 / 0 / 19 |
+
+这里将 `valid_output_rate`、诊断正确率和停止时机严格分开。两组 SFT 的逐前缀 stop-decision accuracy 均为28/110，且都在18/28个 Episode 提前停止；它们没有学会正确停止。预算基线 stop-decision accuracy 为91/110，但漏停19/28个应停止 Episode，不能把高逐前缀准确率解释为正确时机。
+
 ### 结论、产物与复现
 
-已证实：（1）terminal status 与 step/remaining 完全关联；（2）两组 SFT 在同预算前缀上均不区分证据充分性；（3）删除 `remaining` 会显著破坏两组 status，证据组尤其从9/9 terminal uncertain 全部转为 fail；（4）证据监督真实减少了 axis FP/unsupported，但以 offset TP 与总体 recall 下降为代价。尚不能识别：模型是否真正识别视觉证据、`remaining` 相对其他阶段线索的独立效应，以及缺席的2个正式 Validation 物体上的泛化。
+仍成立的描述性收益是：在同一旧 checkpoint 和同一28例 terminal 输入上，证据 SFT 比普通 SFT 少18个 unsupported finding、exact 多4例，并改善 axis 与精确部件定位汇总。不能继续主张的部分是：status 收益已被无图像基线完全解释，defect-type 也高度受阶段捷径影响；同阶段前缀上两组 SFT 对证据充分/不足均输出 `fail`，且停止时机失败，因此现有结果不证明依赖视觉证据。旧 checkpoint 训练于 v3 泄漏目标，**不是修复后监督的训练结果**。
 
-逐前缀预测与配置位于 `output/partnet-qwen3vl2b-diagnostic-{base,ordinary,evidence}-prefix-v1/`，预算消融位于对应 `-no-remaining-v1/`；机器汇总为 `output/partnet-qwen3vl2b-diagnostic-analysis-v1.json`，SHA-256 `4f968468be00586c7daa6da791027c3a56a7610a1399b33410a5d2491fcd1ed0`。报告包含逐物体、缺陷组合、可见 finding 类型、配对差、bootstrap 及全部输入预测 SHA；冻结 Part 2 Test 未读取，Gold/证据标准未修改。
-
-实际命令（普通/证据模型分别增加对应 `--adapter output/partnet-qwen3vl2b-{ordinary,evidence}-sft-v1/checkpoint`）：
+机器汇总 `output/partnet-qwen3vl2b-diagnostic-analysis-v2.json`（SHA-256 `3b8fa8099facbc31b652ae089be3e70e5cab84f15ddc0cc071f33f4ec50a3cf7`）含逐物体、缺陷组合、同阶段对照、stop confusion 和全部输入 SHA。无法比较的条件明确为：0个可信 pass、0个自然错误人工 Gold、2个正式 Validation 物体无 Episode、未评测 comprehensive 策略、预算基线不能定位部件。冻结 Part 2 Test 未读取，Gold/证据标准未修改。
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python scripts/evaluate_qwen_episode_diagnostics.py --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3 --model ../TurnItOver/models/Qwen3-VL-2B-Instruct --out output/partnet-qwen3vl2b-diagnostic-base-prefix-v1 --condition causal_prefixes --max-new-tokens 512
-CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python scripts/evaluate_qwen_episode_diagnostics.py --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3 --model ../TurnItOver/models/Qwen3-VL-2B-Instruct --out output/partnet-qwen3vl2b-diagnostic-base-no-remaining-v1 --condition terminal_without_remaining --max-new-tokens 512
-
-python scripts/analyze_qwen_episode_diagnostics.py \
+python -m scripts.reexport_episode_targets --source data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3 --out data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v4
+python -m scripts.audit_sft_supervision --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v4 --baseline-dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3 --out output/partnet-qwen3vl2b-supervision-audit-v2.json
+python -m scripts.evaluate_budget_baseline --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v4 --out output/partnet-no-image-budget-baseline-v1
+python -m scripts.analyze_qwen_episode_diagnostics \
+  --dataset data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v4 \
+  --budget-baseline output/partnet-no-image-budget-baseline-v1/predictions.jsonl \
   --base-prefix output/partnet-qwen3vl2b-diagnostic-base-prefix-v1/predictions.jsonl \
   --ordinary-prefix output/partnet-qwen3vl2b-diagnostic-ordinary-prefix-v1/predictions.jsonl \
   --evidence-prefix output/partnet-qwen3vl2b-diagnostic-evidence-prefix-v1/predictions.jsonl \
   --base-no-remaining output/partnet-qwen3vl2b-diagnostic-base-no-remaining-v1/predictions.jsonl \
   --ordinary-no-remaining output/partnet-qwen3vl2b-diagnostic-ordinary-no-remaining-v1/predictions.jsonl \
   --evidence-no-remaining output/partnet-qwen3vl2b-diagnostic-evidence-no-remaining-v1/predictions.jsonl \
-  --out output/partnet-qwen3vl2b-diagnostic-analysis-v1.json --seed 20261013 --bootstrap-samples 10000
+  --out output/partnet-qwen3vl2b-diagnostic-analysis-v2.json --seed 20261013 --bootstrap-samples 10000
 ```
 
-下一轮最值得做的是构造**固定 horizon、阶段线索匹配的视觉证据对照**：在相同 step、remaining、历史长度、图像数和动作类型下，收集证据充分/不充分且跨物体平衡的真实前缀；评测时同时提供原图与不改变合法历史的图像内容消融，训练时再用这些固定 horizon 的可见证据 verdict 做多 seed 对照。现有自然前缀只能匹配预算阶段，不能匹配历史内容，先补这个评测设计比直接扩大当前 terminal SFT 更能回答因果问题。
+下一次训练需要阶段线索匹配且跨物体平衡的证据充分/不足前缀、真实 `continue/stop` 样本、分别冻结的 `first_failure` 与 `comprehensive_within_budget` 策略，并补充 pass、自然错误、更多独立物体和多 seed。训练前应先证明同一 step、remaining、历史长度和图像数下目标仍可由可见内容区分；本轮不重新训练。
 
 ## 复现命令
 

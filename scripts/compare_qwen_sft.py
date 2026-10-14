@@ -30,8 +30,11 @@ for name, run in runs.items():
     for key in ("dataset_manifest_sha256", "validation_episodes_sha256", "max_new_tokens", "n"):
         if run.get(key) != runs["base"].get(key):
             raise ValueError(f"Controlled comparison mismatch for {name}: {key}")
-metrics = ("valid_output_rate", "stop_accuracy", "status_accuracy", "exact_verdict_accuracy")
-report = {"version": 1, "status": "complete", "protocol": {
+metrics = ("valid_output_rate", "status_accuracy", "exact_verdict_accuracy")
+limitations = [row for row in list(runs.values())[-1]["limitations"]
+               if "stop accuracy" not in row.lower()]
+limitations.append("Terminal valid_output_rate measures legal output only; stop timing is evaluated separately.")
+report = {"version": 2, "status": "complete", "protocol": {
               key: runs["base"][key] for key in ("dataset_manifest_sha256", "validation_episodes_sha256",
                                                   "max_new_tokens", "n")},
           "runs": {name: {**{key: run[key] for key in metrics},
@@ -44,7 +47,10 @@ report = {"version": 1, "status": "complete", "protocol": {
                            "defect_type_micro": run.get("defect_type_micro"),
                            "part_localization_micro": run.get("part_localization_micro"),
                            "finding_per_defect": run.get("finding_per_defect"),
-                           "stop_behavior": run.get("stop_behavior"),
+                           "output_validity": run.get("output_validity") or {
+                               "evaluation_point": "forced_terminal_prefix_only",
+                               "legal_final_verdicts": round(run["valid_output_rate"] * run["n"]),
+                           },
                            "expected_statuses": run.get("expected_statuses"),
                            "predicted_statuses": run.get("predicted_statuses"),
                            "per_asset": run.get("per_asset"),
@@ -52,7 +58,7 @@ report = {"version": 1, "status": "complete", "protocol": {
                    for name, run in runs.items()},
           "delta_vs_base": {name: {key: run[key] - runs["base"][key] for key in metrics}
                             for name, run in runs.items() if name != "base"},
-          "limitations": list(runs.values())[-1]["limitations"]}
+          "limitations": limitations}
 if "sft" in runs:
     report.update(base=report["runs"]["base"], sft=report["runs"]["sft"],
                   delta=report["delta_vs_base"]["sft"],

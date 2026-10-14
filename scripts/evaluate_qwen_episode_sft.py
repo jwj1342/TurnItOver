@@ -128,7 +128,7 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
                     counts[f"predicted_status:{prediction.status}"] += 1
                 counts["exact_verdict"] += int(prediction is not None and prediction.status == target.status
                                                 and predicted_signature == expected_signature)
-                counts["stop_correct"] += int(prediction is not None)
+                counts["valid_output"] += int(prediction is not None)
                 counts["unsupported_findings"] += unsupported
                 counts["predicted_findings"] += len(predicted_signature)
                 evidence_consistent = (prediction is not None and unsupported == 0
@@ -198,14 +198,12 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
         non_fail = sum(sum(status_confusion[status].values())
                        for status in STATUSES if status != "fail")
         report = {
-            "version": 1, "status": "complete", "scope": "fixed_observation_terminal_diagnosis_and_stop",
+            "version": 2, "status": "complete", "scope": "fixed_observation_terminal_diagnosis",
             "model": str(model_path), "adapter": str(adapter) if adapter else None,
             "dataset": str(dataset), "dataset_manifest_sha256": _sha256(dataset / "manifest.json"),
             "validation_episodes_sha256": _sha256(dataset / "validation.episodes.jsonl"),
             "max_new_tokens": max_new_tokens, "n": counts["n"],
-            "valid_output_rate": counts["stop_correct"] / counts["n"],
-            "final_verdict_rate": counts["stop_correct"] / counts["n"],
-            "stop_accuracy": counts["stop_correct"] / counts["n"],
+            "valid_output_rate": counts["valid_output"] / counts["n"],
             "status_accuracy": counts["status_correct"] / counts["n"],
             "exact_verdict_accuracy": counts["exact_verdict"] / counts["n"],
             "status_classification": _status_metrics(status_confusion),
@@ -237,11 +235,10 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
                 "Validation contains seven held-out PartNet-Mobility assets.",
                 "Inputs use frozen teacher-acquired observations; active action selection is not evaluated.",
                 "No pass-qualified example exists, so pass behavior cannot be measured.",
-                "Stop accuracy only means a legal final verdict at a forced terminal prefix; early stopping is not evaluated.",
+                "This terminal-only evaluation does not measure stop timing.",
             ],
-            "stop_behavior": {"evaluation_point": "terminal_prefix_only",
-                              "legal_final_verdicts": counts["stop_correct"],
-                              "early_stop_evaluated": False},
+            "output_validity": {"evaluation_point": "forced_terminal_prefix_only",
+                                "legal_final_verdicts": counts["valid_output"]},
         }
     except Exception as exc:
         report = {"version": 1, "status": "incomplete", "error_type": type(exc).__name__, "error": str(exc)}

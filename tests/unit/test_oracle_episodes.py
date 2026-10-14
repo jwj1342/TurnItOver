@@ -3,6 +3,7 @@ import json
 import pytest
 
 from turnitover.oracle.episodes import episode_examples
+from turnitover.oracle.stopping import stopping_examples
 
 
 CONTEXT = {
@@ -73,6 +74,15 @@ def test_clean_episode_never_uses_hidden_label_absence_as_pass_evidence():
     assert verdict["limitations"]
 
 
+def test_no_evidence_target_is_identical_for_clean_and_hidden_defect_cases():
+    _, clean = _terminal([[], []], labels=[])
+    _, hidden = _terminal([[], []], labels=LABELS)
+
+    assert clean == hidden
+    text = json.dumps(clean).lower()
+    assert all(term not in text for term in ("inject", "private", "hidden", "unexposed"))
+
+
 def test_failure_stops_at_first_exposed_step_instead_of_exhausting_budget():
     row, verdict = _terminal([[], [0]])
 
@@ -99,3 +109,39 @@ def test_unknown_training_objective_is_rejected():
 def test_terminal_target_requires_an_observation():
     with pytest.raises(ValueError, match="at least one observation"):
         episode_examples("case", CONTEXT, "reference.png", [], [], [], [], budget=2)
+
+
+def _stop_targets(exposures, labels=LABELS, objective="first_failure"):
+    return list(stopping_examples(
+        "case", CONTEXT, "reference.png", HISTORY, [0, 1], exposures, labels,
+        budget=2, objective=objective))
+
+
+def test_first_failure_stop_targets_include_continue_then_evidence_stop():
+    rows = _stop_targets([[], [0]])
+
+    assert [row["stop_target"] for row in rows] == ["continue", "continue", "stop"]
+    assert rows[-1]["stop_outcome"] == "fail"
+    assert rows[-1]["stop_reason"] == "evidence_sufficient"
+
+
+def test_budget_exhausted_uncertain_is_separate_from_evidence_stop():
+    rows = _stop_targets([[], []])
+
+    assert [row["stop_target"] for row in rows] == ["continue", "continue", "stop"]
+    assert rows[-1]["stop_outcome"] == "uncertain"
+    assert rows[-1]["stop_reason"] == "budget_exhausted_uncertain"
+
+
+def test_comprehensive_policy_continues_after_first_evidence_until_final_prefix():
+    rows = _stop_targets([[0], [1]], objective="comprehensive_within_budget")
+
+    assert [row["stop_target"] for row in rows] == ["continue", "continue", "stop"]
+    assert rows[-1]["stop_outcome"] == "fail"
+
+
+def test_no_evidence_stop_supervision_is_private_gold_invariant():
+    clean = _stop_targets([[], []], labels=[])
+    hidden = _stop_targets([[], []], labels=LABELS)
+
+    assert [row["messages"][1] for row in clean] == [row["messages"][1] for row in hidden]

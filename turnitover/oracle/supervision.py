@@ -44,7 +44,7 @@ def load_examples(root, split, kind="actions", *, require_formal_training=False,
         raise ValueError("Refusing incomplete supervision")
     if split not in ("train", "validation", "test"):
         raise ValueError("Unknown split")
-    if kind not in ("actions", "diagnosis", "episodes"):
+    if kind not in ("actions", "diagnosis", "episodes", "stopping"):
         raise ValueError("Unknown supervision kind")
     if require_formal_training and manifest.get("formal_training") is not True:
         raise ValueError("Refusing non-formal training data")
@@ -54,7 +54,7 @@ def load_examples(root, split, kind="actions", *, require_formal_training=False,
             if terminal_only and not record.get("terminal"):
                 continue
             identity = record.get("data_identity")
-            if kind == "episodes":
+            if kind in ("episodes", "stopping"):
                 if not isinstance(identity, dict):
                     raise ValueError("Episode is missing data identity")
                 if identity.get("formal_training") != manifest.get("formal_training"):
@@ -69,8 +69,9 @@ def load_examples(root, split, kind="actions", *, require_formal_training=False,
                         raise ValueError(f"Episode has invalid {key}")
             images = []
             image_hashes = record.get("image_sha256")
-            if kind == "episodes" and (not isinstance(image_hashes, list) or len(image_hashes) != len(record["images"])):
-                raise ValueError("Episode image hashes are missing")
+            if kind in ("episodes", "stopping") and (
+                    not isinstance(image_hashes, list) or len(image_hashes) != len(record["images"])):
+                raise ValueError("Supervision image hashes are missing")
             for index, relative in enumerate(record["images"]):
                 path = (root / relative).resolve()
                 if not path.is_relative_to(root.resolve()):

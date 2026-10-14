@@ -1,0 +1,36 @@
+{
+  "audit_skill": "experiment-audit",
+  "date": "2026-10-14",
+  "overall_verdict": "fail",
+  "integrity_status": "fail",
+  "reason_code": "supervision_leakage_and_stage_shortcut",
+  "summary": "Frozen v3 results are real, but leaked assistant explanations and stage-confounded targets do not establish visual evidence use or learned stopping.",
+  "reviewer_model": "codex-same-family",
+  "reviewer_family": "openai",
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "trace_path": ".aris/traces/experiment-audit/2026-10-14_run01/",
+  "audited_input_hashes": {
+    "data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3/manifest.json": "sha256:f95302809fa135d2d161577dee9b44ff405a671287ae07bc1015f40a8e1f546b",
+    "data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3/train.episodes.jsonl": "sha256:a04446c76fbf473e4443315e8663bc463c27080c22d7ccb17fc4f46644780ca1",
+    "data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v3/validation.episodes.jsonl": "sha256:0e9eeeab74d48e5c410248746da0e97ba9cee4f8877c76b3ae34870e16909405",
+    "output/partnet-qwen3vl2b-controlled-comparison-v5.json": "sha256:92e8abc8f8d420c0e30bf9fb7107be45c5af30e09d4d9922da16ff6d30f062e5",
+    "output/partnet-qwen3vl2b-diagnostic-analysis-v1.json": "sha256:4f968468be00586c7daa6da791027c3a56a7610a1399b33410a5d2491fcd1ed0"
+  },
+  "checks": {
+    "gt_provenance": {"status": "fail", "details": "Private Gold was absent from inputs but affected v3 assistant explanation text."},
+    "score_normalization": {"status": "pass", "details": "Metrics use raw count denominators."},
+    "result_existence": {"status": "pass", "details": "Saved terminal and causal-prefix artifacts exist and were reproduced."},
+    "dead_code_and_metric_semantics": {"status": "fail", "details": "Old stop_accuracy/final_verdict_rate fields measured valid terminal output, not stop timing."},
+    "scope": {"status": "fail", "details": "Seven objects, one seed, two synthetic defects, no pass or natural-error cases."},
+    "eval_type": "simulation_only_with_independent_private_gold"
+  },
+  "claims": [
+    {"id": "saved_metrics_exist", "impact": "supported"},
+    {"id": "unsupported_findings_reduced", "impact": "needs_qualifier"},
+    {"id": "visual_evidence_learned", "impact": "unsupported"},
+    {"id": "stop_timing_learned", "impact": "unsupported"},
+    {"id": "repaired_training_improves_model", "impact": "not_evaluated"}
+  ],
+  "reviewed_remediation": false
+}

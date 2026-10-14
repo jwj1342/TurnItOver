@@ -19,6 +19,7 @@ from turnitover.core.program import ObjectProgram
 from turnitover.dataset.prepare import records, SPLITS
 from turnitover.oracle.evidence import ExposureThresholds, exposure_matrix, pixels, render_grid, replay_corruptions
 from turnitover.oracle.episodes import episode_examples
+from turnitover.oracle.stopping import stopping_examples
 from turnitover.oracle.supervision import action_examples, action_json
 from turnitover.oracle.witnesses import plan, witness_grid
 from turnitover.policy.loop import execute_observation
@@ -96,15 +97,17 @@ def run(benchmark, config, output, budget=6, per_asset=None, episode_objective="
                                for p in provenance_files}
     report["render_resolution"] = [cfg.render.width, cfg.render.height]
     report["fixed_order"] = "Each view at rest, then each joint's unique nonzero detents for front/oblique views"
-    counts, episode_counts, episode_terminations, samples = Counter(), Counter(), Counter(), Counter()
+    counts, episode_counts, stopping_counts = Counter(), Counter(), Counter()
+    episode_terminations, stop_targets, samples = Counter(), Counter(), Counter()
     curves = {mode: np.zeros(budget, dtype=int) for mode in ("oracle", "fixed", "random")}
     total_labels, teacher_renders = 0, 0
     reference_cache = {}
-    streams, episode_streams = {}, {}
+    streams, episode_streams, stopping_streams = {}, {}, {}
     try:
         for split in SPLITS:
             streams[split] = (output / f"{split}.actions.jsonl").open("w")
             episode_streams[split] = (output / f"{split}.episodes.jsonl").open("w")
+            stopping_streams[split] = (output / f"{split}.stopping.jsonl").open("w")
         with (output / "annotations.private.jsonl").open("w") as annotations, ObservationSession(cfg.render, load_views(cfg.views_path)) as session:
             for sample, _ in records(sorted((benchmark / "raw").glob("*.tar"))):
                 uid = hashlib.sha256(f"{sample.source_id}:{sample.sample_id}".encode()).hexdigest()[:24]
@@ -175,6 +178,13 @@ def run(benchmark, config, output, budget=6, per_asset=None, episode_objective="
                     _attach_identity(example, output, sample, source_metadata, reference, candidate)
                     episode_streams[split].write(json.dumps(example)+"\n")
                     episode_counts[split] += 1
+                for example in stopping_examples(
+                        uid, model_input["context"], reference_path.as_posix(), oracle["history"],
+                        oracle["witness_indices"], exposures, labels, budget, episode_objective):
+                    _attach_identity(example, output, sample, source_metadata, reference, candidate)
+                    stopping_streams[split].write(json.dumps(example)+"\n")
+                    stopping_counts[split] += 1
+                    stop_targets[f"{example['stop_target']}:{example['stop_outcome'] or 'none'}"] += 1
                 annotations.write(json.dumps({"id": uid, "split": split, "asset_id": sample.asset_id,
                     "split_group": sample.dataset["split_group"], "reference_sha": reference.sha,
                     "candidate_sha": candidate.sha, "labels": labels,
@@ -188,6 +198,7 @@ def run(benchmark, config, output, budget=6, per_asset=None, episode_objective="
             raise ValueError("No eligible samples")
         report.update(status="complete", samples=dict(samples), action_examples=dict(counts),
                       episode_examples=dict(episode_counts),
+                      stopping_examples=dict(stopping_counts), stop_targets=dict(stop_targets),
                       episode_termination_reasons=dict(episode_terminations),
                       total_labels=total_labels, teacher_renders=teacher_renders,
                       exposed_counts={k: v.tolist() for k, v in curves.items()},
@@ -200,6 +211,8 @@ def run(benchmark, config, output, budget=6, per_asset=None, episode_objective="
         for stream in streams.values():
             stream.close()
         for stream in episode_streams.values():
+            stream.close()
+        for stream in stopping_streams.values():
             stream.close()
         (output / "manifest.json").write_text(json.dumps(report, indent=2))
     return report

@@ -1,6 +1,10 @@
 import json
 
-from scripts.analyze_qwen_episode_diagnostics import summarize, summarize_defect
+import pytest
+
+from scripts.audit_sft_supervision import _integrity
+from scripts.analyze_qwen_episode_diagnostics import _stop_metrics, summarize, summarize_defect
+from scripts.evaluate_budget_baseline import MajorityLookup, features
 from scripts.evaluate_qwen_episode_diagnostics import remove_remaining, visible_findings
 
 
@@ -51,3 +55,82 @@ def test_diagnostic_summary_counts_exact_and_unsupported_findings():
         "tp": 1, "fp": 1, "fn": 0, "precision": .5, "recall": 1., "f1": 2 / 3,
         "expected_cases": 1, "predicted_cases": 2,
     }
+
+
+def test_budget_baseline_uses_only_declared_metadata_features():
+    payload = {"remaining": 4, "history": [{"step": 0}, {"step": 1}]}
+    record = {"decision_index": 2, "images": ["ref", "a", "b"],
+              "messages": [{"content": "protocol\n" + json.dumps(payload)}]}
+
+    assert features(record) == (2, 4, 2, 3)
+    model = MajorityLookup()
+    model.fit_one(features(record), "fail")
+    assert model.predict((2, 4, 2, 3)) == "fail"
+    assert model.predict((9, 0, 9, 10)) == "fail"
+
+
+def test_stop_metrics_separate_prefix_accuracy_from_first_stop_timing():
+    rows = [
+        {"episode_id": "a", "decision_index": 0, "decision_kind": "action"},
+        {"episode_id": "a", "decision_index": 1, "decision_kind": "verdict"},
+        {"episode_id": "a", "decision_index": 2, "decision_kind": "verdict"},
+    ]
+    targets = {("a", 0): "continue", ("a", 1): "continue", ("a", 2): "stop"}
+
+    result = _stop_metrics(rows, targets)
+    assert result["decision_accuracy"] == 2 / 3
+    assert result["first_stop_early"] == 1
+    assert result["first_stop_exact"] == 0
+
+
+def _audit_row(uid, assistant, *, step=0, terminal=True):
+    payload = {"remaining": 1, "history": [{"step": 0}], "training_objective": "first_failure"}
+    return {
+        "id": uid, "episode_id": uid.split(":")[0], "decision_index": step,
+        "terminal": terminal, "evidence": {"covered_label_indices": []},
+        "images": ["reference.png"], "image_sha256": ["same"],
+        "messages": [
+            {"role": "user", "content": "protocol\n" + json.dumps(payload)},
+            {"role": "assistant", "content": assistant},
+        ],
+    }
+
+
+def _write_integrity_fixture(root, episodes, stopping):
+    for split in ("train", "validation"):
+        rows = episodes if split == "train" else []
+        stops = stopping if split == "train" else []
+        (root / f"{split}.episodes.jsonl").write_text(
+            "".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8")
+        (root / f"{split}.stopping.jsonl").write_text(
+            "".join(json.dumps(row) + "\n" for row in stops), encoding="utf-8")
+
+
+def test_supervision_integrity_reports_leakage_and_equal_prefix_conflicts(tmp_path):
+    left = _audit_row("a:verdict", json.dumps({"verdict": {
+        "status": "uncertain", "findings": [], "summary": "Hidden defect not observed.",
+        "limitations": []}}))
+    right = _audit_row("b:verdict", json.dumps({"verdict": {
+        "status": "uncertain", "findings": [], "summary": "Current evidence is insufficient.",
+        "limitations": []}}))
+    stop = lambda uid: {**_audit_row(uid, json.dumps({"stop_decision": {
+        "decision": "stop", "outcome": "uncertain", "reason": "Budget exhausted."}})),
+                        "stop_target": "stop", "stop_outcome": "uncertain"}
+    _write_integrity_fixture(tmp_path, [left, right], [stop("a:stop"), stop("b:stop")])
+
+    report = _integrity(tmp_path)
+    assert report["assistant_leak_examples"] == [{"id": "a:verdict", "terms": ["hidden defect"]}]
+    assert len(report["exact_public_prefix_conflicts"]) == 1
+
+
+def test_supervision_integrity_rejects_future_evidence_step(tmp_path):
+    row = _audit_row("a:verdict", json.dumps({"verdict": {
+        "status": "fail", "findings": [{"evidence_steps": [1]}],
+        "summary": "Observed failure.", "limitations": []}}))
+    stop = {**_audit_row("a:stop", json.dumps({"stop_decision": {
+        "decision": "stop", "outcome": "uncertain", "reason": "Budget exhausted."}})),
+            "stop_target": "stop", "stop_outcome": "uncertain"}
+    _write_integrity_fixture(tmp_path, [row], [stop])
+
+    with pytest.raises(ValueError, match="future or unknown step"):
+        _integrity(tmp_path)

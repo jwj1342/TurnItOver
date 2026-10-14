@@ -12,7 +12,7 @@ from turnitover.verifier.contracts import Context, parse_decision
 TRAINING_OBJECTIVES = ("first_failure", "comprehensive_within_budget")
 
 
-def _coverage(labels, exposures, witness_indices):
+def coverage(labels, exposures, witness_indices):
     covered = set()
     for index in witness_indices:
         if type(index) is not int or not 0 <= index < len(exposures):
@@ -47,7 +47,7 @@ def _finding(label, steps):
 
 
 def _terminal_verdict(labels, exposures, history, witness_indices):
-    evidence = _coverage(labels, exposures, witness_indices)
+    evidence = coverage(labels, exposures, witness_indices)
     if not history:
         raise ValueError("A terminal verdict requires at least one observation")
     findings = []
@@ -56,20 +56,19 @@ def _terminal_verdict(labels, exposures, history, witness_indices):
             history, witness_indices, strict=True) if label_index in exposures[witness]]
         findings.append(_finding(labels[label_index], steps))
     if findings:
-        limitations = ["The verdict covers only the acquired views and articulated states."]
-        if evidence["status"] == "partial":
-            limitations.append("Additional injected defects were not exposed by this trajectory.")
+        limitations = [
+            "Unobserved views, articulated states, and requested properties remain unverified."
+        ]
         verdict = {"status": "fail", "confidence": 1.0, "findings": findings,
                    "summary": "The acquired observations expose one or more qualified defects.",
                    "limitations": limitations}
-    elif labels:
-        verdict = {"status": "uncertain", "confidence": 0.0, "findings": [],
-                   "summary": "The trajectory does not expose the injected defects.",
-                   "limitations": ["No injected defect reached the configured pixel-exposure threshold."]}
     else:
         verdict = {"status": "uncertain", "confidence": 0.0, "findings": [],
-                   "summary": "The observations do not expose a defect, but do not establish that the candidate is clean.",
-                   "limitations": ["Absence of injected private labels is not model-visible evidence for pass."]}
+                   "summary": "The acquired observations have not established a qualified defect.",
+                   "limitations": [
+                       "Unobserved views, articulated states, and requested properties remain unverified.",
+                       "The current evidence is insufficient for either pass or fail.",
+                   ]}
     return verdict, evidence
 
 
@@ -79,7 +78,7 @@ def _termination(labels, exposures, witness_indices, budget, objective):
         raise ValueError(f"Unknown Episode training objective: {objective}")
     if objective == "first_failure" and labels:
         for length in range(1, len(witness_indices) + 1):
-            if _coverage(labels, exposures, witness_indices[:length])["covered_label_indices"]:
+            if coverage(labels, exposures, witness_indices[:length])["covered_label_indices"]:
                 return length, "evidence_sufficient"
     reason = "budget_exhausted" if len(witness_indices) >= budget else "observation_space_exhausted"
     return len(witness_indices), reason
@@ -109,7 +108,7 @@ def episode_examples(uid, context, reference, history, witness_indices, exposure
         rows.append({**row, "messages": action_messages, "episode_id": uid,
                      "training_objective": objective, "decision_index": decision_index,
                      "terminal": False,
-                     "evidence": _coverage(labels, exposures, witness_indices[:decision_index])})
+                     "evidence": coverage(labels, exposures, witness_indices[:decision_index])})
 
     verdict, evidence = _terminal_verdict(labels, exposures, history, witness_indices)
     target = {"verdict": verdict}
