@@ -97,9 +97,11 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 **v4 + v5独立模块闭环已完成，停止更安全但尚非有效Verifier（2026-10-15）。** 7个独立Validation物体上，三系统各执行fixed/random共14个真实浏览器Episode；策略预定且不称为active。相对v4-only，模块化将提前停止9→1、clean误报4→0、unsupported 14→7，Episode status accuracy 35.71%→92.86%；但finding/定位F1仅13.33%，8次fail仅1次在v4审计口径下有完整证据，且9个v5 left-limit观察无法映射到冻结v4证据网格。失败单LoRA则漏停8/14。当前实现只适合作为可复现的安全门/负结果工程基线，不能作为Roadmap能力基线。详见[训练数据记录](training-dataset-expansion.md)。
 
+**真实revolute运动诊断归因已经收束（2026-10-15）。** 从4个具有冻结axis+offset真值的独立Validation物体构造12个axis/offset/clean反事实；真实浏览器在rest/mid/end和两个视角输出严格对齐reference/candidate，世界坐标刚体拟合与逐例图像审核确认Gold。充分证据B中，底座与v4都把12/12判为axis：axis recall虽为4/4，但precision仅4/12，offset和clean各4/4全部误报axis，完整正确均4/12；逐物体没有一个能同时正确三类。明确上下排配对的D中，v4仍6/6判axis且两个axis的joint/part均错。rest-only C中两模型都把12/12判clean、0 uncertain，既漏掉仍静态可见的4个offset，也把8个无法证明正常运动的axis/clean当成clean。故旧闭环证据协议确有缺口，但正确补齐运动图像仍不能带来可靠诊断；当前P0改为有证据约束的运动诊断专项SFT，显式加入同物体axis/offset/clean与删状态uncertain对照。详见[训练数据记录](training-dataset-expansion.md)。
+
 ## 下一步（按优先级）
 
-1. **P0｜先解决动态证据到诊断的grounding与协议闭合。** v5安全门能抑制clean早停，但shape mismatch不能稳定区分offset/axis或定位part，且left-limit缺少v4证据映射；先统一可观测state/reference协议并验证类型、joint、part证据，再扩训或学习动作。有公开证据前继续禁止clean `pass`。
+1. **P0｜直接开展证据约束的运动诊断专项SFT。** 统一同camera/joint/state的reference-candidate输入；同一物体成组监督axis/offset/clean和删运动状态后的uncertain，并显式监督支持类型的最小步骤、joint和part。先在独立物体留出上通过三类判别、clean/offset误报、候选定位和证据不足四个门禁；不要再投入停止策略调参或仅修协议。
 2. **P0｜按实测漏斗继续扩充 PartNet-Mobility。** 优先补 Train 混合关节、未覆盖类别和更大的独立 Validation；达到80–100个合格原物体前持续保存许可、来源/内容 SHA、运动审核及冻结 Test 去重证据。
 3. **P0｜消除特权动作教师依赖。** 动作选择不读取私有 label/exposure，或显式学习可观测条件下的动作分布；完成前不把 terminal SFT 解释为主动取证训练。
 4. **P1｜收集自然错误独立人工 Gold。** 固定 Generator，由不读取注入标签的人工依据真实渲染标注；GAPartNet 仅在取得完整官方包和额外许可后接入。
@@ -109,4 +111,4 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 ---
 
-最近同步：**2026-10-15 · v4 + v5模块化交互验证**；42个真实浏览器Episode及三系统统一审计已完成。模块化显著减少提前停止和clean误报，但诊断/定位及协议兼容仍不合格；本轮未训练、未构建v6，冻结Part 2 Test未读取或修改。
+最近同步：**2026-10-15 · 真实revolute运动诊断归因**；4个独立物体、12个axis/offset/clean案例的A/B/C及小型D已完成真实GPU推理。充分证据下底座与v4均将12/12判axis，缺证时又12/12判clean，说明首要瓶颈是运动类型判别与证据充分性，其次是结构化定位；下一步已冻结为运动诊断专项SFT。本轮未训练、未构建v6，冻结Part 2 Test未读取或修改。

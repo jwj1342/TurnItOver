@@ -611,3 +611,63 @@ CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_m
 ```
 
 每个系统目录保存 `episodes.jsonl`、`metrics.json`、console log，以及每个Episode的八参考、实际观察PNG和含全部模块调用的 `episode.json`；统一逐物体、逐policy、失败案例、checkpoint/代码SHA和协议缺口位于 `output/partnet-modular-verifier-audit-v1.json`。三组metrics与统一审计SHA-256依次为 `c5ad2b0a1c3e408f5cb3d283120c1ce00fe29e367a69ff81e3a19db91f6dca70`、`fdc0204829afec05ee6c31f875ff67191d58ecb74cb9178084b3814e0456c960`、`5091ca36dcd9f6a64ce7ba18ff367eb31de73bf78a5c57a83173d9d522be4012`、`55913457dfa62b5600ef7d0690b8f8eb7dc64a54b20c9fd69df539208d5febcb`。本轮未训练、未构建v6、未调用付费API、未接入Kimi、未读取或修改冻结Part 2 Test，也未自动push。
+
+## 真实关节运动诊断归因（2026-10-15）
+
+### 受控案例与证据审核
+
+本轮停止优化停止策略，直接检验 Qwen3-VL-2B-Instruct 底座和 v4 诊断 LoRA 在充分真实运动证据下能否区分 `axis`、`offset` 与 `clean`。Validation 中只有4个独立物体同时具有已冻结的 revolute 轴扰动和 offset 扰动；此前闭环中两个 axis-only 物体的标注关节实际为 prismatic，故不把它们冒充 revolute 证据，也不为达到12–24个独立物体而制造标签。本轮对这4个物体各保留原有 axis、只保留原有 offset、或恢复 reference，构成12个反事实案例。它们复用原冻结扰动参数，不新增错误。
+
+每例真实浏览器渲染同一测试关节在 rest/mid/end、front/oblique_fl 两视角下的6组严格配对 reference/candidate PNG；同一物体三种案例使用完全相同的公开结构文本、状态、camera和图片槽位。独立几何审核不读取注入轴作为拟合目标，而是对浏览器导出的世界坐标顶点作 SVD 刚体配准：4个 axis 案例 rest 最大顶点差均低于 `1e-6 m`，运动后的拟合旋转相对 reference 分别偏离97.65°、49.55°、54.69°和58.45°；4个 offset 案例旋转差均为0°，rest 最大顶点差为0.0473/0.0709/0.0596/0.0478 m；4个 clean 案例所有状态几何与PNG一致。逐例可视审核确认 B 的两视角三状态足以看到对应运动平面、持续位移或一致运动；该审核由本轮执行者完成，不冒充独立人类评审组。
+
+条件定义如下：A 复用 v4 单参考闭环协议；同时精确回放此前7个真实闭环最终诊断调用，输入token数和原始输出7/7逐字一致。12案例的 A 是在同一协议下对本轮反事实的重新执行。B 提供6组正确对齐的多状态 reference/candidate 图像。C 只保留两个视角的 rest 配对；axis 与 clean 因没有运动状态应为 `uncertain`，offset 仍应从rest位移识别。D 仅取2个物体的6例，把相同12张B图像排成明确标注“上排reference、下排candidate”的联系表，以排除图片配对和自由输出格式歧义。Gold、扰动参数、几何审核和评分字段均未进入模型输入。
+
+### 真实GPU结果
+
+全部推理使用同一Qwen3-VL-2B、BF16/SDPA、greedy decoding和 `max_new_tokens=512`。下表将协议合法率与语义能力分开；完整正确要求类型、joint、part和真实支持该类型的 evidence_steps 同时正确。B 中 axis 的 joint/part 条件准确率虽然为4/4，但公开输入已经明确唯一 tested joint，且两模型把三类全部回答为该joint的axis，因此这不能证明自由结构grounding能力。
+
+| 模型 / 条件 | 协议合法 | 异常识别 | 类型正确 | axis joint | 缺陷 part | 完整正确 | 关键错误 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| 底座 A，本轮12例 | 12/12 | 1/12 | 1/12 | 0/4 | 0/8 | 1/12 | 9 uncertain、3 clean；没有诊断缺陷 |
+| v4 A，本轮12例 | 12/12 | 0/12 | 0/12 | 0/4 | 0/8 | 0/12 | 12/12 uncertain |
+| 底座 B | 12/12 | 8/12 | 4/12 | 4/4 | 4/8 | 4/12 | axis/offset/clean 全部判 axis |
+| v4 B | 12/12 | 8/12 | 4/12 | 4/4 | 4/8 | 4/12 | axis/offset/clean 全部判 axis |
+| 底座 C | 12/12 | 0/12 | 0/12 | 0/4 | 0/8 | 0/12 | 12/12判clean；0 uncertain |
+| v4 C | 12/12 | 0/12 | 0/12 | 0/4 | 0/8 | 0/12 | 12/12判clean；0 uncertain |
+| 底座 D，2物体×3类 | 2/6 | 2/6 | 2/6 | 1/2 | 1/4 | 0/6 | 1个axis类型命中但joint/part错 |
+| v4 D，2物体×3类 | 6/6 | 4/6 | 2/6 | 0/2 | 1/4 | 0/6 | 6/6判axis；两个axis的joint/part均错 |
+
+B 的表面 axis recall 是4/4，但 precision 只有4/12；4个offset均被误判axis，4个逐帧完全相同的clean也均被误判axis。逐物体看，4/4物体都呈现相同模式：三例中仅axis例完整正确，没有任何物体能同时正确区分三类。两模型在B均产生8个 unsupported finding。D进一步说明，即使明确图片配对，v4仍对6/6输出axis，且两个真实axis的joint和part均定位错误；底座只有2/6类型正确且0/6完整正确。因此结果不是“已经可靠识别axis，只差JSON”。
+
+C 中两模型都没有猜 axis，而是把12/12判成clean。对4个axis和4个clean，rest-only不能证明正常运动，应有8个 `uncertain`；对4个offset，rest图仍有充分可见位移，应识别offset。实际 uncertain 为0/12，三组都错误。这同时暴露证据充分性判断和静态offset识别失败。模型引用的步骤均真实存在，但“引用真步骤”不等于证据支持其类型；评分因此单列 citations 与 supported finding。
+
+精确历史A回放覆盖原模块化实验的7个真实物体：底座7/7输出uncertain；v4逐字复现原调用，包含1个clean上的虚假offset、两个可见offset中仅1个类型与part正确，其余输出则由早停、错误类型/定位或无充分证据限制。它确认旧闭环输入确实不利于诊断，但B的受控结果又证明单纯补齐正确运动图像仍不足以得到可信诊断。
+
+### 决策与最快下一步
+
+本轮结论是：**当前底座与v4 LoRA都不能可靠识别关节轴错误。** 它们能在B的4个轴案例上输出正确类别和公开测试joint/part，但同样对全部offset和clean输出axis；D中v4又无法定位真实joint/part。首要瓶颈是视觉运动比较与类型判别，其次是证据充分性判断，再次是开放结构grounding。旧输入协议是一个真实问题，但不是充分解释：B明显改变输出，却没有改善三类判别，故不应优先投入仅修协议而不训练。
+
+Issue #4 的下一项资源投入应直接是小规模、证据约束的运动诊断专项SFT，而不是v6大数据构建或停止策略实验。训练单元应显式成组包含同一物体/关节/camera/state下的 axis、offset、clean，以及删除运动状态后的 uncertain；目标需监督 reference-candidate 跨状态比较、缺陷类型、joint、part和支持该结论的最小步骤。先在独立物体留出上通过四项门禁：三类均衡判别、clean/offset不被axis吞并、候选列表内joint/part定位、rest-only axis/clean保持uncertain。通过后才进入 fixed/random/active 动作对照；若候选选择仍能判axis但ID失败，再单独加强结构化定位监督。本轮不再训练、不搜索超参，也不研究双Adapter。
+
+复现命令与审计产物：
+
+```bash
+ROOT=output/motion-attribution-v1
+MODEL=../TurnItOver/models/Qwen3-VL-2B-Instruct
+V4=output/partnet-qwen3vl2b-evidence-sft-v4-round2/checkpoint
+export PLAYWRIGHT_BROWSERS_PATH=/91004t2/laq/code/ThreejsJudge/TurnItOver/.cache/ms-playwright
+
+../TurnItOver/.venv-local/bin/python -m scripts.build_motion_attribution --out "$ROOT"
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_motion_attribution --inputs "$ROOT/inputs.jsonl" --model "$MODEL" --out "$ROOT/base"
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_motion_attribution --inputs "$ROOT/inputs.jsonl" --model "$MODEL" --adapter "$V4" --out "$ROOT/v4"
+../TurnItOver/.venv-local/bin/python -m scripts.prepare_motion_attribution_controls --root "$ROOT"
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_motion_attribution --inputs "$ROOT/controls.inputs.jsonl" --model "$MODEL" --out "$ROOT/base-D"
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_motion_attribution --inputs "$ROOT/controls.inputs.jsonl" --model "$MODEL" --adapter "$V4" --out "$ROOT/v4-D"
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_motion_attribution --inputs "$ROOT/historical.inputs.jsonl" --model "$MODEL" --out "$ROOT/base-historical"
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_motion_attribution --inputs "$ROOT/historical.inputs.jsonl" --model "$MODEL" --adapter "$V4" --out "$ROOT/v4-historical"
+../TurnItOver/.venv-local/bin/python -m scripts.audit_motion_attribution --root "$ROOT"
+../TurnItOver/.venv-local/bin/python -m scripts.score_motion_attribution --root "$ROOT"
+../TurnItOver/.venv-local/bin/python -m pytest -q tests/unit/test_motion_attribution.py tests/unit/test_modular_verifier.py tests/unit/test_sft_diagnostics.py tests/unit/test_oracle_episodes.py
+```
+
+逐案例公开输入和图像清单位于 `inputs.jsonl`，原始输出分别位于各评测目录的 `predictions.jsonl`，状态/camera/几何真值、可视审核、逐例私有评分和汇总分别为 `gold.private.jsonl`、`geometry.audit.json`、`visual-review.private.json`、`scores.private.jsonl` 和 `metrics.json`。`manifest.json` / `inputs.jsonl` / `metrics.json` / `geometry.audit.json` SHA-256依次为 `bda76a5b0c63ede7808bb4396658c9ca99201e948f657b92d9e0caed491f6e78`、`5e7513967923e706f92f69225875d244235be0c3b995a64ff7a0c338eb09e312`、`17314fed72ed789dc6331589633508a6b7a15e81b5df78f57225338d184df818`、`adffe5833e8a794fd4435917fc9c7fb7e637df9090f41972183d0cdf3e90b8f9`。相关32项测试通过。未调用付费API、未训练模型、未读取或修改冻结Part 2 Test。
