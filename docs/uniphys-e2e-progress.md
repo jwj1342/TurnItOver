@@ -73,6 +73,10 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 **第一轮 Kimi 小规模采集已在4次真实请求上限停止，不建议直接扩量。** 两个不同 PartNet Train 原物体各运行预算1的观察决策与最终请求：动作均合法，缺陷条 `oblique_fr` 提供一条有新图像的可见信息候选动作，clean 条 `front` 与参考完全重复；但两个终判都不符合现有 verdict schema，故完整 Episode 0/2、有证据 finding 0、无效输出2。总用量8,393 token，费用未知。同 runner、同预算的离线 fixed/random 对照不调用模型：clean 上 Kimi 不如 random 的新视角，缺陷上 Kimi 与 random seed 0 的动作和图像完全相同；既有 Oracle 因 framing 不同不作严格像素对照。原始结果按失败真实保留，未补标签、未训练、未访问冻结 Test。下一步先离线修正 prompt 的显式 verdict 合同并复测同规模门禁，详见 [`training-dataset-expansion.md`](training-dataset-expansion.md) 与 [`kimi-interactive-teacher-round1.json`](evidence/kimi-interactive-teacher-round1.json)。
 
+**第二轮已打通可交付的最小 API 教师接口链路，但尚未得到合格 fail/pass。** prompt 展开 schema，非法输出重试与总请求上限同时生效，真实采集恢复冻结 Sample framing；4条 Train Episode 用8次 Kimi 请求均完成“动作→Chromium→合法终判”，独立 checker/exposure 审核通过3条、拒绝1条已暴露却漏诊的 offset。通过项导出为3条 action + 3条 terminal，现有 formal loader 与本地 Qwen processor 均成功读取；全部 terminal 都是 `uncertain`，所以可以交给 SFT 分支做接口与谨慎停止监督，不足以扩量或支持诊断能力结论。证据见 [`kimi-interactive-teacher-round2.json`](evidence/kimi-interactive-teacher-round2.json)。
+
+**第三轮 joint_axis 运动实验：Kimi 能主动取证，诊断仍是瓶颈。** 审核改为按实际关节值与像素绑定冻结 witness 清单，并且必须有可比的可见参考状态；Gold/annotation/Episode 的身份、行 SHA 与 split 均受校验，Test 被禁止。在4个 axis + 4个 clean 的 Train 案例上，使用标签无关的 `front_motion_v1` 多状态参考：主动组4/4自主获取到充分运动证据，固定组由协议给定；两组严格正确诊断均为1/4（PM_5088），类型+关节正确分别为3/4和2/4。没有出现“证据不足却猜 fail”或 clean 误报 fail 的情况。导出32条动作行与9条诊断行（其中2条 `correct_fail`），loader 与 Qwen processor 均成功读取；数据可作为取证与停止的小型接口交付，但不足以支持诊断训练。见 [`kimi-interactive-teacher-round3-axis.json`](evidence/kimi-interactive-teacher-round3-axis.json)。
+
 ## 关键缺口
 
 **已完成正式 PartNet 第一轮受控 SFT，但只保留为旧 v3 checkpoint 分析。** 底座/普通/证据组 exact verdict 为7/9/13，finding F1 为0/.351/.419；证据组把 unsupported finding 从33降至15，并改善 axis/定位汇总，但 offset recall 下降。无图像预算基线在相同 Validation 上达到28/28 terminal status 和 defect-type F1 .737，完全解释 status 收益并覆盖大量类型表现；因此这些 checkpoint 不支持视觉依赖或修复后监督效果主张。

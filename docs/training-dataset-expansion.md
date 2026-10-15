@@ -332,6 +332,80 @@ python -m scripts.compare_teacher_acquisition \
   --out output/interactive-teacher/kimi-pilot-round1-baselines
 ```
 
+### 第二轮 Kimi 闭环、独立审核与导出（2026-10-15）
+
+本轮保留 `4997c59` 和第一轮原始目录不变，修正了三个闭环问题：教师 prompt 现在展开完整 action/verdict/finding schema 与 `fail/pass/uncertain` 边界；非法输出通过既有 parser 产生可见反馈并在 `--decision-attempts` 内有限重试，`--max-real-requests` 同时约束重试；真实 runner 从 raw Train Sample 恢复与 Oracle 相同的冻结 framing，不再用候选自动 framing。请求仍只含 context、参考图、已执行历史、剩余预算、合法 taxonomy 和错误反馈，不含 Gold、候选程序、counterfactual exposure 或未来观察。
+
+独立审核读取正式 Train 的身份 SHA、prepared checker-qualified Gold 和 `oracle-first-failure-v4` 的 leave-one-corruption-out exposure。`fail` 只有在 finding 与客观缺陷一致、且每个 `evidence_steps` 都映射到暴露该缺陷的冻结 witness 时才通过；广义 scope 的 `pass` 不会因 clean 私有标签而通过；`uncertain` 若漏掉当前 witness 已暴露的客观缺陷则拒绝。审核逻辑和训练导出分别位于 `turnitover/teacher/evidence.py` 与 `turnitover/teacher/export.py`，避免把私有真值拼入教师 prompt。
+
+4 条不同 Train 资产均以预算1、最多3次真实请求、每决策最多2次 schema 尝试串行运行；实际 **8次请求、13,603 token，4/4 合法终止，3/4 独立审核通过**。通过项是 clean broad-scope `uncertain`、front 未暴露 offset 的 `uncertain`、以及静态 front 未暴露 joint-axis 的 `uncertain`。明确 front-exposed offset `PM_10697` 仍被 Kimi 判为 `uncertain`，审核以 `uncertain_misses_exposed_objective_defect` 拒绝；这证明审核没有把“合法 JSON”混同为“可信诊断”。本批没有合格 `fail` 或 `pass`。
+
+`scripts/export_interactive_teacher.py` 仅导出 pipeline integrity 与独立证据审核同时通过的 Episode，保留逐决策可见 prompt、图片与 SHA、动作/终止目标、来源身份、split、源 Episode/Audit SHA 和审核结论；拒绝原因写入 `rejected.jsonl`。`kimi-round2-sft-export-v2` 含 **3个 Episode、3条 action、3条 terminal**，现有 formal Episode loader 实际加载6行/3个 terminal；本地 Qwen3-VL-2B processor 进一步成功生成真实图像张量与 assistant-only mask（1,134 input tokens、75 supervised tokens）。因此 API→Chromium→合法终止→独立审核→JSONL→loader/processor 的接口链路已经打通，但样本仅适合作为 `uncertain`/停止与动作监督的小型交付物，不能据此扩量或声称缺陷诊断能力。
+
+完整计数、逐案例 SHA、拒绝原因和本地 artifact 路径见 [`kimi-interactive-teacher-round2.json`](evidence/kimi-interactive-teacher-round2.json)。复现单条采集时替换 `--sample-id` 与新 `--out`；已付费目录不得 resume 或覆盖：
+
+测试方面，非浏览器套件为223 passed、2 skipped；交互教师与 verifier 的定向 Chromium 测试分别1/1与4/4通过。完整 browser suite 为19 passed、1 failed，唯一失败是既有 `test_catalog_clean_and_mixed_are_shard_independent` 对随机生成结果必须含双 corruption 的断言；本轮未修改该 generator/config/test 路径，未为追求全绿扩大修复范围。
+
+```bash
+python -m scripts.run_interactive_teacher --mode kimi \
+  --sample-id b124e209888e8e2e692ad38a --budget 1 \
+  --max-real-requests 3 --decision-attempts 2 --estimated-input-tokens 8192 \
+  --third-party-transmission-reviewed \
+  --transmission-review-basis partnet-approved-noncommercial-research-terms-no-explicit-render-api-prohibition \
+  --out output/interactive-teacher/kimi-round2-insufficient-axis-pm102080
+python -m scripts.export_interactive_teacher \
+  --episode output/interactive-teacher/kimi-round2-clean-pm101870 \
+  --episode output/interactive-teacher/kimi-round2-observable-offset-pm101714 \
+  --episode output/interactive-teacher/kimi-round2-observable-offset-pm10697 \
+  --episode output/interactive-teacher/kimi-round2-insufficient-axis-pm102080 \
+  --out output/interactive-teacher/kimi-round2-sft-export-v2
+```
+
+### 第三轮 joint_axis 运动取证与诊断（2026-10-15）
+
+第二轮记录、目录与导出保持不变，作为静态参考基线；它们早于本轮的冻结 witness 清单，**不满足第三轮审核标准，不应与第三轮数据一并交付**。
+
+**审核修复。** `turnitover/teacher/witnesses.py` 在任何教师调用前冻结一份清单：对 front/oblique_fr 的全部运动 witness 重新渲染候选，并与 v4 冻结像素逐一核对；每个 witness 记录 Chromium 实际使用的、经限位截断后的关节值。`zero` 是下限，`rest` 是值 0 截断到限位后的姿态，两者只有在下限为 0 时才重合；审核按实际状态匹配，不信任 detent 名称（旧实现会把 `rest` 当作 front 静止 witness 的同义词）。`turnitover/teacher/evidence.py` 把每张实时观察图按（视角、实际关节值、像素 SHA）绑定到冻结 witness；只有同时“绑定成功”且“与某个可见参考状态可比”的观察才计为证据。Gold、v4 annotation、清单、Episode 四者须在 id、asset、split_group、候选/参考 SHA 和 Gold/annotation 行 SHA 上一致，split 必须是 Train/Validation，且行不得出现在冻结 Test 中；prompt 会扫描 Gold 文本、私有参数、程序源码与程序 SHA。审核分别报告动作合法性、每步是否带来新的客观证据、证据是否充分、诊断结果（`correct_fail`、`incorrect_fail`、`fail_without_sufficient_evidence`、`uncertain_after_sufficient_evidence`、`trustworthy_uncertain` 等）。导出会在审核后 Episode 被修改时拒绝；动作行按与标签无关的规则入选（合法、绑定、可比、新状态），缺陷相关性只作为元数据保留，避免隐藏 Gold 决定哪些可见前缀进入监督。
+
+**案例与参考协议。** 选取4个 checker 确认的单缺陷 `kinematics.joint_axis` Train 行（PM_102080、PM_5088、PM_103275、PM_25308），每个配同资产 clean 对照。清单证明这4个缺陷在静态 front 下都不暴露，因此静态参考不足以诊断。本轮使用明确标注、与标签无关的 `front_motion_v1` 参考：front 视角下 rest 加上每个关节在 grid 中的非 rest detent，每张图只驱动一个关节。它独立于 round2 的 `static_front`，学生看不到 Gold、标签或参考程序参数。
+
+**两组真实 API 实验（k3-256k，串行，每决策最多2次 schema 尝试）。** 固定组由协议先执行 front rest → 各关节 detent（换关节前显式回到 rest），并在任何付费调用前完成绑定 dry run；之后只请求一次结构化诊断，固定步骤不作为动作监督导出。主动组的预算等于固定协议长度，所有动作都由 Kimi 根据可见历史自主选择，可以提前停止。4次网关超时或空响应各用新目录重跑一次（超时 300 s），失败目录保留但不导出。
+
+| 指标 | 固定充分证据 | 主动取证 |
+|---|---:|---:|
+| Episode（axis + clean） | 8 (4+4) | 8 (4+4) |
+| 动作与终判均合法 | 8 | 8 |
+| axis 获得充分且可比的运动证据 | 4/4（协议给定） | **4/4（自主获取）** |
+| axis 严格正确（类型+关节+部件+证据步） | 1/4 | 1/4 |
+| axis 类型+关节正确 | 2/4 | 3/4 |
+| 充分证据后仍 `uncertain` | 1 | 1 |
+| 证据不足却猜 `fail` | 0 | 0 |
+| clean 可信 `uncertain` / 误报 fail / 无依据 pass | 3 / 0 / 1 | 4 / 0 / 0 |
+| 合法 + 证据充分 + 诊断正确 | **1** | **1** |
+| 独立审核通过 | 4 | 5 |
+
+主动组的4个 axis 案例都先请求 front rest，再驱动目标关节；首次新证据分别出现在第1、1、4、4步（双关节资产先探索了 joint_0，复位后才驱动 joint_1）。3条 Episode 在预算内主动停止。PM_5088 在两组中都得到完全正确的 `fail`（joint_axis / joint_0 / link_0，证据步均暴露缺陷）。失败归因：PM_102080 的棱柱关节轴误差在 front 正交视图中只改变锅盖边缘的明暗（最大1.1%像素变化），两组都输出 `uncertain`。审核按冻结标准仍拒绝，但证据在感知上很弱，主要归因于“仅 front 的运动参考显著性不足”。PM_103275 两组都定对了类型和关节，但部件多报了 joint_1 的静止父件 link_2；关节→部件映射不在可见 context 中（只能通过 `query_runtime hierarchy` 获得，Kimi 从未使用；固定组中根本没有该信息），属于定位错误加上可见结构信息不足。PM_25308 固定组把出平面的抽屉运动诊断为 `joint_range`（front 投影中位移变短，属于诊断错误），主动组定对了类型和关节，但部件选成父件 link_2。
+
+**导出。** 采用每个（模式, 样本）的最终尝试，共16条。`kimi-round3-sft-export` 含 **32条动作行**（16条 Episode 均未被阻断；5条重复/复位或 runtime 动作被拒）与 **9条诊断行**（2条 `correct_fail`，7条 clean `uncertain`）。现有 formal loader 实际加载 actions 32 / diagnosis 9 / episodes 41 行，Qwen3-VL-2B processor 为 actions 和 diagnosis 各生成真实图像张量与 assistant-only mask。
+
+**结论。** Kimi 能在合法、可审计的动作空间内自主获取诊断 joint_axis 所需的运动证据（4/4），取证不是瓶颈。拿到充分证据后，严格诊断正确率在两组中都只有1/4，类型+关节可达2–3/4，主要短板是部件定位和低显著性证据。这批数据可以作为谨慎停止和取证动作的小型接口交付给 `laq/sft-training`，但其中只有2条（同一资产）正确 `fail` 诊断，不足以支持缺陷诊断训练或能力结论。完整逐步轨迹、SHA、拒绝原因与复现命令见 [`kimi-interactive-teacher-round3-axis.json`](evidence/kimi-interactive-teacher-round3-axis.json)。
+
+```bash
+python -m scripts.freeze_teacher_witnesses --out output/interactive-teacher/axis-round3-frozen-witnesses \
+  --sample-id b124e209888e8e2e692ad38a --sample-id 87873dda7b4e005dd094bb8e  # 其余6个见 axis-round3-cases.txt
+python -m scripts.run_interactive_teacher --mode kimi --sample-id 78daaf49b71ff5f5df8a1a29 \
+  --experiment-mode active --reference-protocol front_motion_v1 \
+  --frozen-witnesses output/interactive-teacher/axis-round3-frozen-witnesses --budget 4 \
+  --max-real-requests 7 --decision-attempts 2 --estimated-input-tokens 16384 \
+  --third-party-transmission-reviewed \
+  --transmission-review-basis partnet-approved-noncommercial-research-terms-no-explicit-render-api-prohibition \
+  --out output/interactive-teacher/kimi-round3-active-pm5088-axis-new
+python -m scripts.reaudit_interactive_teacher --episode output/interactive-teacher/kimi-round3-active-pm5088-axis-r2
+HF_HUB_OFFLINE=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.check_teacher_export_loading \
+  --dataset output/interactive-teacher/kimi-round3-sft-export --out <new>.json \
+  --model ../TurnItOver/models/Qwen3-VL-2B-Instruct
+```
+
 ## 复现命令
 
 以下命令要求已获官方访问权、已构建 `web/dist`，且各输出目录不存在：

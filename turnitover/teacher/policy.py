@@ -11,25 +11,32 @@ from turnitover.core.actions import Observation
 from turnitover.core.serde import to_dict
 from turnitover.models.client import ModelError, is_normal_finish_reason
 from turnitover.teacher.providers import Teacher
+from turnitover.taxonomy import load_taxonomy
 from turnitover.verifier.contracts import Context, DecisionError, parse_json
 
 
 class TeacherPolicy:
-    def __init__(self, teacher: Teacher, output: Path, references: list[Path], calls: list[dict] | None = None):
+    def __init__(self, teacher: Teacher, output: Path, references: list[Path], calls: list[dict] | None = None,
+                 reference_states: list[dict] | None = None):
         self.teacher, self.output, self.references = teacher, output, references
         self.calls = list(calls or [])
+        self.reference_states = reference_states or [{} for _ in references]
+        if len(self.reference_states) != len(references):
+            raise ValueError("One visible state label is required per reference image")
 
     def decide(self, context: Context, history: Sequence[Observation], remaining: int,
                validation_feedback: str | None = None) -> dict:
         images = list(self.references)
-        order = [{"image": i, "kind": "reference"} for i in range(len(images))]
+        order = [{"image": i, "kind": "reference", "state": self.reference_states[i]}
+                 for i in range(len(images))]
         for observation in history:
             if observation.image_ref:
                 order.append({"image": len(images), "kind": "observation", "step": observation.step})
                 images.append(self.output / observation.image_ref)
         visible = {"context": dataclasses.asdict(context), "remaining": remaining,
                    "stop_required": remaining == 0,
-                   "image_order": order, "history": [to_dict(o) for o in history]}
+                   "image_order": order, "history": [to_dict(o) for o in history],
+                   "taxonomy_ids": load_taxonomy().ids}
         protocol = resources.files("turnitover.teacher").joinpath("prompt.txt").read_text()
         prompt = protocol + "\nVisible task state:\n" + json.dumps(visible, ensure_ascii=False)
         if validation_feedback:

@@ -67,12 +67,15 @@ def run_teacher_episode(session: SessionLike, policy: TeacherPolicy, context: Co
                         output: Path, *, episode_id: str, resume: bool = False,
                         max_model_calls: int | None = None,
                         decision_attempts: int = MAX_DECISION_ATTEMPTS,
-                        data_identity: dict | None = None) -> dict:
+                        data_identity: dict | None = None,
+                        initial_actions: Sequence[dict] = ()) -> dict:
     """Run one episode. A pending action is durable before environment execution."""
     if type(budget) is not int or budget < 0:
         raise ValueError("Teacher observation budget must be a nonnegative integer")
     if type(decision_attempts) is not int or decision_attempts < 1:
         raise ValueError("Teacher decision attempts must be positive")
+    if resume and initial_actions:
+        raise ValueError("Fixed initial actions cannot be added while resuming")
     result_path = output / "episode.json"
     if resume:
         if not result_path.is_file():
@@ -113,12 +116,23 @@ def run_teacher_episode(session: SessionLike, policy: TeacherPolicy, context: Co
         observation = execute_observation(session, action, len(history), image_sink)
         record = to_dict(observation)
         record["decision"] = raw
+        record["decision_source"] = state.pop("pending_action_source", "teacher")
         state["trajectory"].append(record)
         history.append(observation)
         state["pending_action"] = None
         _checkpoint(result_path, state, policy)
 
     try:
+        if not resume:
+            for raw in initial_actions:
+                if state["spent"] >= budget:
+                    raise ValueError("Fixed initial actions exceed the observation budget")
+                parse_decision({"action": raw}, context, {o.step for o in history})
+                state["spent"] += 1
+                state["pending_action"] = raw
+                state["pending_action_source"] = "fixed_protocol"
+                _checkpoint(result_path, state, policy)
+                execute_pending()
         if state.get("pending_action") is not None:
             try:
                 execute_pending()
@@ -136,6 +150,11 @@ def run_teacher_episode(session: SessionLike, policy: TeacherPolicy, context: Co
                 break
             feedback = None
             for attempt in range(decision_attempts):
+                if max_model_calls is not None and len(policy.calls) >= max_model_calls:
+                    state.update(status="complete", termination="model_call_limit",
+                                 budget_exhausted=remaining == 0, teacher_verdict_missing=True,
+                                 finished_at=now_iso())
+                    return _finish(result_path, state, policy)
                 raw = None
                 try:
                     raw = policy.decide(context, tuple(history), remaining, feedback)

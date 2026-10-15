@@ -18,6 +18,11 @@ from turnitover.teacher.audit import audit_episode
 from turnitover.teacher.episode import run_teacher_episode
 from turnitover.teacher.policy import TeacherPolicy
 from turnitover.teacher.providers import KimiPricing, KimiTeacher, LocalQwenTeacher, MockTeacher
+from turnitover.teacher.evidence import bind_witnesses
+from turnitover.teacher.witnesses import REFERENCE_PROTOCOL, file_sha256, sample_framing
+from turnitover.policy.loop import execute_observation
+from turnitover.core.serde import to_dict
+from turnitover.verifier.contracts import parse_decision
 from turnitover.verifier.contracts import Context
 from turnitover.config import load_generate_config
 
@@ -25,6 +30,8 @@ from turnitover.config import load_generate_config
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BENCHMARK = ROOT / "data/benchmarks/partnet-mobility-formal-v1/prepared"
 DEFAULT_CONFIG = ROOT / "configs/generate_partnet_mobility_supervision.yaml"
+DEFAULT_ANNOTATIONS = (ROOT / "data/benchmarks/partnet-mobility-formal-v1/"
+                       "oracle-first-failure-v4/annotations.private.jsonl")
 DEFAULT_MODEL = ROOT.parent / "TurnItOver/models/Qwen3-VL-2B-Instruct"
 
 
@@ -32,7 +39,7 @@ def _rows(path: Path) -> dict[str, dict]:
     return {row["id"]: row for row in (json.loads(line) for line in path.read_text().splitlines())}
 
 
-def _sample(benchmark: Path, sample_id: str | None) -> tuple[dict, dict]:
+def _sample(benchmark: Path, sample_id: str | None) -> tuple[dict, dict, object]:
     inputs = _rows(benchmark / "train.inputs.jsonl")
     gold = _rows(benchmark / "train.gold.jsonl")
     uid = sample_id or next(iter(inputs))
@@ -40,7 +47,29 @@ def _sample(benchmark: Path, sample_id: str | None) -> tuple[dict, dict]:
         raise ValueError("Sample must identify one prepared PartNet Train row")
     if gold[uid].get("provenance", {}).get("formal_training") is not True:
         raise ValueError("Interactive teacher requires a formal Train asset")
-    return inputs[uid], gold[uid]
+    private = gold[uid]
+    framing = sample_framing(benchmark.parent / "raw", private["source_id"], private["sample_id"])
+    return inputs[uid], private, framing
+
+
+def _verify_fixed_protocol(session, program, framing, context, manifest, actions, folder: Path) -> None:
+    """Dry-run the fixed history before any paid call; every step must bind to a frozen witness."""
+    folder.mkdir(parents=True)
+    session.load(program, framing=framing)
+    records = []
+    for step, raw in enumerate(actions):
+        def sink(index, png):
+            relative = f"{index:03d}.png"
+            (folder / relative).write_bytes(png)
+            return relative
+        observation = execute_observation(session, parse_decision({"action": raw}, context, set()), step, sink)
+        records.append({**to_dict(observation), "decision": raw, "decision_source": "fixed_protocol"})
+    rows = bind_witnesses({"context": vars(context), "trajectory": records,
+                           "reference_protocol": REFERENCE_PROTOCOL}, manifest, folder)
+    write_json_atomic(folder / "binding.json", rows)
+    if not all(row.get("bound") and row.get("reference_comparable") for row in rows):
+        raise ValueError("Fixed evidence protocol is not fully bound to frozen, reference-comparable witnesses")
+    session.load(program, framing=framing)
 
 
 def _project_fixture(views) -> tuple[dict, dict]:
@@ -106,9 +135,26 @@ def run(args) -> dict:
         sys.path.append(str(args.playwright_site_packages.resolve()))
     cfg = load_generate_config(args.config)
     views = load_views(cfg.views_path)
-    public, private = (_project_fixture(views) if args.project_fixture
-                       else _sample(args.benchmark, args.sample_id))
+    if args.project_fixture:
+        public, private = _project_fixture(views)
+        framing = None
+        annotation = None
+    else:
+        public, private, framing = _sample(args.benchmark, args.sample_id)
+        annotation = _rows(args.oracle_annotations).get(public["id"])
+        if annotation is None:
+            raise ValueError("Train sample lacks an independent Oracle evidence annotation")
     context = Context(**public["context"])
+    manifest, manifest_path = None, None
+    if not args.project_fixture:
+        if args.frozen_witnesses is None:
+            raise ValueError("Real Train episodes require a frozen witness manifest for independent audit")
+        manifest_path = args.frozen_witnesses / public["id"] / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+    if args.reference_protocol == REFERENCE_PROTOCOL and manifest is None:
+        raise ValueError("The multi-state reference protocol needs a frozen witness manifest")
+    if args.experiment_mode == "fixed-diagnosis" and args.reference_protocol != REFERENCE_PROTOCOL:
+        raise ValueError("Fixed diagnosis compares motion states and needs the multi-state reference")
     if args.mode == "mock":
         teacher = _mock(context)
     elif args.mode == "local-qwen":
@@ -157,33 +203,65 @@ def run(args) -> dict:
         "candidate_sha": private.get("program_sha"), "reference_sha": private.get("reference_sha"),
         "formal_training": private.get("provenance", {}).get("formal_training"),
     }
+    if annotation is not None:
+        data_identity = {**annotation["data_identity"], **data_identity}
+    data_identity = {**data_identity, "experiment_mode": args.experiment_mode,
+                     "reference_protocol": args.reference_protocol}
     if args.mode == "kimi":
         data_identity = {**data_identity, "third_party_transmission_reviewed": True,
                          "transmission_review_basis": args.transmission_review_basis}
     with ObservationSession(cfg.render, views) as session:
-        session.load(program, framing=None)
+        session.load(program, framing=framing)
+        joint_limits = {joint: tuple(row["limits"]) for joint, row in session.info.joints.items()}
         if not args.resume:
             args.out.mkdir(parents=True, exist_ok=False)
             references = []
+            reference_states = []
             if args.project_fixture:
                 target = args.out / "reference-00.png"
                 target.write_bytes(session.request_view(ViewId("front")).png)
                 references.append(target)
-                session.load(program, framing=None)
+                reference_states.append({"view": "front", "joint_id": None, "detent": "rest"})
+                session.load(program, framing=framing)
+            elif args.reference_protocol == REFERENCE_PROTOCOL:
+                for row in manifest["reference_protocol"]["states"]:
+                    target = args.out / row["file"]
+                    shutil.copyfile(manifest_path.parent / row["file"], target)
+                    if file_sha256(target) != row["sha256"]:
+                        raise ValueError("Frozen reference image changed after freezing")
+                    references.append(target)
+                    reference_states.append(row["label"])
             else:
                 for index, relative in enumerate(public["reference_images"]):
                     source = args.benchmark / relative
                     target = args.out / f"reference-{index:02d}{source.suffix}"
                     shutil.copyfile(source, target)
                     references.append(target)
+                    reference_states.append({"view": "front", "joint_id": None, "detent": "rest"})
         else:
             references = sorted(args.out.glob("reference-*"))
-        policy = TeacherPolicy(teacher, args.out, references)
+            reference_states = ([row["label"] for row in manifest["reference_protocol"]["states"]]
+                                if args.reference_protocol == REFERENCE_PROTOCOL else
+                                [{"view": "front", "joint_id": None, "detent": "rest"}])
+        initial_actions = ()
+        if args.experiment_mode == "fixed-diagnosis":
+            initial_actions = tuple(manifest["fixed_protocol_actions"])
+            if args.budget != len(initial_actions):
+                raise ValueError("Fixed diagnosis budget must exactly match its evidence protocol")
+            if not args.resume:
+                _verify_fixed_protocol(session, program, framing, context, manifest, initial_actions,
+                                       args.out / "fixed-protocol-preflight")
+        policy = TeacherPolicy(teacher, args.out, references, reference_states=reference_states)
         episode = run_teacher_episode(session, policy, context, args.budget, args.out,
                                       episode_id=public["id"], resume=args.resume,
                                       max_model_calls=max_calls,
-                                      decision_attempts=1 if args.mode == "kimi" else 3,
-                                      data_identity=data_identity)
+                                      decision_attempts=args.decision_attempts,
+                                      data_identity=data_identity, initial_actions=initial_actions)
+    episode["reference_protocol"] = args.reference_protocol
+    episode["reference_states"] = reference_states
+    episode["runtime_joint_limits"] = {k: list(v) for k, v in joint_limits.items()}
+    if manifest_path is not None:
+        episode["frozen_witness_manifest"] = {"path": str(manifest_path), "sha256": file_sha256(manifest_path)}
     if args.mode == "kimi":
         usage = episode["token_usage"]
         episode["real_api_requests"] = teacher.calls
@@ -191,8 +269,8 @@ def run(args) -> dict:
             usage["input_tokens"], usage["output_tokens"])
             if teacher.pricing and usage["total_tokens"] else None)
         episode["billing_cost_rmb"] = None
-        write_json_atomic(args.out / "episode.json", episode)
-    audit_episode(args.out, private)
+    write_json_atomic(args.out / "episode.json", episode)
+    audit_episode(args.out, private, annotation, manifest=manifest)
     return episode
 
 
@@ -202,6 +280,7 @@ if __name__ == "__main__":
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--benchmark", type=Path, default=DEFAULT_BENCHMARK)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    parser.add_argument("--oracle-annotations", type=Path, default=DEFAULT_ANNOTATIONS)
     parser.add_argument("--sample-id")
     parser.add_argument("--project-fixture", action="store_true",
                         help="Use the project-authored compatibility fixture")
@@ -221,5 +300,13 @@ if __name__ == "__main__":
     parser.add_argument("--pricing-source")
     parser.add_argument("--max-cost-rmb", type=float, default=1.0)
     parser.add_argument("--max-real-requests", type=int, default=1)
+    parser.add_argument("--decision-attempts", type=int, default=3,
+                        help="Bounded schema-correction attempts per decision")
+    parser.add_argument("--experiment-mode", choices=("active", "fixed-diagnosis"), default="active")
+    parser.add_argument("--reference-protocol", choices=("static_front", REFERENCE_PROTOCOL),
+                        default="static_front",
+                        help="static_front reproduces round2; front_motion_v1 adds label-independent reference motion states")
+    parser.add_argument("--frozen-witnesses", type=Path,
+                        help="Directory written by scripts.freeze_teacher_witnesses")
     arguments = parser.parse_args()
     print(json.dumps(run(arguments), indent=2))

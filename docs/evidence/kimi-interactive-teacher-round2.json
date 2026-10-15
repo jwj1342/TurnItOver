@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "baseline_commit": "4997c59a075dd9c2989d30d47db1af2a9b5ca427",
+  "model": "k3-256k",
+  "scope": "Four formal Train Episodes; no frozen Test access, SFT training, generator call, or large-scale collection.",
+  "configuration": {
+    "observation_budget": 1,
+    "decision_attempts": 2,
+    "real_request_cap_per_episode": 3,
+    "actual_real_requests": 8,
+    "framing": "frozen raw Sample.framing shared with the Oracle counterfactual evidence run",
+    "automatic_model_fallback": false,
+    "concurrent_calls": false
+  },
+  "summary": {
+    "real_episodes": 4,
+    "legal_terminal_episodes": 4,
+    "independent_audit_accepted": 3,
+    "independent_audit_rejected": 1,
+    "exported_episodes": 3,
+    "exported_action_rows": 3,
+    "exported_terminal_rows": 3,
+    "exported_statuses": {"uncertain": 3, "fail": 0, "pass": 0},
+    "token_usage": {"input_tokens": 9905, "output_tokens": 3698, "total_tokens": 13603},
+    "billing_cost_rmb": null
+  },
+  "episodes": [
+    {
+      "id": "f429ea1efb78e7fcaf87acec",
+      "asset_id": "PM_101870",
+      "scenario": "checker-clean broad-scope case",
+      "action": {"type": "query_runtime", "property": "joint_state"},
+      "terminal_status": "uncertain",
+      "real_api_requests": 2,
+      "tokens": 3529,
+      "audit_accepted": true,
+      "reason": "No objective defect exists, but the neutral runtime query is insufficient for broad articulated verification.",
+      "episode_sha256": "0a29add8a1790d1dea201c1488060745a900525503c78cdab5d2a78430fb532d",
+      "audit_sha256": "9acf2731bf9325b2e545e3e6692c67682ea36150f70923ca92a1da4221f31bdc"
+    },
+    {
+      "id": "98dcbe179f34eaab40924a7b",
+      "asset_id": "PM_101714",
+      "scenario": "offset case not exposed by the selected front witness",
+      "action": {"type": "request_view", "view_id": "front"},
+      "terminal_status": "uncertain",
+      "real_api_requests": 2,
+      "tokens": 3328,
+      "audit_accepted": true,
+      "reason": "Checker truth contains structure.part_offset, but frozen leave-one-out exposure for the cited front witness is empty.",
+      "episode_sha256": "7f852bfe38ac443d383afdb57c20f8f8d25163400bb3c188a846720fb0c6cafb",
+      "audit_sha256": "370c1a572702df5f42ba110b4980414cfd9ecef6b569c89484b2e79bb6083e05"
+    },
+    {
+      "id": "b124e209888e8e2e692ad38a",
+      "asset_id": "PM_102080",
+      "scenario": "axis defect requiring articulation evidence",
+      "action": {"type": "request_view", "view_id": "front"},
+      "terminal_status": "uncertain",
+      "real_api_requests": 2,
+      "tokens": 3135,
+      "audit_accepted": true,
+      "reason": "The static front witness does not expose the checker-confirmed joint-axis defect.",
+      "episode_sha256": "c0026fd1f40b6d994eaf8b44b6d9021962204a38329ccf86fa1b03a09054b1f3",
+      "audit_sha256": "4020201812a39360f24b7ac164c6383bbfe81447e0706acf63b3ae228401125c"
+    },
+    {
+      "id": "f42191334f958711bc7c7f48",
+      "asset_id": "PM_10697",
+      "scenario": "front-observable offset defect",
+      "action": {"type": "request_view", "view_id": "front"},
+      "terminal_status": "uncertain",
+      "real_api_requests": 2,
+      "tokens": 3611,
+      "audit_accepted": false,
+      "rejection_reasons": ["uncertain_misses_exposed_objective_defect"],
+      "episode_sha256": "9599134b40f34be7bbdf8b79987b4d8efd6bc3e6b0dd63de97d7db7a1439bf15",
+      "audit_sha256": "5a77bcdf06366241aee15e79a4f2d62e4851ecaa6c5a17e73e60ea5f4f993be7"
+    }
+  ],
+  "export": {
+    "path": "output/interactive-teacher/kimi-round2-sft-export-v2",
+    "manifest_sha256": "1edc1bb56815e08bfde4f04833f22a488821145fd3b910e5f2ef39f10eb081a1",
+    "train_episodes_sha256": "a62352252303345ce8db8574f461b629fb54308ffd180a84db414e0d68d2fcef",
+    "rejected_sha256": "db05e3956737ffc20b6f7cc8815c8d8cb4429634773eb9f8ed06956c2bf3a5a7",
+    "generic_loader": {"rows_loaded": 6, "terminal_rows_loaded": 3},
+    "qwen_processor": {"terminal_id": "f429ea1efb78e7fcaf87acec:verdict", "images": 1,
+      "input_tokens": 1134, "supervised_tokens": 75, "first_supervised_token": 1059,
+      "pixel_values_shape": [256, 1536]}
+  },
+  "tests": {
+    "non_browser": "223 passed, 2 skipped",
+    "teacher_browser": "1 passed",
+    "verifier_browser": "4 passed",
+    "full_browser_suite": "19 passed, 1 failed",
+    "unrelated_failure": "tests/browser/test_generate_smoke.py::test_catalog_clean_and_mixed_are_shard_independent expects a two-corruption sample; no files in that generator path changed in this round"
+  },
+  "raw_artifacts": {
+    "committed": false,
+    "paths": [
+      "output/interactive-teacher/kimi-round2-clean-pm101870",
+      "output/interactive-teacher/kimi-round2-observable-offset-pm101714",
+      "output/interactive-teacher/kimi-round2-observable-offset-pm10697",
+      "output/interactive-teacher/kimi-round2-insufficient-axis-pm102080"
+    ],
+    "contents": "Each directory retains exact prompt, visible request JSON, ordered images, raw response, call metadata, browser observation, Episode ledger, token usage, and independent audit."
+  },
+  "conclusion": {
+    "pipeline_complete": true,
+    "sft_interface_ready": true,
+    "coverage_ready_for_training_claims": false,
+    "limitation": "The accepted mini-batch contains only uncertain targets. Kimi missed the one independently exposed offset defect, so fail/pass coverage is not yet suitable for broad collection or capability claims."
+  }
+}

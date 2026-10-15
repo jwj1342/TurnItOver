@@ -1,4 +1,5 @@
 import json
+from datetime import date
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -53,7 +54,8 @@ class Session:
 def make_policy(tmp_path, decisions):
     reference = tmp_path / "reference-00.png"
     reference.write_bytes(b"reference")
-    return TeacherPolicy(MockTeacher(decisions), tmp_path, [reference])
+    return TeacherPolicy(MockTeacher(decisions), tmp_path, [reference],
+                         reference_states=[{"view": "front", "joint_id": None, "detent": "rest"}])
 
 
 def test_mock_episode_closes_budget_and_audits_visible_request(tmp_path, context):
@@ -66,7 +68,10 @@ def test_mock_episode_closes_budget_and_audits_visible_request(tmp_path, context
     assert request["remaining"] == 0 and len(request["history"]) == 1
     assert request["stop_required"] is True
     assert request["image_order"][-1] == {"image": 1, "kind": "observation", "step": 0}
-    assert set(request) == {"context", "remaining", "stop_required", "image_order", "history"}
+    assert request["image_order"][0]["state"]["detent"] == "rest"
+    assert set(request) == {"context", "remaining", "stop_required", "image_order", "history",
+                            "taxonomy_ids"}
+    assert "kinematics.joint_axis" in request["taxonomy_ids"]
     assert audit["pipeline_ok"] and audit["teacher_actions_legal"]
     assert audit["teacher_outputs_legal"] and audit["teacher_response_received"]
     assert audit["teacher_verdict_present"]
@@ -79,6 +84,17 @@ def test_teacher_can_stop_before_budget_is_exhausted(tmp_path, context):
     assert episode["termination"] == "teacher_finished" and episode["spent"] == 0
     assert not episode["budget_exhausted"] and not episode["teacher_verdict_missing"]
     assert request["remaining"] == 2 and request["stop_required"] is False
+
+
+def test_runtime_only_history_does_not_require_an_observation_image(tmp_path, context):
+    runtime = {"action": {"type": "query_runtime", "property": "joint_state"}}
+    episode = run_teacher_episode(Session(), make_policy(tmp_path, [runtime, verdict()]), context, 1,
+                                  tmp_path, episode_id="case")
+    request = json.loads((tmp_path / "model_calls/001/request.json").read_text())
+    audit = audit_episode(tmp_path)
+    assert episode["trajectory"][0]["image_ref"] is None
+    assert all(item["kind"] == "reference" for item in request["image_order"])
+    assert audit["pipeline_ok"]
 
 
 def test_one_call_compatibility_action_executes_once_and_stops(tmp_path, context):
@@ -103,6 +119,15 @@ def test_budget_exhaustion_without_valid_verdict_is_explicit_and_not_fabricated(
     assert not audit["teacher_verdict_present"] and audit["teacher_verdict_missing"]
 
 
+def test_model_call_cap_also_bounds_invalid_decision_retries(tmp_path, context):
+    episode = run_teacher_episode(Session(), make_policy(tmp_path, [action("secret")] * 3), context, 1,
+                                  tmp_path, episode_id="case", max_model_calls=2,
+                                  decision_attempts=3)
+    assert episode["termination"] == "model_call_limit"
+    assert len(episode["model_calls"]) == 2 and len(episode["decisions"]) == 2
+    assert episode["teacher_verdict_missing"]
+
+
 @pytest.mark.parametrize("responses", [
     [action("secret")] * 3,
     ["not-json"] * 3,
@@ -115,6 +140,18 @@ def test_invalid_or_unparseable_actions_are_audited_without_budget_charge(tmp_pa
     assert len(episode["decisions"]) == 3 and not any(item["valid"] for item in episode["decisions"])
     audit = audit_episode(tmp_path)
     assert audit["pipeline_ok"] and not audit["teacher_outputs_legal"]
+
+
+def test_invalid_verdict_feedback_allows_a_bounded_schema_correction(tmp_path, context):
+    invalid = {"verdict": {"label": "accept", "rationale": "looks fine"}}
+    policy = make_policy(tmp_path, [action(), invalid, verdict()])
+    episode = run_teacher_episode(Session(), policy, context, 1, tmp_path, episode_id="case",
+                                  decision_attempts=2)
+    retry_prompt = (tmp_path / "model_calls/002/prompt.txt").read_text()
+    assert episode["teacher_verdict_missing"] is False
+    assert [row["valid"] for row in episode["decisions"]] == [True, False, True]
+    assert "Decision fields do not match the required schema" in retry_prompt
+    assert '"status":"uncertain"' in retry_prompt
 
 
 def test_truncated_model_output_is_received_but_not_legal(tmp_path, context):
@@ -169,7 +206,7 @@ def test_resume_executes_pending_action_without_second_teacher_selection(tmp_pat
 
 def test_kimi_requires_allowlisted_model_transmission_review_and_bounded_cost():
     cfg = ModelConfig("teacher", "openai_compatible", "k3", "https://api.example/v1", "key", 100)
-    price = KimiPricing(1, 2, "2026-10-14", "official pricing page")
+    price = KimiPricing(1, 2, date.today().isoformat(), "official pricing page")
     with pytest.raises(ValueError, match="transmission terms"):
         KimiTeacher(cfg, price, transmission_reviewed=False, estimated_input_tokens=100)
     teacher = KimiTeacher(cfg, price, transmission_reviewed=True, estimated_input_tokens=100)
@@ -192,3 +229,14 @@ def test_kimi_enforces_configured_real_request_cap(monkeypatch):
         teacher("prompt", [])
     assert len(calls) == 2
     assert teacher.public()["max_real_requests"] == 2
+
+
+def test_fixed_protocol_populates_history_without_action_supervision(tmp_path, context):
+    policy = make_policy(tmp_path, [verdict()])
+    initial = ({"type": "request_view", "view_id": "front"},)
+    episode = run_teacher_episode(Session(), policy, context, 1, tmp_path, episode_id="case",
+                                  initial_actions=initial)
+    request = json.loads((tmp_path / "model_calls/000/request.json").read_text())
+    assert episode["trajectory"][0]["decision_source"] == "fixed_protocol"
+    assert len(episode["decisions"]) == 1 and "verdict" in episode["decisions"][0]["decision"]
+    assert request["remaining"] == 0 and len(request["history"]) == 1

@@ -6,13 +6,15 @@ import json
 from pathlib import Path
 
 from turnitover.core.jsonio import write_json_atomic
+from turnitover.teacher.evidence import audit_teacher_verdict
 from turnitover.verifier.contracts import Context, parse_decision
 
 
-VISIBLE_KEYS = {"context", "remaining", "stop_required", "image_order", "history"}
+VISIBLE_KEYS = {"context", "remaining", "stop_required", "image_order", "history", "taxonomy_ids"}
 
 
-def audit_episode(output: Path, private_gold: dict | None = None) -> dict:
+def audit_episode(output: Path, private_gold: dict | None = None,
+                  private_annotation: dict | None = None, *, manifest: dict | None = None) -> dict:
     episode = json.loads((output / "episode.json").read_text())
     context = Context(**episode["context"])
     errors, informative, hashes = [], [], set()
@@ -50,7 +52,12 @@ def audit_episode(output: Path, private_gold: dict | None = None) -> dict:
         image_paths = json.loads((output / call["path"] / "images.json").read_text())
         if len(image_paths) != len(image_order):
             errors.append("model image list and declared order differ in length")
-        if [item.get("step") for item in image_order if item["kind"] == "observation"] != list(range(len(request["history"]))):
+        reference_paths = [path.name for path in sorted(output.glob("reference-*"))]
+        if image_paths != reference_paths + [item["image_ref"] for item in request["history"]
+                                             if item.get("image_ref")]:
+            errors.append("model images are not the references followed by causal observations")
+        expected_image_steps = [item["step"] for item in request["history"] if item.get("image_ref")]
+        if [item.get("step") for item in image_order if item["kind"] == "observation"] != expected_image_steps:
             errors.append("model image order is not the causal history order")
         for index, visible in enumerate(request["history"]):
             if index >= len(episode["trajectory"]):
@@ -112,5 +119,8 @@ def audit_episode(output: Path, private_gold: dict | None = None) -> dict:
                                                 "teacher_defect_ids": predicted,
                                                 "exact_defect_ids": gold_ids == predicted,
                                                 "teacher_input_excluded_private_gold": True}
+        audit["independent_evidence_audit"] = audit_teacher_verdict(
+            episode, private_gold, private_annotation, output, manifest=manifest)
+    audit["episode_sha256"] = hashlib.sha256((output / "episode.json").read_bytes()).hexdigest()
     write_json_atomic(output / "audit.json", audit)
     return audit
