@@ -561,3 +561,53 @@ CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_v
 ```
 
 训练配置/命令/loss与checkpoint保存在 `output/partnet-qwen3vl2b-evidence-multitask-v5/`；三组诊断和停止逐案例预测、逐物体汇总、闭环逐步调用与PNG、统一审计分别保存在对应eval目录、`output/partnet-qwen3vl2b-evidence-multitask-closed-loop-v5-run3/` 和 `output/partnet-qwen3vl2b-evidence-multitask-audit-v5.json`。`run.json` / adapter / 闭环metrics / 统一审计SHA-256依次为 `5065c6219963e2d81b81bcd56ae089a4b3f3ef0b9b84401d2c91ccea74642817`、`3d6ae5bfc1ed3f84f40558510590d40ccbbc9b6a2fbfb2102f909f891655731e`、`6823115f4eb840fc5e4933515dc7ff0a1a38878c225a1a525169a42d42038287`、`68dbdde892b95851ac1135752d3183047b5156405fdf50b068a6e9427e999caf`。未调用付费API、未接入Kimi、未读取或修改冻结Part 2 Test，也未自动push。
+
+## v4 + v5 模块化交互 Verifier（2026-10-15）
+
+### 系统边界与协调规则
+
+本轮没有训练或修改任何checkpoint。模块化系统保持两个LoRA独立：v5 stopping始终读取八张按姿态对齐的reference及当前因果历史；v4 diagnosis始终读取原单reference协议及同一当前历史。v5的判断只表示其已验证范围内的“对齐形状是否已有明显差异”，缺陷类型、部件和joint仍只能由v4输出。协调器仅在v5给出 `stop/fail` 且v4返回合法fail finding时考虑终止；finding必须引用已实际观察步骤，`joint_axis`还必须引用同一joint的actuation步骤。缺少对齐差异、静态图直接声称轴缺陷、未知taxonomy或无观察引用均被拒绝。无被接受finding且仍有预算则继续；预算耗尽固定 `uncertain`；永不从空证据生成pass。原始输出、拒绝原因和最终finding同时保存，不修改标签制造成功。
+
+7个Validation独立物体各固定一个候选，覆盖2 clean、2 offset-only、2 axis-only和1 offset+axis；候选ID在模型运行前固定。私有annotation只用于该分层及Episode结束后的评分，不进入模型或协调器。每个系统执行相同14个真实浏览器Episode：fixed为order0；random以seed `20261017`在已真实执行的order1/order2中选择，三系统对每个候选使用同一schedule。两者都是预定观察策略，不称为active。每一步先执行浏览器动作、取得PNG并更新历史，再调用模块；未来观察不传给当前推理。
+
+### 42个完整Episode结果
+
+三组各14个Episode、7个原物体。所有实时八参考、v4单参考和实际observation SHA均与冻结Validation一致。status accuracy按**该系统实际执行前缀中v4审计可见的finding**计算；无可见finding时正确终态是uncertain而非pass。finding F1要求类型、joint和parts均匹配；定位F1要求缺陷类型与parts匹配。
+
+| 系统 | Episode status acc. | finding F1 | defect-type F1 | part定位F1 | unsupported | 提前 / 漏停 | stop时证据充分 | uncertain | 平均观察 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| v4-only | 5/14（35.71%） | 0% | 42.11% | 0% | 14 | 9 / 4 | 0/14 | 0 | 1.50 |
+| **v4 + v5模块化** | **13/14（92.86%）** | **13.33%** | 40.00% | **13.33%** | **7** | **1 / 3** | **1/8（12.50%）** | 6 | 3.64 |
+| 失败的单LoRA多任务 | 10/14（71.43%） | 0% | 16.67% | 0% | 4 | 0 / 8 | 0/4 | 10 | 5.43 |
+
+模块化相对v4-only将提前停止9→1、clean误报4→0、unsupported 14→7，并获得唯一一个类型+关节+部件均正确的finding；代价是平均观察增加2.14步。它没有明显损害exact diagnosis（0→13.33%），但defect-type F1从42.11%微降至40.00%：v4-only的较高type recall主要来自大量无证据猜测，14次fail没有一次满足完整证据支持，不能把该数值单独当作更好诊断。相对失败的单LoRA，模块化漏停8→3且finding F1 0→13.33%，但unsupported增加4→7；两者都不是有效Verifier。
+
+结果对schedule敏感。模块化fixed的status/finding/type/定位F1为100%/25%/50%/25%，提前0、漏停1；random为85.71%/0%/28.57%/0%，提前1、漏停2。样本量只有每组7，不能解释为fixed普遍优于random，但说明当前诊断不能稳健处理观察顺序变化。
+
+### 静态、动态证据与真实失败
+
+- 4个clean Episode均由模块化系统观察满预算并输出uncertain，正确阻止v4的4次早停误报；这证明v5可作为“尚无对齐形状差异”的安全门，但不提供clean/pass证明。
+- 4个offset-only Episode中v5均触发了差异，但v4有2次判错成axis，另2次类型正确却定位到错误part，因此4条最终finding全部unsupported。静态轮廓差异支持“存在形状异常”，不足以自动给出正确缺陷语义和部件。
+- axis-only中的 `PM_34610` fixed Episode在真实front actuation后得到本轮唯一完整正确的 `joint_axis/link_0/joint_0`；其random Episode先在left-limit触发，而该状态没有v4审计网格对应项，最终axis finding保守计为unsupported。另一个axis-only候选在当前两条schedule均没有v4合格可见证据，模块化正确保留uncertain。
+- combined候选在v4可比状态只暴露offset，但v4两次输出axis，均unsupported。这说明v5的通用shape mismatch不能区分“静态offset导致的运动态差异”和真正axis错误。
+
+协议并非完全闭合：模块化实际执行的9个观察为v5 `left/limit`，冻结v4 exposure grid没有该状态。它们仍真实提供给两个模型，但事后缺陷评分不把v5像素差异投影成任何私有label；统一审计显式记录为 `v4_unmapped_observations=9`。这是当前模块无法无损协作的关键证据，而不是补标签的理由。
+
+因此，当前v4+v5**可作为可复现的负结果/安全门工程基线，但不能作为Roadmap中“实际有效的交互式Verifier”能力基线**。下一优先级应是动态证据到结构化诊断的可观测grounding与统一state/reference协议；在模型连已有观察都不能稳定归因到类型和部件前，先学习主动动作只会更快地产生不可解释证据。其后才是非特权主动动作选择与多关节覆盖，再收集自然错误独立人工Gold；修复闭环应最后接入，不能消费当前unsupported finding。
+
+### 复现与产物
+
+```bash
+export PLAYWRIGHT_BROWSERS_PATH=/91004t2/laq/code/ThreejsJudge/TurnItOver/.cache/ms-playwright
+V4_DATA=../TurnItOver-dataset/data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v4
+V5_DATA=data/partnet-motion-decisions-v5
+MODEL=../TurnItOver/models/Qwen3-VL-2B-Instruct
+COMMON=(--v4-dataset "$V4_DATA" --v5-dataset "$V5_DATA" --benchmark ../TurnItOver-dataset/data/benchmarks/partnet-mobility-formal-v1 --asset-workspace ../TurnItOver-dataset --harness-workspace ../TurnItOver --model "$MODEL" --seed 20261017 --browser-site-packages ../TurnItOver/.venv-local/lib/python3.12/site-packages)
+
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_modular_verifier --system v4_only --stop-adapter output/partnet-qwen3vl2b-evidence-sft-v4-round2/checkpoint --diagnosis-adapter output/partnet-qwen3vl2b-evidence-sft-v4-round2/checkpoint --out output/partnet-modular-verifier-v4-only-v1 "${COMMON[@]}"
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_modular_verifier --system modular --stop-adapter output/partnet-qwen3vl2b-visual-stopping-sft-v5/checkpoint --diagnosis-adapter output/partnet-qwen3vl2b-evidence-sft-v4-round2/checkpoint --out output/partnet-modular-verifier-v4-v5-v1 "${COMMON[@]}"
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_modular_verifier --system multitask --stop-adapter output/partnet-qwen3vl2b-evidence-multitask-v5/checkpoint --diagnosis-adapter output/partnet-qwen3vl2b-evidence-multitask-v5/checkpoint --out output/partnet-modular-verifier-multitask-v1 "${COMMON[@]}"
+../TurnItOver/.venv-qwen/bin/python -m scripts.audit_modular_verifier --v4-only output/partnet-modular-verifier-v4-only-v1 --modular output/partnet-modular-verifier-v4-v5-v1 --multitask output/partnet-modular-verifier-multitask-v1 --out output/partnet-modular-verifier-audit-v1.json
+```
+
+每个系统目录保存 `episodes.jsonl`、`metrics.json`、console log，以及每个Episode的八参考、实际观察PNG和含全部模块调用的 `episode.json`；统一逐物体、逐policy、失败案例、checkpoint/代码SHA和协议缺口位于 `output/partnet-modular-verifier-audit-v1.json`。三组metrics与统一审计SHA-256依次为 `c5ad2b0a1c3e408f5cb3d283120c1ce00fe29e367a69ff81e3a19db91f6dca70`、`fdc0204829afec05ee6c31f875ff67191d58ecb74cb9178084b3814e0456c960`、`5091ca36dcd9f6a64ce7ba18ff367eb31de73bf78a5c57a83173d9d522be4012`、`55913457dfa62b5600ef7d0690b8f8eb7dc64a54b20c9fd69df539208d5febcb`。本轮未训练、未构建v6、未调用付费API、未接入Kimi、未读取或修改冻结Part 2 Test，也未自动push。

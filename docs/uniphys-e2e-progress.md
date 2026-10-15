@@ -95,9 +95,11 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 **v4诊断 + v5停止受控多任务SFT已完成，但没有同时保留两项能力（2026-10-15）。** 从v4证据checkpoint继续训练，全部1,618条v5停止样本与110条v4诊断replay按分离输入协议组成405个50/50 loss group。新模型在v4 Validation上finding/定位F1由42.11%升至52.63%、unsupported 11→9，未见诊断遗忘；但v5停止准确率由专项模型91.26%降至55.78%，主动stop recall 85.58%→32.09%，严格同预算视觉对照84/102→5/102。6个真实浏览器Episode中停止时机仅2/6 exact，4次主动停止只有2次已有充分证据。因此当前单adapter混合配方失败，不扩大训练或搜索超参；两任务参考图协议不同，静态形状停止结论不外推为关节诊断。详见[训练数据记录](training-dataset-expansion.md)。
 
+**v4 + v5独立模块闭环已完成，停止更安全但尚非有效Verifier（2026-10-15）。** 7个独立Validation物体上，三系统各执行fixed/random共14个真实浏览器Episode；策略预定且不称为active。相对v4-only，模块化将提前停止9→1、clean误报4→0、unsupported 14→7，Episode status accuracy 35.71%→92.86%；但finding/定位F1仅13.33%，8次fail仅1次在v4审计口径下有完整证据，且9个v5 left-limit观察无法映射到冻结v4证据网格。失败单LoRA则漏停8/14。当前实现只适合作为可复现的安全门/负结果工程基线，不能作为Roadmap能力基线。详见[训练数据记录](training-dataset-expansion.md)。
+
 ## 下一步（按优先级）
 
-1. **P0｜解决多任务干扰后再扩训。** 当前固定50/50 replay保住诊断但严重损失v5停止；先在Train/Validation边界内设计协议兼容或参数隔离的最小消融，再考虑多seed和更多独立物体，继续分层报告主动/强制终止。有公开证据前继续禁止clean `pass`。
+1. **P0｜先解决动态证据到诊断的grounding与协议闭合。** v5安全门能抑制clean早停，但shape mismatch不能稳定区分offset/axis或定位part，且left-limit缺少v4证据映射；先统一可观测state/reference协议并验证类型、joint、part证据，再扩训或学习动作。有公开证据前继续禁止clean `pass`。
 2. **P0｜按实测漏斗继续扩充 PartNet-Mobility。** 优先补 Train 混合关节、未覆盖类别和更大的独立 Validation；达到80–100个合格原物体前持续保存许可、来源/内容 SHA、运动审核及冻结 Test 去重证据。
 3. **P0｜消除特权动作教师依赖。** 动作选择不读取私有 label/exposure，或显式学习可观测条件下的动作分布；完成前不把 terminal SFT 解释为主动取证训练。
 4. **P1｜收集自然错误独立人工 Gold。** 固定 Generator，由不读取注入标签的人工依据真实渲染标注；GAPartNet 仅在取得完整官方包和额外许可后接入。
@@ -107,4 +109,4 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 ---
 
-最近同步：**2026-10-15 · v4诊断 + v5停止受控多任务SFT**；GPU训练、两侧留出评测、严格配对和6个真实浏览器Episode已完成。当前模型保住诊断但停止能力显著退化，不能作为统一Verifier；未继续扩大训练，冻结Part 2 Test未读取或修改。
+最近同步：**2026-10-15 · v4 + v5模块化交互验证**；42个真实浏览器Episode及三系统统一审计已完成。模块化显著减少提前停止和clean误报，但诊断/定位及协议兼容仍不合格；本轮未训练、未构建v6，冻结Part 2 Test未读取或修改。
