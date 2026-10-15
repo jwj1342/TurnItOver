@@ -514,3 +514,50 @@ CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_q
 ```
 
 逐案例预测、metrics和console log分别位于上述评测目录；统一对比与输入文件SHA位于 `output/partnet-qwen3vl2b-visual-stopping-audit-v5.json`。最终 `run.json` / adapter / 统一审计SHA-256依次为 `8a6cbf29e91caae50b2b1edab4509be6432044f6754c6a1878d434b65aa67432`、`1281761aea1874b240cd4f1fb08f5563ed5c7a3cb60fdeacb04baf2dabad3beb`、`6e04603f888a2049ad34f91604d5ec3dc54a9d2c2c4c1c9da74400d78bf14bbd`。未调用付费API，未启动或停止Kimi工作区，未执行大规模多任务SFT，也未自动push。
+
+## v4诊断 + v5视觉停止：受控多任务 SFT（2026-10-15）
+
+### 可审计混合与训练
+
+在提交 `1062136` 及其v4/v5 checkpoint不变的前提下，从v4证据模型继续训练一个新LoRA：`output/partnet-qwen3vl2b-evidence-multitask-v5/checkpoint/`。输入协议没有直接拼接或改写：110条v4 terminal diagnosis继续使用单参考图协议 `v4_single_reference_terminal_diagnosis`；1,618条v5 stopping继续使用八张对齐状态参考协议 `v5_eight_reference_prefix_stopping`。训练行保留各自原始消息与图像，目标字段显式分为diagnosis和stop decision；没有动作目标、隐藏Gold、未来观察或冻结Test。
+
+单seed `20261016`、1 epoch、学习率 `1e-4`。每个optimizer group包含1条v4 diagnosis和至多4条v5 stopping，目标为 `0.5 * diagnosis loss + 0.5 * mean(class-balanced stopping loss)`。全部1,618条v5样本恰好一次；405个group对110条v4诊断确定性循环，使每条重放3–4次；合计2,023个micro example和405次更新。stop/continue权重仍为 `.65295/2.13456`。`run.json` 状态为complete，所有loss有限；低训练loss并未转化成停止侧留出泛化，因此不能用训练收敛替代能力结论。
+
+### 留出评测：诊断保留、视觉停止严重退化
+
+所有比较复用原Validation和原checkpoint。v4诊断是7个独立物体/28个terminal case；v5停止是相同7个留出物体的389个前缀和102对严格同预算视觉对照。两者参考图协议、输出schema与任务不同，下表分别比较各任务内的基线，不能把跨列数值解释为同一输入上的联合准确率。
+
+| 模型 | v4 exact verdict | finding P/R/F1 | defect type F1 | part定位F1 | unsupported | v5 stop准确率 | stop P/R | 提前/漏停 | 严格视觉对照 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| v4证据第二轮 | 17/28（60.71%） | 42.11/42.11/42.11% | 84.21% | 42.11% | 11 | 36.50% | 65.44/50.00% | 75/142 | 0/102 |
+| v5停止专项 | 0/28；合法输出8/28 | —/0/0% | 0 | 0 | 0 | **91.26%** | **98.83/89.08%** | **3/31** | **84/102** |
+| **本轮多任务** | **19/28（67.86%）** | **52.63/52.63/52.63%** | **84.21%** | **52.63%** | **9** | **55.78%** | **84.15/48.59%** | **26/146** | **5/102** |
+
+多任务相对v4诊断exact增加2/28、finding与定位F1各增加10.53个百分点、unsupported减少2；但exact逐案例McNemar只有6个discordant case，`p=.6875`，只能说本次run没有诊断遗忘，不能声称统计显著改善。反之，相对v5专项，停止准确率下降35.48个百分点，主动stop recall由85.58%降至32.09%，同预算视觉对照由84/102降至5/102；逐案例McNemar为149例仅专项正确、11例仅多任务正确，`p=4.58e-32`。预算耗尽仍69/69触发stop，但outcome只对48/69，进一步说明强制终止格式保留不等于视觉停止能力保留。
+
+因此本轮预先定义的诊断retention gate通过，停止准确率、严格视觉对照及闭环证据支持三个gate失败。最直接的限制是同一低秩adapter在两个差异很大的图像协议和输出任务间发生明显干扰；从v4初始化、单seed、固定50/50 group loss与小规模7物体Validation也限制归因。这里报告的是当前配方失败，不据此断言多任务目标原则上不可兼容，也未继续做无依据超参搜索。
+
+### 真实浏览器闭环
+
+另按模型预测前固定的分层规则选6个Validation轨迹：首次证据分别出现在step 1/2/3的3条，以及3条全程无充分证据轨迹，共6个独立物体。浏览器重新执行公开固定动作序列，模型逐步自主决定continue/stop；所有reference与observation PNG均与冻结v5 SHA一致。停止时机exact/early/late为2/2/2，outcome正确3/6；4次主动停止中只有2次已经具备充分证据。该结果确认离线退化会影响完整Episode，但动作仍是固定公开schedule，不是自主取证策略评测。
+
+当前答案是：**这个受控单adapter训练没有同时保留两项能力。** 它保住了v4证据约束诊断，却丢失了大部分v5视觉停止能力。距离完整交互式Verifier仍缺少：可观测条件下的动作选择、跨多个关节与视角的覆盖规划、轴/枢轴等动态诊断、可信clean/pass证据、自然错误独立人工Gold、协议兼容的联合表示，以及更多独立物体和多seed验证。静态/配对轮廓停止不得外推为关节运动诊断。
+
+### 复现与产物
+
+```bash
+V4_DATA=../TurnItOver-dataset/data/benchmarks/partnet-mobility-formal-v1/oracle-first-failure-v4
+V5_DATA=data/partnet-motion-decisions-v5
+MODEL=../TurnItOver/models/Qwen3-VL-2B-Instruct
+V4=output/partnet-qwen3vl2b-evidence-sft-v4-round2/checkpoint
+MULTI=output/partnet-qwen3vl2b-evidence-multitask-v5/checkpoint
+
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.train_qwen_multitask_replay --v4-dataset "$V4_DATA" --v5-dataset "$V5_DATA" --model "$MODEL" --initial-adapter "$V4" --out output/partnet-qwen3vl2b-evidence-multitask-v5 --seed 20261016 --epochs 1 --learning-rate 0.0001 --stopping-per-diagnosis 4
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_qwen_episode_sft --dataset "$V4_DATA" --model "$MODEL" --adapter "$MULTI" --out output/partnet-qwen3vl2b-evidence-multitask-terminal-eval-v4 --max-new-tokens 512
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_qwen_visual_stopping --dataset "$V5_DATA" --model "$MODEL" --adapter "$MULTI" --out output/partnet-qwen3vl2b-evidence-multitask-stopping-eval-v5 --max-new-tokens 64
+
+export PLAYWRIGHT_BROWSERS_PATH=/91004t2/laq/code/ThreejsJudge/TurnItOver/.cache/ms-playwright
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_visual_stopping_closed_loop --dataset "$V5_DATA" --benchmark ../TurnItOver-dataset/data/benchmarks/partnet-mobility-formal-v1 --asset-workspace ../TurnItOver-dataset --harness-workspace ../TurnItOver --model "$MODEL" --adapter "$MULTI" --out output/partnet-qwen3vl2b-evidence-multitask-closed-loop-v5-run3 --episodes 6 --max-new-tokens 64 --browser-site-packages ../TurnItOver/.venv-local/lib/python3.12/site-packages
+```
+
+训练配置/命令/loss与checkpoint保存在 `output/partnet-qwen3vl2b-evidence-multitask-v5/`；三组诊断和停止逐案例预测、逐物体汇总、闭环逐步调用与PNG、统一审计分别保存在对应eval目录、`output/partnet-qwen3vl2b-evidence-multitask-closed-loop-v5-run3/` 和 `output/partnet-qwen3vl2b-evidence-multitask-audit-v5.json`。`run.json` / adapter / 闭环metrics / 统一审计SHA-256依次为 `5065c6219963e2d81b81bcd56ae089a4b3f3ef0b9b84401d2c91ccea74642817`、`3d6ae5bfc1ed3f84f40558510590d40ccbbc9b6a2fbfb2102f909f891655731e`、`6823115f4eb840fc5e4933515dc7ff0a1a38878c225a1a525169a42d42038287`、`68dbdde892b95851ac1135752d3183047b5156405fdf50b068a6e9427e999caf`。未调用付费API、未接入Kimi、未读取或修改冻结Part 2 Test，也未自动push。

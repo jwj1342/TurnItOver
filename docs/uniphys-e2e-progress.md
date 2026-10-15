@@ -93,11 +93,11 @@ for asset in $(jq -r '.assets[] | select(.status=="structural_candidate") | .ass
 python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/uniphys40k-trainval-v2-revalidated --ids "$(jq -r '.assets[].asset_id' output/uniphys40k-expanded-conversion-v4/conversion.json | paste -sd, -)" --test-plan configs/uniphys-test.json --test-root data/assets/uniphys/data --motion-reviews configs/uniphys40k-trainval-v2.json
 ```
 
-**v5 证据驱动停止专项已完成训练与评测（2026-10-15）。** Qwen3-VL-2B stopping-only LoRA实际训练1,618步；7物体/389行Validation上准确率91.26%、stop precision/recall 98.83%/89.08%，提前停止3、漏停31，严格同预算视觉对照正确84/102。全图遮蔽后准确率降至44.73%、主动stop召回降至0、配对正确降至0/102，而预算强制stop仍69/69，支持模型实际利用像素而非只看预算。结果仅为单seed、八参考姿态下的程序化形状一致性停止，不扩展为关节诊断；完整多任务第三轮仍未启动。详见[训练数据记录](training-dataset-expansion.md)。
+**v4诊断 + v5停止受控多任务SFT已完成，但没有同时保留两项能力（2026-10-15）。** 从v4证据checkpoint继续训练，全部1,618条v5停止样本与110条v4诊断replay按分离输入协议组成405个50/50 loss group。新模型在v4 Validation上finding/定位F1由42.11%升至52.63%、unsupported 11→9，未见诊断遗忘；但v5停止准确率由专项模型91.26%降至55.78%，主动stop recall 85.58%→32.09%，严格同预算视觉对照84/102→5/102。6个真实浏览器Episode中停止时机仅2/6 exact，4次主动停止只有2次已有充分证据。因此当前单adapter混合配方失败，不扩大训练或搜索超参；两任务参考图协议不同，静态形状停止结论不外推为关节诊断。详见[训练数据记录](training-dataset-expansion.md)。
 
 ## 下一步（按优先级）
 
-1. **P0｜验证v5停止监督的可迁移性。** 在不改冻结Test的前提下补多seed和更多独立物体；下一轮完整多任务SFT将v5作为受控停止目标并保留diagnosis replay，继续分层报告主动/强制终止。有公开证据前继续禁止clean `pass`。
+1. **P0｜解决多任务干扰后再扩训。** 当前固定50/50 replay保住诊断但严重损失v5停止；先在Train/Validation边界内设计协议兼容或参数隔离的最小消融，再考虑多seed和更多独立物体，继续分层报告主动/强制终止。有公开证据前继续禁止clean `pass`。
 2. **P0｜按实测漏斗继续扩充 PartNet-Mobility。** 优先补 Train 混合关节、未覆盖类别和更大的独立 Validation；达到80–100个合格原物体前持续保存许可、来源/内容 SHA、运动审核及冻结 Test 去重证据。
 3. **P0｜消除特权动作教师依赖。** 动作选择不读取私有 label/exposure，或显式学习可观测条件下的动作分布；完成前不把 terminal SFT 解释为主动取证训练。
 4. **P1｜收集自然错误独立人工 Gold。** 固定 Generator，由不读取注入标签的人工依据真实渲染标注；GAPartNet 仅在取得完整官方包和额外许可后接入。
@@ -107,4 +107,4 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 ---
 
-最近同步：**2026-10-15 · v5视觉停止专项SFT**；训练、四组对照、严格配对和图像遮蔽评测已完成，支持将停止监督受控并入下一轮多任务SFT，但尚无多seed或关节诊断结论。完整多任务训练未启动；冻结Part 2 Test未读取或修改。
+最近同步：**2026-10-15 · v4诊断 + v5停止受控多任务SFT**；GPU训练、两侧留出评测、严格配对和6个真实浏览器Episode已完成。当前模型保住诊断但停止能力显著退化，不能作为统一Verifier；未继续扩大训练，冻结Part 2 Test未读取或修改。
