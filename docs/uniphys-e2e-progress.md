@@ -93,11 +93,11 @@ for asset in $(jq -r '.assets[] | select(.status=="structural_candidate") | .ass
 python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/uniphys40k-trainval-v2-revalidated --ids "$(jq -r '.assets[].asset_id' output/uniphys40k-expanded-conversion-v4/conversion.json | paste -sd, -)" --test-plan configs/uniphys-test.json --test-root data/assets/uniphys/data --motion-reviews configs/uniphys40k-trainval-v2.json
 ```
 
-**v5 证据驱动停止数据已实际生成与审核（2026-10-14）。** 主数据138个候选执行三种含关节驱动/回零的固定顺序，得到414条真实轨迹、2,484次观察；隔离43个模糊前缀、去重434条后保留Train1,618 / Validation389条。严格同物体、参考、动作历史和预算的对照为359 / 102对，独立Validation评测204行；另有同候选不同顺序的10 / 3个正反分组，涉及10 / 2个物体。全部processor检查和30项相关测试通过。停止专项数据可用；八张公开参考姿态协议、首关节覆盖和较少的顺序敏感案例仍限制完整第三轮多任务SFT，未启动训练。详见[训练数据记录](training-dataset-expansion.md)。
+**v5 证据驱动停止专项已完成训练与评测（2026-10-15）。** Qwen3-VL-2B stopping-only LoRA实际训练1,618步；7物体/389行Validation上准确率91.26%、stop precision/recall 98.83%/89.08%，提前停止3、漏停31，严格同预算视觉对照正确84/102。全图遮蔽后准确率降至44.73%、主动stop召回降至0、配对正确降至0/102，而预算强制stop仍69/69，支持模型实际利用像素而非只看预算。结果仅为单seed、八参考姿态下的程序化形状一致性停止，不扩展为关节诊断；完整多任务第三轮仍未启动。详见[训练数据记录](training-dataset-expansion.md)。
 
 ## 下一步（按优先级）
 
-1. **P0｜补可识别的停止与视觉对照。** 构造保持 step、remaining、历史结构和动作类型不变、只改变真实可见证据的合法反事实对；分别冻结 `first_failure` / `comprehensive_within_budget`，并补更多物体和多 seed。有公开证据前继续禁止 clean `pass`。
+1. **P0｜验证v5停止监督的可迁移性。** 在不改冻结Test的前提下补多seed和更多独立物体；下一轮完整多任务SFT将v5作为受控停止目标并保留diagnosis replay，继续分层报告主动/强制终止。有公开证据前继续禁止clean `pass`。
 2. **P0｜按实测漏斗继续扩充 PartNet-Mobility。** 优先补 Train 混合关节、未覆盖类别和更大的独立 Validation；达到80–100个合格原物体前持续保存许可、来源/内容 SHA、运动审核及冻结 Test 去重证据。
 3. **P0｜消除特权动作教师依赖。** 动作选择不读取私有 label/exposure，或显式学习可观测条件下的动作分布；完成前不把 terminal SFT 解释为主动取证训练。
 4. **P1｜收集自然错误独立人工 Gold。** 固定 Generator，由不读取注入标签的人工依据真实渲染标注；GAPartNet 仅在取得完整官方包和额外许可后接入。
@@ -107,4 +107,4 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 ---
 
-最近同步：**2026-10-14 · v5 真实交互停止数据**；视觉配对与同候选顺序对照已生成，完整多任务训练条件仍有缺口，第三轮SFT未启动。v4第二轮提前停止结论不变；冻结Part 2 Test未修改。
+最近同步：**2026-10-15 · v5视觉停止专项SFT**；训练、四组对照、严格配对和图像遮蔽评测已完成，支持将停止监督受控并入下一轮多任务SFT，但尚无多seed或关节诊断结论。完整多任务训练未启动；冻结Part 2 Test未读取或修改。

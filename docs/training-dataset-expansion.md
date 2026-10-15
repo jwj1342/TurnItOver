@@ -467,3 +467,50 @@ CUDA_VISIBLE_DEVICES='' OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 USE_TF=0 \
 主目录的 `manifest.json` 保留来源与标签代码SHA，`trajectories.jsonl` 保存真实观察，`audit.json` 记录统计、逐阶段分布、文件SHA及processor结果；`*.matched.stopping.jsonl` 是严格配对子集，`*.first-stop.stopping.jsonl` 是首停子集。代码、测试和现有文档本地提交，不push；数据与PNG按现有约定本地保留。
 
 本次主数据冻结摘要：`audit.json` SHA-256为 `f9497dbf0dee2a1bd8b8b6ba3666c16fb3c62907eadb98681c5b74f57b9f3ecf`；`train.stopping.jsonl` 为 `10754f2a969e7f3f77adc629c47b9f7ce21d196c804ccca5b96fbf5e4fa3ca74`；独立204行 `validation.matched.stopping.jsonl` 为 `890fca8fc589d4cf343746cad4332ef65ca7237ec400a1a7d10f789b65055706`。其余文件SHA见审计报告。
+
+## v5：视觉停止专项 SFT 与留出评测（2026-10-15）
+
+### 训练设置与边界
+
+已从提交 `3ba02b4` 的 v5 主数据实际训练 stopping-only Qwen3-VL-2B-Instruct LoRA。训练消费全部1,618条 Train 决策行、1 epoch / 1,618次更新；这与 v4 第二轮每个模型的1,617次总更新基本等量。seed为 `20261015`，AdamW学习率 `2e-4`，LoRA rank/alpha为8/16、dropout为0，模块仍为 `q/k/v/o_proj`。由于Train为1,239 stop / 379 continue，assistant-token mean CE按决策标签逆频率加权（stop `.65295`、continue `2.13456`），避免全停捷径主导训练。训练未混入diagnosis、Oracle动作、隐藏Gold或未来观察；主动证据停止与环境强制终止分别保留为 `active` 和 `forced`，后者目标为当前公开结果对应的stop outcome，不冒充自主视觉停止。
+
+`output/partnet-qwen3vl2b-visual-stopping-sft-v5/run.json` 为 `complete`，保存训练配置、精确命令、环境版本和loss汇总；1,618条逐步loss均有限，checkpoint位于同目录 `checkpoint/`。adapter权重SHA-256为 `1281761aea1874b240cd4f1fb08f5563ed5c7a3cb60fdeacb04baf2dabad3beb`。训练入口SHA-256为 `8d6a5d39cd1a7a06f25b522ded1feedff26c6dd48bef6a9e5e612b78a101bbcc`。CUDA对CuBLAS/Flash Attention仍给出warn-only非确定性提示，因此固定配置、seed和顺序可复现，但不主张权重逐比特相同。
+
+### 389条 Validation 与102对严格视觉对照
+
+所有模型使用同一389条Validation、greedy decoding和 `max_new_tokens=64`。v4对照明确是第二轮证据checkpoint；它训练于v4单参考输入，因而与v5的差异同时包含监督和八参考输入协议变化，不能视为只替换数据的等条件消融。未微调底座的389个输出全部不符合 `stop_decision` 协议，故其准确率为0而不是可解释的分类能力。无图像基线只拟合 `decision_index/remaining/history_length/image_count`，不读取图像字节；它对continue/stop的准确率是284/389=73.01%，此前的263/389=67.61%是连同fail/uncertain outcome一起精确匹配的更严格口径，二者不应混称。
+
+| 模型 / 干预 | continue/stop准确率 | stop precision | stop recall | 提前停止 | 漏停 | 严格对照正确区分 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 未微调底座 | 0/389 | — | 0/284 | 0（389个输出全无效） | 284 | 0/102 |
+| v4第二轮证据checkpoint | 142/389（36.50%） | 65.44% | 50.00% | 75 | 142 | 0/102 |
+| 无图像预算基线 | 284/389（73.01%） | 73.01% | 100.00% | 105 | 0 | 0/102 |
+| **v5视觉停止SFT** | **355/389（91.26%）** | **98.83%** | **89.08%** | **3** | **31** | **84/102（82.35%）** |
+| v5，全部图像遮蔽 | 174/389（44.73%） | 100.00% | 24.30% | 0 | 215 | 0/102 |
+
+v5相对v4在逐案例正确性上的exact McNemar检验为 `p=3.29e-42`，相对无图像预算基线为 `p=4.91e-10`。提前停止从v4的75和预算基线的105降至3，同时仍保留253/284 stop召回和100%合法输出；因此不是靠无效输出或一律continue换来的表面改善。主动停止单独为184/215=85.58%；预算强制终止为69/69，且outcome也69/69。完整错误仍集中在较早证据：step 1主动stop召回22/35，step 2为32/42，不能描述成提前停止问题已经消失。
+
+严格配对的102/102对在模型可见的用户文本、context、动作历史、step、remaining和图像槽位数上完全相同，只有实际图像像素不同；记录ID、候选身份和文件路径在消息外不同。v5同时正确判断stop/continue的比例为84/102，其他三组均为0。遮蔽评测将每个图像替换为相同尺寸的RGB(127,127,127)，其余输入保持不变：总体准确率下降46.53个百分点，主动stop召回由85.58%降为0，严格配对由84/102降为0；逐案例exact McNemar `p=1.11e-50`。遮蔽后模型仍在step 6作出69/69强制stop，但只对21/69 outcome正确，显示预算能触发终止，却不能替代像素决定是否已有fail证据。
+
+这些结果在本数据协议内提供了较强的视觉依赖证据，但边界仍是单seed、7个Validation物体和程序化轮廓标签；389行共享物体，行级p值不能外推为跨seed/跨数据集显著性。全图灰色遮蔽也是分布外干预。v5只支持“八参考姿态下的形状一致性停止”，不支持关节轴、枢轴或完整缺陷定位能力结论，也没有读取或修改冻结Part 2 Test。
+
+### 结论与复现
+
+本轮结论是：v5在当前留出集上显著缓解而未完全消除提前停止；模型确实利用了图像，而非只依赖预算；值得把这类停止监督作为下一轮完整多任务SFT的一个受控目标，但应保留diagnosis replay、继续按 `active/forced` 分层，并先做多seed和更大物体验证。本轮没有据此启动完整多任务训练。
+
+```bash
+DATA=data/partnet-motion-decisions-v5
+MODEL=../TurnItOver/models/Qwen3-VL-2B-Instruct
+V5=output/partnet-qwen3vl2b-visual-stopping-sft-v5/checkpoint
+V4=output/partnet-qwen3vl2b-evidence-sft-v4-round2/checkpoint
+
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.train_qwen_stopping_sft --dataset "$DATA" --model "$MODEL" --out output/partnet-qwen3vl2b-visual-stopping-sft-v5 --seed 20261015 --epochs 1 --learning-rate 0.0002 --lora-rank 8 --lora-alpha 16
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_qwen_visual_stopping --dataset "$DATA" --model "$MODEL" --out output/partnet-qwen3vl2b-base-visual-stopping-eval-v5 --max-new-tokens 64
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_qwen_visual_stopping --dataset "$DATA" --model "$MODEL" --adapter "$V4" --out output/partnet-qwen3vl2b-evidence-v4-visual-stopping-eval-v5 --max-new-tokens 64
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_qwen_visual_stopping --dataset "$DATA" --model "$MODEL" --adapter "$V5" --out output/partnet-qwen3vl2b-visual-stopping-eval-v5 --max-new-tokens 64
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_qwen_visual_stopping --dataset "$DATA" --model "$MODEL" --adapter "$V5" --out output/partnet-qwen3vl2b-visual-stopping-masked-eval-v5 --max-new-tokens 64 --image-mode masked
+../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_visual_stopping_baseline --dataset "$DATA" --out output/partnet-no-image-budget-baseline-v5-stopping
+../TurnItOver/.venv-qwen/bin/python -m scripts.compare_visual_stopping --base output/partnet-qwen3vl2b-base-visual-stopping-eval-v5 --v4 output/partnet-qwen3vl2b-evidence-v4-visual-stopping-eval-v5 --v5 output/partnet-qwen3vl2b-visual-stopping-eval-v5 --masked output/partnet-qwen3vl2b-visual-stopping-masked-eval-v5 --budget output/partnet-no-image-budget-baseline-v5-stopping --out output/partnet-qwen3vl2b-visual-stopping-audit-v5.json
+```
+
+逐案例预测、metrics和console log分别位于上述评测目录；统一对比与输入文件SHA位于 `output/partnet-qwen3vl2b-visual-stopping-audit-v5.json`。最终 `run.json` / adapter / 统一审计SHA-256依次为 `8a6cbf29e91caae50b2b1edab4509be6432044f6754c6a1878d434b65aa67432`、`1281761aea1874b240cd4f1fb08f5563ed5c7a3cb60fdeacb04baf2dabad3beb`、`6e04603f888a2049ad34f91604d5ec3dc54a9d2c2c4c1c9da74400d78bf14bbd`。未调用付费API，未启动或停止Kimi工作区，未执行大规模多任务SFT，也未自动push。
