@@ -446,6 +446,25 @@ HF_HUB_OFFLINE=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.check_teacher_ex
 
 完整逐案例记录、条件定义与复现命令见 [`kimi-interactive-teacher-round4-diagnosis.json`](evidence/kimi-interactive-teacher-round4-diagnosis.json)。
 
+### 默认采集流程固化：合法 hierarchy + joint_axis 定位规则（2026-10-15）
+
+Round4 中已验证有效的设置现已成为 `scripts/run_interactive_teacher.py` 对真实 Train 行的默认值，无需再传参数：参考协议为 `front_motion_v1`；第 0 步固定执行一次 rest 姿态的 `query_runtime hierarchy`（声明的共同输入，dry run 与审核都会核对其载荷是否等于冻结层级）；prompt 末尾附加 `turnitover/teacher/joint_axis_rules.txt`。教师请求中新增 `joint_structure`（`joint_id → parent_link, moving_child_links`），由 `turnitover/teacher/structure.py` 只根据已观察到的 hierarchy 载荷重新整理得到；完整性审核会拒绝任何与这一整理结果不一致的 `joint_structure`。规则只有三条：`joint_axis` 的 `parts` 恰好是该关节的 `moving_child_links`，不额外报告父件或更下游的部件；`evidence_steps` 只引用实际执行过、且与可比参考状态有可见差异的步骤；没有这类观察时输出 `uncertain`。独立审核标准、冻结 witness、导出规则均不变；没有加入 oblique 视角、额外图片或 few-shot 示例。需要复现旧流程时可传 `--common-input none --diagnosis-rules none`。
+
+**回归。** 用新代码重新审核 Round4 的 76 条 Episode，结果另存为 `audit.round5-regression.json`，结论变化为 0；mock Chromium E2E 有 3 条 Episode，均通过完整性审核。真实 Kimi＋Chromium 共跑 9 条 Episode（无网关故障），改动前的对照是第三轮同一批案例在可感知标准下的重审结果：
+
+| 指标（同一批案例） | 改动前 | 改动后 |
+|---|---:|---:|
+| 固定组 axis 严格正确 `correct_fail` | 1/4 | **2/4** |
+| 固定组 axis 通过审核（含 PM_102080 可信 `uncertain`） | 2/4 | **3/4** |
+| 主动组 axis 严格正确 | 1/3 | **2/3** |
+| `joint_axis` 部件包含静止父件 | 3/6 条 finding | **0/6** |
+| 缺陷类型错误（`joint_range`） | 1 | 0 |
+| clean 无依据 `pass` | 1/2（PM_25308） | 1/2（PM_103275） |
+
+剩余阻塞集中在 PM_103275：部件已正确（`[link_1]`），但固定组仍引用了 joint_1 limit（核心变化只有 39 像素，按标准不算证据）；主动组只驱动到 joint_1 limit 就给出 `fail`，判为证据不足。另一项阻塞是 clean 上偶发无依据的 `pass`。改动后的运行使用 16384 输出上限和 300 s 超时（第三轮为 4096 和 120 s），这是改动前后对照中的一个混杂因素。
+
+**导出。** `kimi-round5-sft-export`：8 条动作行、6 条诊断行（`correct_fail` 4 条，来自 PM_25308 与 PM_5088；PM_102080 可信 `uncertain` 1 条；clean `uncertain` 1 条），所有行都带 `common_input=hierarchy`，诊断行的 prompt 中都含 `joint_structure`。loader 实际加载 actions 8 / diagnosis 6 / episodes 14 行，Qwen3-VL-2B processor 生成真实图像张量与 assistant-only mask。记录见 [`kimi-interactive-teacher-round5-default-flow.json`](evidence/kimi-interactive-teacher-round5-default-flow.json)。
+
 ## 复现命令
 
 以下命令要求已获官方访问权、已构建 `web/dist`，且各输出目录不存在：

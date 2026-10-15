@@ -79,6 +79,8 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 **第四轮诊断瓶颈归因。** 冻结清单升级为 schema 2，加入“可感知证据”分级：变化区域至少 5 像素厚才计为证据。按该标准，PM_102080 在所有视角下都没有可感知差异，Kimi 的 `uncertain` 被重新判为可信。PM_25308 加入合法的 rest hierarchy 共同输入后 2/2 严格正确；PM_103275 加入 hierarchy 和部件约定后部件定位正确，但仍引用不可感知的 limit 状态作为证据而被拒。增加 oblique 视角参考反而降低正确率（严格正确 0/7）。正确 `fail` 诊断只覆盖 2 个独立资产，暂不足以开展诊断 SFT 对照。见 [`kimi-interactive-teacher-round4-diagnosis.json`](evidence/kimi-interactive-teacher-round4-diagnosis.json)。
 
+**默认采集流程固化。** 真实 Train 行默认使用 `front_motion_v1`，并把 rest hierarchy 作为第 0 步；教师请求附带由该可见载荷整理出的 `joint_structure`，prompt 附加三条 `joint_axis` 定位规则，审核标准不变。在同一批 9 个案例上，严格正确的 `fail` 从 2/7 提高到 4/7，父件误报从 3 降到 0；剩余阻塞是 PM_103275 引用不可感知的 limit 状态作为证据，以及 clean 上偶发无依据的 `pass`。见 [`kimi-interactive-teacher-round5-default-flow.json`](evidence/kimi-interactive-teacher-round5-default-flow.json)。
+
 ## 关键缺口
 
 **已完成正式 PartNet 第一轮受控 SFT，但只保留为旧 v3 checkpoint 分析。** 底座/普通/证据组 exact verdict 为7/9/13，finding F1 为0/.351/.419；证据组把 unsupported finding 从33降至15，并改善 axis/定位汇总，但 offset recall 下降。无图像预算基线在相同 Validation 上达到28/28 terminal status 和 defect-type F1 .737，完全解释 status 收益并覆盖大量类型表现；因此这些 checkpoint 不支持视觉依赖或修复后监督效果主张。

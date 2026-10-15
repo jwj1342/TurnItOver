@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 from turnitover.core.jsonio import write_json_atomic
+from turnitover.teacher.structure import joint_structure
 from turnitover.teacher.evidence import audit_teacher_verdict
 from turnitover.verifier.contracts import Context, parse_decision
 
@@ -47,8 +48,14 @@ def audit_episode(output: Path, private_gold: dict | None = None,
             informative.append(bool(record.get("payload")))
     for call in episode.get("model_calls", []):
         request = json.loads((output / call["path"] / "request.json").read_text())
-        if set(request) != VISIBLE_KEYS:
+        if set(request) - {"joint_structure"} != VISIBLE_KEYS:
             errors.append(f"model-visible request has unexpected fields: {sorted(set(request) - VISIBLE_KEYS)}")
+        if "joint_structure" in request:
+            # Allowed only as an exact reshaping of the latest hierarchy payload in the visible causal history.
+            observed = [item["payload"] for item in request["history"]
+                        if (item.get("payload") or {}).get("property") == "hierarchy"]
+            if not observed or request["joint_structure"] != joint_structure(observed[-1]["root"]):
+                errors.append("model-visible joint_structure is not derived from an observed hierarchy")
         image_order = request["image_order"]
         image_paths = json.loads((output / call["path"] / "images.json").read_text())
         if len(image_paths) != len(image_order):

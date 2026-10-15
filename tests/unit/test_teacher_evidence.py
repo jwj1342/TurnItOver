@@ -365,3 +365,16 @@ def test_repeated_conditions_on_one_row_get_distinct_export_ids(tmp_path):
     export_episodes(sources, tmp_path / "export")
     ids = [json.loads(line)["id"] for line in (tmp_path / "export/train.diagnosis.jsonl").read_text().splitlines()]
     assert len(ids) == len(set(ids)) == 2
+
+
+def test_joint_structure_must_match_the_observed_hierarchy(tmp_path):
+    case = build_case(tmp_path, LIMITS, GRID, [[], [0], [0], [0]], [AXIS], perceptible=[[], [0], [0], [0]])
+    out, audit = run_case(tmp_path, [actuate("limit"), verdict("fail", [finding([1])])], LIMITS, case,
+                          initial=(HIERARCHY_INPUT,))
+    request = json.loads((out / "model_calls/000/request.json").read_text())
+    assert request["joint_structure"] == {"hinge": {"parent_link": "base", "moving_child_links": ["door"]}}
+    assert audit["pipeline_ok"]
+    request["joint_structure"]["hinge"]["moving_child_links"] = ["base"]
+    (out / "model_calls/000/request.json").write_text(json.dumps(request))
+    assert "model-visible joint_structure is not derived from an observed hierarchy" in audit_episode(
+        out, case[0], case[1], manifest=case[2])["errors"]

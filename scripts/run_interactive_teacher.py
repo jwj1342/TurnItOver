@@ -19,7 +19,7 @@ from turnitover.teacher.episode import run_teacher_episode
 from turnitover.teacher.policy import TeacherPolicy
 from turnitover.teacher.providers import KimiPricing, KimiTeacher, LocalQwenTeacher, MockTeacher
 from turnitover.teacher.evidence import bind_witnesses
-from turnitover.teacher.witnesses import (HIERARCHY_INPUT, REFERENCE_PROTOCOLS, file_sha256,
+from turnitover.teacher.witnesses import (HIERARCHY_INPUT, REFERENCE_PROTOCOL, REFERENCE_PROTOCOLS, file_sha256,
                                           protocol_record, sample_framing)
 from turnitover.policy.loop import execute_observation
 from turnitover.core.serde import to_dict
@@ -34,6 +34,9 @@ DEFAULT_CONFIG = ROOT / "configs/generate_partnet_mobility_supervision.yaml"
 DEFAULT_ANNOTATIONS = (ROOT / "data/benchmarks/partnet-mobility-formal-v1/"
                        "oracle-first-failure-v4/annotations.private.jsonl")
 DEFAULT_MODEL = ROOT.parent / "TurnItOver/models/Qwen3-VL-2B-Instruct"
+# Default teacher collection: rest hierarchy as step 0 plus these label-independent diagnosis rules.
+DIAGNOSIS_RULES = {"joint_axis_v1": ["joint_axis_rules.txt"], "round4_part_convention": ["part_convention.txt"],
+                   "none": []}
 
 
 def _rows(path: Path) -> dict[str, dict]:
@@ -212,7 +215,7 @@ def run(args) -> dict:
         data_identity = {**annotation["data_identity"], **data_identity}
     data_identity = {**data_identity, "experiment_mode": args.experiment_mode,
                      "reference_protocol": args.reference_protocol, "common_input": args.common_input,
-                     "prompt_addenda": ["part_convention.txt"] if args.part_convention else []}
+                     "prompt_addenda": DIAGNOSIS_RULES[args.diagnosis_rules]}
     if args.mode == "kimi":
         data_identity = {**data_identity, "third_party_transmission_reviewed": True,
                          "transmission_review_basis": args.transmission_review_basis}
@@ -312,13 +315,19 @@ if __name__ == "__main__":
                         help="Bounded schema-correction attempts per decision")
     parser.add_argument("--experiment-mode", choices=("active", "fixed-diagnosis"), default="active")
     parser.add_argument("--reference-protocol", choices=("static_front", *REFERENCE_PROTOCOLS),
-                        default="static_front",
-                        help="static_front reproduces round2; motion protocols add label-independent reference states")
-    parser.add_argument("--part-convention", action="store_true",
-                        help="Append the declared label-independent part convention to the teacher prompt")
-    parser.add_argument("--common-input", choices=("none", "hierarchy"), default="none",
-                        help="hierarchy: a rest-pose query_runtime hierarchy runs first as a declared fixed step")
+                        help="Default front_motion_v1 (static_front for the project fixture); "
+                             "static_front reproduces round2")
+    parser.add_argument("--diagnosis-rules", choices=tuple(DIAGNOSIS_RULES), default="joint_axis_v1",
+                        help="Label-independent prompt addendum; round4_part_convention reproduces round4 HC")
+    parser.add_argument("--part-convention", dest="diagnosis_rules", action="store_const",
+                        const="round4_part_convention", help="Alias kept for the round4 reproduction scripts")
+    parser.add_argument("--common-input", choices=("none", "hierarchy"),
+                        help="Default hierarchy: a rest-pose query_runtime hierarchy runs first as a declared "
+                             "fixed step (none for the project fixture)")
     parser.add_argument("--frozen-witnesses", type=Path,
                         help="Directory written by scripts.freeze_teacher_witnesses")
     arguments = parser.parse_args()
+    fixture = arguments.project_fixture
+    arguments.reference_protocol = arguments.reference_protocol or ("static_front" if fixture else REFERENCE_PROTOCOL)
+    arguments.common_input = arguments.common_input or ("none" if fixture else "hierarchy")
     print(json.dumps(run(arguments), indent=2))

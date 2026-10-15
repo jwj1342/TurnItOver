@@ -1,0 +1,797 @@
+{
+ "schema_version": 1,
+ "date": "2026-10-15",
+ "model": "k3-256k",
+ "baseline_commit": "b64ab7b",
+ "change": {
+  "default_collection_flow": "front_motion_v1 reference + rest-pose query_runtime hierarchy as declared step 0 + joint_axis_rules.txt prompt addendum",
+  "visible_input": "request.json gains joint_structure (joint -> parent_link, moving_child_links), computed only from the latest observed hierarchy payload; the integrity audit rejects any joint_structure that differs from that reshaping",
+  "prompt_rules": "turnitover/teacher/joint_axis_rules.txt",
+  "unchanged": [
+   "independent evidence audit and perceptible-exposure standard",
+   "frozen witnesses (axis-round4-frozen-witnesses)",
+   "JSONL export rules",
+   "no oblique views, no few-shot examples, no hidden Gold"
+  ],
+  "opt_out": "--common-input none --diagnosis-rules none (round3 flow); --part-convention reproduces round4 HC"
+ },
+ "offline_regression": {
+  "episodes": 76,
+  "reaudited_with_new_code": "audit.round5-regression.json beside each round4 audit.json",
+  "conclusions_changed": 0
+ },
+ "mock_chromium_e2e": "output/interactive-teacher/axis-round5-mock (3 Episodes, pipeline_ok, joint_structure present)",
+ "before": {
+  "summary": {
+   "fixed-diagnosis": {
+    "axis_cases": 4,
+    "strict_correct_fail": 1,
+    "trustworthy_uncertain": 1,
+    "axis_accepted": 2,
+    "outcomes": {
+     "trustworthy_uncertain": 1,
+     "incorrect_fail": 2,
+     "correct_fail": 1
+    },
+    "findings": 3,
+    "wrong_defect_type": 1,
+    "part_relation": {
+     "includes_static_part_outside_joint_subtree": 1,
+     "None": 1,
+     "direct_child": 1
+    },
+    "clean_cases": 2,
+    "clean_outcomes": {
+     "uncertain_on_clean": 1,
+     "pass_on_clean": 1
+    }
+   },
+   "active": {
+    "axis_cases": 3,
+    "strict_correct_fail": 1,
+    "trustworthy_uncertain": 0,
+    "axis_accepted": 1,
+    "outcomes": {
+     "incorrect_fail": 2,
+     "correct_fail": 1
+    },
+    "findings": 3,
+    "wrong_defect_type": 0,
+    "part_relation": {
+     "includes_static_part_outside_joint_subtree": 2,
+     "direct_child": 1
+    },
+    "clean_cases": 0,
+    "clean_outcomes": {}
+   }
+  },
+  "episodes": [
+   {
+    "source": "round3 (old default: front_motion_v1, no hierarchy, no rules) re-audited under the round4 perceptible standard",
+    "dir": "output/interactive-teacher/kimi-round3-active-pm103275-axis",
+    "asset_id": "PM_103275",
+    "mode": "active",
+    "kind": "axis",
+    "status": "fail",
+    "findings": [
+     {
+      "defect_id": "kinematics.joint_axis",
+      "joint_id": "joint_1",
+      "parts": [
+       "link_1",
+       "link_2"
+      ],
+      "evidence_steps": [
+       4,
+       5
+      ],
+      "part_relation": "includes_static_part_outside_joint_subtree"
+     }
+    ],
+    "diagnosis_outcome": "incorrect_fail",
+    "accepted": false,
+    "rejection_reasons": [
+     "finding_not_objective_truth:kinematics.joint_axis",
+     "fail_does_not_cover_all_objective_defects"
+    ],
+    "teacher_actions": [
+     {
+      "type": "request_view",
+      "view_id": "front"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_0",
+      "detent": "mid"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_0",
+      "detent": "limit"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_0",
+      "detent": "rest"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_1",
+      "detent": "zero"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_1",
+      "detent": "mid"
+     }
+    ],
+    "termination": "teacher_finished",
+    "tokens": 27469,
+    "episode_sha256": "5db6656ee89417e030f4ca35f11d7df99568df17a346aacb9c6ee394fda4ea1f",
+    "audit_sha256": "3a311b789520c7a03d3fe91e7534c65452f3cb58e03e4b85d03cf6261278caab"
+   },
+   {
+    "source": "round3 (old default: front_motion_v1, no hierarchy, no rules) re-audited under the round4 perceptible standard",
+    "dir": "output/interactive-teacher/kimi-round3-active-pm25308-axis-r2",
+    "asset_id": "PM_25308",
+    "mode": "active",
+    "kind": "axis",
+    "status": "fail",
+    "findings": [
+     {
+      "defect_id": "kinematics.joint_axis",
+      "joint_id": "joint_1",
+      "parts": [
+       "link_2"
+      ],
+      "evidence_steps": [
+       4,
+       5
+      ],
+      "part_relation": "includes_static_part_outside_joint_subtree"
+     }
+    ],
+    "diagnosis_outcome": "incorrect_fail",
+    "accepted": false,
+    "rejection_reasons": [
+     "finding_not_objective_truth:kinematics.joint_axis",
+     "fail_does_not_cover_all_objective_defects"
+    ],
+    "teacher_actions": [
+     {
+      "type": "request_view",
+      "view_id": "front"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_0",
+      "detent": "mid"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_0",
+      "detent": "limit"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_0",
+      "detent": "rest"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_1",
+      "detent": "mid"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_1",
+      "detent": "limit"
+     }
+    ],
+    "termination": "budget_exhausted",
+    "tokens": 27895,
+    "episode_sha256": "0b62267f8995935fa9543c4541e41a69eaa98d0368c40bc41a0417a8f150e670",
+    "audit_sha256": "990f6e91688656db18e82b1eb7ddf764ed296b34b9aaaf07dc8d7515d9be9909"
+   },
+   {
+    "source": "round3 (old default: front_motion_v1, no hierarchy, no rules) re-audited under the round4 perceptible standard",
+    "dir": "output/interactive-teacher/kimi-round3-active-pm5088-axis-r2",
+    "asset_id": "PM_5088",
+    "mode": "active",
+    "kind": "axis",
+    "status": "fail",
+    "findings": [
+     {
+      "defect_id": "kinematics.joint_axis",
+      "joint_id": "joint_0",
+      "parts": [
+       "link_0"
+      ],
+      "evidence_steps": [
+       1,
+       2
+      ],
+      "part_relation": "direct_child"
+     }
+    ],
+    "diagnosis_outcome": "correct_fail",
+    "accepted": true,
+    "rejection_reasons": [],
+    "teacher_actions": [
+     {
+      "type": "request_view",
+      "view_id": "front"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_0",
+      "detent": "zero"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_0",
+      "detent": "mid"
+     }
+    ],
+    "termination": "teacher_finished",
+    "tokens": 15573,
+    "episode_sha256": "570ed5ca2425adc3fef55b5df5eab835a460c461f14b6214da1231607b52fd3b",
+    "audit_sha256": "28b5a08b315f2c7a99c6d9a7da52a7292531329355fe4fff49719bdfee08afb3"
+   },
+   {
+    "source": "round3 (old default: front_motion_v1, no hierarchy, no rules) re-audited under the round4 perceptible standard",
+    "dir": "output/interactive-teacher/kimi-round3-fixed-pm102080-axis",
+    "asset_id": "PM_102080",
+    "mode": "fixed-diagnosis",
+    "kind": "axis",
+    "status": "uncertain",
+    "findings": [],
+    "diagnosis_outcome": "trustworthy_uncertain",
+    "accepted": true,
+    "rejection_reasons": [],
+    "teacher_actions": [],
+    "termination": "budget_exhausted",
+    "tokens": 2996,
+    "episode_sha256": "5854deb132172f563274b14748d38cc40581f7bc66185302a0ff96bd08e31be3",
+    "audit_sha256": "725cc8ea515757e604b97f3e8e41a7585fc3113265d964c76e5a3ef284ef175d"
+   },
+   {
+    "source": "round3 (old default: front_motion_v1, no hierarchy, no rules) re-audited under the round4 perceptible standard",
+    "dir": "output/interactive-teacher/kimi-round3-fixed-pm103275-axis",
+    "asset_id": "PM_103275",
+    "mode": "fixed-diagnosis",
+    "kind": "axis",
+    "status": "fail",
+    "findings": [
+     {
+      "defect_id": "kinematics.joint_axis",
+      "joint_id": "joint_1",
+      "parts": [
+       "link_1",
+       "link_2"
+      ],
+      "evidence_steps": [
+       5,
+       6
+      ],
+      "part_relation": "includes_static_part_outside_joint_subtree"
+     }
+    ],
+    "diagnosis_outcome": "incorrect_fail",
+    "accepted": false,
+    "rejection_reasons": [
+     "finding_not_objective_truth:kinematics.joint_axis",
+     "fail_does_not_cover_all_objective_defects"
+    ],
+    "teacher_actions": [],
+    "termination": "budget_exhausted",
+    "tokens": 7125,
+    "episode_sha256": "e861c5664599cde5a61a1be9e4d10b04ae69dcb6f752d4f73ed081098be96305",
+    "audit_sha256": "11f18dc396021de79bce90d1bfba336e492c46ed3b4db56e6269429a6d04d195"
+   },
+   {
+    "source": "round3 (old default: front_motion_v1, no hierarchy, no rules) re-audited under the round4 perceptible standard",
+    "dir": "output/interactive-teacher/kimi-round3-fixed-pm103275-clean-r2",
+    "asset_id": "PM_103275",
+    "mode": "fixed-diagnosis",
+    "kind": "clean",
+    "status": "uncertain",
+    "findings": [],
+    "diagnosis_outcome": "uncertain_on_clean",
+    "accepted": true,
+    "rejection_reasons": [],
+    "teacher_actions": [],
+    "termination": "budget_exhausted",
+    "tokens": 5080,
+    "episode_sha256": "ff8bfb361aa73dcb8a2519a182a5c2fc8422bdd014d1bfea10b71862d3f60a53",
+    "audit_sha256": "a7aef3f1b30ebeea652eed09e260e7a6d56d896518eefd6fd7e9c273c847a56c"
+   },
+   {
+    "source": "round3 (old default: front_motion_v1, no hierarchy, no rules) re-audited under the round4 perceptible standard",
+    "dir": "output/interactive-teacher/kimi-round3-fixed-pm25308-axis",
+    "asset_id": "PM_25308",
+    "mode": "fixed-diagnosis",
+    "kind": "axis",
+    "status": "fail",
+    "findings": [
+     {
+      "defect_id": "kinematics.joint_range",
+      "joint_id": null,
+      "parts": [
+       "link_1",
+       "link_2"
+      ],
+      "evidence_steps": [
+       4,
+       5
+      ],
+      "part_relation": null
+     }
+    ],
+    "diagnosis_outcome": "incorrect_fail",
+    "accepted": false,
+    "rejection_reasons": [
+     "finding_not_objective_truth:kinematics.joint_range",
+     "fail_does_not_cover_all_objective_defects"
+    ],
+    "teacher_actions": [],
+    "termination": "budget_exhausted",
+    "tokens": 10669,
+    "episode_sha256": "1193c59bce42ec782a37f3b9205344bcc41314faf40e2f3f26a4836684520461",
+    "audit_sha256": "91565ba91cf84a9df1378fe9bbc93669412a031579825f923b1c7eec5eede199"
+   },
+   {
+    "source": "round3 (old default: front_motion_v1, no hierarchy, no rules) re-audited under the round4 perceptible standard",
+    "dir": "output/interactive-teacher/kimi-round3-fixed-pm25308-clean",
+    "asset_id": "PM_25308",
+    "mode": "fixed-diagnosis",
+    "kind": "clean",
+    "status": "pass",
+    "findings": [],
+    "diagnosis_outcome": "pass_on_clean",
+    "accepted": false,
+    "rejection_reasons": [
+     "pass_scope_not_supported:task_scope_not_limited_to_an_auditable_single_reference_rule"
+    ],
+    "teacher_actions": [],
+    "termination": "budget_exhausted",
+    "tokens": 5916,
+    "episode_sha256": "cf2df29724912613436204e04e1f1897fd6ca8cf947e28e9df8eed2ab3462de6",
+    "audit_sha256": "039a74e2b63002513a7d73f8c2a27486b9b87de788123bc4b8120a5cdc84e38f"
+   },
+   {
+    "source": "round3 (old default: front_motion_v1, no hierarchy, no rules) re-audited under the round4 perceptible standard",
+    "dir": "output/interactive-teacher/kimi-round3-fixed-pm5088-axis",
+    "asset_id": "PM_5088",
+    "mode": "fixed-diagnosis",
+    "kind": "axis",
+    "status": "fail",
+    "findings": [
+     {
+      "defect_id": "kinematics.joint_axis",
+      "joint_id": "joint_0",
+      "parts": [
+       "link_0"
+      ],
+      "evidence_steps": [
+       1,
+       2,
+       3
+      ],
+      "part_relation": "direct_child"
+     }
+    ],
+    "diagnosis_outcome": "correct_fail",
+    "accepted": true,
+    "rejection_reasons": [],
+    "teacher_actions": [],
+    "termination": "budget_exhausted",
+    "tokens": 5265,
+    "episode_sha256": "6f5b5fee559dceb2ecdfabb2d8c8dc0b439bff3621f42f1b2697eea018c2e9f2",
+    "audit_sha256": "e3184eb14bd1ecce750dec225dab8e49dc4d51c63194e5bb905f70be26e398b8"
+   }
+  ]
+ },
+ "after": {
+  "summary": {
+   "fixed-diagnosis": {
+    "axis_cases": 4,
+    "strict_correct_fail": 2,
+    "trustworthy_uncertain": 1,
+    "axis_accepted": 3,
+    "outcomes": {
+     "trustworthy_uncertain": 1,
+     "incorrect_fail": 1,
+     "correct_fail": 2
+    },
+    "findings": 3,
+    "wrong_defect_type": 0,
+    "part_relation": {
+     "direct_child": 3
+    },
+    "clean_cases": 2,
+    "clean_outcomes": {
+     "pass_on_clean": 1,
+     "uncertain_on_clean": 1
+    }
+   },
+   "active": {
+    "axis_cases": 3,
+    "strict_correct_fail": 2,
+    "trustworthy_uncertain": 0,
+    "axis_accepted": 2,
+    "outcomes": {
+     "fail_without_sufficient_evidence": 1,
+     "correct_fail": 2
+    },
+    "findings": 3,
+    "wrong_defect_type": 0,
+    "part_relation": {
+     "direct_child": 3
+    },
+    "clean_cases": 0,
+    "clean_outcomes": {}
+   }
+  },
+  "episodes": [
+   {
+    "source": "round5 default flow",
+    "dir": "output/interactive-teacher/kimi-round5-active-pm103275-axis-r1",
+    "asset_id": "PM_103275",
+    "mode": "active",
+    "kind": "axis",
+    "status": "fail",
+    "findings": [
+     {
+      "defect_id": "kinematics.joint_axis",
+      "joint_id": "joint_1",
+      "parts": [
+       "link_1"
+      ],
+      "evidence_steps": [
+       2
+      ],
+      "part_relation": "direct_child"
+     }
+    ],
+    "diagnosis_outcome": "fail_without_sufficient_evidence",
+    "accepted": false,
+    "rejection_reasons": [
+     "finding_lacks_cited_counterfactual_evidence:kinematics.joint_axis",
+     "fail_does_not_cover_all_objective_defects"
+    ],
+    "teacher_actions": [
+     {
+      "type": "request_view",
+      "view_id": "front"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_1",
+      "detent": "limit"
+     }
+    ],
+    "termination": "teacher_finished",
+    "tokens": 14820,
+    "episode_sha256": "09a4698c6cb8cf3ada74e564e27e254e9018a3da1f1bb70da98f4411e38d6c2f",
+    "audit_sha256": "e4562d01c0f5335314cc03242c33a5b57aa609e54c51be7b08224b6d9413abf6"
+   },
+   {
+    "source": "round5 default flow",
+    "dir": "output/interactive-teacher/kimi-round5-active-pm25308-axis-r1",
+    "asset_id": "PM_25308",
+    "mode": "active",
+    "kind": "axis",
+    "status": "fail",
+    "findings": [
+     {
+      "defect_id": "kinematics.joint_axis",
+      "joint_id": "joint_1",
+      "parts": [
+       "link_1"
+      ],
+      "evidence_steps": [
+       4,
+       5
+      ],
+      "part_relation": "direct_child"
+     }
+    ],
+    "diagnosis_outcome": "correct_fail",
+    "accepted": true,
+    "rejection_reasons": [],
+    "teacher_actions": [
+     {
+      "type": "request_view",
+      "view_id": "front"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_0",
+      "detent": "limit"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_0",
+      "detent": "rest"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_1",
+      "detent": "limit"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_1",
+      "detent": "mid"
+     }
+    ],
+    "termination": "teacher_finished",
+    "tokens": 31826,
+    "episode_sha256": "8958c2b893f4105989658efde3d699388153a27b9dc58fa851436eece6999a1c",
+    "audit_sha256": "6b00e2fe8bdd0768dc7bee7a8306aea821cbe6d7fed1524947c487c6711df6ab"
+   },
+   {
+    "source": "round5 default flow",
+    "dir": "output/interactive-teacher/kimi-round5-active-pm5088-axis-r1",
+    "asset_id": "PM_5088",
+    "mode": "active",
+    "kind": "axis",
+    "status": "fail",
+    "findings": [
+     {
+      "defect_id": "kinematics.joint_axis",
+      "joint_id": "joint_0",
+      "parts": [
+       "link_0"
+      ],
+      "evidence_steps": [
+       2
+      ],
+      "part_relation": "direct_child"
+     }
+    ],
+    "diagnosis_outcome": "correct_fail",
+    "accepted": true,
+    "rejection_reasons": [],
+    "teacher_actions": [
+     {
+      "type": "request_view",
+      "view_id": "front"
+     },
+     {
+      "type": "actuate_joint",
+      "joint_id": "joint_0",
+      "detent": "limit"
+     }
+    ],
+    "termination": "teacher_finished",
+    "tokens": 11339,
+    "episode_sha256": "8f410cd35d752b2c4494ac473dfe7fc8ea4d0ff20eab653bcc3b6f44bae2ef68",
+    "audit_sha256": "c9b080e6a9a22437eec0a621fc7c4437e0a0306134082b7418bf7fce46949412"
+   },
+   {
+    "source": "round5 default flow",
+    "dir": "output/interactive-teacher/kimi-round5-fixed-pm102080-axis-r1",
+    "asset_id": "PM_102080",
+    "mode": "fixed-diagnosis",
+    "kind": "axis",
+    "status": "uncertain",
+    "findings": [],
+    "diagnosis_outcome": "trustworthy_uncertain",
+    "accepted": true,
+    "rejection_reasons": [],
+    "teacher_actions": [],
+    "termination": "budget_exhausted",
+    "tokens": 3821,
+    "episode_sha256": "88c8c68540940926830d965020027da9d4eb692f8574cff03b94b0af3089cf55",
+    "audit_sha256": "096f065cd1445e10ca483a63fb3241e1f2853a5d67e5c3c1a932ab792d3bb6d9"
+   },
+   {
+    "source": "round5 default flow",
+    "dir": "output/interactive-teacher/kimi-round5-fixed-pm103275-axis-r1",
+    "asset_id": "PM_103275",
+    "mode": "fixed-diagnosis",
+    "kind": "axis",
+    "status": "fail",
+    "findings": [
+     {
+      "defect_id": "kinematics.joint_axis",
+      "joint_id": "joint_1",
+      "parts": [
+       "link_1"
+      ],
+      "evidence_steps": [
+       5,
+       6,
+       7
+      ],
+      "part_relation": "direct_child"
+     }
+    ],
+    "diagnosis_outcome": "incorrect_fail",
+    "accepted": false,
+    "rejection_reasons": [
+     "finding_lacks_cited_counterfactual_evidence:kinematics.joint_axis",
+     "fail_does_not_cover_all_objective_defects"
+    ],
+    "teacher_actions": [],
+    "termination": "budget_exhausted",
+    "tokens": 7218,
+    "episode_sha256": "3bf9705bddde83e2a9e53fdc9a1dc38d9a5c6f4a7914dbfb4e0ecf4263349d81",
+    "audit_sha256": "ba5874555ca11ae2e46da9e92f199f14fa06a2da8d985fe5cfd8427e55e89b4b"
+   },
+   {
+    "source": "round5 default flow",
+    "dir": "output/interactive-teacher/kimi-round5-fixed-pm103275-clean-r1",
+    "asset_id": "PM_103275",
+    "mode": "fixed-diagnosis",
+    "kind": "clean",
+    "status": "pass",
+    "findings": [],
+    "diagnosis_outcome": "pass_on_clean",
+    "accepted": false,
+    "rejection_reasons": [
+     "pass_scope_not_supported:task_scope_not_limited_to_an_auditable_single_reference_rule"
+    ],
+    "teacher_actions": [],
+    "termination": "budget_exhausted",
+    "tokens": 7828,
+    "episode_sha256": "6378b4ef59d0ed5083e0e564e0dc99e7073e19c935841d58b85526bae99fae3f",
+    "audit_sha256": "9b97f46f9476881547228ca7b6230885567f1e8f4aa87ab8fd2c0a42de77de3f"
+   },
+   {
+    "source": "round5 default flow",
+    "dir": "output/interactive-teacher/kimi-round5-fixed-pm25308-axis-r1",
+    "asset_id": "PM_25308",
+    "mode": "fixed-diagnosis",
+    "kind": "axis",
+    "status": "fail",
+    "findings": [
+     {
+      "defect_id": "kinematics.joint_axis",
+      "joint_id": "joint_1",
+      "parts": [
+       "link_1"
+      ],
+      "evidence_steps": [
+       5,
+       6
+      ],
+      "part_relation": "direct_child"
+     }
+    ],
+    "diagnosis_outcome": "correct_fail",
+    "accepted": true,
+    "rejection_reasons": [],
+    "teacher_actions": [],
+    "termination": "budget_exhausted",
+    "tokens": 6197,
+    "episode_sha256": "38e09e6a5932d15241db72c43e61a8ef0b1c106a2a390247a04a43e5c83ebbc1",
+    "audit_sha256": "44e42a3672ac5da41f0526218bc760d0914c5852e1185fd6cfbb46de7773fbbf"
+   },
+   {
+    "source": "round5 default flow",
+    "dir": "output/interactive-teacher/kimi-round5-fixed-pm25308-clean-r1",
+    "asset_id": "PM_25308",
+    "mode": "fixed-diagnosis",
+    "kind": "clean",
+    "status": "uncertain",
+    "findings": [],
+    "diagnosis_outcome": "uncertain_on_clean",
+    "accepted": true,
+    "rejection_reasons": [],
+    "teacher_actions": [],
+    "termination": "budget_exhausted",
+    "tokens": 5522,
+    "episode_sha256": "f1d4ab38649c16cd2ec12c45ef3b06da44c97ea21027becfa5cbd82eaa2cf1ad",
+    "audit_sha256": "70cc0c81a1a3a393a4ae3b8f984f4d3a5f6428beec938d6015edcc825e14ddc0"
+   },
+   {
+    "source": "round5 default flow",
+    "dir": "output/interactive-teacher/kimi-round5-fixed-pm5088-axis-r1",
+    "asset_id": "PM_5088",
+    "mode": "fixed-diagnosis",
+    "kind": "axis",
+    "status": "fail",
+    "findings": [
+     {
+      "defect_id": "kinematics.joint_axis",
+      "joint_id": "joint_0",
+      "parts": [
+       "link_0"
+      ],
+      "evidence_steps": [
+       2,
+       3,
+       4
+      ],
+      "part_relation": "direct_child"
+     }
+    ],
+    "diagnosis_outcome": "correct_fail",
+    "accepted": true,
+    "rejection_reasons": [],
+    "teacher_actions": [],
+    "termination": "budget_exhausted",
+    "tokens": 5130,
+    "episode_sha256": "6b11cd5d8cba5e094eb42eec763a22eceb3db3e320e87efe1bcdc697eeb29898",
+    "audit_sha256": "5780ecb1bd1ab2e37c7aa73f9d322a6e138b885249d59b592b7176c97282006c"
+   }
+  ]
+ },
+ "export": {
+  "path": "output/interactive-teacher/kimi-round5-sft-export",
+  "manifest_sha256": "6dd52229758afc9c524b653713b9424a84b64aab97e7f78e026ff9a87ac6f31c",
+  "counts": {
+   "episodes_seen": 9,
+   "episodes_blocked": 0,
+   "diagnosis_accepted": 6,
+   "diagnosis_rejected": 3,
+   "action_rows": 8,
+   "action_rows_rejected": 1,
+   "terminal_rows": 6
+  },
+  "loader": {
+   "train.actions": {
+    "rows": 8,
+    "terminal": 0,
+    "images": 50,
+    "statuses": []
+   },
+   "train.diagnosis": {
+    "rows": 6,
+    "terminal": 6,
+    "images": 52,
+    "statuses": [
+     "fail",
+     "uncertain"
+    ]
+   },
+   "train.episodes": {
+    "rows": 14,
+    "terminal": 6,
+    "images": 102,
+    "statuses": [
+     "fail",
+     "uncertain"
+    ]
+   },
+   "validation.actions": {
+    "rows": 0,
+    "terminal": 0,
+    "images": 0,
+    "statuses": []
+   },
+   "validation.diagnosis": {
+    "rows": 0,
+    "terminal": 0,
+    "images": 0,
+    "statuses": []
+   },
+   "validation.episodes": {
+    "rows": 0,
+    "terminal": 0,
+    "images": 0,
+    "statuses": []
+   }
+  }
+ },
+ "totals": {
+  "episodes": 9,
+  "gateway_failures": 0,
+  "tokens": 93701,
+  "billing_cost_rmb": null
+ },
+ "tests": {
+  "non_browser": "246 passed, 2 skipped",
+  "browser": "20 passed"
+ },
+ "reproduce": [
+  "bash output/interactive-teacher/round5-default.sh r1 fixed:pm102080-axis fixed:pm5088-axis fixed:pm103275-axis fixed:pm25308-axis fixed:pm103275-clean fixed:pm25308-clean active:pm103275-axis active:pm25308-axis active:pm5088-axis",
+  "python -m scripts.reaudit_interactive_teacher --audit-name audit.round5-regression.json --episode <round4 dirs>",
+  "python -m scripts.summarize_interactive_teacher --episode <round5 dirs> --out output/interactive-teacher/round5-summary.json",
+  "python -m scripts.export_interactive_teacher --episode <round5 dirs> --out output/interactive-teacher/kimi-round5-sft-export",
+  "HF_HUB_OFFLINE=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.check_teacher_export_loading --dataset output/interactive-teacher/kimi-round5-sft-export --out output/interactive-teacher/kimi-round5-sft-export-loading.json --model ../TurnItOver/models/Qwen3-VL-2B-Instruct"
+ ]
+}

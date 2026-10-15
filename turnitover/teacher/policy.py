@@ -11,6 +11,7 @@ from turnitover.core.actions import Observation
 from turnitover.core.serde import to_dict
 from turnitover.models.client import ModelError, is_normal_finish_reason
 from turnitover.teacher.providers import Teacher
+from turnitover.teacher.structure import joint_structure
 from turnitover.taxonomy import load_taxonomy
 from turnitover.verifier.contracts import Context, DecisionError, parse_json
 
@@ -38,6 +39,10 @@ class TeacherPolicy:
                    "stop_required": remaining == 0,
                    "image_order": order, "history": [to_dict(o) for o in history],
                    "taxonomy_ids": load_taxonomy().ids}
+        hierarchy = next((o.payload for o in reversed(history)
+                          if isinstance(o.payload, dict) and o.payload.get("property") == "hierarchy"), None)
+        if hierarchy is not None:  # a reshaping of the observed payload, not new information
+            visible["joint_structure"] = joint_structure(hierarchy["root"])
         package = resources.files("turnitover.teacher")
         protocol = package.joinpath("prompt.txt").read_text() + "".join(
             package.joinpath(name).read_text() for name in self.protocol_addenda)
