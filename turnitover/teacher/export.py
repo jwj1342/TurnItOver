@@ -60,20 +60,26 @@ def _episode_blockers(episode: dict, audit: dict, episode_path: Path) -> list[st
 
 
 def qualified_action(step: dict, seen_states: list) -> bool:
-    """Label-independent: a legal teacher action reaching a new, frozen-bound, reference-comparable state.
+    """Label-independent: a legal teacher action reaching a new, frozen-bound, reference-comparable state,
+    or a first rest-pose hierarchy query whose payload matches the frozen one.
 
     Hidden labels never decide which visible prefixes are supervised; defect relevance is metadata only.
     """
-    if step.get("decision_source") != "teacher" or not (step.get("legal") and step.get("bound")
-                                                         and step.get("reference_comparable")):
+    if step.get("decision_source") != "teacher" or not step.get("legal"):
         return False
-    if step["state"] in seen_states:
+    if step.get("reason") == "runtime_only":
+        key = {"runtime": step.get("property")}
+        if not step.get("payload_matches_frozen_rest_hierarchy") or key in seen_states:
+            return False
+        seen_states.append(key)
+        return True
+    if not (step.get("bound") and step.get("reference_comparable")) or step["state"] in seen_states:
         return False
     seen_states.append(step["state"])
     return True
 
 
-def export_episodes(sources: list[Path], output: Path) -> dict:
+def export_episodes(sources: list[Path], output: Path, audit_name: str = "audit.json") -> dict:
     if output.exists() and any(output.iterdir()):
         raise ValueError("Interactive SFT export directory must be new or empty")
     output.mkdir(parents=True, exist_ok=True)
@@ -83,11 +89,11 @@ def export_episodes(sources: list[Path], output: Path) -> dict:
     rejected = (output / "rejected.jsonl").open("w", encoding="utf-8")
     counts = {"episodes_seen": 0, "episodes_blocked": 0, "diagnosis_accepted": 0,
               "diagnosis_rejected": 0, "action_rows": 0, "action_rows_rejected": 0, "terminal_rows": 0}
-    provenance = []
+    provenance, seen_ids = [], set()
     try:
         for source in sources:
             counts["episodes_seen"] += 1
-            episode_path, audit_path = source / "episode.json", source / "audit.json"
+            episode_path, audit_path = source / "episode.json", source / audit_name
             episode, audit = json.loads(episode_path.read_text()), json.loads(audit_path.read_text())
             evidence = audit.get("independent_evidence_audit", {})
             blockers = _episode_blockers(episode, audit, episode_path)
@@ -122,13 +128,21 @@ def export_episodes(sources: list[Path], output: Path) -> dict:
                         continue
                 call = episode["model_calls"][decision["call"]]
                 images, image_hashes = _copy_images(source, output, episode["episode_id"], call)
+                row_id = (f"{episode['episode_id']}:{identity.get('experiment_mode', 'active')}:"
+                          f"{'verdict' if terminal else f'action:{decision_index}'}")
+                if row_id in seen_ids:  # repeated conditions on one row: qualify by the source run directory
+                    row_id = f"{row_id}@{source.name}"
+                if row_id in seen_ids:
+                    raise ValueError(f"Duplicate export row id: {row_id}")
+                seen_ids.add(row_id)
                 row = {
-                    "id": (f"{episode['episode_id']}:{identity.get('experiment_mode', 'active')}:"
-                           f"{'verdict' if terminal else f'action:{decision_index}'}"),
+                    "id": row_id,
                     "episode_id": episode["episode_id"], "decision_index": decision_index,
                     "condition": "visible_only_interactive_teacher",
                     "experiment_mode": identity.get("experiment_mode"),
                     "reference_protocol": identity.get("reference_protocol"),
+                    "common_input": identity.get("common_input", "none"),
+                    "prompt_addenda": identity.get("prompt_addenda", []),
                     "terminal": terminal, "termination_target": "verdict" if terminal else None,
                     "termination_reason": episode.get("termination") if terminal else None,
                     "images": images, "image_sha256": image_hashes,
@@ -159,6 +173,6 @@ def export_episodes(sources: list[Path], output: Path) -> dict:
         rejected.close()
     manifest = {"schema_version": 2, "status": "complete", "formal_training": True,
                 "kind": "visible_only_interactive_teacher", "counts": counts,
-                "splits": list(TRAINING_SPLITS), "sources": provenance}
+                "splits": list(TRAINING_SPLITS), "audit_name": audit_name, "sources": provenance}
     write_json_atomic(output / "manifest.json", manifest)
     return manifest

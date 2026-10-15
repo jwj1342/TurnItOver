@@ -12,15 +12,23 @@ import hashlib
 import json
 from pathlib import Path
 
-from turnitover.core.actions import Detent, detent_value
+import numpy as np
+
+from turnitover.core.actions import Detent, RuntimeProperty, detent_value
+from turnitover.oracle.evidence import ExposureThresholds, pixels
 from turnitover.oracle.witnesses import Witness
 from turnitover.storage.reader import iter_samples
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 MOTION_VIEWS = ("front", "oblique_fr")
 STATE_TOLERANCE = 1e-6
 REFERENCE_PROTOCOL = "front_motion_v1"
+# Label-independent motion reference protocols: name -> views rendered for rest and every joint detent.
+REFERENCE_PROTOCOLS = {REFERENCE_PROTOCOL: ("front",), "front_oblique_motion_v1": ("front", "oblique_fr")}
+PERCEPTIBLE_CORE_RADIUS = 2
+PERCEPTIBLE_CORE_FRACTION = ExposureThresholds().changed_fraction
+HIERARCHY_INPUT = {"type": "query_runtime", "property": "hierarchy"}
 
 
 def sample_framing(raw_root: Path, source_id: str, sample_id: str):
@@ -62,34 +70,58 @@ def same_state(left: dict, right: dict) -> bool:
     return set(left) == set(right) and all(abs(left[k] - right[k]) <= STATE_TOLERANCE for k in left)
 
 
-def reference_protocol_rows(grid: list[dict]) -> list[dict]:
-    """Label-independent multi-state reference: front rest, then every joint's grid detents at front."""
-    return [row for row in grid if row["view"] == "front"]
+def reference_protocol_rows(grid: list[dict], views=("front",)) -> list[dict]:
+    """Label-independent multi-state reference: per view, rest then every joint's grid detents."""
+    return [row for view in views for row in grid if row["view"] == view]
 
 
 def reference_label(row: dict) -> dict:
     return {"view": row["view"], "joint_id": row.get("joint"), "detent": row.get("detent") or "rest"}
 
 
-def fixed_protocol_actions(grid: list[dict]) -> list[dict]:
-    """Front rest, then each joint's grid detents with an explicit rest reset between joints."""
-    actions = [{"type": "request_view", "view_id": "front"}]
-    active = None
-    for row in reference_protocol_rows(grid):
-        joint = row.get("joint")
-        if joint is None:
-            continue
-        if active not in (None, joint):
+def fixed_protocol_actions(grid: list[dict], views=("front",)) -> list[dict]:
+    """Per view: rest, then each joint's grid detents, with an explicit rest reset between joints and views."""
+    actions, active = [], None
+    for view in views:
+        if active is not None:
             actions.append({"type": "actuate_joint", "joint_id": active, "detent": "rest"})
-        actions.append({"type": "actuate_joint", "joint_id": joint, "detent": row["detent"]})
-        active = joint
+            active = None
+        actions.append({"type": "request_view", "view_id": view})
+        for row in reference_protocol_rows(grid, (view,)):
+            joint = row.get("joint")
+            if joint is None:
+                continue
+            if active not in (None, joint):
+                actions.append({"type": "actuate_joint", "joint_id": active, "detent": "rest"})
+            actions.append({"type": "actuate_joint", "joint_id": joint, "detent": row["detent"]})
+            active = joint
     return actions
+
+
+def core_changed_fraction(a: np.ndarray, b: np.ndarray, radius: int = PERCEPTIBLE_CORE_RADIUS) -> float:
+    """Fraction of pixels whose change survives erosion by a (2r+1)^2 square (rim shifts do not)."""
+    mask = np.abs(a.astype(np.float32) - b.astype(np.float32)).max(axis=2) / 255. > ExposureThresholds().pixel_delta
+    padded = np.pad(mask, radius, constant_values=False)
+    height, width = mask.shape
+    core = np.ones_like(mask)
+    for dy in range(2 * radius + 1):
+        for dx in range(2 * radius + 1):
+            core &= padded[dy:dy + height, dx:dx + width]
+    return float(core.mean())
 
 
 def _browser_limits(session, program, framing) -> dict[str, tuple[float, float]]:
     info = session.load(program, framing=framing)
     try:
         return {joint: tuple(row["limits"]) for joint, row in info.joints.items()}
+    finally:
+        session.dispose()
+
+
+def _rest_hierarchy(session, program, framing) -> dict:
+    session.load(program, framing=framing)
+    try:
+        return session.query_runtime(RuntimeProperty.HIERARCHY)
     finally:
         session.dispose()
 
@@ -106,7 +138,7 @@ def _render(session, program, framing, view: str, state: dict) -> bytes:
 def build_manifest(session, *, uid: str, split: str, public: dict, gold: dict, annotation: dict,
                    candidate, reference, framing, annotation_root: Path, out_dir: Path,
                    source_files: dict[str, Path], test_ids: set[str],
-                   prepared_reference: Path) -> dict:
+                   prepared_reference: Path, supersedes: Path | None = None) -> dict:
     """Render and freeze every motion-view witness; refuse rows whose identities disagree."""
     errors = []
     if candidate.sha != gold["program_sha"] or candidate.sha != annotation["candidate_sha"]:
@@ -137,6 +169,9 @@ def build_manifest(session, *, uid: str, split: str, public: dict, gold: dict, a
             saved.setdefault(index, set()).add(file_sha256(annotation_root / observation["image_ref"]))
 
     out_dir.mkdir(parents=True, exist_ok=False)
+    # Perceptibility is measured against the reference at the same state, which is the
+    # leave-one-corruption-out counterfactual only for single-defect rows.
+    perceptibility = len(annotation["labels"]) <= 1
     witnesses = []
     for index, row in enumerate(annotation["grid"]):
         if row["view"] not in MOTION_VIEWS:
@@ -146,23 +181,40 @@ def build_manifest(session, *, uid: str, split: str, public: dict, gold: dict, a
         digest = hashlib.sha256(png).hexdigest()
         if index in saved and saved[index] != {digest}:
             raise ValueError(f"Fresh witness render differs from frozen v4 pixels: {uid}/{index}")
-        witnesses.append({"index": index, "key": Witness(row["view"], row.get("joint"),
-                                                         Detent(row["detent"]) if row.get("detent") else None).key,
-                          "view": row["view"], "joint": row.get("joint"), "detent": row.get("detent"),
-                          "state": state, "sha256": digest,
-                          "v4_pixel_verified": index in saved,
-                          "exposures": annotation["exposures"][index]})
-    references = []
-    for position, row in enumerate(reference_protocol_rows(annotation["grid"])):
-        state = witness_state(row, reference_limits)
-        png = _render(session, reference, framing, row["view"], state)
-        path = out_dir / f"reference-{position:02d}.png"
-        path.write_bytes(png)
-        references.append({"file": path.name, "label": reference_label(row), "state": state,
-                           "sha256": hashlib.sha256(png).hexdigest()})
+        witness = {"index": index, "key": Witness(row["view"], row.get("joint"),
+                                                  Detent(row["detent"]) if row.get("detent") else None).key,
+                   "view": row["view"], "joint": row.get("joint"), "detent": row.get("detent"),
+                   "state": state, "sha256": digest,
+                   "v4_pixel_verified": index in saved,
+                   "exposures": annotation["exposures"][index]}
+        if perceptibility:
+            core = core_changed_fraction(pixels(png), pixels(_render(session, reference, framing, row["view"], state)))
+            witness.update(core_changed_fraction=core, perceptible_exposures=(
+                witness["exposures"] if core >= PERCEPTIBLE_CORE_FRACTION else []))
+        witnesses.append(witness)
+
+    def protocol(name: str, folder: Path) -> dict:
+        folder.mkdir(parents=True, exist_ok=True)
+        states = []
+        for position, row in enumerate(reference_protocol_rows(annotation["grid"], REFERENCE_PROTOCOLS[name])):
+            state = witness_state(row, reference_limits)
+            png = _render(session, reference, framing, row["view"], state)
+            path = folder / f"reference-{position:02d}.png"
+            path.write_bytes(png)
+            states.append({"file": path.relative_to(out_dir).as_posix(), "label": reference_label(row),
+                           "state": state, "sha256": hashlib.sha256(png).hexdigest()})
+        return {"name": name, "label_independent": True, "states": states,
+                "fixed_protocol_actions": fixed_protocol_actions(annotation["grid"], REFERENCE_PROTOCOLS[name])}
+
+    primary = protocol(REFERENCE_PROTOCOL, out_dir)
+    references = primary["states"]
     frozen_reference = file_sha256(annotation_root / "images" / uid / "reference.png")
     if references[0]["sha256"] != frozen_reference:
         raise ValueError(f"Reference front/rest differs from the frozen v4 reference: {uid}")
+    protocols = {name: protocol(name, out_dir / name) for name in REFERENCE_PROTOCOLS if name != REFERENCE_PROTOCOL}
+    hierarchy = {"candidate": _rest_hierarchy(session, candidate, framing),
+                 "reference": _rest_hierarchy(session, reference, framing)}
+    hierarchy["equal"] = hierarchy["candidate"] == hierarchy["reference"]
 
     comparable = {w["index"] for w in witnesses
                   if any(w["view"] == r["label"]["view"] and same_state(w["state"], r["state"])
@@ -192,10 +244,41 @@ def build_manifest(session, *, uid: str, split: str, public: dict, gold: dict, a
         "witnesses": witnesses,
         "reference_protocol": {"name": REFERENCE_PROTOCOL, "label_independent": True,
                                "states": references},
-        "fixed_protocol_actions": fixed_protocol_actions(annotation["grid"]),
+        "fixed_protocol_actions": primary["fixed_protocol_actions"],
         "reference_support": support,
         "v4_reference_sha256": frozen_reference,
         "static_reference_sha256": file_sha256(prepared_reference),
+        "perceptibility": ({"core_radius_px": PERCEPTIBLE_CORE_RADIUS, "min_core_fraction": PERCEPTIBLE_CORE_FRACTION,
+                            "against": "reference at the same state"} if perceptibility else None),
+        "perceptible_support": ([{"label_index": i, "perceptible_witnesses": [
+            w["index"] for w in witnesses if i in w["perceptible_exposures"]]}
+            for i in range(len(annotation["labels"]))] if perceptibility else None),
+        "extra_reference_protocols": protocols,
+        "rest_hierarchy": hierarchy,
     }
+    if supersedes is not None:
+        errors = supersedes_errors(json.loads(Path(supersedes).read_text()), manifest)
+        if errors:
+            raise ValueError(f"Schema-2 manifest changes frozen schema-1 fields: {uid}: {errors}")
+        manifest["supersedes"] = {"path": str(supersedes), "sha256": file_sha256(supersedes)}
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2))
     return manifest
+
+
+def protocol_record(manifest: dict, name: str | None) -> dict | None:
+    """The reference protocol named by an Episode, or None for the static reference."""
+    if name == manifest["reference_protocol"]["name"]:
+        return {**manifest["reference_protocol"], "fixed_protocol_actions": manifest.get("fixed_protocol_actions")}
+    return manifest.get("extra_reference_protocols", {}).get(name)
+
+
+def supersedes_errors(old: dict, new: dict) -> list[str]:
+    """A schema-2 manifest may only add fields to the schema-1 manifest it supersedes."""
+    errors = [f"superseded_field_changed:{key}" for key in old
+              if key not in ("schema_version", "witnesses") and old[key] != new.get(key)]
+    new_witnesses = {w["index"]: w for w in new.get("witnesses", [])}
+    for witness in old.get("witnesses", []):
+        extended = new_witnesses.get(witness["index"], {})
+        if any(extended.get(key) != value for key, value in witness.items()):
+            errors.append(f"superseded_witness_changed:{witness['index']}")
+    return errors

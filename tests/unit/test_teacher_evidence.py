@@ -10,7 +10,8 @@ from turnitover.teacher.episode import run_teacher_episode
 from turnitover.teacher.export import export_episodes
 from turnitover.teacher.policy import TeacherPolicy
 from turnitover.teacher.providers import MockTeacher
-from turnitover.teacher.witnesses import (clamp, fixed_protocol_actions, row_sha256, witness_state)
+from turnitover.teacher.witnesses import (HIERARCHY_INPUT, clamp, fixed_protocol_actions, row_sha256,
+                                          supersedes_errors, witness_state)
 from turnitover.verifier.contracts import Context
 
 
@@ -39,16 +40,25 @@ class Session:
         return SimpleNamespace(png=self.png(), render_ms=1, value=self.values[joint])
 
     def query_runtime(self, prop):
+        if str(getattr(prop, "value", prop)) == "hierarchy":
+            return HIERARCHY
         return {"joints": dict(self.values)}
 
 
+HIERARCHY = {"property": "hierarchy", "root": {"name": "base", "children": [{"name": "joint:hinge",
+                                                                            "children": [{"name": "door"}]}]}}
+
+
 def context():
-    return Context("inspect", ("base", "door"), ("hinge",), ("front", "side"), ("joint_state",),
+    return Context("inspect", ("base", "door"), ("hinge",), ("front", "side"), ("joint_state", "hierarchy"),
                    ("request_view", "actuate_joint", "query_runtime"), 100, 10)
 
 
-def build_case(tmp_path, limits, grid, exposures, labels, *, reference_rows=None):
-    """Frozen manifest whose pixels follow the same deterministic Session rendering."""
+def build_case(tmp_path, limits, grid, exposures, labels, *, reference_rows=None, perceptible=None):
+    """Frozen manifest whose pixels follow the same deterministic Session rendering.
+
+    ``perceptible`` (per witness) adds the schema-2 perceptibility tier and rest hierarchy.
+    """
     folder = tmp_path / "frozen"
     folder.mkdir(exist_ok=True)
     witnesses = []
@@ -59,6 +69,8 @@ def build_case(tmp_path, limits, grid, exposures, labels, *, reference_rows=None
                           "view": row["view"], "joint": row.get("joint"), "detent": row.get("detent"),
                           "state": state, "sha256": hashlib.sha256(png).hexdigest(),
                           "exposures": exposures[index]})
+        if perceptible is not None:
+            witnesses[-1]["perceptible_exposures"] = perceptible[index]
     references = []
     for position, row in enumerate(reference_rows if reference_rows is not None else grid):
         path = folder / f"reference-{position:02d}.png"
@@ -80,6 +92,9 @@ def build_case(tmp_path, limits, grid, exposures, labels, *, reference_rows=None
                 "candidate_joint_limits": {k: list(v) for k, v in limits.items()},
                 "witnesses": witnesses, "static_reference_sha256": "unused",
                 "reference_protocol": {"name": "front_motion_v1", "states": references}}
+    if perceptible is not None:
+        manifest.update(perceptibility={"core_radius_px": 2, "min_core_fraction": .001},
+                        rest_hierarchy={"candidate": HIERARCHY, "reference": HIERARCHY, "equal": True})
     (folder / "manifest.json").write_text(json.dumps(manifest))
     return gold, annotation, manifest, folder
 
@@ -267,3 +282,86 @@ def test_export_blocks_test_split_and_post_audit_edits(tmp_path):
     rejected = json.loads((tmp_path / "export/rejected.jsonl").read_text())
     assert manifest["counts"]["episodes_blocked"] == 1
     assert {"episode_changed_after_audit", "test_or_nonformal_split_forbidden"} <= set(rejected["reasons"])
+
+
+def test_imperceptible_exposure_keeps_uncertain_trustworthy_and_rejects_fail(tmp_path):
+    for name, decisions, outcome, accepted in (
+            ("uncertain", [actuate("limit"), verdict("uncertain")], "trustworthy_uncertain", True),
+            ("fail", [actuate("limit"), verdict("fail", [finding([0])])], "fail_without_sufficient_evidence", False)):
+        root = tmp_path / name
+        root.mkdir()
+        case = build_case(root, LIMITS, GRID, [[], [0], [0], [0]], [AXIS], perceptible=[[], [], [], []])
+        _, audit = run_case(root, decisions, LIMITS, case)
+        result = evidence(audit)
+        assert result["evidence_standard"] == "perceptible_exposure"
+        assert result["objective_exposure_imperceptible_only"] == [0]
+        assert result["diagnosis_outcome"] == outcome and result["accepted"] is accepted
+
+
+def test_perceptible_exposure_is_credited_like_round3(tmp_path):
+    case = build_case(tmp_path, LIMITS, GRID, [[], [0], [0], [0]], [AXIS], perceptible=[[], [], [0], []])
+    _, audit = run_case(tmp_path, [actuate("limit"), verdict("fail", [finding([0])])], LIMITS, case)
+    assert evidence(audit)["diagnosis_outcome"] == "correct_fail" and evidence(audit)["accepted"]
+
+
+def test_multi_view_fixed_protocol_resets_before_switching_view():
+    grid = [{"view": "front", "joint": None, "detent": None},
+            {"view": "front", "joint": "a", "detent": "limit"},
+            {"view": "oblique_fr", "joint": None, "detent": None},
+            {"view": "oblique_fr", "joint": "a", "detent": "limit"}]
+    assert fixed_protocol_actions(grid, ("front", "oblique_fr")) == [
+        {"type": "request_view", "view_id": "front"},
+        {"type": "actuate_joint", "joint_id": "a", "detent": "limit"},
+        {"type": "actuate_joint", "joint_id": "a", "detent": "rest"},
+        {"type": "request_view", "view_id": "oblique_fr"},
+        {"type": "actuate_joint", "joint_id": "a", "detent": "limit"}]
+
+
+def test_superseding_manifest_may_only_add_fields(tmp_path):
+    gold, annotation, manifest, folder = build_case(tmp_path, LIMITS, GRID, [[], [0], [0], [0]], [AXIS])
+    out, _ = run_case(tmp_path, [actuate("limit"), verdict("fail", [finding([0])])], LIMITS,
+                      (gold, annotation, manifest, folder))
+    path = folder / "manifest.json"
+    record = {"path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+    extended = {**manifest, "schema_version": 2, "supersedes": record,
+                "witnesses": [{**w, "perceptible_exposures": w["exposures"]} for w in manifest["witnesses"]]}
+    assert supersedes_errors(manifest, extended) == []
+    audit = audit_episode(out, gold, annotation, manifest=extended, audit_name="reaudit.json")
+    assert "frozen_manifest_sha_or_content_mismatch" not in evidence(audit)["rejection_reasons"]
+    assert json.loads((out / "audit.json").read_text())["independent_evidence_audit"]["accepted"]
+
+    changed = {**extended, "witnesses": [{**w, "exposures": []} for w in manifest["witnesses"]]}
+    assert supersedes_errors(manifest, changed)
+    audit = audit_episode(out, gold, annotation, manifest=changed, audit_name="reaudit.json")
+    assert "frozen_manifest_sha_or_content_mismatch" in evidence(audit)["rejection_reasons"]
+
+
+def test_rest_hierarchy_common_input_is_bound_and_teacher_query_is_action_supervision(tmp_path):
+    case = build_case(tmp_path, LIMITS, GRID, [[], [0], [0], [0]], [AXIS], perceptible=[[], [0], [0], [0]])
+    query = {"action": HIERARCHY_INPUT}
+    out, audit = run_case(tmp_path, [query, actuate("limit"), verdict("fail", [finding([1])])], LIMITS, case)
+    rows = evidence(audit)["action_audit"]
+    assert rows[0]["property"] == "hierarchy" and rows[0]["payload_matches_frozen_rest_hierarchy"]
+    assert evidence(audit)["accepted"]
+    assert export_episodes([out], tmp_path / "export")["counts"]["action_rows"] == 2
+
+    fixed = tmp_path / "fixed"
+    fixed.mkdir()
+    case = build_case(fixed, LIMITS, GRID, [[], [0], [0], [0]], [AXIS], perceptible=[[], [0], [0], [0]])
+    out, audit = run_case(fixed, [actuate("limit"), verdict("fail", [finding([1])])], LIMITS, case,
+                          initial=(HIERARCHY_INPUT,))
+    assert evidence(audit)["action_audit"][0]["decision_source"] == "fixed_protocol"
+    assert export_episodes([out], fixed / "export")["counts"]["action_rows"] == 1
+
+
+def test_repeated_conditions_on_one_row_get_distinct_export_ids(tmp_path):
+    sources = []
+    for name in ("a", "b"):
+        root = tmp_path / name
+        root.mkdir()
+        case = build_case(root, LIMITS, GRID, [[], [0], [0], [0]], [AXIS])
+        out, _ = run_case(root, [actuate("limit"), verdict("fail", [finding([0])])], LIMITS, case)
+        sources.append(out)
+    export_episodes(sources, tmp_path / "export")
+    ids = [json.loads(line)["id"] for line in (tmp_path / "export/train.diagnosis.jsonl").read_text().splitlines()]
+    assert len(ids) == len(set(ids)) == 2

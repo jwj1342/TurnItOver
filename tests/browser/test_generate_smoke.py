@@ -46,7 +46,9 @@ def test_catalog_clean_and_mixed_are_shard_independent(tmp_path, toy_spec):
     catalog = tmp_path / "catalog.json"
     catalog.write_text(json.dumps({"version": 1, "source_id": "test", "assets": entries}))
     cfg = load_generate_config(ROOT / "configs/generate_dataset.yaml", ROOT)
-    cfg = dataclasses.replace(cfg, n_samples=4, seed=1, asset_source={"kind": "catalog", "manifest": str(catalog)},
+    # With seed=1 and clean_fraction=0.5 the per-sample draws for idx 0..7 are
+    # 1, 1, clean, clean, clean, 1, 2, 1 corruptions: 8 samples cover clean and two-corruption rows.
+    cfg = dataclasses.replace(cfg, n_samples=8, seed=1, asset_source={"kind": "catalog", "manifest": str(catalog)},
                               output_dir=tmp_path / "whole", clean_fraction=0.5,
                               render=dataclasses.replace(cfg.render, width=128, height=128))
     whole = [s for s, _ in iter_samples(run_generate(cfg))]

@@ -406,6 +406,46 @@ HF_HUB_OFFLINE=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.check_teacher_ex
   --model ../TurnItOver/models/Qwen3-VL-2B-Instruct
 ```
 
+### 第四轮 诊断瓶颈归因：参考可辨识性与结构信息（2026-10-15）
+
+提交 `64c266b` 与第三轮目录、`audit.json`、导出均未修改，作为基线；对第三轮 Episode 的重审写在旁边的 `audit.round4-perceptible.json`。
+
+**冻结清单 schema 2 与可感知证据。** `scripts/freeze_teacher_witnesses.py --supersedes` 生成 `axis-round4-frozen-witnesses`，逐字段核对 schema-1 字段未变，只增加三项：每个 witness 相对同状态参考的“核心变化比例”（变化区域经 2 像素腐蚀后仍存在，即至少 5 像素厚；比例 ≥ 0.001 才记入 `perceptible_exposures`）；额外的标签无关参考协议 `front_oblique_motion_v1`（front 与 oblique_fr 各自的 rest 与全部 detent）；候选与参考在 rest 姿态下的运行时 hierarchy（8 行中两者完全相同，因此只提供结构信息，不泄露缺陷）。审核在有该分级时只把**可感知**暴露计为证据；Oracle 暴露但不可感知时，`uncertain` 被判为可信，`fail` 被判为证据不足。`scripts/measure_teacher_discriminability.py` 另输出参考｜候选｜差异的对照图与数值，仅供审核侧使用。
+
+| 资产 | 暴露的运动状态 | 最大 changed_fraction | 最大核心变化 | 结论 |
+|---|---|---:|---:|---|
+| PM_102080 | joint_0 mid/limit（front、oblique_fr，及全部 12 个视角） | 1.8% | 0（≤3 像素） | 只有约 1 像素宽的边缘移动，不可感知 |
+| PM_5088 | joint_0 zero/mid/limit | 20.8% | 18.4% | 明显可见 |
+| PM_103275 | joint_1 zero/mid/limit | 11.0% | 8.7%（limit 只有 39 像素） | zero/mid 可见，limit 不可感知 |
+| PM_25308 | joint_1 mid/limit | 4.5% | 3.3% | 可见 |
+
+在新标准下重审第三轮的 16 条最终 Episode：PM_102080 的两条 `uncertain` 由 `uncertain_after_sufficient_evidence` 改判为 `trustworthy_uncertain` 并被接受（接受数 9 → 11），其余结论不变。
+
+**受控固定诊断矩阵。** 同一底座、`prompt.txt`、decision attempts、冻结 witness 与 Chromium；只改变参考协议与共同输入。A 的参考与观察 SHA 与第三轮完全一致，prompt 只在渲染耗时字段上不同。条件：A=`front_motion_v1`；M=`front_oblique_motion_v1`；H=A + rest hierarchy（声明的共同输入：第 0 步由协议执行一次 `query_runtime hierarchy`，dry run 校验其载荷等于冻结层级）；MH=M + hierarchy；HC=H + `part_convention.txt`（一条与标签无关的约定：`parts` 只报关节直接带动的部件）。每个 axis 案例重复 2 次，clean 各 1 次。网关超时、HTTP 524 或空响应（推理 token 耗尽 4096 上限）的 Episode 用新目录重跑，重跑时上限提高到 16384，失败目录保留并计数，不导出。
+
+| 条件 | axis 合法终判 | axis 严格正确 | 正确的 `uncertain`（PM_102080） | 充分证据后 `uncertain` | 缺陷上判 `pass` | clean 无依据 `pass` |
+|---|---:|---:|---:|---:|---:|---:|
+| A | 7 | 2（PM_25308、PM_5088） | 2/2 | 0 | 0 | 1/4 |
+| M | 7 | **0** | 2/2 | 2 | 1 | 3/4 |
+| H | 7 | **3**（PM_25308 ×2、PM_5088） | 2/2 | 0 | 0 | 0/4 |
+| MH | 6 | 1 | 2/2 | 2 | 1 | 2/4 |
+| HC | 5 | 2（PM_25308、PM_5088） | — | 1 | 0 | 0/2 |
+
+部件错误与可见层级的关系（审核侧用冻结层级判断）：A/M 中的错误是把关节的静止父件算进去（PM_103275、PM_5088、PM_25308 都出现过）；加入 hierarchy 后，父件错误在 H 中消失，PM_103275 改为多报下游部件 link_0；加入部件约定后，HC 的 PM_103275 两次都报出正确的 `[link_1]`，但都引用了 joint_1 limit（步骤 7），该状态的核心变化只有 39 像素，因此仍按“引用了不暴露缺陷的步骤”被拒。审核没有放宽。
+
+**主动复测（HC 条件）。** rest hierarchy 作为第 0 步共同输入，之后的教师预算等于第三轮主动组。首轮 5 条 Episode 全部遇到网关超时，用新目录重跑一次。合法终判中：PM_5088 严格正确；PM_103275 部件正确（`[link_1]`），但证据步含不可感知的 joint_1 limit，被拒；PM_25308 在取得可见证据后仍输出 `uncertain`；PM_25308 clean 判 `pass` 被拒；PM_103275 clean 再次遇到网关故障。主动组从未在第 0 步之外自行查询 hierarchy。
+
+**结论。**
+- 三个失败资产的根因已确认。PM_102080 是参考可辨识性不足：任何冻结视角都没有可感知差异，Kimi 在 8/8 次运行中都输出 `uncertain`，这是正确的。PM_25308 主要是结构信息不足：H 条件 2/2 严格正确，第三轮为 0/2，但 A 也有 1 次正确，说明还有模型随机性。PM_103275 是两种原因叠加：部件映射靠 hierarchy 加约定得到修正；剩余失败是模型把不可感知的 limit 状态当作证据引用。
+- 增强参考没有帮助：在每次请求 17–31 张图的条件下，Kimi 更容易在缺陷上判 `pass`，或在证据充分后输出 `uncertain`，而 PM_5088 的差异在这些图中非常明显。因此这是多图输入下的识别失败，不是证据不足。合法 hierarchy 带来小幅提升（2/7 → 3/7），并消除了父件错误，但样本太小，不足以得出统计结论。
+- 加入可感知分级后，审核能把“视觉证据不可感知”（PM_102080）与“证据可见但模型识别失败”（M 条件下的 PM_5088）区分开。这个分级仍是像素厚度代理，没有经过人工标注验证。
+
+**导出。** `kimi-round4-sft-export` 由所有未被网关中断的第四轮 Episode 组成（54 条，见 `round4-export-sources.txt`）：17 条动作行（仅来自主动组教师自选动作）与 29 条诊断行（`correct_fail` 9 条，只来自 PM_25308、PM_5088 两个资产；PM_102080 可信 `uncertain` 8 条；clean `uncertain` 12 条）。同一行在不同条件下的重复运行，id 会追加来源目录以保证唯一，并新增 `common_input` 与 `prompt_addenda` 字段。loader 实际加载 actions 17 / diagnosis 29 / episodes 46 行，Qwen3-VL-2B processor 生成真实图像张量与 assistant-only mask。第三轮按新标准重导出到 `kimi-round3-sft-export-perceptible`（32 条动作行，11 条诊断行），同样可以加载。
+
+**浏览器测试。** `test_catalog_clean_and_mixed_are_shard_independent` 的失败不是生成器缺陷：分片一致性断言本身通过；失败的是“至少有一个双缺陷样本”这条断言，而 seed=1 时 idx 0–3 的抽样为 1、1、clean、clean，第一个双缺陷样本在 idx 6。正式 PartNet 数据走同一路径，但其中有 49 个双缺陷样本。夹具改为 `n_samples=8` 后测试通过，不影响数据可靠性。
+
+完整逐案例记录、条件定义与复现命令见 [`kimi-interactive-teacher-round4-diagnosis.json`](evidence/kimi-interactive-teacher-round4-diagnosis.json)。
+
 ## 复现命令
 
 以下命令要求已获官方访问权、已构建 `web/dist`，且各输出目录不存在：

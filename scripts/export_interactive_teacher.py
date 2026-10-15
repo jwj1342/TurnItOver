@@ -12,5 +12,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--episode", action="append", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--audit-name", default="audit.json",
+                        help="Audit file inside each Episode (e.g. a re-audit under a superseding manifest)")
     args = parser.parse_args()
-    print(json.dumps(export_episodes(args.episode, args.out), indent=2))
+    print(json.dumps(export_episodes(args.episode, args.out, args.audit_name), indent=2))

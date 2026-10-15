@@ -23,14 +23,22 @@ if __name__ == "__main__":
     parser.add_argument("--episode", action="append", type=Path, required=True)
     parser.add_argument("--benchmark", type=Path, default=DEFAULT_BENCHMARK)
     parser.add_argument("--oracle-annotations", type=Path, default=DEFAULT_ANNOTATIONS)
+    parser.add_argument("--manifest-root", type=Path,
+                        help="Superseding frozen witness directory; default is the manifest the Episode recorded")
+    parser.add_argument("--audit-name", default="audit.json",
+                        help="Write the re-audit beside, not over, the original audit")
     args = parser.parse_args()
     gold = {**_rows(args.benchmark / "train.gold.jsonl"), **_rows(args.benchmark / "validation.gold.jsonl")}
     annotations = _rows(args.oracle_annotations)
     for source in args.episode:
         episode = json.loads((source / "episode.json").read_text())
-        manifest = json.loads(Path(episode["frozen_witness_manifest"]["path"]).read_text())
         uid = episode["episode_id"]
-        audit = audit_episode(source, gold[uid], annotations.get(uid), manifest=manifest)
+        path = (args.manifest_root / uid / "manifest.json" if args.manifest_root
+                else Path(episode["frozen_witness_manifest"]["path"]))
+        audit = audit_episode(source, gold[uid], annotations.get(uid), manifest=json.loads(path.read_text()),
+                              audit_name=args.audit_name)
         evidence = audit["independent_evidence_audit"]
         print(json.dumps({"episode": str(source), "accepted": evidence["accepted"],
-                          "outcome": evidence["diagnosis_outcome"]}))
+                          "outcome": evidence["diagnosis_outcome"],
+                          "standard": evidence.get("evidence_standard"),
+                          "reasons": evidence["rejection_reasons"]}))

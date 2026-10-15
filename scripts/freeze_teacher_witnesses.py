@@ -47,14 +47,19 @@ def run(args) -> list[dict]:
                 source_files={"inputs": args.benchmark / f"{split}.inputs.jsonl",
                               "gold": args.benchmark / f"{split}.gold.jsonl",
                               "annotations": args.oracle_annotations},
-                test_ids=test_ids, prepared_reference=args.benchmark / public["reference_images"][0])
+                test_ids=test_ids, prepared_reference=args.benchmark / public["reference_images"][0],
+                supersedes=args.supersedes / uid / "manifest.json" if args.supersedes else None)
             manifests.append({"id": uid, "asset_id": manifest["asset_id"],
                               "objective_defect_ids": manifest["objective_defect_ids"],
                               "witnesses": len(manifest["witnesses"]),
                               "v4_pixel_verified": sum(w["v4_pixel_verified"] for w in manifest["witnesses"]),
                               "reference_states": len(manifest["reference_protocol"]["states"]),
                               "fixed_protocol_steps": len(manifest["fixed_protocol_actions"]),
-                              "reference_support": manifest["reference_support"]})
+                              "reference_support": manifest["reference_support"],
+                              "perceptible_support": manifest["perceptible_support"],
+                              "rest_hierarchy_equal": manifest["rest_hierarchy"]["equal"],
+                              "extra_protocol_steps": {name: len(row["fixed_protocol_actions"]) for name, row
+                                                       in manifest["extra_reference_protocols"].items()}})
             print(json.dumps(manifests[-1]), flush=True)
     (args.out / "summary.json").write_text(json.dumps(manifests, indent=2))
     return manifests
@@ -67,4 +72,6 @@ if __name__ == "__main__":
     parser.add_argument("--benchmark", type=Path, default=DEFAULT_BENCHMARK)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument("--oracle-annotations", type=Path, default=DEFAULT_ANNOTATIONS)
+    parser.add_argument("--supersedes", type=Path,
+                        help="Earlier frozen witness directory whose manifests must stay field-identical")
     run(parser.parse_args())

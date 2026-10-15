@@ -24,3 +24,14 @@ The round2 review notes were not available in the repository, so the four reques
 - export: Test/non-formal splits and post-audit Episode edits are blocked; action rows use a label-independent rule, so hidden Gold no longer decides which visible prefixes are supervised.
 
 This is still a local review, not an independent model approval.
+
+
+## Round 4 (diagnosis bottleneck attribution)
+
+- Evidence standard: Oracle exposure counted 1-px rim shifts (PM_102080) as sufficient evidence. Schema-2 manifests add a perceptibility tier (changed region surviving a 2-px erosion); the audit credits only perceptible exposures when the tier exists. Schema-2 manifests may only add fields; `supersedes_errors` enforces this, and an Episode recorded under a schema-1 manifest is re-audited only through a declared `supersedes` link.
+- Hierarchy common input: a rest-pose `query_runtime hierarchy` runs as a declared fixed step in both modes; its payload is checked against the frozen hierarchy in the dry run and in the audit. A teacher-chosen hierarchy query that matches is eligible as action supervision; fixed steps never are.
+- Export: repeated conditions on one row produced duplicate row ids; ids are now qualified by the source directory and checked for uniqueness.
+- Client: empty provider responses now record `finish_reason` and usage; several round4 empty responses were reasoning-token exhaustion at the 4096 ceiling.
+- Browser test `test_catalog_clean_and_mixed_are_shard_independent`: the fixture expectation did not match the seeded draws (no two-corruption sample among idx 0-3). The generator was correct; the fixture now uses 8 samples.
+
+This is still a local review, not an independent model approval.

@@ -1,0 +1,2 @@
+
+Part convention (declared common input, identical for every row): for a `kinematics.joint_axis` finding, `parts` lists exactly the part that the named joint directly carries, i.e. the part group immediately under `joint:<joint_id>` in the runtime hierarchy. Do not list the joint's static parent, and do not list parts that are carried further down by other joints even though they move along.

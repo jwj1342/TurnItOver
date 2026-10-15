@@ -14,7 +14,8 @@ VISIBLE_KEYS = {"context", "remaining", "stop_required", "image_order", "history
 
 
 def audit_episode(output: Path, private_gold: dict | None = None,
-                  private_annotation: dict | None = None, *, manifest: dict | None = None) -> dict:
+                  private_annotation: dict | None = None, *, manifest: dict | None = None,
+                  audit_name: str = "audit.json") -> dict:
     episode = json.loads((output / "episode.json").read_text())
     context = Context(**episode["context"])
     errors, informative, hashes = [], [], set()
@@ -122,5 +123,5 @@ def audit_episode(output: Path, private_gold: dict | None = None,
         audit["independent_evidence_audit"] = audit_teacher_verdict(
             episode, private_gold, private_annotation, output, manifest=manifest)
     audit["episode_sha256"] = hashlib.sha256((output / "episode.json").read_bytes()).hexdigest()
-    write_json_atomic(output / "audit.json", audit)
+    write_json_atomic(output / audit_name, audit)
     return audit

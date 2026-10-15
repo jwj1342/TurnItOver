@@ -13,7 +13,8 @@ from pathlib import Path
 
 from turnitover.core.actions import Detent, detent_value
 from turnitover.oracle.pass_evidence import assess_single_reference_pass
-from turnitover.teacher.witnesses import clamp, rest_state, row_sha256, same_state
+from turnitover.teacher.witnesses import (clamp, protocol_record, rest_state, row_sha256, same_state,
+                                          supersedes_errors)
 from turnitover.verifier.contracts import Context, parse_decision
 
 
@@ -42,8 +43,9 @@ def bind_witnesses(episode: dict, manifest: dict, output_root: Path) -> list[dic
     context = Context(**episode["context"])
     limits = {joint: tuple(bounds) for joint, bounds in manifest["candidate_joint_limits"].items()}
     view, state = context.views[0], rest_state(limits)
-    references = manifest["reference_protocol"]["states"] if episode.get(
-        "reference_protocol") == manifest["reference_protocol"]["name"] else []
+    rest = dict(state)
+    references = (protocol_record(manifest, episode.get("reference_protocol")) or {}).get("states", [])
+    frozen_hierarchy = (manifest.get("rest_hierarchy") or {}).get("candidate")
     rows = []
     for record in episode.get("trajectory", []):
         decision = record["decision"]
@@ -55,7 +57,11 @@ def bind_witnesses(episode: dict, manifest: dict, output_root: Path) -> list[dic
             rows.append({**row, "legal": False, "bound": False, "reason": f"illegal:{exc}"})
             continue
         if decision["type"] == "query_runtime":
-            rows.append({**row, "bound": False, "reason": "runtime_only", "image": False})
+            runtime = {**row, "bound": False, "reason": "runtime_only", "image": False,
+                       "property": decision["property"]}
+            if decision["property"] == "hierarchy" and frozen_hierarchy is not None and same_state(state, rest):
+                runtime["payload_matches_frozen_rest_hierarchy"] = record.get("payload") == frozen_hierarchy
+            rows.append(runtime)
             continue
         if decision["type"] == "request_view":
             view = decision["view_id"]
@@ -73,15 +79,19 @@ def bind_witnesses(episode: dict, manifest: dict, output_root: Path) -> list[dic
         bound = [w for w in matches if w["sha256"] == live_sha]
         comparable = any(r["label"]["view"] == view and same_state(r["state"], state) for r in references)
         exposures = set.intersection(*(set(w["exposures"]) for w in bound)) if bound else set()
+        perceptible = (set.intersection(*(set(w.get("perceptible_exposures", w["exposures"])) for w in bound))
+                       if bound else set())
         row.update(live_sha256=live_sha, witness_indices=[w["index"] for w in matches],
                    witness_keys=[w["key"] for w in matches], bound=bool(bound),
-                   reference_comparable=comparable, exposures=sorted(exposures))
+                   reference_comparable=comparable, exposures=sorted(exposures),
+                   perceptible_exposures=sorted(perceptible))
         if not matches:
             row["reason"] = "state_outside_frozen_witness_grid"
         elif not bound:
             row["reason"] = "pixels_differ_from_frozen_witness"
         elif not row.get("actuation_consistent", True):
-            row.update(bound=False, exposures=[], reason="actual_joint_value_differs_from_request")
+            row.update(bound=False, exposures=[], perceptible_exposures=[],
+                       reason="actual_joint_value_differs_from_request")
         rows.append(row)
     return rows
 
@@ -122,9 +132,13 @@ def identity_errors(episode: dict, private_gold: dict, annotation: dict, manifes
         errors.append("not_formal_training")
     record = episode.get("frozen_witness_manifest") or {}
     path = Path(record["path"]) if record.get("path") else None
-    if path is None or not path.is_file() or _sha(path) != record.get("sha256") or json.loads(
-            path.read_text()) != manifest:
+    if path is None or not path.is_file() or _sha(path) != record.get("sha256"):
         errors.append("frozen_manifest_sha_or_content_mismatch")
+    elif json.loads(path.read_text()) != manifest:
+        # Re-auditing under a later manifest is allowed only if it extends the recorded one field-identically.
+        if manifest.get("supersedes") != {"path": str(path), "sha256": record["sha256"]} or supersedes_errors(
+                json.loads(path.read_text()), manifest):
+            errors.append("frozen_manifest_sha_or_content_mismatch")
     runtime = episode.get("runtime_joint_limits")
     if runtime is not None and {k: list(v) for k, v in runtime.items()} != manifest["candidate_joint_limits"]:
         errors.append("runtime_joint_limits_differ_from_frozen_manifest")
@@ -134,11 +148,13 @@ def identity_errors(episode: dict, private_gold: dict, annotation: dict, manifes
 def reference_errors(episode: dict, manifest: dict, output_root: Path) -> list[str]:
     references = sorted(output_root.glob("reference-*"))
     hashes = [_sha(path) for path in references]
-    if episode.get("reference_protocol") == manifest["reference_protocol"]["name"]:
-        expected = [row["sha256"] for row in manifest["reference_protocol"]["states"]]
-        labels = [row["label"] for row in manifest["reference_protocol"]["states"]]
-        if episode.get("reference_states") != labels:
+    protocol = protocol_record(manifest, episode.get("reference_protocol"))
+    if protocol is not None:
+        expected = [row["sha256"] for row in protocol["states"]]
+        if episode.get("reference_states") != [row["label"] for row in protocol["states"]]:
             return ["reference_state_labels_differ_from_frozen_protocol"]
+    elif episode.get("reference_protocol") not in (None, "static_front"):
+        return ["reference_protocol_not_in_frozen_manifest"]
     else:
         expected = [manifest["static_reference_sha256"]]
     return [] if hashes == expected else ["reference_pixels_differ_from_frozen_protocol"]
@@ -198,8 +214,14 @@ def audit_teacher_verdict(episode: dict, private_gold: dict, annotation: dict | 
     if annotation is not None and gold_keys != set(label_keys):
         reasons.append("annotation_labels_differ_from_checker_gold")
     # Evidence counts only when bound to frozen pixels AND comparable with a visible reference state.
-    usable = {row["step"]: set(row["exposures"]) if row.get("bound") and row.get("reference_comparable")
-              else set() for row in steps}
+    # With a perceptibility tier in the manifest, only perceptible exposures can be credited; mere
+    # Oracle exposure (some pixels differ, e.g. a 1-px rim shift) is reported but never sufficient.
+    perceptibility = bool((manifest or {}).get("perceptibility"))
+    credit_key = "perceptible_exposures" if perceptibility else "exposures"
+    comparable = {row["step"]: row for row in steps if row.get("bound") and row.get("reference_comparable")}
+    usable = {row["step"]: set(comparable[row["step"]][credit_key]) if row["step"] in comparable else set()
+              for row in steps}
+    exposed_only = set().union(*(set(row["exposures"]) for row in comparable.values()))
     covered, prior = set().union(*usable.values()) if usable else set(), set()
     for row in steps:
         exposed = usable.get(row["step"], set())
@@ -207,6 +229,7 @@ def audit_teacher_verdict(episode: dict, private_gold: dict, annotation: dict | 
         row["defect_relevant"] = bool(exposed)
         prior |= exposed
     sufficient = bool(labels) and covered == set(range(len(labels)))
+    imperceptible_only = sorted(exposed_only - covered)
     # Reporting only: exposure is a pixel proxy, so record how salient the credited evidence was.
     signals = (annotation or {}).get("signals", {}).get("against_reference", [])
     salience = max((signals[index]["changed_fraction"] for row in steps
@@ -274,6 +297,8 @@ def audit_teacher_verdict(episode: dict, private_gold: dict, annotation: dict | 
         "actions_legal": all(row.get("legal") for row in steps),
         "evidence_sufficient": sufficient,
         "objective_evidence_covered": sorted(covered),
+        "evidence_standard": "perceptible_exposure" if perceptibility else "oracle_exposure",
+        "objective_exposure_imperceptible_only": imperceptible_only,
         "max_credited_changed_fraction": salience,
         "objective_exposure_without_visible_reference": exposed_without_reference,
         "diagnosis_outcome": _diagnosis(status, findings_ok, labels, sufficient),

@@ -77,6 +77,8 @@ python -m scripts.audit_episode_export --benchmark data/benchmarks/uniphys40k-ep
 
 **第三轮 joint_axis 运动实验：Kimi 能主动取证，诊断仍是瓶颈。** 审核改为按实际关节值与像素绑定冻结 witness 清单，并且必须有可比的可见参考状态；Gold/annotation/Episode 的身份、行 SHA 与 split 均受校验，Test 被禁止。在4个 axis + 4个 clean 的 Train 案例上，使用标签无关的 `front_motion_v1` 多状态参考：主动组4/4自主获取到充分运动证据，固定组由协议给定；两组严格正确诊断均为1/4（PM_5088），类型+关节正确分别为3/4和2/4。没有出现“证据不足却猜 fail”或 clean 误报 fail 的情况。导出32条动作行与9条诊断行（其中2条 `correct_fail`），loader 与 Qwen processor 均成功读取；数据可作为取证与停止的小型接口交付，但不足以支持诊断训练。见 [`kimi-interactive-teacher-round3-axis.json`](evidence/kimi-interactive-teacher-round3-axis.json)。
 
+**第四轮诊断瓶颈归因。** 冻结清单升级为 schema 2，加入“可感知证据”分级：变化区域至少 5 像素厚才计为证据。按该标准，PM_102080 在所有视角下都没有可感知差异，Kimi 的 `uncertain` 被重新判为可信。PM_25308 加入合法的 rest hierarchy 共同输入后 2/2 严格正确；PM_103275 加入 hierarchy 和部件约定后部件定位正确，但仍引用不可感知的 limit 状态作为证据而被拒。增加 oblique 视角参考反而降低正确率（严格正确 0/7）。正确 `fail` 诊断只覆盖 2 个独立资产，暂不足以开展诊断 SFT 对照。见 [`kimi-interactive-teacher-round4-diagnosis.json`](evidence/kimi-interactive-teacher-round4-diagnosis.json)。
+
 ## 关键缺口
 
 **已完成正式 PartNet 第一轮受控 SFT，但只保留为旧 v3 checkpoint 分析。** 底座/普通/证据组 exact verdict 为7/9/13，finding F1 为0/.351/.419；证据组把 unsupported finding 从33降至15，并改善 axis/定位汇总，但 offset recall 下降。无图像预算基线在相同 Validation 上达到28/28 terminal status 和 defect-type F1 .737，完全解释 status 收益并覆盖大量类型表现；因此这些 checkpoint 不支持视觉依赖或修复后监督效果主张。

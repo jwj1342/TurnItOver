@@ -19,7 +19,8 @@ from turnitover.teacher.episode import run_teacher_episode
 from turnitover.teacher.policy import TeacherPolicy
 from turnitover.teacher.providers import KimiPricing, KimiTeacher, LocalQwenTeacher, MockTeacher
 from turnitover.teacher.evidence import bind_witnesses
-from turnitover.teacher.witnesses import REFERENCE_PROTOCOL, file_sha256, sample_framing
+from turnitover.teacher.witnesses import (HIERARCHY_INPUT, REFERENCE_PROTOCOLS, file_sha256,
+                                          protocol_record, sample_framing)
 from turnitover.policy.loop import execute_observation
 from turnitover.core.serde import to_dict
 from turnitover.verifier.contracts import parse_decision
@@ -52,8 +53,8 @@ def _sample(benchmark: Path, sample_id: str | None) -> tuple[dict, dict, object]
     return inputs[uid], private, framing
 
 
-def _verify_fixed_protocol(session, program, framing, context, manifest, actions, folder: Path) -> None:
-    """Dry-run the fixed history before any paid call; every step must bind to a frozen witness."""
+def _verify_fixed_protocol(session, program, framing, context, manifest, protocol, actions, folder: Path) -> None:
+    """Dry-run the fixed history before any paid call; every step must bind to frozen evidence."""
     folder.mkdir(parents=True)
     session.load(program, framing=framing)
     records = []
@@ -65,9 +66,10 @@ def _verify_fixed_protocol(session, program, framing, context, manifest, actions
         observation = execute_observation(session, parse_decision({"action": raw}, context, set()), step, sink)
         records.append({**to_dict(observation), "decision": raw, "decision_source": "fixed_protocol"})
     rows = bind_witnesses({"context": vars(context), "trajectory": records,
-                           "reference_protocol": REFERENCE_PROTOCOL}, manifest, folder)
+                           "reference_protocol": protocol}, manifest, folder)
     write_json_atomic(folder / "binding.json", rows)
-    if not all(row.get("bound") and row.get("reference_comparable") for row in rows):
+    if not all(row.get("payload_matches_frozen_rest_hierarchy") if row.get("reason") == "runtime_only"
+               else row.get("bound") and row.get("reference_comparable") for row in rows):
         raise ValueError("Fixed evidence protocol is not fully bound to frozen, reference-comparable witnesses")
     session.load(program, framing=framing)
 
@@ -151,10 +153,13 @@ def run(args) -> dict:
             raise ValueError("Real Train episodes require a frozen witness manifest for independent audit")
         manifest_path = args.frozen_witnesses / public["id"] / "manifest.json"
         manifest = json.loads(manifest_path.read_text())
-    if args.reference_protocol == REFERENCE_PROTOCOL and manifest is None:
-        raise ValueError("The multi-state reference protocol needs a frozen witness manifest")
-    if args.experiment_mode == "fixed-diagnosis" and args.reference_protocol != REFERENCE_PROTOCOL:
+    protocol = protocol_record(manifest, args.reference_protocol) if manifest is not None else None
+    if args.reference_protocol in REFERENCE_PROTOCOLS and protocol is None:
+        raise ValueError("The multi-state reference protocol needs a frozen witness manifest that defines it")
+    if args.experiment_mode == "fixed-diagnosis" and protocol is None:
         raise ValueError("Fixed diagnosis compares motion states and needs the multi-state reference")
+    if args.common_input == "hierarchy" and not (manifest or {}).get("rest_hierarchy"):
+        raise ValueError("The hierarchy common input needs a schema-2 manifest with the frozen rest hierarchy")
     if args.mode == "mock":
         teacher = _mock(context)
     elif args.mode == "local-qwen":
@@ -206,7 +211,8 @@ def run(args) -> dict:
     if annotation is not None:
         data_identity = {**annotation["data_identity"], **data_identity}
     data_identity = {**data_identity, "experiment_mode": args.experiment_mode,
-                     "reference_protocol": args.reference_protocol}
+                     "reference_protocol": args.reference_protocol, "common_input": args.common_input,
+                     "prompt_addenda": ["part_convention.txt"] if args.part_convention else []}
     if args.mode == "kimi":
         data_identity = {**data_identity, "third_party_transmission_reviewed": True,
                          "transmission_review_basis": args.transmission_review_basis}
@@ -223,9 +229,9 @@ def run(args) -> dict:
                 references.append(target)
                 reference_states.append({"view": "front", "joint_id": None, "detent": "rest"})
                 session.load(program, framing=framing)
-            elif args.reference_protocol == REFERENCE_PROTOCOL:
-                for row in manifest["reference_protocol"]["states"]:
-                    target = args.out / row["file"]
+            elif protocol is not None:
+                for row in protocol["states"]:
+                    target = args.out / Path(row["file"]).name
                     shutil.copyfile(manifest_path.parent / row["file"], target)
                     if file_sha256(target) != row["sha256"]:
                         raise ValueError("Frozen reference image changed after freezing")
@@ -240,18 +246,20 @@ def run(args) -> dict:
                     reference_states.append({"view": "front", "joint_id": None, "detent": "rest"})
         else:
             references = sorted(args.out.glob("reference-*"))
-            reference_states = ([row["label"] for row in manifest["reference_protocol"]["states"]]
-                                if args.reference_protocol == REFERENCE_PROTOCOL else
+            reference_states = ([row["label"] for row in protocol["states"]]
+                                if protocol is not None else
                                 [{"view": "front", "joint_id": None, "detent": "rest"}])
-        initial_actions = ()
+        # Declared common inputs run first, at rest, identically in both experiment modes.
+        initial_actions = (HIERARCHY_INPUT,) if args.common_input == "hierarchy" else ()
         if args.experiment_mode == "fixed-diagnosis":
-            initial_actions = tuple(manifest["fixed_protocol_actions"])
+            initial_actions += tuple(protocol["fixed_protocol_actions"])
             if args.budget != len(initial_actions):
                 raise ValueError("Fixed diagnosis budget must exactly match its evidence protocol")
-            if not args.resume:
-                _verify_fixed_protocol(session, program, framing, context, manifest, initial_actions,
-                                       args.out / "fixed-protocol-preflight")
-        policy = TeacherPolicy(teacher, args.out, references, reference_states=reference_states)
+        if initial_actions and not args.resume:
+            _verify_fixed_protocol(session, program, framing, context, manifest, args.reference_protocol,
+                                   initial_actions, args.out / "fixed-protocol-preflight")
+        policy = TeacherPolicy(teacher, args.out, references, reference_states=reference_states,
+                               protocol_addenda=data_identity["prompt_addenda"])
         episode = run_teacher_episode(session, policy, context, args.budget, args.out,
                                       episode_id=public["id"], resume=args.resume,
                                       max_model_calls=max_calls,
@@ -303,9 +311,13 @@ if __name__ == "__main__":
     parser.add_argument("--decision-attempts", type=int, default=3,
                         help="Bounded schema-correction attempts per decision")
     parser.add_argument("--experiment-mode", choices=("active", "fixed-diagnosis"), default="active")
-    parser.add_argument("--reference-protocol", choices=("static_front", REFERENCE_PROTOCOL),
+    parser.add_argument("--reference-protocol", choices=("static_front", *REFERENCE_PROTOCOLS),
                         default="static_front",
-                        help="static_front reproduces round2; front_motion_v1 adds label-independent reference motion states")
+                        help="static_front reproduces round2; motion protocols add label-independent reference states")
+    parser.add_argument("--part-convention", action="store_true",
+                        help="Append the declared label-independent part convention to the teacher prompt")
+    parser.add_argument("--common-input", choices=("none", "hierarchy"), default="none",
+                        help="hierarchy: a rest-pose query_runtime hierarchy runs first as a declared fixed step")
     parser.add_argument("--frozen-witnesses", type=Path,
                         help="Directory written by scripts.freeze_teacher_witnesses")
     arguments = parser.parse_args()

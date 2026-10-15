@@ -17,8 +17,9 @@ from turnitover.verifier.contracts import Context, DecisionError, parse_json
 
 class TeacherPolicy:
     def __init__(self, teacher: Teacher, output: Path, references: list[Path], calls: list[dict] | None = None,
-                 reference_states: list[dict] | None = None):
+                 reference_states: list[dict] | None = None, protocol_addenda: Sequence[str] = ()):
         self.teacher, self.output, self.references = teacher, output, references
+        self.protocol_addenda = tuple(protocol_addenda)
         self.calls = list(calls or [])
         self.reference_states = reference_states or [{} for _ in references]
         if len(self.reference_states) != len(references):
@@ -37,7 +38,9 @@ class TeacherPolicy:
                    "stop_required": remaining == 0,
                    "image_order": order, "history": [to_dict(o) for o in history],
                    "taxonomy_ids": load_taxonomy().ids}
-        protocol = resources.files("turnitover.teacher").joinpath("prompt.txt").read_text()
+        package = resources.files("turnitover.teacher")
+        protocol = package.joinpath("prompt.txt").read_text() + "".join(
+            package.joinpath(name).read_text() for name in self.protocol_addenda)
         prompt = protocol + "\nVisible task state:\n" + json.dumps(visible, ensure_ascii=False)
         if validation_feedback:
             prompt += "\nValidation feedback:\n" + validation_feedback

@@ -104,7 +104,9 @@ def parse_response(provider: str, data: dict, elapsed_ms: float) -> ModelResult:
             text = choice["message"].get("content") or ""
             finish = choice.get("finish_reason", "unknown")
         if not isinstance(text, str) or not text.strip():
-            raise ModelError("Provider returned no text (possibly refusal, token limit or incompatible model)")
+            usage = data.get("usage", data.get("usageMetadata", {}))
+            raise ModelError("Provider returned no text (possibly refusal, token limit or incompatible model); "
+                             f"finish_reason={finish}; usage={json.dumps(usage, sort_keys=True)}")
         return ModelResult(text, data.get("model", data.get("modelVersion", "")),
                            data.get("usage", data.get("usageMetadata", {})), finish, elapsed_ms)
     except (KeyError, IndexError, TypeError, AttributeError):
