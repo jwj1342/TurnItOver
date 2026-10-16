@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "status": "complete",
+  "scope": "human_review_gate_only",
+  "cases": 9,
+  "submission_rows": 10,
+  "duplicate_ids": {
+    "odr-902e87011e30": 2
+  },
+  "conflicting_duplicate_ids": [],
+  "counts": {
+    "needs_adjudication": 3,
+    "review_approved_candidate": 6
+  },
+  "by_gold_kind": {
+    "clean": {
+      "needs_adjudication": 1,
+      "review_approved_candidate": 2
+    },
+    "joint_axis": {
+      "review_approved_candidate": 3
+    },
+    "part_offset": {
+      "needs_adjudication": 2,
+      "review_approved_candidate": 1
+    }
+  },
+  "boundaries": {
+    "sft_exported": false,
+    "sft_trained": false,
+    "test_modified": false,
+    "model_calls": 0
+  },
+  "inputs": {
+    "parent_manifest_sha256": "9448248cfd5a66c8b85a377864e288357941f17d53dd969efecb48400ff86833",
+    "human_review_sha256": "b1dc7153c62dfdb3d2f5937435ef747b60a93099b26944fc89b5e90d7fb54b14",
+    "raw_submissions_sha256": "db00375a194314df385b4c16f28cebb04ca2dbbadb8d36f78944f01a4f75a2a2",
+    "private_gold_sha256": "1f7bcb352aa599bd2a26f6497984ef9fc6c4d637aaca98739cc791d113944e79",
+    "private_checks_sha256": "3516cf421aa8df4184f2f45adf0abb421fda2da79a45a72a432fb801af3a59c6"
+  }
+}
