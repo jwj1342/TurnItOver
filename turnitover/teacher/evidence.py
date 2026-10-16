@@ -24,6 +24,7 @@ IDENTITY_KEYS = (
     "source_identity", "annotation_id", "model_id", "archive_sha256",
 )
 TRAINING_SPLITS = ("train", "validation")
+DIAGNOSIS_OBJECTIVES = ("first_failure", "comprehensive_within_budget")
 PRIVATE_PARAM_KEYS = ("angle_deg", "original_axis", "magnitude_m")
 
 
@@ -190,8 +191,11 @@ def _diagnosis(status, findings_ok, objective, sufficient) -> str:
 
 
 def audit_teacher_verdict(episode: dict, private_gold: dict, annotation: dict | None,
-                          output_root, *, manifest: dict | None = None) -> dict:
+                          output_root, *, manifest: dict | None = None,
+                          diagnosis_objective: str = "first_failure") -> dict:
     """Separate objective defect truth from what the teacher's cited pixels support."""
+    if diagnosis_objective not in DIAGNOSIS_OBJECTIVES:
+        raise ValueError(f"Unsupported diagnosis objective: {diagnosis_objective}")
     output_root = Path(output_root)
     reasons, steps = [], []
     if private_gold.get("quality", {}).get("status") != "accepted":
@@ -228,7 +232,7 @@ def audit_teacher_verdict(episode: dict, private_gold: dict, annotation: dict | 
         row["new_objective_evidence"] = sorted(exposed - prior)
         row["defect_relevant"] = bool(exposed)
         prior |= exposed
-    sufficient = bool(labels) and covered == set(range(len(labels)))
+    objective_complete = bool(labels) and covered == set(range(len(labels)))
     imperceptible_only = sorted(exposed_only - covered)
     # Reporting only: exposure is a pixel proxy, so record how salient the credited evidence was.
     signals = (annotation or {}).get("signals", {}).get("against_reference", [])
@@ -269,8 +273,9 @@ def audit_teacher_verdict(episode: dict, private_gold: dict, annotation: dict | 
                 supported_findings.append({"defect_id": finding["defect_id"],
                                            "joint_id": finding.get("joint_id"),
                                            "evidence_steps": supported, "label_index": label_index})
-        if labels and {f["label_index"] for f in supported_findings} != set(range(len(labels))):
-            reasons.append("fail_does_not_cover_all_objective_defects")
+        reported = {f["label_index"] for f in supported_findings}
+        if diagnosis_objective == "comprehensive_within_budget" and reported != covered:
+            reasons.append("fail_does_not_cover_observed_defects")
     elif status == "pass":
         history = [{**row, "action": row["decision"]} for row in episode["trajectory"]]
         payload = {"context": episode["context"], "history": history,
@@ -288,6 +293,8 @@ def audit_teacher_verdict(episode: dict, private_gold: dict, annotation: dict | 
     else:
         reasons.append("unknown_verdict_status")
 
+    finding_evidence_sufficient = bool(supported_findings)
+    fail_scope_has_evidence = bool(covered)
     findings_ok = status == "fail" and not any(r.startswith(("finding_", "fail_")) for r in reasons)
     return {
         "accepted": not reasons, "status": status,
@@ -295,13 +302,17 @@ def audit_teacher_verdict(episode: dict, private_gold: dict, annotation: dict | 
         "supported_findings": supported_findings, "localization": localization,
         "action_audit": steps,
         "actions_legal": all(row.get("legal") for row in steps),
-        "evidence_sufficient": sufficient,
+        "diagnosis_objective": diagnosis_objective,
+        "evidence_sufficient": finding_evidence_sufficient if status == "fail" else objective_complete,
+        "objective_evidence_complete": objective_complete,
         "objective_evidence_covered": sorted(covered),
         "evidence_standard": "perceptible_exposure" if perceptibility else "oracle_exposure",
         "objective_exposure_imperceptible_only": imperceptible_only,
         "max_credited_changed_fraction": salience,
         "objective_exposure_without_visible_reference": exposed_without_reference,
-        "diagnosis_outcome": _diagnosis(status, findings_ok, labels, sufficient),
+        "diagnosis_outcome": _diagnosis(
+            status, findings_ok, labels,
+            fail_scope_has_evidence if status == "fail" else objective_complete),
         "comparable_motion_joints": motion_joints,
         "rejection_reasons": reasons,
         "truth_basis": "prepared checker-qualified private gold",

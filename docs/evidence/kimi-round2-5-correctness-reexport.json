@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-16",
+  "baseline_commit": "5f0c0e4",
+  "scope": "Offline re-audit and full re-export of all saved real Kimi Round2-5 Episodes; no API call, collection, or SFT training",
+  "artifact": {
+    "dataset": "output/interactive-teacher/kimi-round2-5-sft-export-correctness-v2",
+    "audit_report": "audit-report.json",
+    "per_case_audit": "audit.correctness-v1.json beside each of 109 source Episodes, also summarized in audit-report.json.cases",
+    "image_manifest": "image-manifest.jsonl",
+    "rejections": "rejected.jsonl",
+    "reproduction": "reproduction.json",
+    "full_hash_manifest": "sha256.json",
+    "loader_processor_report": "loading-qwen-all.json",
+    "hash_manifest_entries": 430,
+    "hash_manifest_verification_errors": 0,
+    "sha256": {
+      "audit-report.json": "7ffca2b82f9af027b288b27b3020baf74dec909f95317c3b5dc7cd2742acd1cd",
+      "sha256.json": "06964a0bdf2c281087a32fd0d33a6b5b44408a345ade04e2ff1b0eae98729d23",
+      "reproduction.json": "ae8f5ef159c59bb17058051eb82fadd1e063a9668cae76c09cbf6a724a0e30b3",
+      "loading-qwen-all.json": "24cda9d36aa1f441348406ea940bad942a883b0136670798be788a653a1de07b",
+      "manifest.json": "319de8aa86024c38b943f45665e96c5bf8e8ba39c20823aa95b59ddeb58ac148",
+      "image-manifest.jsonl": "d8367dafe74b0b82c7e7c079697a3adaade38e53548c90bc2a9529616a8c4eeb",
+      "rejected.jsonl": "3692b26a40fc43cc504c0b53b868bc239bf96dde47a942cc6a5d7aea87e8b4a1"
+    }
+  },
+  "source_coverage": {
+    "raw_episodes": 109,
+    "rounds": {"2": 4, "3": 20, "4": 76, "5": 9},
+    "source_runs_contributing_any_row": 57,
+    "blocked_episodes": 4,
+    "blocked_round2": 4,
+    "round2_block_reason": "Three lack a frozen witness manifest; one recorded manifest fails SHA/content identity. None is silently retained."
+  },
+  "export": {
+    "action_rows": 71,
+    "diagnosis_rows": 46,
+    "total_rows": 117,
+    "action_rows_by_round": {"3": 41, "4": 22, "5": 8},
+    "diagnosis_rows_by_round": {"3": 11, "4": 29, "5": 6},
+    "diagnosis_statuses": {"fail": 15, "uncertain": 31, "pass": 0},
+    "diagnosis_outcomes": {"correct_fail": 15, "trustworthy_uncertain": 11, "uncertain_on_clean": 20},
+    "independent_source_assets": 4,
+    "candidate_versions": 8,
+    "correct_fail_independent_assets": 2,
+    "correct_fail_assets": ["PartNetMobility:25308", "PartNetMobility:5088"],
+    "train_rows": 117,
+    "validation_rows": 0,
+    "test_rows": 0
+  },
+  "before_after": {
+    "previous_selected_source_runs": 83,
+    "previous_action_rows": 60,
+    "previous_terminal_rows": 49,
+    "new_raw_source_runs_audited": 109,
+    "new_action_rows": 71,
+    "new_diagnosis_rows": 46,
+    "interpretation": "The net gain is 11 qualified action rows. Three old Round2 uncertain terminals are removed because current frozen-witness identity cannot verify them. Existing Round2-5 records contain no multi-defect Episode, so the first_failure semantic fix recovers zero historical rows by itself; its reviewer regression is covered by unit tests."
+  },
+  "image_identity": {
+    "row_image_bindings": 921,
+    "unique_content_sha256": 43,
+    "source_export_sha_mismatches": 0,
+    "naming": "Episode ID plus call/index plus full source-content SHA-256",
+    "existing_destination_policy": "Reuse only on exact SHA-256 equality; otherwise atomically rebuild and verify"
+  },
+  "loading": {
+    "formal_sft_loader_rows": 117,
+    "qwen3_vl_2b_processor_rows": 117,
+    "assistant_only_mask_passed": 117,
+    "failed": 0
+  },
+  "tests": {
+    "unit": {"passed": 253, "skipped": 2, "collected": 255},
+    "chromium": {"passed": 20, "failed": 0}
+  },
+  "handoff": "Safe as a hash-verified train-only augmentation for separate action and diagnosis objectives. It is not a standalone train/validation dataset: only four independent source assets, no pass labels, and no validation rows."
+}

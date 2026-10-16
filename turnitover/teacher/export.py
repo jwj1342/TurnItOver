@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import tempfile
 from pathlib import Path
 
 from turnitover.core.jsonio import write_json_atomic
@@ -28,20 +29,51 @@ def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _copy_images(source: Path, target: Path, episode_id: str, call: dict) -> tuple[list[str], list[str]]:
+def _copy_verified(src: Path, dst: Path, expected_sha: str) -> None:
+    """Copy one image atomically and verify both ends, including existing destinations."""
+    if not src.is_file():
+        raise ValueError(f"Missing source image: {src}")
+    if _sha(src) != expected_sha:
+        raise ValueError(f"Source image changed while exporting: {src}")
+    if dst.is_file() and _sha(dst) == expected_sha:
+        return
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(dir=dst.parent, prefix=f".{dst.name}.", delete=False) as stream:
+        temporary = Path(stream.name)
+    try:
+        shutil.copyfile(src, temporary)
+        if _sha(src) != expected_sha or _sha(temporary) != expected_sha:
+            raise ValueError(f"Image SHA-256 mismatch while exporting: {src}")
+        temporary.replace(dst)
+    finally:
+        temporary.unlink(missing_ok=True)
+    if _sha(dst) != expected_sha:
+        raise ValueError(f"Exported image SHA-256 mismatch: {dst}")
+
+
+def _copy_images(source: Path, target: Path, episode_id: str, call: dict) -> tuple[list[str], list[str], list[dict]]:
     call_dir = source / call["path"]
     relative_paths = json.loads((call_dir / "images.json").read_text())
-    exported, hashes = [], []
+    exported, hashes, provenance = [], [], []
     for index, relative in enumerate(relative_paths):
-        src = source / relative
+        src = (source / relative).resolve()
+        try:
+            source_relative = src.relative_to(source.resolve()).as_posix()
+        except ValueError as exc:
+            raise ValueError(f"Image path escapes Episode directory: {relative}") from exc
+        source_sha = _sha(src) if src.is_file() else None
+        if source_sha is None:
+            raise ValueError(f"Missing source image: {src}")
         suffix = src.suffix or ".png"
-        dst = target / "images" / episode_id / f"{call_dir.name}-{index:02d}{suffix}"
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        if not dst.exists():
-            shutil.copyfile(src, dst)
-        exported.append(dst.relative_to(target).as_posix())
-        hashes.append(_sha(dst))
-    return exported, hashes
+        filename = f"{call_dir.name}-{index:02d}-{source_sha}{suffix.lower()}"
+        dst = target / "images" / episode_id / filename
+        _copy_verified(src, dst, source_sha)
+        exported_path = dst.relative_to(target).as_posix()
+        exported.append(exported_path)
+        hashes.append(source_sha)
+        provenance.append({"source": source_relative, "source_sha256": source_sha,
+                           "exported": exported_path, "exported_sha256": _sha(dst)})
+    return exported, hashes, provenance
 
 
 def _episode_blockers(episode: dict, audit: dict, episode_path: Path) -> list[str]:
@@ -87,6 +119,7 @@ def export_episodes(sources: list[Path], output: Path, audit_name: str = "audit.
                for split in TRAINING_SPLITS
                for kind in ("actions", "diagnosis", "episodes")}
     rejected = (output / "rejected.jsonl").open("w", encoding="utf-8")
+    image_manifest = (output / "image-manifest.jsonl").open("w", encoding="utf-8")
     counts = {"episodes_seen": 0, "episodes_blocked": 0, "diagnosis_accepted": 0,
               "diagnosis_rejected": 0, "action_rows": 0, "action_rows_rejected": 0, "terminal_rows": 0}
     provenance, seen_ids = [], set()
@@ -127,17 +160,25 @@ def export_episodes(sources: list[Path], output: Path, audit_name: str = "audit.
                         counts["action_rows_rejected"] += 1
                         continue
                 call = episode["model_calls"][decision["call"]]
-                images, image_hashes = _copy_images(source, output, episode["episode_id"], call)
+                images, image_hashes, image_provenance = _copy_images(
+                    source, output, episode["episode_id"], call)
+                run_id = hashlib.sha256(json.dumps({
+                    "source_name": source.name,
+                    "episode_sha256": _sha(episode_path),
+                    "audit_sha256": _sha(audit_path),
+                    "image_sha256": image_hashes,
+                }, sort_keys=True).encode()).hexdigest()[:16]
                 row_id = (f"{episode['episode_id']}:{identity.get('experiment_mode', 'active')}:"
                           f"{'verdict' if terminal else f'action:{decision_index}'}")
                 if row_id in seen_ids:  # repeated conditions on one row: qualify by the source run directory
-                    row_id = f"{row_id}@{source.name}"
+                    row_id = f"{row_id}@{source.name}-{run_id}"
                 if row_id in seen_ids:
                     raise ValueError(f"Duplicate export row id: {row_id}")
                 seen_ids.add(row_id)
                 row = {
                     "id": row_id,
                     "episode_id": episode["episode_id"], "decision_index": decision_index,
+                    "source_episode": str(source), "source_run_id": run_id,
                     "condition": "visible_only_interactive_teacher",
                     "experiment_mode": identity.get("experiment_mode"),
                     "reference_protocol": identity.get("reference_protocol"),
@@ -146,6 +187,7 @@ def export_episodes(sources: list[Path], output: Path, audit_name: str = "audit.
                     "terminal": terminal, "termination_target": "verdict" if terminal else None,
                     "termination_reason": episode.get("termination") if terminal else None,
                     "images": images, "image_sha256": image_hashes,
+                    "image_provenance": image_provenance,
                     "messages": [
                         {"role": "user", "content": (source / call["path"] / "prompt.txt").read_text()},
                         {"role": "assistant", "content": json.dumps(raw)},
@@ -156,22 +198,32 @@ def export_episodes(sources: list[Path], output: Path, audit_name: str = "audit.
                     "episode_diagnosis_accepted": diagnosis_ok,
                     "action_new_objective_evidence": None if terminal else step.get("new_objective_evidence"),
                     "audit_conclusion": {key: evidence.get(key) for key in (
-                        "status", "diagnosis_outcome", "evidence_sufficient", "supported_findings",
+                        "status", "diagnosis_objective", "diagnosis_outcome", "evidence_sufficient",
+                        "objective_evidence_complete", "supported_findings",
                         "objective_evidence_covered", "rejection_reasons")},
                 }
                 streams[(split, "episodes")].write(json.dumps(row) + "\n")
                 streams[(split, "diagnosis" if terminal else "actions")].write(json.dumps(row) + "\n")
+                for image in image_provenance:
+                    image_manifest.write(json.dumps({"row_id": row_id, "episode_id": episode["episode_id"],
+                                                     "source_episode": str(source), **image}) + "\n")
                 counts["terminal_rows" if terminal else "action_rows"] += 1
             counts["diagnosis_accepted"] += diagnosis_ok
             provenance.append({"episode_id": episode["episode_id"], "source": str(source),
                                "experiment_mode": identity.get("experiment_mode"),
+                               "source_asset_id": identity.get("source_asset_id"),
+                               "split": split, "split_group": identity.get("split_group"),
+                               "candidate_sha": identity.get("candidate_sha"),
+                               "reference_sha": identity.get("reference_sha"),
+                               "diagnosis_objective": evidence.get("diagnosis_objective"),
                                "diagnosis_accepted": diagnosis_ok,
                                "episode_sha256": _sha(episode_path), "audit_sha256": _sha(audit_path)})
     finally:
         for stream in streams.values():
             stream.close()
         rejected.close()
-    manifest = {"schema_version": 2, "status": "complete", "formal_training": True,
+        image_manifest.close()
+    manifest = {"schema_version": 3, "status": "complete", "formal_training": True,
                 "kind": "visible_only_interactive_teacher", "counts": counts,
                 "splits": list(TRAINING_SPLITS), "audit_name": audit_name, "sources": provenance}
     write_json_atomic(output / "manifest.json", manifest)

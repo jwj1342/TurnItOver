@@ -465,6 +465,36 @@ Round4 中已验证有效的设置现已成为 `scripts/run_interactive_teacher.
 
 **导出。** `kimi-round5-sft-export`：8 条动作行、6 条诊断行（`correct_fail` 4 条，来自 PM_25308 与 PM_5088；PM_102080 可信 `uncertain` 1 条；clean `uncertain` 1 条），所有行都带 `common_input=hierarchy`，诊断行的 prompt 中都含 `joint_structure`。loader 实际加载 actions 8 / diagnosis 6 / episodes 14 行，Qwen3-VL-2B processor 生成真实图像张量与 assistant-only mask。记录见 [`kimi-interactive-teacher-round5-default-flow.json`](evidence/kimi-interactive-teacher-round5-default-flow.json)。
 
+### API 教师数据正确性修复与 Round2–5 全量重导出（2026-10-16）
+
+本轮以 `5f0c0e4` 和原 Round2–5 目录为只读基线，不扩采、不调用 API、不训练 SFT。共发现并旁路重审 109 条真实 Kimi Episode（Round2/3/4/5 为 4/20/76/9）；每个源目录新增 `audit.correctness-v1.json`，原 `episode.json`、`audit.json`、图片和旧导出均未覆盖。新数据集是 `output/interactive-teacher/kimi-round2-5-sft-export-correctness-v2`，逐案例结果、拒绝项、图片映射、430 文件完整哈希、运行配置和命令分别保存在 `audit-report.json`、`rejected.jsonl`、`image-manifest.jsonl`、`sha256.json` 与 `reproduction.json`；摘要与关键文件哈希见 [`kimi-round2-5-correctness-reexport.json`](evidence/kimi-round2-5-correctness-reexport.json)。
+
+**图片身份。** 导出图片名现在包含源图片的完整 SHA-256，不同 Episode、条件和重复运行不会再因相同的 Episode ID、call 序号和图片位置而静默共用文件。每次导出先计算源 SHA，目标已存在时只有内容完全相同才复用；不相同时通过同目录临时文件原子重建，复制前后再次核验源与目标。每行保留 `source_episode`、稳定 `source_run_id`、`data_identity` 及逐图 `source/source_sha256/exported/exported_sha256`。红图/蓝图同 ID 冲突、多 Episode、多条件、重复导出和损坏目标重建均有回归。新导出的 921 个行级图片引用（43 个唯一内容 SHA）全部完成源—行—目标一致性核验；Train/Validation 的 split_group、source asset 与 reference SHA 均无交集，Test 无输出。
+
+**证据目标。** 审核现在显式记录 `diagnosis_objective`。`first_failure` 只要求至少一个 finding 的 defect、joint、parts 和全部 `evidence_steps` 同时通过 checker、冻结 witness、可见参考与真实观察校验；未观察的其他隐藏缺陷只计覆盖率，不再构成拒绝原因。任何额外错误或无证据 finding 仍会使整条 fail 被拒。`comprehensive_within_budget` 要求报告实际已观察范围内全部有合格证据的缺陷，但不要求猜测范围外缺陷。`pass` 仍走公开范围充分性审核，`uncertain` 在已有充分缺陷证据时仍拒绝。reviewer 的“一个缺陷可见、另一个隐藏”正例以及错误 finding、无证据 fail、合理 uncertain、无依据 pass 均有正反例测试。现存 109 条原始 Episode 的 Gold 只有 clean 或单缺陷，没有多缺陷 Episode，因此该语义修复在历史数据上直接新增的诊断行为 0；它修复的是错误拒绝条件，而不是通过放宽定位或证据标准增加数量。
+
+**重导出结果。** 旧版四个选定导出合计覆盖 83 个源运行、60 条动作和 49 条终判。全量重审覆盖 109 个源运行；Round2 的 4 条均因缺少冻结 witness（3 条）或记录的 witness SHA/内容不匹配（1 条）而拒绝，不能继续作为当前标准下的可信监督。新导出共有 **117 条训练行**：动作 71（Round3/4/5 为 41/22/8），诊断 46（11/29/6）。诊断为 15 条 `correct_fail`、11 条 `trustworthy_uncertain`、20 条 clean `uncertain`、0 条 `pass`；共 4 个独立 PartNet 源资产、8 个候选版本，其中正确 fail 仍只覆盖 **2 个独立资产（25308、5088）**。与旧选定导出相比净增加 11 条逐步独立审核合格的动作行，同时主动删除 3 条无法按冻结 witness 复核的 Round2 uncertain 终判；重复 API 运行没有计作独立资产扩量。
+
+**实际加载与交付边界。** formal SFT loader 成功加载 actions 71 / diagnosis 46 / episodes 117。使用本地 Qwen3-VL-2B processor 对全部 117 条非重复训练目标逐条生成真实图像张量并检查 assistant-only mask，117/117 通过、0 失败，详见 `loading-qwen-all.json`。完整单元测试为 253 passed、2 skipped；真实 Chromium 为 20 passed。该版本可安全交付 `laq/sft-training` 作为**仅 Train 的、动作与诊断分开使用的可信增量**；它没有 Validation 行、没有 pass、只有 4 个独立资产，不能单独承担验证集或支持规模/泛化结论。
+
+复现（不会调用 API）：
+
+```bash
+python -m scripts.reexport_interactive_teacher_rounds \
+  --source-root output/interactive-teacher \
+  --manifest-root output/interactive-teacher/axis-round4-frozen-witnesses \
+  --out output/interactive-teacher/kimi-round2-5-sft-export-correctness-v2 \
+  --diagnosis-objective first_failure
+HF_HUB_OFFLINE=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.check_teacher_export_loading \
+  --dataset output/interactive-teacher/kimi-round2-5-sft-export-correctness-v2 \
+  --out output/interactive-teacher/kimi-round2-5-sft-export-correctness-v2/loading-qwen-all.json \
+  --model ../TurnItOver/models/Qwen3-VL-2B-Instruct --all-processor-rows
+python -m scripts.hash_teacher_export \
+  --dataset output/interactive-teacher/kimi-round2-5-sft-export-correctness-v2
+pytest -q tests/unit
+pytest -m browser -q
+```
+
 ## 复现命令
 
 以下命令要求已获官方访问权、已构建 `web/dist`，且各输出目录不存在：

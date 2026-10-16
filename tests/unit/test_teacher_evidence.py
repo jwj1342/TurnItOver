@@ -123,6 +123,8 @@ def run_case(tmp_path, decisions, limits, case, *, initial=(), budget=None, iden
 
 AXIS = {"defect_id": "kinematics.joint_axis", "parts": ["door"], "joint_id": "hinge",
         "params": {"joint": "hinge"}}
+OFFSET = {"defect_id": "structure.part_offset", "parts": ["base"], "joint_id": None,
+          "params": {"magnitude_m": .1}}
 GRID = [{"view": "front", "joint": None, "detent": None},
         {"view": "front", "joint": "hinge", "detent": "zero"},
         {"view": "front", "joint": "hinge", "detent": "limit"},
@@ -137,6 +139,12 @@ def finding(steps, joint="hinge", parts=("door",)):
     return {"defect_id": "kinematics.joint_axis", "parts": list(parts), "joint_id": joint, "severity": .7,
             "confidence": .8, "evidence_steps": steps, "description": "Door swings off-axis.",
             "suggested_fix": "Correct the hinge axis."}
+
+
+def offset_finding(steps):
+    return {"defect_id": "structure.part_offset", "parts": ["base"], "joint_id": None,
+            "severity": .7, "confidence": .8, "evidence_steps": steps,
+            "description": "The base is visibly offset.", "suggested_fix": "Restore the base position."}
 
 
 def verdict(status, findings=()):
@@ -203,6 +211,63 @@ def test_fail_without_evidence_and_wrong_localization_are_rejected(tmp_path):
     assert evidence(wrong)["diagnosis_outcome"] == "incorrect_fail"
     assert evidence(wrong)["localization"][0]["joint_correct"]
     assert not evidence(wrong)["localization"][0]["parts_correct"]
+
+
+def test_first_failure_accepts_one_visible_checked_finding_without_guessing_hidden_defect(tmp_path):
+    case = build_case(tmp_path, LIMITS, GRID, [[], [0], [0], [0]], [AXIS, OFFSET])
+    _, audit = run_case(tmp_path, [actuate("limit"), verdict("fail", [finding([0])])], LIMITS, case)
+    result = evidence(audit)
+    assert result["accepted"] and result["diagnosis_outcome"] == "correct_fail"
+    assert result["diagnosis_objective"] == "first_failure"
+    assert result["objective_evidence_covered"] == [0]
+    assert not result["objective_evidence_complete"]
+
+
+def test_comprehensive_reports_all_observed_not_all_hidden_defects(tmp_path):
+    case = build_case(tmp_path, LIMITS, GRID, [[], [0], [0], [0]], [AXIS, OFFSET])
+    out, _ = run_case(tmp_path, [actuate("limit"), verdict("fail", [finding([0])])], LIMITS, case)
+    audit = audit_episode(out, case[0], case[1], manifest=case[2],
+                          audit_name="comprehensive.json",
+                          diagnosis_objective="comprehensive_within_budget")
+    result = evidence(audit)
+    assert result["accepted"] and result["objective_evidence_covered"] == [0]
+
+    root = tmp_path / "both"
+    root.mkdir()
+    case = build_case(root, LIMITS, GRID, [[], [0, 1], [0, 1], [0, 1]], [AXIS, OFFSET])
+    out, _ = run_case(root, [actuate("limit"), verdict("fail", [finding([0])])], LIMITS, case)
+    audit = audit_episode(out, case[0], case[1], manifest=case[2],
+                          audit_name="comprehensive.json",
+                          diagnosis_objective="comprehensive_within_budget")
+    assert "fail_does_not_cover_observed_defects" in evidence(audit)["rejection_reasons"]
+
+
+def test_first_failure_still_rejects_any_extra_wrong_or_unsupported_finding(tmp_path):
+    case = build_case(tmp_path, LIMITS, GRID, [[], [0], [0], [0]], [AXIS, OFFSET])
+    wrong = {**offset_finding([0]), "parts": ["door"]}
+    _, audit = run_case(tmp_path, [actuate("limit"), verdict("fail", [finding([0]), wrong])], LIMITS, case)
+    result = evidence(audit)
+    assert not result["accepted"]
+    assert "finding_not_objective_truth:structure.part_offset" in result["rejection_reasons"]
+
+
+def test_uncertain_and_pass_keep_strict_visible_scope_rules(tmp_path, monkeypatch):
+    uncertain_root = tmp_path / "uncertain"
+    uncertain_root.mkdir()
+    case = build_case(uncertain_root, LIMITS, GRID, [[], [0], [0], [0]], [AXIS])
+    _, audit = run_case(uncertain_root, [{"action": {"type": "request_view", "view_id": "front"}},
+                                         verdict("uncertain")], LIMITS, case)
+    assert evidence(audit)["accepted"] and evidence(audit)["diagnosis_outcome"] == "trustworthy_uncertain"
+
+    pass_root = tmp_path / "pass"
+    pass_root.mkdir()
+    monkeypatch.setattr("turnitover.teacher.evidence.assess_single_reference_pass",
+                        lambda payload, root: {"eligible": False, "reason": "insufficient_visible_scope"})
+    case = build_case(pass_root, LIMITS, GRID, [[], [], [], []], [])
+    _, audit = run_case(pass_root, [{"action": {"type": "request_view", "view_id": "front"}},
+                                    verdict("pass")], LIMITS, case)
+    assert not evidence(audit)["accepted"]
+    assert any(reason.startswith("pass_scope_not_supported:") for reason in evidence(audit)["rejection_reasons"])
 
 
 def test_state_outside_grid_and_view_without_reference_are_not_credited(tmp_path):

@@ -27,6 +27,8 @@ if __name__ == "__main__":
                         help="Superseding frozen witness directory; default is the manifest the Episode recorded")
     parser.add_argument("--audit-name", default="audit.json",
                         help="Write the re-audit beside, not over, the original audit")
+    parser.add_argument("--diagnosis-objective", choices=("first_failure", "comprehensive_within_budget"),
+                        default="first_failure")
     args = parser.parse_args()
     gold = {**_rows(args.benchmark / "train.gold.jsonl"), **_rows(args.benchmark / "validation.gold.jsonl")}
     annotations = _rows(args.oracle_annotations)
@@ -36,7 +38,7 @@ if __name__ == "__main__":
         path = (args.manifest_root / uid / "manifest.json" if args.manifest_root
                 else Path(episode["frozen_witness_manifest"]["path"]))
         audit = audit_episode(source, gold[uid], annotations.get(uid), manifest=json.loads(path.read_text()),
-                              audit_name=args.audit_name)
+                              audit_name=args.audit_name, diagnosis_objective=args.diagnosis_objective)
         evidence = audit["independent_evidence_audit"]
         print(json.dumps({"episode": str(source), "accepted": evidence["accepted"],
                           "outcome": evidence["diagnosis_outcome"],
