@@ -1,0 +1,107 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "case_id": "odr-485c93213d2f",
+      "pipeline_ok": true,
+      "one_call": true,
+      "response_retained": true,
+      "six_image_shas_match": true,
+      "fixed_terminal_request": true,
+      "history_steps": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "private_markers_in_prompt": [],
+      "source_board_sha_matches": true,
+      "passed": true
+    },
+    {
+      "case_id": "odr-93a73fb99bd3",
+      "pipeline_ok": true,
+      "one_call": true,
+      "response_retained": true,
+      "six_image_shas_match": true,
+      "fixed_terminal_request": true,
+      "history_steps": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "private_markers_in_prompt": [],
+      "source_board_sha_matches": true,
+      "passed": true
+    },
+    {
+      "case_id": "odr-d11b5f796913",
+      "pipeline_ok": true,
+      "one_call": true,
+      "response_retained": true,
+      "six_image_shas_match": true,
+      "fixed_terminal_request": true,
+      "history_steps": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "private_markers_in_prompt": [],
+      "source_board_sha_matches": true,
+      "passed": true
+    },
+    {
+      "case_id": "odr-8afcabd9c65c",
+      "pipeline_ok": true,
+      "one_call": true,
+      "response_retained": true,
+      "six_image_shas_match": true,
+      "fixed_terminal_request": true,
+      "history_steps": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "private_markers_in_prompt": [],
+      "source_board_sha_matches": true,
+      "passed": true
+    },
+    {
+      "case_id": "odr-ff7157e0a125",
+      "pipeline_ok": true,
+      "one_call": true,
+      "response_retained": true,
+      "six_image_shas_match": true,
+      "fixed_terminal_request": true,
+      "history_steps": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "private_markers_in_prompt": [],
+      "source_board_sha_matches": true,
+      "passed": true
+    },
+    {
+      "case_id": "odr-602d5a570ecf",
+      "pipeline_ok": true,
+      "one_call": true,
+      "response_retained": true,
+      "six_image_shas_match": true,
+      "fixed_terminal_request": true,
+      "history_steps": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "private_markers_in_prompt": [],
+      "source_board_sha_matches": true,
+      "passed": true
+    }
+  ]
+}

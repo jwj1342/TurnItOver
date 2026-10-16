@@ -1,0 +1,35 @@
+{
+  "case_id": "odr-d11b5f796913",
+  "asset_id": "PM_12036",
+  "kind": "clean",
+  "format_valid": true,
+  "error_category": "clean_uncertain",
+  "strict_axis_correct": null,
+  "field_correctness": {
+    "verdict_exact_gold": false,
+    "clean_safe": true,
+    "defect_id": true,
+    "joint_id": true,
+    "parts": true,
+    "evidence_steps": true
+  },
+  "expected": {
+    "status": "pass",
+    "defect_id": null,
+    "joint_id": null,
+    "parts": [],
+    "evidence_steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "predicted": {
+    "status": "uncertain",
+    "defect_ids": [],
+    "joint_ids": [],
+    "parts": [],
+    "evidence_steps": []
+  },
+  "human_gold_agree": true
+}

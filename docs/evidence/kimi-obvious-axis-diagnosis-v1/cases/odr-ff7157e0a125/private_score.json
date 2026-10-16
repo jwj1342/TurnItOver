@@ -1,0 +1,35 @@
+{
+  "case_id": "odr-ff7157e0a125",
+  "asset_id": "PM_25308",
+  "kind": "clean",
+  "format_valid": true,
+  "error_category": "clean_pass",
+  "strict_axis_correct": null,
+  "field_correctness": {
+    "verdict_exact_gold": true,
+    "clean_safe": true,
+    "defect_id": true,
+    "joint_id": true,
+    "parts": true,
+    "evidence_steps": true
+  },
+  "expected": {
+    "status": "pass",
+    "defect_id": null,
+    "joint_id": null,
+    "parts": [],
+    "evidence_steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "predicted": {
+    "status": "pass",
+    "defect_ids": [],
+    "joint_ids": [],
+    "parts": [],
+    "evidence_steps": []
+  },
+  "human_gold_agree": true
+}

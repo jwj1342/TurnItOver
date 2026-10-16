@@ -425,3 +425,17 @@ python -m scripts.render_perceptibility_figures \
 | `kimi-round5-fixed-pm25308-axis-r1` | fixed/F/H/AR | fail (0.9) | joint_axis: joint_1 / link_1 / [5, 6] | `correct_fail` | — | 0.0313 / 0.0535 | ✅ 正确 |
 
 另有 4 个 episode 因网关错误或空响应没有合法终判（`no_legal_verdict`），不计入归因：`kimi-round3-active-pm25308-axis`, `kimi-round4-active-HC-pm25308-axis-rep1`, `kimi-round4-fixed-A-pm25308-axis`, `kimi-round4-fixed-A-pm25308-axis-r2`
+
+## 附录 B：人类盲审清晰案例的固定充分证据复测（2026-10-16）
+
+上一轮另从 Train 构建了 3 个 60° `joint_axis` 明显缺陷：柜门、抽屉和翻盖均由人类盲审
+确认，且缺陷类型、joint、part 与独立 Gold 一致。本次把同视角 reference/candidate 的
+rest、mid、limit 原生 256×256 图以及合法 hierarchy 一次性提供给 `k3-256k`；每个轴错误
+和同资产 clean 对照各调用一次，共 6 次，无重试、无 Prompt 调整、无主动取证。
+
+结果为：轴错误严格五字段诊断 **3/3**，clean `fail` 误报 **0/3**（2 pass、1 uncertain）。
+严格字段包括 verdict、`defect_id`、`joint_id`、`parts` 和与人审一致的 mid/limit
+`evidence_steps=[2,3]`。抽屉 finding 的字段正确，但说明文字把 prismatic 轴误称为
+“rotation axis”，因此机械术语层面记为部分正确，不改动五字段主统计。完整原始请求响应、
+图片 SHA、Episode、独立审核和复现命令见
+[`kimi-obvious-axis-diagnosis-v1/REPORT.md`](kimi-obvious-axis-diagnosis-v1/REPORT.md)。

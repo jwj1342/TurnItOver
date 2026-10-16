@@ -1,0 +1,449 @@
+{
+  "schema_version": 1,
+  "episode_id": "odr-ff7157e0a125",
+  "status": "complete",
+  "created_at": "2026-10-16T09:16:48+00:00",
+  "budget": 4,
+  "spent": 4,
+  "context": {
+    "task": "Compare candidate rest, mid, and limit motion with the same-view reference states. Return one final structured diagnosis for the visible evidence.",
+    "parts": [
+      "base",
+      "link_0",
+      "link_1",
+      "link_2"
+    ],
+    "joints": [
+      "joint_0",
+      "joint_1"
+    ],
+    "views": [
+      "oblique_bl"
+    ],
+    "runtime_properties": [
+      "hierarchy"
+    ],
+    "action_types": [
+      "request_view",
+      "actuate_joint",
+      "query_runtime"
+    ],
+    "max_triangles": 1000000,
+    "max_draw_calls": 1024
+  },
+  "teacher": {
+    "kind": "kimi",
+    "model": "k3-256k",
+    "paid": true,
+    "max_real_requests": 6,
+    "estimated_input_tokens": 12000,
+    "estimated_max_cost_rmb": null,
+    "cost_cap_rmb": null,
+    "pricing": null,
+    "billing_basis": "unknown_gateway_or_membership_quota"
+  },
+  "trajectory": [
+    {
+      "step": 0,
+      "action": {
+        "property": "hierarchy",
+        "__type__": "QueryRuntime"
+      },
+      "image_ref": null,
+      "payload": {
+        "property": "hierarchy",
+        "root": {
+          "name": "PM_25308",
+          "type": "Group",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "children": [
+            {
+              "name": "base",
+              "type": "Group",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "children": [
+                {
+                  "name": "link_2",
+                  "type": "Group",
+                  "position": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "rotation": [
+                    1.5707963267948966,
+                    -1.570796326794896,
+                    0
+                  ],
+                  "scale": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "children": [
+                    {
+                      "name": "joint:joint_0",
+                      "type": "Group",
+                      "position": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "rotation": [
+                        -0.0,
+                        0,
+                        -0.0
+                      ],
+                      "scale": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "children": [
+                        {
+                          "name": "link_0",
+                          "type": "Group",
+                          "position": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "rotation": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "scale": [
+                            1,
+                            1,
+                            1
+                          ],
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "name": "joint:joint_1",
+                      "type": "Group",
+                      "position": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "rotation": [
+                        -0.0,
+                        0,
+                        -0.0
+                      ],
+                      "scale": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "children": [
+                        {
+                          "name": "link_1",
+                          "type": "Group",
+                          "position": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "rotation": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "scale": [
+                            1,
+                            1,
+                            1
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "elapsed_ms": 0.004107016138732433,
+      "__type__": "Observation",
+      "decision": {
+        "type": "query_runtime",
+        "property": "hierarchy"
+      },
+      "decision_source": "fixed_protocol"
+    },
+    {
+      "step": 1,
+      "action": {
+        "joint_id": "joint_1",
+        "detent": "rest",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/001.png",
+      "payload": {
+        "value": 0.0,
+        "render_ms": 0.0
+      },
+      "elapsed_ms": 0.041346997022628784,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_1",
+        "detent": "rest"
+      },
+      "decision_source": "fixed_protocol"
+    },
+    {
+      "step": 2,
+      "action": {
+        "joint_id": "joint_1",
+        "detent": "mid",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/002.png",
+      "payload": {
+        "value": 0.21999999999999997,
+        "render_ms": 0.0
+      },
+      "elapsed_ms": 0.02876401413232088,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_1",
+        "detent": "mid"
+      },
+      "decision_source": "fixed_protocol"
+    },
+    {
+      "step": 3,
+      "action": {
+        "joint_id": "joint_1",
+        "detent": "limit",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/003.png",
+      "payload": {
+        "value": 0.43999999999999995,
+        "render_ms": 0.0
+      },
+      "elapsed_ms": 0.027491943910717964,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_1",
+        "detent": "limit"
+      },
+      "decision_source": "fixed_protocol"
+    }
+  ],
+  "decisions": [
+    {
+      "call": 0,
+      "remaining": 0,
+      "valid": true,
+      "decision": {
+        "verdict": {
+          "status": "pass",
+          "confidence": 0.95,
+          "findings": [],
+          "summary": "Observed joint_1 rest, mid, and limit poses in the oblique_bl view match the compatible reference states with no visible deviation.",
+          "limitations": []
+        }
+      }
+    }
+  ],
+  "pending_action": null,
+  "model_calls": [
+    {
+      "path": "model_calls/000",
+      "status": "received",
+      "remaining": 0,
+      "image_count": 6,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2951,
+        "completion_tokens": 2383,
+        "total_tokens": 5334,
+        "cached_tokens": 82,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2316
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 82
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 72141.94538397714
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 2951,
+    "output_tokens": 2383,
+    "total_tokens": 5334
+  },
+  "budget_exhausted": true,
+  "teacher_verdict_missing": false,
+  "data_identity": {
+    "experiment": "kimi-obvious-axis-diagnosis-v1",
+    "order": 4,
+    "case_id": "odr-ff7157e0a125",
+    "asset_id": "PM_25308",
+    "split": "train",
+    "source_board": "docs/evidence/partnet-mobility-obvious-defects-v1/boards/odr-ff7157e0a125.png",
+    "source_board_sha256": "ef30fb4ef9f94adcb1cb83e9717a377b51e59ccfc8ee5a2a1e72c5e071a57385",
+    "candidate_sha": "4f2a81ecd16f96db",
+    "reference_sha": "4f2a81ecd16f96db",
+    "human_review_gate": "passed",
+    "human_gold_agreement": true,
+    "independent_checker_consistent": true,
+    "fixed_evidence": true,
+    "active_acquisition": false,
+    "third_party_transmission_reviewed": true,
+    "transmission_review_basis": "user-requested-six-case-PartNet-Train-diagnostic"
+  },
+  "updated_at": "2026-10-16T09:18:00+00:00",
+  "termination": "budget_exhausted",
+  "verdict": {
+    "status": "pass",
+    "confidence": 0.95,
+    "findings": [],
+    "summary": "Observed joint_1 rest, mid, and limit poses in the oblique_bl view match the compatible reference states with no visible deviation.",
+    "limitations": []
+  },
+  "finished_at": "2026-10-16T09:18:00+00:00",
+  "real_api_requests": 1,
+  "usage_cost_rmb_estimate": null,
+  "billing_cost_rmb": null,
+  "input_images": [
+    {
+      "kind": "reference",
+      "state": "rest",
+      "path": "reference-rest.png",
+      "sha256": "1e188211baf0d938cc725a24f295f9c385702b120fa397232d3b26526c56d607",
+      "size": [
+        256,
+        256
+      ],
+      "source_crop": [
+        122,
+        116,
+        378,
+        372
+      ]
+    },
+    {
+      "kind": "reference",
+      "state": "mid",
+      "path": "reference-mid.png",
+      "sha256": "8d65b8540b2913d8828a9db1b3fe6c2dd478a120c7d62ec975d1a7d2d44b6b63",
+      "size": [
+        256,
+        256
+      ],
+      "source_crop": [
+        388,
+        116,
+        644,
+        372
+      ]
+    },
+    {
+      "kind": "reference",
+      "state": "limit",
+      "path": "reference-limit.png",
+      "sha256": "a71de292d77574dae601c73a643ca4d6bd8a2c042c5a9fcfc8ee6ba309808f06",
+      "size": [
+        256,
+        256
+      ],
+      "source_crop": [
+        654,
+        116,
+        910,
+        372
+      ]
+    },
+    {
+      "kind": "candidate",
+      "state": "rest",
+      "path": "candidate-rest.png",
+      "sha256": "1e188211baf0d938cc725a24f295f9c385702b120fa397232d3b26526c56d607",
+      "size": [
+        256,
+        256
+      ],
+      "source_crop": [
+        122,
+        382,
+        378,
+        638
+      ]
+    },
+    {
+      "kind": "candidate",
+      "state": "mid",
+      "path": "candidate-mid.png",
+      "sha256": "8d65b8540b2913d8828a9db1b3fe6c2dd478a120c7d62ec975d1a7d2d44b6b63",
+      "size": [
+        256,
+        256
+      ],
+      "source_crop": [
+        388,
+        382,
+        644,
+        638
+      ]
+    },
+    {
+      "kind": "candidate",
+      "state": "limit",
+      "path": "candidate-limit.png",
+      "sha256": "a71de292d77574dae601c73a643ca4d6bd8a2c042c5a9fcfc8ee6ba309808f06",
+      "size": [
+        256,
+        256
+      ],
+      "source_crop": [
+        654,
+        382,
+        910,
+        638
+      ]
+    }
+  ]
+}

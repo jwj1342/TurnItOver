@@ -1,0 +1,1145 @@
+{
+  "version": 1,
+  "status": "complete",
+  "model": {
+    "role": "teacher",
+    "provider": "openai_compatible",
+    "model": "k3-256k",
+    "key_configured": true,
+    "max_tokens": 4096,
+    "timeout": 120.0
+  },
+  "protocol": {
+    "fixed_sufficient_evidence": true,
+    "active_acquisition": false,
+    "calls_per_case": 1,
+    "schema_retries": 0,
+    "total_request_cap": 6,
+    "states": [
+      "rest",
+      "mid",
+      "limit"
+    ],
+    "candidate_evidence_steps": {
+      "rest": 1,
+      "mid": 2,
+      "limit": 3
+    },
+    "student_image_size": [
+      256,
+      256
+    ]
+  },
+  "counts": {
+    "cases": 6,
+    "real_api_requests": 6,
+    "format_valid": 6,
+    "axis_strict_correct": 3,
+    "axis_total": 3,
+    "clean_false_positives": 0,
+    "clean_total": 3
+  },
+  "human_clear_but_kimi_not_strict": [],
+  "cases": [
+    {
+      "case_id": "odr-485c93213d2f",
+      "asset_id": "PM_102257",
+      "kind": "clean",
+      "format_valid": true,
+      "error_category": "clean_pass",
+      "strict_axis_correct": null,
+      "field_correctness": {
+        "verdict_exact_gold": true,
+        "clean_safe": true,
+        "defect_id": true,
+        "joint_id": true,
+        "parts": true,
+        "evidence_steps": true
+      },
+      "expected": {
+        "status": "pass",
+        "defect_id": null,
+        "joint_id": null,
+        "parts": [],
+        "evidence_steps": []
+      },
+      "predicted": {
+        "status": "pass",
+        "defect_ids": [],
+        "joint_ids": [],
+        "parts": [],
+        "evidence_steps": []
+      },
+      "human_gold_agree": false,
+      "model_call": {
+        "status": "received",
+        "usage": {
+          "prompt_tokens": 2822,
+          "completion_tokens": 1577,
+          "total_tokens": 4399,
+          "completion_tokens_details": {
+            "reasoning_tokens": 1499
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 56634.3021329958
+      },
+      "artifacts": {
+        "episode": "cases/odr-485c93213d2f/episode.json",
+        "prompt_sha256": "2abf4badeb85a9b2515903a28d64cd756bba1aa3560f00e338468161af8f439c",
+        "request_sha256": "afeb4c9c620d32c14f8edf319d6c0f3f7aa0096324d5e257ad8027c1324bbead",
+        "response_sha256": "54c71bea2014c2853c29b9aadad53d7ecef02d660467d07b31867bb93c39f477",
+        "images": [
+          {
+            "kind": "reference",
+            "state": "rest",
+            "path": "reference-rest.png",
+            "sha256": "cf61daf4c559ac2b091de09b7c7d0de108dc1e2cbf8f66ab7a98e60c6c0d931d",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              122,
+              116,
+              378,
+              372
+            ]
+          },
+          {
+            "kind": "reference",
+            "state": "mid",
+            "path": "reference-mid.png",
+            "sha256": "ef8ddd2bbe131649a0756c7484283ed346dc0cc92974f49fa8cd8d0628133f6b",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              388,
+              116,
+              644,
+              372
+            ]
+          },
+          {
+            "kind": "reference",
+            "state": "limit",
+            "path": "reference-limit.png",
+            "sha256": "aaede13a9547c97635c254abf56cbe58fb76272b31d9101ed0bfbebb6d2f427f",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              654,
+              116,
+              910,
+              372
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "rest",
+            "path": "candidate-rest.png",
+            "sha256": "cf61daf4c559ac2b091de09b7c7d0de108dc1e2cbf8f66ab7a98e60c6c0d931d",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              122,
+              382,
+              378,
+              638
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "mid",
+            "path": "candidate-mid.png",
+            "sha256": "ef8ddd2bbe131649a0756c7484283ed346dc0cc92974f49fa8cd8d0628133f6b",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              388,
+              382,
+              644,
+              638
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "limit",
+            "path": "candidate-limit.png",
+            "sha256": "aaede13a9547c97635c254abf56cbe58fb76272b31d9101ed0bfbebb6d2f427f",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              654,
+              382,
+              910,
+              638
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "odr-93a73fb99bd3",
+      "asset_id": "PM_102257",
+      "kind": "joint_axis",
+      "format_valid": true,
+      "error_category": "strict_correct",
+      "strict_axis_correct": true,
+      "field_correctness": {
+        "verdict": true,
+        "defect_id": true,
+        "joint_id": true,
+        "parts": true,
+        "evidence_steps": true
+      },
+      "expected": {
+        "status": "fail",
+        "defect_id": "kinematics.joint_axis",
+        "joint_id": "joint_0",
+        "parts": [
+          "link_0"
+        ],
+        "evidence_steps": [
+          2,
+          3
+        ]
+      },
+      "predicted": {
+        "status": "fail",
+        "defect_ids": [
+          "kinematics.joint_axis"
+        ],
+        "joint_ids": [
+          "joint_0"
+        ],
+        "parts": [
+          "link_0"
+        ],
+        "evidence_steps": [
+          2,
+          3
+        ]
+      },
+      "human_gold_agree": true,
+      "model_call": {
+        "status": "received",
+        "usage": {
+          "prompt_tokens": 2822,
+          "completion_tokens": 1223,
+          "total_tokens": 4045,
+          "cached_tokens": 514,
+          "completion_tokens_details": {
+            "reasoning_tokens": 1027
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 514
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 42175.92482198961
+      },
+      "artifacts": {
+        "episode": "cases/odr-93a73fb99bd3/episode.json",
+        "prompt_sha256": "31e60add31d1b55b4a75332cdd8939ee4bef08e59c114c28899cdad446744975",
+        "request_sha256": "4a359ba67c39f092501659b491cd0474ad55cccdc5dbdb4d84de2cbe29a2ba28",
+        "response_sha256": "0de89ec6797bcc1f99d41ea0470f9cf4c1ef1015f0e7385d8c1876d7aebc1970",
+        "images": [
+          {
+            "kind": "reference",
+            "state": "rest",
+            "path": "reference-rest.png",
+            "sha256": "cf61daf4c559ac2b091de09b7c7d0de108dc1e2cbf8f66ab7a98e60c6c0d931d",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              122,
+              116,
+              378,
+              372
+            ]
+          },
+          {
+            "kind": "reference",
+            "state": "mid",
+            "path": "reference-mid.png",
+            "sha256": "ef8ddd2bbe131649a0756c7484283ed346dc0cc92974f49fa8cd8d0628133f6b",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              388,
+              116,
+              644,
+              372
+            ]
+          },
+          {
+            "kind": "reference",
+            "state": "limit",
+            "path": "reference-limit.png",
+            "sha256": "aaede13a9547c97635c254abf56cbe58fb76272b31d9101ed0bfbebb6d2f427f",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              654,
+              116,
+              910,
+              372
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "rest",
+            "path": "candidate-rest.png",
+            "sha256": "cf61daf4c559ac2b091de09b7c7d0de108dc1e2cbf8f66ab7a98e60c6c0d931d",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              122,
+              382,
+              378,
+              638
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "mid",
+            "path": "candidate-mid.png",
+            "sha256": "db61b092236299590b95cc96f1ef2158411b2fc7f5a45013deba6f2da2897cd2",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              388,
+              382,
+              644,
+              638
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "limit",
+            "path": "candidate-limit.png",
+            "sha256": "7d94ffdedbef3a2b2fd1b3b76f58c18726be68f2e70aa8ff018f7d784ffac987",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              654,
+              382,
+              910,
+              638
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "odr-d11b5f796913",
+      "asset_id": "PM_12036",
+      "kind": "clean",
+      "format_valid": true,
+      "error_category": "clean_uncertain",
+      "strict_axis_correct": null,
+      "field_correctness": {
+        "verdict_exact_gold": false,
+        "clean_safe": true,
+        "defect_id": true,
+        "joint_id": true,
+        "parts": true,
+        "evidence_steps": true
+      },
+      "expected": {
+        "status": "pass",
+        "defect_id": null,
+        "joint_id": null,
+        "parts": [],
+        "evidence_steps": [
+          1,
+          2,
+          3
+        ]
+      },
+      "predicted": {
+        "status": "uncertain",
+        "defect_ids": [],
+        "joint_ids": [],
+        "parts": [],
+        "evidence_steps": []
+      },
+      "human_gold_agree": true,
+      "model_call": {
+        "status": "received",
+        "usage": {
+          "prompt_tokens": 2993,
+          "completion_tokens": 1109,
+          "total_tokens": 4102,
+          "cached_tokens": 82,
+          "completion_tokens_details": {
+            "reasoning_tokens": 980
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 82
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 38593.354415963404
+      },
+      "artifacts": {
+        "episode": "cases/odr-d11b5f796913/episode.json",
+        "prompt_sha256": "08164ac8946708a365142f9b1cec1964e57f0f4cc47cca31ece85b5b110924e4",
+        "request_sha256": "87a2bf64918c5e8a8a61277e26dca5a1973379f3c4ba00498cadefd7263aeecc",
+        "response_sha256": "9ee24595fa0cf7831a8dbe1bc58ac11eb39af7ab271140772c6b61c59b8d38b3",
+        "images": [
+          {
+            "kind": "reference",
+            "state": "rest",
+            "path": "reference-rest.png",
+            "sha256": "4b0df75db8c3a59b3809da865baae7a2441c9008dae094be9dcd95d12c066a91",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              122,
+              116,
+              378,
+              372
+            ]
+          },
+          {
+            "kind": "reference",
+            "state": "mid",
+            "path": "reference-mid.png",
+            "sha256": "e7ce476b94a131be0ff937d0203e93eb946fbd4c4031361f172ee87b01f1cabe",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              388,
+              116,
+              644,
+              372
+            ]
+          },
+          {
+            "kind": "reference",
+            "state": "limit",
+            "path": "reference-limit.png",
+            "sha256": "5d8bf249228d3d452deae24fdbb48665dde9f71f1faaaaa14d65d6745f4b5736",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              654,
+              116,
+              910,
+              372
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "rest",
+            "path": "candidate-rest.png",
+            "sha256": "4b0df75db8c3a59b3809da865baae7a2441c9008dae094be9dcd95d12c066a91",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              122,
+              382,
+              378,
+              638
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "mid",
+            "path": "candidate-mid.png",
+            "sha256": "e7ce476b94a131be0ff937d0203e93eb946fbd4c4031361f172ee87b01f1cabe",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              388,
+              382,
+              644,
+              638
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "limit",
+            "path": "candidate-limit.png",
+            "sha256": "5d8bf249228d3d452deae24fdbb48665dde9f71f1faaaaa14d65d6745f4b5736",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              654,
+              382,
+              910,
+              638
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "odr-8afcabd9c65c",
+      "asset_id": "PM_12036",
+      "kind": "joint_axis",
+      "format_valid": true,
+      "error_category": "strict_correct",
+      "strict_axis_correct": true,
+      "field_correctness": {
+        "verdict": true,
+        "defect_id": true,
+        "joint_id": true,
+        "parts": true,
+        "evidence_steps": true
+      },
+      "expected": {
+        "status": "fail",
+        "defect_id": "kinematics.joint_axis",
+        "joint_id": "joint_0",
+        "parts": [
+          "link_0"
+        ],
+        "evidence_steps": [
+          2,
+          3
+        ]
+      },
+      "predicted": {
+        "status": "fail",
+        "defect_ids": [
+          "kinematics.joint_axis"
+        ],
+        "joint_ids": [
+          "joint_0"
+        ],
+        "parts": [
+          "link_0"
+        ],
+        "evidence_steps": [
+          2,
+          3
+        ]
+      },
+      "human_gold_agree": true,
+      "model_call": {
+        "status": "received",
+        "usage": {
+          "prompt_tokens": 2993,
+          "completion_tokens": 2214,
+          "total_tokens": 5207,
+          "cached_tokens": 514,
+          "completion_tokens_details": {
+            "reasoning_tokens": 1983
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 514
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 71310.6643059291
+      },
+      "artifacts": {
+        "episode": "cases/odr-8afcabd9c65c/episode.json",
+        "prompt_sha256": "de9ca8f621c2ce9a1c934ce0588ffef52ac1752dc60b3b9f7b7691bccfe85765",
+        "request_sha256": "db4a5c290c5cf20e76057816d16ac67825a965580ad7b96e42c1af58af8a9566",
+        "response_sha256": "65c0eaf92875a1723ab6d52d4c4cb20fd9f4a7871f2ae1ee65e7db9f8a702f7c",
+        "images": [
+          {
+            "kind": "reference",
+            "state": "rest",
+            "path": "reference-rest.png",
+            "sha256": "4b0df75db8c3a59b3809da865baae7a2441c9008dae094be9dcd95d12c066a91",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              122,
+              116,
+              378,
+              372
+            ]
+          },
+          {
+            "kind": "reference",
+            "state": "mid",
+            "path": "reference-mid.png",
+            "sha256": "e7ce476b94a131be0ff937d0203e93eb946fbd4c4031361f172ee87b01f1cabe",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              388,
+              116,
+              644,
+              372
+            ]
+          },
+          {
+            "kind": "reference",
+            "state": "limit",
+            "path": "reference-limit.png",
+            "sha256": "5d8bf249228d3d452deae24fdbb48665dde9f71f1faaaaa14d65d6745f4b5736",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              654,
+              116,
+              910,
+              372
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "rest",
+            "path": "candidate-rest.png",
+            "sha256": "4b0df75db8c3a59b3809da865baae7a2441c9008dae094be9dcd95d12c066a91",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              122,
+              382,
+              378,
+              638
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "mid",
+            "path": "candidate-mid.png",
+            "sha256": "76b275c9d0ca10932c4193508273c5b628ce807866ee91b7ee2adeeca44d3ad6",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              388,
+              382,
+              644,
+              638
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "limit",
+            "path": "candidate-limit.png",
+            "sha256": "b86a75c94bb8f419c9295db2f5af178b76bf184f6623668e8d6a58b0ee068736",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              654,
+              382,
+              910,
+              638
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "odr-ff7157e0a125",
+      "asset_id": "PM_25308",
+      "kind": "clean",
+      "format_valid": true,
+      "error_category": "clean_pass",
+      "strict_axis_correct": null,
+      "field_correctness": {
+        "verdict_exact_gold": true,
+        "clean_safe": true,
+        "defect_id": true,
+        "joint_id": true,
+        "parts": true,
+        "evidence_steps": true
+      },
+      "expected": {
+        "status": "pass",
+        "defect_id": null,
+        "joint_id": null,
+        "parts": [],
+        "evidence_steps": [
+          1,
+          2,
+          3
+        ]
+      },
+      "predicted": {
+        "status": "pass",
+        "defect_ids": [],
+        "joint_ids": [],
+        "parts": [],
+        "evidence_steps": []
+      },
+      "human_gold_agree": true,
+      "model_call": {
+        "status": "received",
+        "usage": {
+          "prompt_tokens": 2951,
+          "completion_tokens": 2383,
+          "total_tokens": 5334,
+          "cached_tokens": 82,
+          "completion_tokens_details": {
+            "reasoning_tokens": 2316
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 82
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 72141.94538397714
+      },
+      "artifacts": {
+        "episode": "cases/odr-ff7157e0a125/episode.json",
+        "prompt_sha256": "91c1e2c71143599f479b50b6dcad295fcff5f0704d529c4742f1fac453b5ec52",
+        "request_sha256": "3571ac754420be8eb7bbfbdc93cb7e8ad1ac6423e90b3ace2c4a28301eda337b",
+        "response_sha256": "f4517920b8840612b7fa380f25ad90df58b2d2360e91e9fca89cd324a59250f4",
+        "images": [
+          {
+            "kind": "reference",
+            "state": "rest",
+            "path": "reference-rest.png",
+            "sha256": "1e188211baf0d938cc725a24f295f9c385702b120fa397232d3b26526c56d607",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              122,
+              116,
+              378,
+              372
+            ]
+          },
+          {
+            "kind": "reference",
+            "state": "mid",
+            "path": "reference-mid.png",
+            "sha256": "8d65b8540b2913d8828a9db1b3fe6c2dd478a120c7d62ec975d1a7d2d44b6b63",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              388,
+              116,
+              644,
+              372
+            ]
+          },
+          {
+            "kind": "reference",
+            "state": "limit",
+            "path": "reference-limit.png",
+            "sha256": "a71de292d77574dae601c73a643ca4d6bd8a2c042c5a9fcfc8ee6ba309808f06",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              654,
+              116,
+              910,
+              372
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "rest",
+            "path": "candidate-rest.png",
+            "sha256": "1e188211baf0d938cc725a24f295f9c385702b120fa397232d3b26526c56d607",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              122,
+              382,
+              378,
+              638
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "mid",
+            "path": "candidate-mid.png",
+            "sha256": "8d65b8540b2913d8828a9db1b3fe6c2dd478a120c7d62ec975d1a7d2d44b6b63",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              388,
+              382,
+              644,
+              638
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "limit",
+            "path": "candidate-limit.png",
+            "sha256": "a71de292d77574dae601c73a643ca4d6bd8a2c042c5a9fcfc8ee6ba309808f06",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              654,
+              382,
+              910,
+              638
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "odr-602d5a570ecf",
+      "asset_id": "PM_25308",
+      "kind": "joint_axis",
+      "format_valid": true,
+      "error_category": "strict_correct",
+      "strict_axis_correct": true,
+      "field_correctness": {
+        "verdict": true,
+        "defect_id": true,
+        "joint_id": true,
+        "parts": true,
+        "evidence_steps": true
+      },
+      "expected": {
+        "status": "fail",
+        "defect_id": "kinematics.joint_axis",
+        "joint_id": "joint_1",
+        "parts": [
+          "link_1"
+        ],
+        "evidence_steps": [
+          2,
+          3
+        ]
+      },
+      "predicted": {
+        "status": "fail",
+        "defect_ids": [
+          "kinematics.joint_axis"
+        ],
+        "joint_ids": [
+          "joint_1"
+        ],
+        "parts": [
+          "link_1"
+        ],
+        "evidence_steps": [
+          2,
+          3
+        ]
+      },
+      "human_gold_agree": true,
+      "model_call": {
+        "status": "received",
+        "usage": {
+          "prompt_tokens": 2951,
+          "completion_tokens": 1728,
+          "total_tokens": 4679,
+          "cached_tokens": 514,
+          "completion_tokens_details": {
+            "reasoning_tokens": 1543
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 514
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 62058.50172205828
+      },
+      "artifacts": {
+        "episode": "cases/odr-602d5a570ecf/episode.json",
+        "prompt_sha256": "d5d26a595d38eed36d8bde63f05e28de62f3350541ef12aa8b755895882d5465",
+        "request_sha256": "6a19964e2b6afe93b485114256afc0561ed4965438038517aaa257de40dc1a46",
+        "response_sha256": "a5a3dd75e032237a5f828c4712d44d88f1a9ec6949dc425a5a19f622e9ccefcf",
+        "images": [
+          {
+            "kind": "reference",
+            "state": "rest",
+            "path": "reference-rest.png",
+            "sha256": "1e188211baf0d938cc725a24f295f9c385702b120fa397232d3b26526c56d607",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              122,
+              116,
+              378,
+              372
+            ]
+          },
+          {
+            "kind": "reference",
+            "state": "mid",
+            "path": "reference-mid.png",
+            "sha256": "8d65b8540b2913d8828a9db1b3fe6c2dd478a120c7d62ec975d1a7d2d44b6b63",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              388,
+              116,
+              644,
+              372
+            ]
+          },
+          {
+            "kind": "reference",
+            "state": "limit",
+            "path": "reference-limit.png",
+            "sha256": "a71de292d77574dae601c73a643ca4d6bd8a2c042c5a9fcfc8ee6ba309808f06",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              654,
+              116,
+              910,
+              372
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "rest",
+            "path": "candidate-rest.png",
+            "sha256": "1e188211baf0d938cc725a24f295f9c385702b120fa397232d3b26526c56d607",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              122,
+              382,
+              378,
+              638
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "mid",
+            "path": "candidate-mid.png",
+            "sha256": "3c2921a267f422cd62a59a1cb30e79b8e44494feeddd8f03b2356508cdf36701",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              388,
+              382,
+              644,
+              638
+            ]
+          },
+          {
+            "kind": "candidate",
+            "state": "limit",
+            "path": "candidate-limit.png",
+            "sha256": "47b7a46bbfeba1f37aa9304380d1e11d09d37687052a9506d64839b1dec6571a",
+            "size": [
+              256,
+              256
+            ],
+            "source_crop": [
+              654,
+              382,
+              910,
+              638
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "boundaries": {
+    "expanded_collection": false,
+    "sft_exported": false,
+    "sft_trained": false,
+    "frozen_test_read_or_modified": false,
+    "images_rerendered": false,
+    "chromium_use": "hierarchy_query_only",
+    "billing_cost_rmb": null
+  },
+  "independent_audit": {
+    "status": "passed",
+    "cases": [
+      {
+        "case_id": "odr-485c93213d2f",
+        "pipeline_ok": true,
+        "one_call": true,
+        "response_retained": true,
+        "six_image_shas_match": true,
+        "fixed_terminal_request": true,
+        "history_steps": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "private_markers_in_prompt": [],
+        "source_board_sha_matches": true,
+        "passed": true
+      },
+      {
+        "case_id": "odr-93a73fb99bd3",
+        "pipeline_ok": true,
+        "one_call": true,
+        "response_retained": true,
+        "six_image_shas_match": true,
+        "fixed_terminal_request": true,
+        "history_steps": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "private_markers_in_prompt": [],
+        "source_board_sha_matches": true,
+        "passed": true
+      },
+      {
+        "case_id": "odr-d11b5f796913",
+        "pipeline_ok": true,
+        "one_call": true,
+        "response_retained": true,
+        "six_image_shas_match": true,
+        "fixed_terminal_request": true,
+        "history_steps": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "private_markers_in_prompt": [],
+        "source_board_sha_matches": true,
+        "passed": true
+      },
+      {
+        "case_id": "odr-8afcabd9c65c",
+        "pipeline_ok": true,
+        "one_call": true,
+        "response_retained": true,
+        "six_image_shas_match": true,
+        "fixed_terminal_request": true,
+        "history_steps": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "private_markers_in_prompt": [],
+        "source_board_sha_matches": true,
+        "passed": true
+      },
+      {
+        "case_id": "odr-ff7157e0a125",
+        "pipeline_ok": true,
+        "one_call": true,
+        "response_retained": true,
+        "six_image_shas_match": true,
+        "fixed_terminal_request": true,
+        "history_steps": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "private_markers_in_prompt": [],
+        "source_board_sha_matches": true,
+        "passed": true
+      },
+      {
+        "case_id": "odr-602d5a570ecf",
+        "pipeline_ok": true,
+        "one_call": true,
+        "response_retained": true,
+        "six_image_shas_match": true,
+        "fixed_terminal_request": true,
+        "history_steps": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "private_markers_in_prompt": [],
+        "source_board_sha_matches": true,
+        "passed": true
+      }
+    ]
+  },
+  "field_accuracy": {
+    "joint_axis": {
+      "total": 3,
+      "verdict": 3,
+      "defect_id": 3,
+      "joint_id": 3,
+      "parts": 3,
+      "evidence_steps": 3
+    },
+    "clean": {
+      "total": 3,
+      "verdict_exact_gold": 2,
+      "clean_safe": 3,
+      "defect_id": 3,
+      "joint_id": 3,
+      "parts": 3,
+      "evidence_steps": 3
+    }
+  },
+  "error_categories": {
+    "clean_pass": 2,
+    "clean_uncertain": 1,
+    "strict_correct": 3
+  },
+  "token_usage": {
+    "prompt_tokens": 17532,
+    "completion_tokens": 10234,
+    "total_tokens": 27766
+  }
+}

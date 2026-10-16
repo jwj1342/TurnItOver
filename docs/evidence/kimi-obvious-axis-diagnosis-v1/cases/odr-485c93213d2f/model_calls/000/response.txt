@@ -1,0 +1,1 @@
+{"verdict":{"status":"pass","confidence":0.93,"findings":[],"summary":"Candidate rest, mid, and limit observations match the compatible same-view reference states for joint_0, and the reported hierarchy is consistent with joint_0 carrying link_0 under link_1.","limitations":[]}}

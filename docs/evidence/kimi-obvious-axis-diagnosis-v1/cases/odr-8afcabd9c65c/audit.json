@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "episode_id": "odr-8afcabd9c65c",
+  "pipeline_ok": true,
+  "teacher_actions_legal": true,
+  "teacher_outputs_legal": true,
+  "teacher_response_received": true,
+  "teacher_verdict_present": true,
+  "budget_exhausted": true,
+  "teacher_verdict_missing": false,
+  "diagnosis_evidence_supported": null,
+  "diagnosis_evidence_reason": "Pixel novelty alone cannot establish semantic support; checker or human review is required.",
+  "informative_observations": 3,
+  "observations": 4,
+  "observation_new_information": [
+    true,
+    false,
+    true,
+    true
+  ],
+  "errors": [],
+  "reference_sha256": [
+    "4b0df75db8c3a59b3809da865baae7a2441c9008dae094be9dcd95d12c066a91",
+    "e7ce476b94a131be0ff937d0203e93eb946fbd4c4031361f172ee87b01f1cabe",
+    "5d8bf249228d3d452deae24fdbb48665dde9f71f1faaaaa14d65d6745f4b5736"
+  ],
+  "observation_sha256": [
+    "4b0df75db8c3a59b3809da865baae7a2441c9008dae094be9dcd95d12c066a91",
+    "76b275c9d0ca10932c4193508273c5b628ce807866ee91b7ee2adeeca44d3ad6",
+    "b86a75c94bb8f419c9295db2f5af178b76bf184f6623668e8d6a58b0ee068736"
+  ],
+  "scope": "integrity_and_observation_novelty_not_semantic_ground_truth",
+  "data_identity": {
+    "experiment": "kimi-obvious-axis-diagnosis-v1",
+    "order": 3,
+    "case_id": "odr-8afcabd9c65c",
+    "asset_id": "PM_12036",
+    "split": "train",
+    "source_board": "docs/evidence/partnet-mobility-obvious-defects-v1/boards/odr-8afcabd9c65c.png",
+    "source_board_sha256": "85eebaec59c82334dcfd16223b8f2a8ccd0134ee8d5389a4f399254e97da4805",
+    "candidate_sha": "a37d9a50f4bd4e41",
+    "reference_sha": "d3c9d7b7ac14d2b5",
+    "human_review_gate": "passed",
+    "human_gold_agreement": true,
+    "independent_checker_consistent": true,
+    "fixed_evidence": true,
+    "active_acquisition": false,
+    "third_party_transmission_reviewed": true,
+    "transmission_review_basis": "user-requested-six-case-PartNet-Train-diagnostic"
+  },
+  "episode_sha256": "b021cb286072c6e24b34048043225ea3cd40f8b047ce512e75d958bfbafe6b5a",
+  "input_adapter": "Temporary numeric reference filenames were used because the legacy auditor sorts reference-* names; raw request files and image bytes were not changed."
+}

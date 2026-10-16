@@ -1,0 +1,6 @@
+
+Joint-axis diagnosis rules (default common input, identical for every row and label-independent):
+- `joint_structure`, when present in the visible task state, is derived only from the observed `query_runtime hierarchy` payload: for each joint it names the static `parent_link` and the `moving_child_links` that the joint itself carries.
+- A `kinematics.joint_axis` finding sets `joint_id` to the joint whose motion is wrong and `parts` to exactly that joint's `moving_child_links`. Do not add the parent link because it connects to the joint, and do not add links carried further down by other joints.
+- `evidence_steps` lists only executed observation steps whose candidate image visibly differs from the compatible reference state. Leave out steps that look the same as their reference, including other detents of the same joint.
+- If no executed observation shows a visible difference from a compatible reference state, return `uncertain`.

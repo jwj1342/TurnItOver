@@ -1,0 +1,44 @@
+{
+  "case_id": "odr-602d5a570ecf",
+  "asset_id": "PM_25308",
+  "kind": "joint_axis",
+  "format_valid": true,
+  "error_category": "strict_correct",
+  "strict_axis_correct": true,
+  "field_correctness": {
+    "verdict": true,
+    "defect_id": true,
+    "joint_id": true,
+    "parts": true,
+    "evidence_steps": true
+  },
+  "expected": {
+    "status": "fail",
+    "defect_id": "kinematics.joint_axis",
+    "joint_id": "joint_1",
+    "parts": [
+      "link_1"
+    ],
+    "evidence_steps": [
+      2,
+      3
+    ]
+  },
+  "predicted": {
+    "status": "fail",
+    "defect_ids": [
+      "kinematics.joint_axis"
+    ],
+    "joint_ids": [
+      "joint_1"
+    ],
+    "parts": [
+      "link_1"
+    ],
+    "evidence_steps": [
+      2,
+      3
+    ]
+  },
+  "human_gold_agree": true
+}

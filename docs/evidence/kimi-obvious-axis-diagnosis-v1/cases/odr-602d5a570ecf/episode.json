@@ -1,0 +1,481 @@
+{
+  "schema_version": 1,
+  "episode_id": "odr-602d5a570ecf",
+  "status": "complete",
+  "created_at": "2026-10-16T09:18:00+00:00",
+  "budget": 4,
+  "spent": 4,
+  "context": {
+    "task": "Compare candidate rest, mid, and limit motion with the same-view reference states. Return one final structured diagnosis for the visible evidence.",
+    "parts": [
+      "base",
+      "link_0",
+      "link_1",
+      "link_2"
+    ],
+    "joints": [
+      "joint_0",
+      "joint_1"
+    ],
+    "views": [
+      "oblique_bl"
+    ],
+    "runtime_properties": [
+      "hierarchy"
+    ],
+    "action_types": [
+      "request_view",
+      "actuate_joint",
+      "query_runtime"
+    ],
+    "max_triangles": 1000000,
+    "max_draw_calls": 1024
+  },
+  "teacher": {
+    "kind": "kimi",
+    "model": "k3-256k",
+    "paid": true,
+    "max_real_requests": 6,
+    "estimated_input_tokens": 12000,
+    "estimated_max_cost_rmb": null,
+    "cost_cap_rmb": null,
+    "pricing": null,
+    "billing_basis": "unknown_gateway_or_membership_quota"
+  },
+  "trajectory": [
+    {
+      "step": 0,
+      "action": {
+        "property": "hierarchy",
+        "__type__": "QueryRuntime"
+      },
+      "image_ref": null,
+      "payload": {
+        "property": "hierarchy",
+        "root": {
+          "name": "PM_25308",
+          "type": "Group",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "children": [
+            {
+              "name": "base",
+              "type": "Group",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "children": [
+                {
+                  "name": "link_2",
+                  "type": "Group",
+                  "position": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "rotation": [
+                    1.5707963267948966,
+                    -1.570796326794896,
+                    0
+                  ],
+                  "scale": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "children": [
+                    {
+                      "name": "joint:joint_0",
+                      "type": "Group",
+                      "position": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "rotation": [
+                        -0.0,
+                        0,
+                        -0.0
+                      ],
+                      "scale": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "children": [
+                        {
+                          "name": "link_0",
+                          "type": "Group",
+                          "position": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "rotation": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "scale": [
+                            1,
+                            1,
+                            1
+                          ],
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "name": "joint:joint_1",
+                      "type": "Group",
+                      "position": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "rotation": [
+                        -0.0,
+                        0,
+                        -0.0
+                      ],
+                      "scale": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "children": [
+                        {
+                          "name": "link_1",
+                          "type": "Group",
+                          "position": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "rotation": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "scale": [
+                            1,
+                            1,
+                            1
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "elapsed_ms": 0.00418804120272398,
+      "__type__": "Observation",
+      "decision": {
+        "type": "query_runtime",
+        "property": "hierarchy"
+      },
+      "decision_source": "fixed_protocol"
+    },
+    {
+      "step": 1,
+      "action": {
+        "joint_id": "joint_1",
+        "detent": "rest",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/001.png",
+      "payload": {
+        "value": 0.0,
+        "render_ms": 0.0
+      },
+      "elapsed_ms": 0.05718693137168884,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_1",
+        "detent": "rest"
+      },
+      "decision_source": "fixed_protocol"
+    },
+    {
+      "step": 2,
+      "action": {
+        "joint_id": "joint_1",
+        "detent": "mid",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/002.png",
+      "payload": {
+        "value": 0.21999999999999997,
+        "render_ms": 0.0
+      },
+      "elapsed_ms": 0.041257007978856564,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_1",
+        "detent": "mid"
+      },
+      "decision_source": "fixed_protocol"
+    },
+    {
+      "step": 3,
+      "action": {
+        "joint_id": "joint_1",
+        "detent": "limit",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/003.png",
+      "payload": {
+        "value": 0.43999999999999995,
+        "render_ms": 0.0
+      },
+      "elapsed_ms": 0.06309803575277328,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_1",
+        "detent": "limit"
+      },
+      "decision_source": "fixed_protocol"
+    }
+  ],
+  "decisions": [
+    {
+      "call": 0,
+      "remaining": 0,
+      "valid": true,
+      "decision": {
+        "verdict": {
+          "status": "fail",
+          "confidence": 0.82,
+          "findings": [
+            {
+              "defect_id": "kinematics.joint_axis",
+              "parts": [
+                "link_1"
+              ],
+              "joint_id": "joint_1",
+              "severity": 0.8,
+              "confidence": 0.82,
+              "evidence_steps": [
+                2,
+                3
+              ],
+              "description": "For joint_1, the rest pose matches the reference, but at mid and limit the carried link_1 moves along a different direction/arc than the compatible same-view reference states.",
+              "suggested_fix": "Correct the joint_1 rotation axis so link_1 follows the reference outward swing from rest through mid to limit."
+            }
+          ],
+          "summary": "The candidate joint_1 articulation is incorrect: rest is consistent, while mid and limit visibly diverge from the reference motion for the same view and joint state.",
+          "limitations": []
+        }
+      }
+    }
+  ],
+  "pending_action": null,
+  "model_calls": [
+    {
+      "path": "model_calls/000",
+      "status": "received",
+      "remaining": 0,
+      "image_count": 6,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2951,
+        "completion_tokens": 1728,
+        "total_tokens": 4679,
+        "cached_tokens": 514,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1543
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 514
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 62058.50172205828
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 2951,
+    "output_tokens": 1728,
+    "total_tokens": 4679
+  },
+  "budget_exhausted": true,
+  "teacher_verdict_missing": false,
+  "data_identity": {
+    "experiment": "kimi-obvious-axis-diagnosis-v1",
+    "order": 5,
+    "case_id": "odr-602d5a570ecf",
+    "asset_id": "PM_25308",
+    "split": "train",
+    "source_board": "docs/evidence/partnet-mobility-obvious-defects-v1/boards/odr-602d5a570ecf.png",
+    "source_board_sha256": "542be0f396f0389ab8ff4d6996cdf3807c79ce5ab2d6cd5850d7c606de263e34",
+    "candidate_sha": "e06889c73d6adc02",
+    "reference_sha": "4f2a81ecd16f96db",
+    "human_review_gate": "passed",
+    "human_gold_agreement": true,
+    "independent_checker_consistent": true,
+    "fixed_evidence": true,
+    "active_acquisition": false,
+    "third_party_transmission_reviewed": true,
+    "transmission_review_basis": "user-requested-six-case-PartNet-Train-diagnostic"
+  },
+  "updated_at": "2026-10-16T09:19:02+00:00",
+  "termination": "budget_exhausted",
+  "verdict": {
+    "status": "fail",
+    "confidence": 0.82,
+    "findings": [
+      {
+        "defect_id": "kinematics.joint_axis",
+        "parts": [
+          "link_1"
+        ],
+        "joint_id": "joint_1",
+        "severity": 0.8,
+        "confidence": 0.82,
+        "evidence_steps": [
+          2,
+          3
+        ],
+        "description": "For joint_1, the rest pose matches the reference, but at mid and limit the carried link_1 moves along a different direction/arc than the compatible same-view reference states.",
+        "suggested_fix": "Correct the joint_1 rotation axis so link_1 follows the reference outward swing from rest through mid to limit."
+      }
+    ],
+    "summary": "The candidate joint_1 articulation is incorrect: rest is consistent, while mid and limit visibly diverge from the reference motion for the same view and joint state.",
+    "limitations": []
+  },
+  "finished_at": "2026-10-16T09:19:02+00:00",
+  "real_api_requests": 1,
+  "usage_cost_rmb_estimate": null,
+  "billing_cost_rmb": null,
+  "input_images": [
+    {
+      "kind": "reference",
+      "state": "rest",
+      "path": "reference-rest.png",
+      "sha256": "1e188211baf0d938cc725a24f295f9c385702b120fa397232d3b26526c56d607",
+      "size": [
+        256,
+        256
+      ],
+      "source_crop": [
+        122,
+        116,
+        378,
+        372
+      ]
+    },
+    {
+      "kind": "reference",
+      "state": "mid",
+      "path": "reference-mid.png",
+      "sha256": "8d65b8540b2913d8828a9db1b3fe6c2dd478a120c7d62ec975d1a7d2d44b6b63",
+      "size": [
+        256,
+        256
+      ],
+      "source_crop": [
+        388,
+        116,
+        644,
+        372
+      ]
+    },
+    {
+      "kind": "reference",
+      "state": "limit",
+      "path": "reference-limit.png",
+      "sha256": "a71de292d77574dae601c73a643ca4d6bd8a2c042c5a9fcfc8ee6ba309808f06",
+      "size": [
+        256,
+        256
+      ],
+      "source_crop": [
+        654,
+        116,
+        910,
+        372
+      ]
+    },
+    {
+      "kind": "candidate",
+      "state": "rest",
+      "path": "candidate-rest.png",
+      "sha256": "1e188211baf0d938cc725a24f295f9c385702b120fa397232d3b26526c56d607",
+      "size": [
+        256,
+        256
+      ],
+      "source_crop": [
+        122,
+        382,
+        378,
+        638
+      ]
+    },
+    {
+      "kind": "candidate",
+      "state": "mid",
+      "path": "candidate-mid.png",
+      "sha256": "3c2921a267f422cd62a59a1cb30e79b8e44494feeddd8f03b2356508cdf36701",
+      "size": [
+        256,
+        256
+      ],
+      "source_crop": [
+        388,
+        382,
+        644,
+        638
+      ]
+    },
+    {
+      "kind": "candidate",
+      "state": "limit",
+      "path": "candidate-limit.png",
+      "sha256": "47b7a46bbfeba1f37aa9304380d1e11d09d37687052a9506d64839b1dec6571a",
+      "size": [
+        256,
+        256
+      ],
+      "source_crop": [
+        654,
+        382,
+        910,
+        638
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"verdict":{"status":"pass","confidence":0.95,"findings":[],"summary":"Observed joint_1 rest, mid, and limit poses in the oblique_bl view match the compatible reference states with no visible deviation.","limitations":[]}}
