@@ -1,5 +1,9 @@
 # Easy Object + Obvious Defect：第二轮盲审
 
+2026-10-16 更新：24 个候选的人审已完成，生成时的 `pending_human_review` 标记为历史快照。
+逐例核对、误判和下一轮候选清单见 [盲审后审核报告](../partnet-mobility-easy-objects-v2-audit/REPORT.md)。
+下文描述原始生成与审核流程；自动通过不代表人工通过或训练资格。
+
 打开 `boards/` 的 8 张图，每张依次包含参考和 3 个匿名候选，共 24 个候选。
 每格是 Chromium 原生 256×256，列为 rest/mid/limit。请对照
 `review_manifest.jsonl` 的合法 hierarchy 和状态值填写 `human_review.jsonl`：

@@ -1,0 +1,22 @@
+{
+  "files": {
+    "CASE_TABLE.md": "b8a66d034601b945dbff48d7addb1d5b779ee0a5010f0d1af577448ead396cdf",
+    "CLAIMS_FROM_RESULTS.md": "10f446a6a77b067d411a126789524d334e5b188694115352015ca90ae9667229",
+    "REPORT.md": "9e284e469f6f63748bc620d805dd3518baaa802a82f8f8b64ecc6216b40b3431",
+    "VALIDATION.md": "9fdb28ace0c2ee185e0446eccb67b430a292c394f4b87e4e801408744576426d",
+    "baseline_case_audit.jsonl": "603508c764813eefbdf6a72f618d68eb78439b4b4e81789629d867c6aca1cb6e",
+    "case_audit.jsonl": "6058188bfd253bfc2ef3cb81ad58e74ccfad1269a6a84baf50694f2efe61a805",
+    "explicit_errors.jsonl": "c0e892549d46b5ba3f3012ad3deb95d959009b2ba41dea603675b9ca1fa8a5a0",
+    "findings.md": "c58f060b13762d2f2a81b138f52a960968f701e9bb01e1649a29d4737c6b0210",
+    "high_confidence_candidates.jsonl": "36d9dfe43d569bc3a100857d02b47310424de0472f46cf3ebe7c44b17776c9a6",
+    "human_uncertain.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reproduce.py": "44884f6edc30dd948c802abfcc6f09790cfbc68b5708e087d26b7504582cbbb0",
+    "reviewer_trace/REQUEST.md": "87771d52cf51acdc32b80007589dee715bcdc3e10e38a807d70a5fa86a831d73",
+    "reviewer_trace/REVIEW.md": "97bce72247e7ef2b330e3f6dff0b1f542775a941ad5a21684132f6919b60476d",
+    "reviewer_trace/result.json": "10b11164bdc26bd6244cd2d24f0f2a0f8a663ac353e8fb7a98f1b3e83ea21bbc",
+    "semantic_or_context_holds.jsonl": "85f69f3c7ca488939c5f41785f79c0deab273352c26d506659b9f2837ef9acad",
+    "summary.json": "17eb5317218cd608a039c83b150aaee916fbd23550861691b1aa63bcc0320ab3",
+    "validation.json": "f838038ba5cbcc990d46db9f7b8468a9221434cbe60d044341416dee27ae360f"
+  },
+  "scope": "private post-human-review audit; no training authorization"
+}

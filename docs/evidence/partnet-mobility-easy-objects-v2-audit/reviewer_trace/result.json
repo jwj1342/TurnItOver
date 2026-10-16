@@ -1,0 +1,16 @@
+{
+  "skill": "result-to-claim",
+  "run_id": "2026-10-16_run01",
+  "executor": "codex",
+  "reviewer_model": "gpt-6-astra",
+  "reasoning_effort": "ultra",
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "claim_supported": "no",
+  "weaker_claim_supported": "partial",
+  "confidence": "low",
+  "review_completed": true,
+  "initial_attempt": "usage_limit",
+  "retry": "same_route_completed",
+  "project_dir": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset"
+}

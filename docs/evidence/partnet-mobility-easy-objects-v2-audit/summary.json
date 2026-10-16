@@ -1,0 +1,342 @@
+{
+  "version": 1,
+  "scope": "offline audit only; no teacher API calls, no training, no frozen Test modification",
+  "review_independence": "same-family; see reviewer_trace/ for actual completion status",
+  "by_kind": {
+    "clean": {
+      "total": 8,
+      "correct": 8,
+      "uncertain": 0,
+      "explicit_error": 0,
+      "high_confidence_candidates": 7
+    },
+    "joint_axis": {
+      "total": 8,
+      "correct": 8,
+      "uncertain": 0,
+      "explicit_error": 0,
+      "high_confidence_candidates": 6
+    },
+    "part_offset": {
+      "total": 8,
+      "correct": 6,
+      "uncertain": 0,
+      "explicit_error": 2,
+      "high_confidence_candidates": 5
+    }
+  },
+  "baseline_by_kind": {
+    "clean": {
+      "total": 3,
+      "correct": 2,
+      "uncertain": 1,
+      "explicit_error": 0,
+      "high_confidence_candidates": 2
+    },
+    "joint_axis": {
+      "total": 3,
+      "correct": 3,
+      "uncertain": 0,
+      "explicit_error": 0,
+      "high_confidence_candidates": 3
+    },
+    "part_offset": {
+      "total": 3,
+      "correct": 1,
+      "uncertain": 2,
+      "explicit_error": 0,
+      "high_confidence_candidates": 1
+    }
+  },
+  "assets": [
+    {
+      "asset_id": "PM_102016",
+      "by_kind": {
+        "clean": {
+          "case_id": "eor-24f1b5b48879",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "board_level_pass_no_explicit_state_citations"
+        },
+        "part_offset": {
+          "case_id": "eor-3da26638899e",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        },
+        "joint_axis": {
+          "case_id": "eor-68c7fb547080",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        }
+      },
+      "all_three_fields_correct": true,
+      "all_three_high_confidence": true
+    },
+    {
+      "asset_id": "PM_102379",
+      "by_kind": {
+        "part_offset": {
+          "case_id": "eor-42443d5a386a",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        },
+        "clean": {
+          "case_id": "eor-472c836efefa",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "board_level_pass_no_explicit_state_citations"
+        },
+        "joint_axis": {
+          "case_id": "eor-6a5cc960eafc",
+          "human_outcome": "correct",
+          "high_confidence_candidate": false,
+          "semantic_hold_reasons": [
+            "normal_motion_explanation_conflicts_with_revolute_reference"
+          ],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        }
+      },
+      "all_three_fields_correct": true,
+      "all_three_high_confidence": false
+    },
+    {
+      "asset_id": "PM_10697",
+      "by_kind": {
+        "joint_axis": {
+          "case_id": "eor-57a7ca1300ca",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        },
+        "part_offset": {
+          "case_id": "eor-72321a1e08e9",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        },
+        "clean": {
+          "case_id": "eor-79926ed20b6c",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "board_level_pass_no_explicit_state_citations"
+        }
+      },
+      "all_three_fields_correct": true,
+      "all_three_high_confidence": true
+    },
+    {
+      "asset_id": "PM_12594",
+      "by_kind": {
+        "part_offset": {
+          "case_id": "eor-49a23abdda64",
+          "human_outcome": "explicit_error",
+          "high_confidence_candidate": false,
+          "semantic_hold_reasons": [
+            "insufficient_evidence_states"
+          ],
+          "evidence_assessment": "insufficient_cited_states"
+        },
+        "joint_axis": {
+          "case_id": "eor-9d3143231c41",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        },
+        "clean": {
+          "case_id": "eor-e4f19bdb3db0",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "board_level_pass_no_explicit_state_citations"
+        }
+      },
+      "all_three_fields_correct": false,
+      "all_three_high_confidence": false
+    },
+    {
+      "asset_id": "PM_19836",
+      "by_kind": {
+        "clean": {
+          "case_id": "eor-a76c53e335c6",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "board_level_pass_no_explicit_state_citations"
+        },
+        "joint_axis": {
+          "case_id": "eor-d32e9efba9de",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        },
+        "part_offset": {
+          "case_id": "eor-f67bca1f30ef",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        }
+      },
+      "all_three_fields_correct": true,
+      "all_three_high_confidence": true
+    },
+    {
+      "asset_id": "PM_48686",
+      "by_kind": {
+        "clean": {
+          "case_id": "eor-0407b54342e0",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "board_level_pass_no_explicit_state_citations"
+        },
+        "part_offset": {
+          "case_id": "eor-0b44adc5d35c",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        },
+        "joint_axis": {
+          "case_id": "eor-e8c7469405c6",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        }
+      },
+      "all_three_fields_correct": true,
+      "all_three_high_confidence": true
+    },
+    {
+      "asset_id": "PM_5088",
+      "by_kind": {
+        "part_offset": {
+          "case_id": "eor-38d4df7a4778",
+          "human_outcome": "explicit_error",
+          "high_confidence_candidate": false,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        },
+        "clean": {
+          "case_id": "eor-95a0f2bbba88",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "explicit_all_states"
+        },
+        "joint_axis": {
+          "case_id": "eor-d5ba7047c72f",
+          "human_outcome": "correct",
+          "high_confidence_candidate": true,
+          "semantic_hold_reasons": [],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        }
+      },
+      "all_three_fields_correct": false,
+      "all_three_high_confidence": false
+    },
+    {
+      "asset_id": "PM_8867",
+      "by_kind": {
+        "part_offset": {
+          "case_id": "eor-6b8564f7552a",
+          "human_outcome": "correct",
+          "high_confidence_candidate": false,
+          "semantic_hold_reasons": [
+            "human_explicitly_relies_on_multi_candidate_context_not_pair_only_validated"
+          ],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        },
+        "clean": {
+          "case_id": "eor-85eff6ea6b76",
+          "human_outcome": "correct",
+          "high_confidence_candidate": false,
+          "semantic_hold_reasons": [
+            "human_explicitly_relies_on_multi_candidate_context_not_pair_only_validated"
+          ],
+          "evidence_assessment": "board_level_pass_no_explicit_state_citations"
+        },
+        "joint_axis": {
+          "case_id": "eor-a6c870bf59bf",
+          "human_outcome": "correct",
+          "high_confidence_candidate": false,
+          "semantic_hold_reasons": [
+            "human_explicitly_relies_on_multi_candidate_context_not_pair_only_validated"
+          ],
+          "evidence_assessment": "matched_reference_supports_cited_defect_states"
+        }
+      },
+      "all_three_fields_correct": true,
+      "all_three_high_confidence": false
+    }
+  ],
+  "totals": {
+    "cases": 24,
+    "independent_assets": 8,
+    "structured_correct": 22,
+    "high_confidence_candidates": 18,
+    "high_confidence_assets": 7,
+    "all_three_fields_correct_assets": 6,
+    "all_three_high_confidence_assets": 4,
+    "semantic_or_context_held_field_correct": 4
+  },
+  "automatic_screening": {
+    "joint_axis": {
+      "targeted_attempts": 24,
+      "automatic_pass": 24
+    },
+    "part_offset": {
+      "targeted_attempts": 24,
+      "automatic_pass": 21
+    }
+  },
+  "missing_clean_state_citations": [
+    "eor-0407b54342e0",
+    "eor-24f1b5b48879",
+    "eor-472c836efefa",
+    "eor-79926ed20b6c",
+    "eor-85eff6ea6b76",
+    "eor-a76c53e335c6",
+    "eor-e4f19bdb3db0"
+  ],
+  "high_confidence_with_explicit_state_evidence": 12,
+  "literal_offset_joint_mismatches": 8,
+  "boundaries": {
+    "model_calls": 0,
+    "model_calls_scope": "teacher experiment calls; excludes internal same-family audit reviewer",
+    "training_runs": 0,
+    "training_exports": 0,
+    "test_modified": false,
+    "input_reviews_modified": false
+  },
+  "statistics_note": "One reviewer, 8 clustered assets. Variants and attempted seeds are not independent human trials. No stability or improvement significance claim.",
+  "input_sha256": {
+    "docs/evidence/partnet-mobility-easy-objects-v2/human_review.jsonl": "b18c6ea8fc44d057b11e3284c48fb7330a1cb94f1fb479e4a924eb6014f0a7ac",
+    "docs/evidence/partnet-mobility-easy-objects-v2/review_manifest.jsonl": "235da79d50e3451c9effafb30850743647286d67610ba456e86544669ab0440f",
+    "docs/evidence/partnet-mobility-easy-objects-v2/private/gold.jsonl": "693d32133f28162af783b586ed1f3b1ca683fb87ebb41102f3df70f2ed34e49e",
+    "docs/evidence/partnet-mobility-easy-objects-v2/private/checks.jsonl": "6a2d16f64aa22f190385b259c63b1ea3fdd37b4a07a69c2bc1d8b5cdba571a53",
+    "docs/evidence/partnet-mobility-easy-objects-v2/private/screening.jsonl": "2478297e2f264a56990becc26c33e6a9d2990757f92b98684f19f8d26e2bb119",
+    "docs/evidence/partnet-mobility-easy-objects-v2/manifest.json": "a2efe84506ba6589b6cdd63ea99a303c0315cc96ac56d9ba3eee721e222f100c",
+    "docs/evidence/partnet-mobility-easy-objects-v2/private/object_selection.jsonl": "07604fe66069f66844bb1e436ceb8474938409d0f62526732a6b0814d3ca61c6",
+    "docs/evidence/partnet-mobility-obvious-defects-v1/private/gold.jsonl": "1f7bcb352aa599bd2a26f6497984ef9fc6c4d637aaca98739cc791d113944e79",
+    "docs/evidence/partnet-mobility-obvious-defects-v1/private/checks.jsonl": "3516cf421aa8df4184f2f45adf0abb421fda2da79a45a72a432fb801af3a59c6",
+    "docs/evidence/partnet-mobility-obvious-defects-v1/private/screening.json": "605c3676fbe6be7c91c76220920309d4f9742042668e6dcd5b107596b51e416c",
+    "docs/evidence/partnet-mobility-obvious-defects-v1/review_manifest.jsonl": "ca2a5bebef0784c38fdbea81b3fbfe8567b88b35a9bb3272ead5fe0cdb36615d",
+    "docs/evidence/partnet-mobility-obvious-defects-v1-human-review/human_review.jsonl": "b1dc7153c62dfdb3d2f5937435ef747b60a93099b26944fc89b5e90d7fb54b14",
+    "docs/evidence/partnet-mobility-obvious-defects-v1-human-review/summary.json": "f5b8f544eb2763a0dd73f9d8dc585a5a981bbbc9d2c2bb37181b7970afc255ac"
+  }
+}

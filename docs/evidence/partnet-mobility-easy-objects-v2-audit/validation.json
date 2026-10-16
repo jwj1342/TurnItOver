@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "case_ids_aligned": 24,
+  "candidate_program_sha_verified": 24,
+  "parent_file_hashes_verified": 42,
+  "baseline_file_hashes_verified": 17,
+  "original_reviews_unchanged": true
+}
