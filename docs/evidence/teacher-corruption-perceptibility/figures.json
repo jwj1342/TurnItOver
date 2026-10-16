@@ -1,0 +1,1348 @@
+[
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_102080__key__oblique_fr__joint_0-limit.png",
+  "sha256": "eb8189c600d4b904e70a764c8daaebfa9ef08354e25780e5a441157c051f5d73",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__oblique_fr__joint_0-limit.png",
+    "sha256": "5278ca8814ced242857c8cd9608f914f8743b6be604eea1aef7392cd6ce2fa87"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__oblique_fr__joint_0-limit.png",
+    "sha256": "251b3ee61546c4765e61a4361cbef6469c831cd4954b1f28403dbb2d679507ba"
+   }
+  ],
+  "kind": "key_panel",
+  "asset": "PM_102080",
+  "view": "oblique_fr",
+  "state": "joint_0=limit",
+  "angle_deg": 55.79145410914971,
+  "metrics": {
+   "changed_fraction": 0.0177154541015625,
+   "core_changed_fraction": 4.57763671875e-05,
+   "largest_region_px": 259,
+   "largest_core_region_px": 3,
+   "perceptible_rule": false
+  },
+  "displacement": {
+   "world_max": 0.01871456578373909,
+   "px_max": 1.827645953302399,
+   "parts": {
+    "link_0": {
+     "world_max": 0.01871456578373909,
+     "world_mean": 0.018714556470513344,
+     "px_max": 1.827645953302399,
+     "px_p95": 1.7885716972350116
+    }
+   }
+  },
+  "zoom_box_xyxy": [
+   105,
+   75,
+   173,
+   143
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_102080__key__front__joint_0-limit.png",
+  "sha256": "5ca730f06239b5e5a3ca921b90532dbbd7a1ec713173d1e68054d9d2df82c09d",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__front__joint_0-limit.png",
+    "sha256": "3409b5eebaf99e484d42b7f9a8a511ef8042e1e4a1ec4e4d8e144820cf02426c"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__front__joint_0-limit.png",
+    "sha256": "7af024829b0e78ed410b806f6559b6f5cd57eee58c68d32825b5c22119e0e0c6"
+   }
+  ],
+  "kind": "key_panel",
+  "asset": "PM_102080",
+  "view": "front",
+  "state": "joint_0=limit",
+  "angle_deg": 55.79145410914971,
+  "metrics": {
+   "changed_fraction": 0.01129150390625,
+   "core_changed_fraction": 0.0,
+   "largest_region_px": 80,
+   "largest_core_region_px": 0,
+   "perceptible_rule": false
+  },
+  "displacement": {
+   "world_max": 0.01871456578373909,
+   "px_max": 1.3359485485296345,
+   "parts": {
+    "link_0": {
+     "world_max": 0.01871456578373909,
+     "world_mean": 0.018714556470513344,
+     "px_max": 1.3359485485296345,
+     "px_p95": 1.335948548529621
+    }
+   }
+  },
+  "zoom_box_xyxy": [
+   107,
+   120,
+   148,
+   161
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_5088__key__front__joint_0-limit.png",
+  "sha256": "41a02c702d6c1bb9d1310360c5243056e186006dc4b1c9b8caed14c73ccbebe6",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/78daaf49b71ff5f5df8a1a29/png/reference__front__joint_0-limit.png",
+    "sha256": "bf5fd746b258b761dd1a027d50cdecceda14a498f0badc236e223e2f74e9ded4"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/78daaf49b71ff5f5df8a1a29/png/angle36.20__front__joint_0-limit.png",
+    "sha256": "87f69f8591886c2dcdaba114f5aa127fae848b9568b736a903aa687a4d2ff839"
+   }
+  ],
+  "kind": "key_panel",
+  "asset": "PM_5088",
+  "view": "front",
+  "state": "joint_0=limit",
+  "angle_deg": 36.20266878514121,
+  "metrics": {
+   "changed_fraction": 0.2081451416015625,
+   "core_changed_fraction": 0.1836700439453125,
+   "largest_region_px": 13640,
+   "largest_core_region_px": 12007,
+   "perceptible_rule": true
+  },
+  "displacement": {
+   "world_max": 0.5450379848480225,
+   "px_max": 46.80912159822381,
+   "parts": {
+    "link_0": {
+     "world_max": 0.5450379848480225,
+     "world_mean": 0.14790254831314087,
+     "px_max": 46.80912159822381,
+     "px_p95": 24.878195678516605
+    }
+   }
+  },
+  "zoom_box_xyxy": [
+   47,
+   38,
+   251,
+   242
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_5088__key__front__joint_0-zero.png",
+  "sha256": "a7f9ba7cd8a16429101a98a91a8338e62351a6dd09d852370a7e519411251519",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/78daaf49b71ff5f5df8a1a29/png/reference__front__joint_0-zero.png",
+    "sha256": "cbb5213e4339e5e4dbb93105b03eaf987e41beefa0f13262b3d1c64212d7e6c4"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/78daaf49b71ff5f5df8a1a29/png/angle36.20__front__joint_0-zero.png",
+    "sha256": "69540e562b902b95f6bde281409a5406003eea7263c248b5d7b91d57a81c30f0"
+   }
+  ],
+  "kind": "key_panel",
+  "asset": "PM_5088",
+  "view": "front",
+  "state": "joint_0=zero",
+  "angle_deg": 36.20266878514121,
+  "metrics": {
+   "changed_fraction": 0.057891845703125,
+   "core_changed_fraction": 0.024566650390625,
+   "largest_region_px": 3788,
+   "largest_core_region_px": 1507,
+   "perceptible_rule": true
+  },
+  "displacement": {
+   "world_max": 0.1831672042608261,
+   "px_max": 17.966098955245922,
+   "parts": {
+    "link_0": {
+     "world_max": 0.1831672042608261,
+     "world_mean": 0.04848400130867958,
+     "px_max": 17.966098955245922,
+     "px_p95": 11.654787564782614
+    }
+   }
+  },
+  "zoom_box_xyxy": [
+   26,
+   26,
+   217,
+   217
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_103275__key__front__joint_0-rest__joint_1-mid.png",
+  "sha256": "5e08f8225f7b6509f0bfb76e64c182b6d8cc22498f6dfe098efd026ddb8e9668",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/reference__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "73e47e38cdc7859832c411e45ec6904d9735abf6dab76814b71c5695f0b933c8"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle47.82__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "8d1bfd7a1401b450cd82f03a218d84ce393d0a1d8a8aff510c6dd7818ff27643"
+   }
+  ],
+  "kind": "key_panel",
+  "asset": "PM_103275",
+  "view": "front",
+  "state": "joint_0=rest,joint_1=mid",
+  "angle_deg": 47.817853108570404,
+  "metrics": {
+   "changed_fraction": 0.0962371826171875,
+   "core_changed_fraction": 0.0795745849609375,
+   "largest_region_px": 6287,
+   "largest_core_region_px": 5215,
+   "perceptible_rule": true
+  },
+  "displacement": {
+   "world_max": 1.4513049125671387,
+   "px_max": 154.5935701859816,
+   "parts": {
+    "link_1": {
+     "world_max": 1.4513049125671387,
+     "world_mean": 0.4782654643058777,
+     "px_max": 154.5935701859816,
+     "px_p95": 145.7207465941789
+    },
+    "link_0": {
+     "world_max": 1.4086612462997437,
+     "world_mean": 0.16253267228603363,
+     "px_max": 146.08449770651123,
+     "px_p95": 14.170354451461545
+    }
+   }
+  },
+  "zoom_box_xyxy": [
+   95,
+   95,
+   256,
+   256
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_103275__key__front__joint_0-rest__joint_1-limit.png",
+  "sha256": "2846000d60a2496c280754d56c6ca4d7e7ba8bea33993acd6572fd44760396f5",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/reference__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "d1a285a6ba44028b46cb641a0e98b7c363d546f7733b1d3b8d9025b3f1b48b96"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle47.82__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "229b15845234aaa23864fb429f562a1f446b5834f426b5bd189e5459b95503e8"
+   }
+  ],
+  "kind": "key_panel",
+  "asset": "PM_103275",
+  "view": "front",
+  "state": "joint_0=rest,joint_1=limit",
+  "angle_deg": 47.817853108570404,
+  "metrics": {
+   "changed_fraction": 0.007049560546875,
+   "core_changed_fraction": 0.0005950927734375,
+   "largest_region_px": 368,
+   "largest_core_region_px": 15,
+   "perceptible_rule": false
+  },
+  "displacement": {
+   "world_max": 0.5296097993850708,
+   "px_max": 43.99012653785975,
+   "parts": {
+    "link_1": {
+     "world_max": 0.48071277141571045,
+     "world_mean": 0.21338865160942078,
+     "px_max": 39.6750069803985,
+     "px_p95": 36.02268609915613
+    },
+    "link_0": {
+     "world_max": 0.5296097993850708,
+     "world_mean": 0.1525622308254242,
+     "px_max": 43.99012653785975,
+     "px_p95": 19.56382253901814
+    }
+   }
+  },
+  "zoom_box_xyxy": [
+   195,
+   93,
+   256,
+   154
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_25308__key__front__joint_0-rest__joint_1-limit.png",
+  "sha256": "9f76b1bd36ebe14c6e1619969523e55475ba481ab15e4703d0204861bb40fac7",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/reference__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "c0b073a505a70fe02513ebdcafc488ce306963bdb65c901014618e4094bed28d"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle59.13__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "8d9c769116ea3e5c8d0a9586375b0fd5bbf0c29ff48061d1f9d4c40080fc9427"
+   }
+  ],
+  "kind": "key_panel",
+  "asset": "PM_25308",
+  "view": "front",
+  "state": "joint_0=rest,joint_1=limit",
+  "angle_deg": 59.13160951255156,
+  "metrics": {
+   "changed_fraction": 0.0427093505859375,
+   "core_changed_fraction": 0.03131103515625,
+   "largest_region_px": 2799,
+   "largest_core_region_px": 1587,
+   "perceptible_rule": true
+  },
+  "displacement": {
+   "world_max": 0.4342121481895447,
+   "px_max": 43.39892658802703,
+   "parts": {
+    "link_1": {
+     "world_max": 0.4342121481895447,
+     "world_mean": 0.43421217799186707,
+     "px_max": 43.39892658802703,
+     "px_p95": 43.398926588027024
+    }
+   }
+  },
+  "zoom_box_xyxy": [
+   33,
+   9,
+   158,
+   134
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_25308__key__front__joint_0-rest__joint_1-mid.png",
+  "sha256": "438c6c961781c1764049bd545eb54b2a1543c04958970206fdd58580574075be",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/reference__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "946855bd0185b8477a8f98b604aa96ec211c2740705768b550f4bfd7c66516d3"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle59.13__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "a0d2a9395da601d51e753d29a6fc4c6732ce94cf4c4621a54bb6fe685d2e41e5"
+   }
+  ],
+  "kind": "key_panel",
+  "asset": "PM_25308",
+  "view": "front",
+  "state": "joint_0=rest,joint_1=mid",
+  "angle_deg": 59.13160951255156,
+  "metrics": {
+   "changed_fraction": 0.01104736328125,
+   "core_changed_fraction": 0.0062255859375,
+   "largest_region_px": 724,
+   "largest_core_region_px": 408,
+   "perceptible_rule": true
+  },
+  "displacement": {
+   "world_max": 0.21710607409477234,
+   "px_max": 21.699463294013515,
+   "parts": {
+    "link_1": {
+     "world_max": 0.21710607409477234,
+     "world_mean": 0.21710608899593353,
+     "px_max": 21.699463294013515,
+     "px_p95": 21.699463294013505
+    }
+   }
+  },
+  "zoom_box_xyxy": [
+   44,
+   46,
+   132,
+   134
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_25308__gradient__front__joint_0-rest__joint_1-limit.png",
+  "sha256": "0a3493b9d19d49cbe092d6bb28568b06a12a949d7e2a6d04779e93117f907029",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle0.00__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "c0b073a505a70fe02513ebdcafc488ce306963bdb65c901014618e4094bed28d"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle15.00__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "d9961e9a00254981df93e7cb8a12e533e40416892585b773b6195ead44575fc6"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle180.00__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "c6f77cb9f032d126bbab6c70d3cc1f3e760e81a5c25c3a159fccc80b09ba9d78"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle30.00__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "6914457177f2af301fd54aa60af2699d7d0789e6756f3c71395cef0b292c2bcc"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle45.00__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "e116d069dcbec701985f254782646f6563e52a64288d155aadce9dcdfbe9bf56"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle5.00__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "4f8c3a0b35c9fb7f3c449b4f4b998bd35c65709d7d52b73aa6e2513983d8db57"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle59.13__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "8d9c769116ea3e5c8d0a9586375b0fd5bbf0c29ff48061d1f9d4c40080fc9427"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle60.00__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "5be466c2cd088fc913aac0fa6309f234a56ce2345ff93bf5e0d3c1adb63990a3"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle90.00__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "00b0527d28e0cab0e5e97d875e5cd82c963a1c3abac7fb188f7f487efcbd97f3"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/reference__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "c0b073a505a70fe02513ebdcafc488ce306963bdb65c901014618e4094bed28d"
+   }
+  ],
+  "kind": "gradient",
+  "asset": "PM_25308",
+  "view": "front",
+  "state": "joint_0=rest,joint_1=limit",
+  "series": [
+   {
+    "angle_deg": 0,
+    "current": false,
+    "changed_fraction": 0.0,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 0.0,
+    "world_max": 0.0
+   },
+   {
+    "angle_deg": 5,
+    "current": false,
+    "changed_fraction": 0.00421142578125,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 3.749015086627449,
+    "world_max": 0.03838508576154709
+   },
+   {
+    "angle_deg": 15,
+    "current": false,
+    "changed_fraction": 0.012908935546875,
+    "core_changed_fraction": 0.00653076171875,
+    "largest_core_region_px": 232,
+    "perceptible_rule": true,
+    "px_max": 11.235092979405575,
+    "world_max": 0.11486305296421051
+   },
+   {
+    "angle_deg": 30,
+    "current": false,
+    "changed_fraction": 0.025177001953125,
+    "core_changed_fraction": 0.015655517578125,
+    "largest_core_region_px": 592,
+    "perceptible_rule": true,
+    "px_max": 22.38616782406846,
+    "world_max": 0.22776077687740326
+   },
+   {
+    "angle_deg": 45,
+    "current": false,
+    "changed_fraction": 0.0353546142578125,
+    "core_changed_fraction": 0.024017333984375,
+    "largest_core_region_px": 1142,
+    "perceptible_rule": true,
+    "px_max": 33.35258443674015,
+    "world_max": 0.3367614448070526
+   },
+   {
+    "angle_deg": 59.13160951255156,
+    "current": true,
+    "changed_fraction": 0.0427093505859375,
+    "core_changed_fraction": 0.03131103515625,
+    "largest_core_region_px": 1587,
+    "perceptible_rule": true,
+    "px_max": 43.39892658802703,
+    "world_max": 0.4342121481895447
+   },
+   {
+    "angle_deg": 60,
+    "current": false,
+    "changed_fraction": 0.0429534912109375,
+    "core_changed_fraction": 0.031494140625,
+    "largest_core_region_px": 1632,
+    "perceptible_rule": true,
+    "px_max": 44.00423753716312,
+    "world_max": 0.4400000274181366
+   },
+   {
+    "angle_deg": 90,
+    "current": false,
+    "changed_fraction": 0.048309326171875,
+    "core_changed_fraction": 0.038330078125,
+    "largest_core_region_px": 1972,
+    "perceptible_rule": true,
+    "px_max": 63.66561082167998,
+    "world_max": 0.6222540140151978
+   },
+   {
+    "angle_deg": 180,
+    "current": false,
+    "changed_fraction": 0.084686279296875,
+    "core_changed_fraction": 0.07159423828125,
+    "largest_core_region_px": 2720,
+    "perceptible_rule": true,
+    "px_max": 93.96210511682429,
+    "world_max": 0.8799999952316284
+   }
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_102080__gradient__oblique_fr__joint_0-limit.png",
+  "sha256": "782063a58e4495aa4c01095a0ae107dbd28257bcd57d8ea803cdf4716f8d3e56",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle0.00__oblique_fr__joint_0-limit.png",
+    "sha256": "5278ca8814ced242857c8cd9608f914f8743b6be604eea1aef7392cd6ce2fa87"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle180.00__oblique_fr__joint_0-limit.png",
+    "sha256": "81ae29cc4538dd38974b33ec14ffe33fa0e7d44415aab2d75e188b1b460b51f7"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle30.00__oblique_fr__joint_0-limit.png",
+    "sha256": "e1b0ac2ca08c84f5083d869ba5ee69a9506ad3f666a10e7b0051abe5936768f0"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__oblique_fr__joint_0-limit.png",
+    "sha256": "251b3ee61546c4765e61a4361cbef6469c831cd4954b1f28403dbb2d679507ba"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle60.00__oblique_fr__joint_0-limit.png",
+    "sha256": "831a0b688cbaa1d8fffff71c74d17cd81d916a4b7942858743362ac6092ca629"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle90.00__oblique_fr__joint_0-limit.png",
+    "sha256": "4931fa1c3264d25083a30bed8fcea5f4103eae3d16509cf25b7ebf3fbb0f888a"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__oblique_fr__joint_0-limit.png",
+    "sha256": "5278ca8814ced242857c8cd9608f914f8743b6be604eea1aef7392cd6ce2fa87"
+   }
+  ],
+  "kind": "gradient",
+  "asset": "PM_102080",
+  "view": "oblique_fr",
+  "state": "joint_0=limit",
+  "series": [
+   {
+    "angle_deg": 0,
+    "current": false,
+    "changed_fraction": 0.0,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 0.0,
+    "world_max": 0.0
+   },
+   {
+    "angle_deg": 30,
+    "current": false,
+    "changed_fraction": 0.0095367431640625,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 0.9625180386651175,
+    "world_max": 0.01035277545452118
+   },
+   {
+    "angle_deg": 55.79145410914971,
+    "current": true,
+    "changed_fraction": 0.0177154541015625,
+    "core_changed_fraction": 4.57763671875e-05,
+    "largest_core_region_px": 3,
+    "perceptible_rule": false,
+    "px_max": 1.827645953302399,
+    "world_max": 0.01871456578373909
+   },
+   {
+    "angle_deg": 60,
+    "current": false,
+    "changed_fraction": 0.0187530517578125,
+    "core_changed_fraction": 6.103515625e-05,
+    "largest_core_region_px": 3,
+    "perceptible_rule": false,
+    "px_max": 1.959808024796315,
+    "world_max": 0.020000023767352104
+   },
+   {
+    "angle_deg": 90,
+    "current": false,
+    "changed_fraction": 0.025299072265625,
+    "core_changed_fraction": 0.000274658203125,
+    "largest_core_region_px": 9,
+    "perceptible_rule": false,
+    "px_max": 2.7437795845353277,
+    "world_max": 0.028284288942813873
+   },
+   {
+    "angle_deg": 180,
+    "current": false,
+    "changed_fraction": 0.025726318359375,
+    "core_changed_fraction": 0.000152587890625,
+    "largest_core_region_px": 4,
+    "perceptible_rule": false,
+    "px_max": 2.7684592311257217,
+    "world_max": 0.04000002145767212
+   }
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_5088__gradient__front__joint_0-limit.png",
+  "sha256": "689c3bebe421b2d82b0f0721e44202db138fa015529c69db690d496963030cc2",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/78daaf49b71ff5f5df8a1a29/png/angle0.00__front__joint_0-limit.png",
+    "sha256": "bf5fd746b258b761dd1a027d50cdecceda14a498f0badc236e223e2f74e9ded4"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/78daaf49b71ff5f5df8a1a29/png/angle15.00__front__joint_0-limit.png",
+    "sha256": "b827a54d8fe78d66476c073262d4a9f110ff685dff980f91c254431cd69a62a3"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/78daaf49b71ff5f5df8a1a29/png/angle30.00__front__joint_0-limit.png",
+    "sha256": "23df4bcffd554852ecac8f91bbe7c53a1a53f8ce7f6473910950226fce45c763"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/78daaf49b71ff5f5df8a1a29/png/angle36.20__front__joint_0-limit.png",
+    "sha256": "87f69f8591886c2dcdaba114f5aa127fae848b9568b736a903aa687a4d2ff839"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/78daaf49b71ff5f5df8a1a29/png/angle5.00__front__joint_0-limit.png",
+    "sha256": "bd718f2ecda36e2bb2cbfef2eb3f7ff61257f5c342056da7b6513f88ddde77c5"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/78daaf49b71ff5f5df8a1a29/png/angle60.00__front__joint_0-limit.png",
+    "sha256": "2cb53f9a430c8e5e73fdee4fa81b6ff9f57de6da2d2373fa9b9c6f1955883019"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/78daaf49b71ff5f5df8a1a29/png/reference__front__joint_0-limit.png",
+    "sha256": "bf5fd746b258b761dd1a027d50cdecceda14a498f0badc236e223e2f74e9ded4"
+   }
+  ],
+  "kind": "gradient",
+  "asset": "PM_5088",
+  "view": "front",
+  "state": "joint_0=limit",
+  "series": [
+   {
+    "angle_deg": 0,
+    "current": false,
+    "changed_fraction": 0.0,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 0.0,
+    "world_max": 0.0
+   },
+   {
+    "angle_deg": 5,
+    "current": false,
+    "changed_fraction": 0.177978515625,
+    "core_changed_fraction": 0.1514434814453125,
+    "largest_core_region_px": 9925,
+    "perceptible_rule": true,
+    "px_max": 5.046697345723624,
+    "world_max": 0.07252514362335205
+   },
+   {
+    "angle_deg": 15,
+    "current": false,
+    "changed_fraction": 0.2024993896484375,
+    "core_changed_fraction": 0.1866912841796875,
+    "largest_core_region_px": 12235,
+    "perceptible_rule": true,
+    "px_max": 16.633879952011398,
+    "world_max": 0.22215156257152557
+   },
+   {
+    "angle_deg": 30,
+    "current": false,
+    "changed_fraction": 0.2100067138671875,
+    "core_changed_fraction": 0.19342041015625,
+    "largest_core_region_px": 12676,
+    "perceptible_rule": true,
+    "px_max": 37.334580375587215,
+    "world_max": 0.45124146342277527
+   },
+   {
+    "angle_deg": 36.20266878514121,
+    "current": true,
+    "changed_fraction": 0.2081451416015625,
+    "core_changed_fraction": 0.1836700439453125,
+    "largest_core_region_px": 12007,
+    "perceptible_rule": true,
+    "px_max": 46.80912159822381,
+    "world_max": 0.5450379848480225
+   },
+   {
+    "angle_deg": 60,
+    "current": false,
+    "changed_fraction": 0.21343994140625,
+    "core_changed_fraction": 0.1905517578125,
+    "largest_core_region_px": 12488,
+    "perceptible_rule": true,
+    "px_max": 85.23986524878578,
+    "world_max": 0.8798931241035461
+   }
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_103275__gradient__front__joint_0-rest__joint_1-mid.png",
+  "sha256": "67e91715320424527d4b1df20e198c1700b63430879531b7ea535990327051e2",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle0.00__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "73e47e38cdc7859832c411e45ec6904d9735abf6dab76814b71c5695f0b933c8"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle15.00__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "302ab95f84b877c26bed561c18efe1d85262bdf16343d4b4b8090daefe041261"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle30.00__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "5707ec9c5c55de4b28dd0cc94bf728750c95581748836518aff5fd8dd709b3f1"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle47.82__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "8d1bfd7a1401b450cd82f03a218d84ce393d0a1d8a8aff510c6dd7818ff27643"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle5.00__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "2c2edaf9de4b7c0e557c5dfcc6fa3f84458b06e461197af5da140b8d96537f37"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle60.00__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "02033b050706becce630b8c3135e8e8aee0f012476430c51f3d5a2e180494097"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/reference__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "73e47e38cdc7859832c411e45ec6904d9735abf6dab76814b71c5695f0b933c8"
+   }
+  ],
+  "kind": "gradient",
+  "asset": "PM_103275",
+  "view": "front",
+  "state": "joint_0=rest,joint_1=mid",
+  "series": [
+   {
+    "angle_deg": 0,
+    "current": false,
+    "changed_fraction": 0.0,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 0.0,
+    "world_max": 0.0
+   },
+   {
+    "angle_deg": 5,
+    "current": false,
+    "changed_fraction": 0.0283660888671875,
+    "core_changed_fraction": 0.0201568603515625,
+    "largest_core_region_px": 1315,
+    "perceptible_rule": true,
+    "px_max": 18.33568039911306,
+    "world_max": 0.15832075476646423
+   },
+   {
+    "angle_deg": 15,
+    "current": false,
+    "changed_fraction": 0.0505218505859375,
+    "core_changed_fraction": 0.0412445068359375,
+    "largest_core_region_px": 2700,
+    "perceptible_rule": true,
+    "px_max": 54.9649192913656,
+    "world_max": 0.47448161244392395
+   },
+   {
+    "angle_deg": 30,
+    "current": false,
+    "changed_fraction": 0.0801239013671875,
+    "core_changed_fraction": 0.0663604736328125,
+    "largest_core_region_px": 4349,
+    "perceptible_rule": true,
+    "px_max": 106.29694205608611,
+    "world_max": 0.9379382133483887
+   },
+   {
+    "angle_deg": 47.817853108570404,
+    "current": true,
+    "changed_fraction": 0.0962371826171875,
+    "core_changed_fraction": 0.0795745849609375,
+    "largest_core_region_px": 5215,
+    "perceptible_rule": true,
+    "px_max": 154.5935701859816,
+    "world_max": 1.4513049125671387
+   },
+   {
+    "angle_deg": 60,
+    "current": false,
+    "changed_fraction": 0.1015472412109375,
+    "core_changed_fraction": 0.086669921875,
+    "largest_core_region_px": 5680,
+    "perceptible_rule": true,
+    "px_max": 176.21157467423066,
+    "world_max": 1.7672549486160278
+   }
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_103275__states__joint1-states-and-views.png",
+  "sha256": "6b89d9a3b5976e4054231bc8095c8e07456deff5225e8ae310b7dba58b862088",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/reference__front__joint_0-rest__joint_1-zero.png",
+    "sha256": "97deafef7a532ea29e87ec4b27720190e433c4f237e66a42a261d4938046771b"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle47.82__front__joint_0-rest__joint_1-zero.png",
+    "sha256": "5962807994fe56481344db883c33adafbc05b8278acd09dba162f950bc617273"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/reference__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "73e47e38cdc7859832c411e45ec6904d9735abf6dab76814b71c5695f0b933c8"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle47.82__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "8d1bfd7a1401b450cd82f03a218d84ce393d0a1d8a8aff510c6dd7818ff27643"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/reference__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "d1a285a6ba44028b46cb641a0e98b7c363d546f7733b1d3b8d9025b3f1b48b96"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle47.82__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "229b15845234aaa23864fb429f562a1f446b5834f426b5bd189e5459b95503e8"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/reference__oblique_fr__joint_0-rest__joint_1-limit.png",
+    "sha256": "f289efcc8b5efbff1b424ada5e0eaaef46558746b72953b75c8ea26cd826954a"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle47.82__oblique_fr__joint_0-rest__joint_1-limit.png",
+    "sha256": "055685987f089191bc64e8de615430d35de2c7cb8ff0ecd3e6443182536addc3"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/reference__grazing_front__joint_0-rest__joint_1-mid.png",
+    "sha256": "6b664c184f508b09827cdf209fbf4bb0bf320bf84a98ccb06391af0f145f4147"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle47.82__grazing_front__joint_0-rest__joint_1-mid.png",
+    "sha256": "e4c33ca68f2ad76da12f13a6ac7149c62d5d945f8a2b2c67ed194ad4be3fa7a0"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/reference__right__joint_0-limit__joint_1-mid.png",
+    "sha256": "e47314df00cfd61ba26159e15b8f930bd7238f1d32b727533f65d81d9a912a98"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/ec3acb502c61937e9b968ab1/png/angle47.82__right__joint_0-limit__joint_1-mid.png",
+    "sha256": "9e78e826a98ed6918764c6f652fe516d53be7edb637158f3be0f0946207e523e"
+   }
+  ],
+  "kind": "state_grid",
+  "asset": "PM_103275",
+  "pairs": [
+   {
+    "view": "front",
+    "state": "joint_0=rest,joint_1=zero",
+    "changed_fraction": 0.019012451171875,
+    "core_changed_fraction": 0.005584716796875,
+    "largest_core_region_px": 366,
+    "perceptible_rule": true,
+    "px_max": 15.113701170353146
+   },
+   {
+    "view": "front",
+    "state": "joint_0=rest,joint_1=mid",
+    "changed_fraction": 0.0962371826171875,
+    "core_changed_fraction": 0.0795745849609375,
+    "largest_core_region_px": 5215,
+    "perceptible_rule": true,
+    "px_max": 154.5935701859816
+   },
+   {
+    "view": "front",
+    "state": "joint_0=rest,joint_1=limit",
+    "changed_fraction": 0.007049560546875,
+    "core_changed_fraction": 0.0005950927734375,
+    "largest_core_region_px": 15,
+    "perceptible_rule": false,
+    "px_max": 43.99012653785975
+   },
+   {
+    "view": "oblique_fr",
+    "state": "joint_0=rest,joint_1=limit",
+    "changed_fraction": 0.0087890625,
+    "core_changed_fraction": 0.0013275146484375,
+    "largest_core_region_px": 85,
+    "perceptible_rule": true,
+    "px_max": 51.40158430367334
+   },
+   {
+    "view": "grazing_front",
+    "state": "joint_0=rest,joint_1=mid",
+    "changed_fraction": 0.20672607421875,
+    "core_changed_fraction": 0.18218994140625,
+    "largest_core_region_px": 11940,
+    "perceptible_rule": true,
+    "px_max": 241.11713447135384
+   },
+   {
+    "view": "right",
+    "state": "joint_0=limit,joint_1=mid",
+    "changed_fraction": 0.2355194091796875,
+    "core_changed_fraction": 0.1913604736328125,
+    "largest_core_region_px": 8381,
+    "perceptible_rule": true,
+    "px_max": 167.0884203333981
+   }
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_25308__states__joint1-views.png",
+  "sha256": "551fb117345491da828c39e9188a333c0c12b792c121a4b08ee2291c378d6533",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/reference__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "946855bd0185b8477a8f98b604aa96ec211c2740705768b550f4bfd7c66516d3"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle59.13__front__joint_0-rest__joint_1-mid.png",
+    "sha256": "a0d2a9395da601d51e753d29a6fc4c6732ce94cf4c4621a54bb6fe685d2e41e5"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/reference__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "c0b073a505a70fe02513ebdcafc488ce306963bdb65c901014618e4094bed28d"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle59.13__front__joint_0-rest__joint_1-limit.png",
+    "sha256": "8d9c769116ea3e5c8d0a9586375b0fd5bbf0c29ff48061d1f9d4c40080fc9427"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/reference__oblique_fr__joint_0-rest__joint_1-limit.png",
+    "sha256": "4e3759591657b3998d442f129fe2834faba176fc595baa1225dd27803cd7d095"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle59.13__oblique_fr__joint_0-rest__joint_1-limit.png",
+    "sha256": "4518ddfc14f990f03c32408e552df7dcff34ffd88c11bd381cccd09cb155615d"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/reference__oblique_fl__joint_0-rest__joint_1-limit.png",
+    "sha256": "30023e19cc1aa6c9be30f7feff6ef030d0c0092ee0c49a407dfdda6f87a988db"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle59.13__oblique_fl__joint_0-rest__joint_1-limit.png",
+    "sha256": "5a90280398654034dc044d95f57ff513c3aa9ff07d12c8bfa45170379d0c453e"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/reference__top__joint_0-rest__joint_1-limit.png",
+    "sha256": "2df5b8c7a7c3ce3f767a1e5b0b02ae4b319d825fe8c176bc3b0a582ed0eea068"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/27d942cd3de2d333f24d6279/png/angle59.13__top__joint_0-rest__joint_1-limit.png",
+    "sha256": "f61435d558de031f1ea3bdbbf9889ecc8a22f9ef60ecd9ec751de3298338004c"
+   }
+  ],
+  "kind": "state_grid",
+  "asset": "PM_25308",
+  "pairs": [
+   {
+    "view": "front",
+    "state": "joint_0=rest,joint_1=mid",
+    "changed_fraction": 0.01104736328125,
+    "core_changed_fraction": 0.0062255859375,
+    "largest_core_region_px": 408,
+    "perceptible_rule": true,
+    "px_max": 21.699463294013515
+   },
+   {
+    "view": "front",
+    "state": "joint_0=rest,joint_1=limit",
+    "changed_fraction": 0.0427093505859375,
+    "core_changed_fraction": 0.03131103515625,
+    "largest_core_region_px": 1587,
+    "perceptible_rule": true,
+    "px_max": 43.39892658802703
+   },
+   {
+    "view": "oblique_fr",
+    "state": "joint_0=rest,joint_1=limit",
+    "changed_fraction": 0.044525146484375,
+    "core_changed_fraction": 0.0331573486328125,
+    "largest_core_region_px": 1292,
+    "perceptible_rule": true,
+    "px_max": 54.49722828640339
+   },
+   {
+    "view": "oblique_fl",
+    "state": "joint_0=rest,joint_1=limit",
+    "changed_fraction": 0.078887939453125,
+    "core_changed_fraction": 0.0534820556640625,
+    "largest_core_region_px": 1980,
+    "perceptible_rule": true,
+    "px_max": 58.245005692315004
+   },
+   {
+    "view": "top",
+    "state": "joint_0=rest,joint_1=limit",
+    "changed_fraction": 0.0187530517578125,
+    "core_changed_fraction": 0.01239013671875,
+    "largest_core_region_px": 539,
+    "perceptible_rule": true,
+    "px_max": 28.096337961042806
+   }
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_102080__states__all-views-limit.png",
+  "sha256": "71ab7b15d1f8c30c5393a7df63ddb695f326740b7af78b6cdcf13af677d32cca",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__front__joint_0-limit.png",
+    "sha256": "3409b5eebaf99e484d42b7f9a8a511ef8042e1e4a1ec4e4d8e144820cf02426c"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__front__joint_0-limit.png",
+    "sha256": "7af024829b0e78ed410b806f6559b6f5cd57eee58c68d32825b5c22119e0e0c6"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__back__joint_0-limit.png",
+    "sha256": "e5aff5353d676ccd427168250888a45e8613e4044c6248b96a9ffda7935b0235"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__back__joint_0-limit.png",
+    "sha256": "ec79ce4471bdefa04cd67d03d6740b0695419a9cc25e09add8d14de99a9eae68"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__left__joint_0-limit.png",
+    "sha256": "2e40535bfceec6ea59dcb3461e35a7fe33752d8f3d341a635b5c54319f597479"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__left__joint_0-limit.png",
+    "sha256": "00c7650d365b78bfe1515d7d2042c95dd35a4793366cc67e31905758101bb56e"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__right__joint_0-limit.png",
+    "sha256": "b39b201c32539b2ded01e8686f86b1069bb8b35fa7b9adc707cd222d1447461a"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__right__joint_0-limit.png",
+    "sha256": "3659f70f421e6f6c9fcfc8d53b7341cefea752aabdfeacbe5a60852ee041f80b"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__top__joint_0-limit.png",
+    "sha256": "8a136e752b818bf205f52085bd36f26226a8d5b88e15468571214f15b6c91cc3"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__top__joint_0-limit.png",
+    "sha256": "e87b25950a5f60b93a7bb3ee6d686b468a1b8cd63f2773261786760bc4a71d33"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__bottom__joint_0-limit.png",
+    "sha256": "a908a9ff0957538729a97149e60bea386938a06d69e572e9993b18880b6e6863"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__bottom__joint_0-limit.png",
+    "sha256": "337655aa9025c9d1fb9d8cb54c2b7948a9c0aa0728e67857dc2335d4a3ebdfdc"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__oblique_fr__joint_0-limit.png",
+    "sha256": "5278ca8814ced242857c8cd9608f914f8743b6be604eea1aef7392cd6ce2fa87"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__oblique_fr__joint_0-limit.png",
+    "sha256": "251b3ee61546c4765e61a4361cbef6469c831cd4954b1f28403dbb2d679507ba"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__oblique_fl__joint_0-limit.png",
+    "sha256": "22bab806725e45fdd70eafc0baa57d0c75a8e0cc04b934607ba6b067f385cd73"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__oblique_fl__joint_0-limit.png",
+    "sha256": "44842e2485ac1a88821092b441cb5a414409181e139d23d0aa31193106cd2057"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__oblique_br__joint_0-limit.png",
+    "sha256": "4b3cc0c3fdb2c9ae28a9e8f3161e8e3b013b4e5a8100a5e9f1053e94418825e8"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__oblique_br__joint_0-limit.png",
+    "sha256": "48bb76d99902465c53df25c149db2779940f2199d3522c843baab1d45e07d844"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__oblique_bl__joint_0-limit.png",
+    "sha256": "44700df9ae055b59a4638988ed67f8276173a10efd62b3e1a41c66e8f943b048"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__oblique_bl__joint_0-limit.png",
+    "sha256": "a89506d6c702bbe84064fbcde7b21a174779d72281fa8587e49a372c387613c5"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__grazing_front__joint_0-limit.png",
+    "sha256": "c267fdf4bcafa915d2104f3423d17041888e3f4a9821035616cf9ae18ce67925"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__grazing_front__joint_0-limit.png",
+    "sha256": "a840d6991803752951f9ddd4e9612ff3b27a3fe63c25e7a0f38d65a982a936cd"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/reference__grazing_top__joint_0-limit.png",
+    "sha256": "e51a2ebd9ba075ac8432e6950ba5322683d39fdebbf098aa9fc0b029a46ba44f"
+   },
+   {
+    "path": "output/interactive-teacher/corruption-perceptibility-v1/b124e209888e8e2e692ad38a/png/angle55.79__grazing_top__joint_0-limit.png",
+    "sha256": "8db1128229295e7cf3e63e1b29c7c025fb2dc6311c4cb55c0f0ee6d81a7ad62b"
+   }
+  ],
+  "kind": "state_grid",
+  "asset": "PM_102080",
+  "pairs": [
+   {
+    "view": "front",
+    "state": "joint_0=limit",
+    "changed_fraction": 0.01129150390625,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 1.3359485485296345
+   },
+   {
+    "view": "back",
+    "state": "joint_0=limit",
+    "changed_fraction": 0.0041656494140625,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 1.3359485485296345
+   },
+   {
+    "view": "left",
+    "state": "joint_0=limit",
+    "changed_fraction": 0.006011962890625,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 0.7812779677210352
+   },
+   {
+    "view": "right",
+    "state": "joint_0=limit",
+    "changed_fraction": 0.006134033203125,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 0.7812779677210352
+   },
+   {
+    "view": "top",
+    "state": "joint_0=limit",
+    "changed_fraction": 0.00677490234375,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 1.4746809054313528
+   },
+   {
+    "view": "bottom",
+    "state": "joint_0=limit",
+    "changed_fraction": 0.0064849853515625,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 1.4746809054313528
+   },
+   {
+    "view": "oblique_fr",
+    "state": "joint_0=limit",
+    "changed_fraction": 0.0177154541015625,
+    "core_changed_fraction": 4.57763671875e-05,
+    "largest_core_region_px": 3,
+    "perceptible_rule": false,
+    "px_max": 1.827645953302399
+   },
+   {
+    "view": "oblique_fl",
+    "state": "joint_0=limit",
+    "changed_fraction": 0.0105743408203125,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 1.4300447598579138
+   },
+   {
+    "view": "oblique_br",
+    "state": "joint_0=limit",
+    "changed_fraction": 0.00262451171875,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 0.9602986101605864
+   },
+   {
+    "view": "oblique_bl",
+    "state": "joint_0=limit",
+    "changed_fraction": 0.003143310546875,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 1.5539447712097518
+   },
+   {
+    "view": "grazing_front",
+    "state": "joint_0=limit",
+    "changed_fraction": 0.0091400146484375,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 1.0532880724957596
+   },
+   {
+    "view": "grazing_top",
+    "state": "joint_0=limit",
+    "changed_fraction": 0.0090789794921875,
+    "core_changed_fraction": 0.0,
+    "largest_core_region_px": 0,
+    "perceptible_rule": false,
+    "px_max": 1.7792838673324278
+   }
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_103275__teacher__kimi-round4-active-HC-pm103275-axis-r2.png",
+  "sha256": "35d573d1722199892fad407cf8e9c66d6b7029619bb272d688fc731950afad85",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/kimi-round4-active-HC-pm103275-axis-r2/reference-05.png",
+    "sha256": "d1a285a6ba44028b46cb641a0e98b7c363d546f7733b1d3b8d9025b3f1b48b96"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-active-HC-pm103275-axis-r2/reference-04.png",
+    "sha256": "73e47e38cdc7859832c411e45ec6904d9735abf6dab76814b71c5695f0b933c8"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-active-HC-pm103275-axis-r2/observations/004.png",
+    "sha256": "229b15845234aaa23864fb429f562a1f446b5834f426b5bd189e5459b95503e8"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-active-HC-pm103275-axis-r2/observations/005.png",
+    "sha256": "8d1bfd7a1401b450cd82f03a218d84ce393d0a1d8a8aff510c6dd7818ff27643"
+   }
+  ],
+  "kind": "teacher_view",
+  "asset": "PM_103275",
+  "episode": "kimi-round4-active-HC-pm103275-axis-r2",
+  "steps": [
+   4,
+   5
+  ],
+  "references": [
+   "reference-05.png",
+   "reference-04.png"
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_25308__teacher__kimi-round4-fixed-HC-pm25308-axis-rep2.png",
+  "sha256": "a7db3584c6ea99b050840356b608dc460f0d794b57ad352ffd389258e39918da",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/kimi-round4-fixed-HC-pm25308-axis-rep2/reference-03.png",
+    "sha256": "946855bd0185b8477a8f98b604aa96ec211c2740705768b550f4bfd7c66516d3"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-fixed-HC-pm25308-axis-rep2/reference-04.png",
+    "sha256": "c0b073a505a70fe02513ebdcafc488ce306963bdb65c901014618e4094bed28d"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-fixed-HC-pm25308-axis-rep2/observations/005.png",
+    "sha256": "a0d2a9395da601d51e753d29a6fc4c6732ce94cf4c4621a54bb6fe685d2e41e5"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-fixed-HC-pm25308-axis-rep2/observations/006.png",
+    "sha256": "8d9c769116ea3e5c8d0a9586375b0fd5bbf0c29ff48061d1f9d4c40080fc9427"
+   }
+  ],
+  "kind": "teacher_view",
+  "asset": "PM_25308",
+  "episode": "kimi-round4-fixed-HC-pm25308-axis-rep2",
+  "steps": [
+   5,
+   6
+  ],
+  "references": [
+   "reference-03.png",
+   "reference-04.png"
+  ]
+ },
+ {
+  "figure": "docs/evidence/teacher-corruption-perceptibility/PM_5088__teacher__kimi-round4-fixed-MH-pm5088-axis-rep2.png",
+  "sha256": "99d70132dadcefc8b750e7bdaceb954ad6606b48c92b8114e0d35711d5957436",
+  "sources": [
+   {
+    "path": "output/interactive-teacher/kimi-round4-fixed-MH-pm5088-axis-rep2/reference-01.png",
+    "sha256": "cbb5213e4339e5e4dbb93105b03eaf987e41beefa0f13262b3d1c64212d7e6c4"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-fixed-MH-pm5088-axis-rep2/reference-03.png",
+    "sha256": "bf5fd746b258b761dd1a027d50cdecceda14a498f0badc236e223e2f74e9ded4"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-fixed-MH-pm5088-axis-rep2/reference-05.png",
+    "sha256": "4eab87aaa3e31f5d65bb92e8ce6af8da17572d715ea856112a86b7eb2662e6af"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-fixed-MH-pm5088-axis-rep2/reference-07.png",
+    "sha256": "363a26932ebb268b0543ef819436b27d06912341f828fe2429b0611bbdbae269"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-fixed-MH-pm5088-axis-rep2/observations/002.png",
+    "sha256": "69540e562b902b95f6bde281409a5406003eea7263c248b5d7b91d57a81c30f0"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-fixed-MH-pm5088-axis-rep2/observations/004.png",
+    "sha256": "87f69f8591886c2dcdaba114f5aa127fae848b9568b736a903aa687a4d2ff839"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-fixed-MH-pm5088-axis-rep2/observations/007.png",
+    "sha256": "94d30e7602ea56f29b2ac9cb97ba2e993830d17919cebe651681aa08d680b475"
+   },
+   {
+    "path": "output/interactive-teacher/kimi-round4-fixed-MH-pm5088-axis-rep2/observations/009.png",
+    "sha256": "e3e618a02a0139cd1ebad3ffef62d3f2fb484e8a845b6af3e8ceb2cb0a82c606"
+   }
+  ],
+  "kind": "teacher_view",
+  "asset": "PM_5088",
+  "episode": "kimi-round4-fixed-MH-pm5088-axis-rep2",
+  "steps": [
+   2,
+   4,
+   7,
+   9
+  ],
+  "references": [
+   "reference-01.png",
+   "reference-03.png",
+   "reference-05.png",
+   "reference-07.png"
+  ]
+ }
+]
