@@ -1,0 +1,414 @@
+{
+  "schema_version": 2,
+  "id": "eor-0b44adc5d35c",
+  "asset_id": "PM_48686",
+  "split": "train",
+  "split_group": "PartNet-Mobility:48686",
+  "candidate_sha": "1d7731c583e2c529",
+  "reference_sha": "5b6bfb1835102a75",
+  "in_frozen_test": false,
+  "split_verification": "Train source split identity; frozen Test never opened",
+  "candidate_joint_limits": {
+    "joint_0": [
+      0,
+      0.5640000000000001
+    ]
+  },
+  "reference_joint_limits": {
+    "joint_0": [
+      0,
+      0.5640000000000001
+    ]
+  },
+  "row_sha256": {
+    "gold": "8d7c0394688fe10eb94cb5f986d063f81b886523a637bc5d79534950b4b934ca",
+    "annotation": "ab88a4862bbb1e3182abdff276452d4747dfb1525ee746de5a0047d80184f7a5"
+  },
+  "framing": {
+    "center": [
+      -0.018086507916450306,
+      0.01403498649597168,
+      0.004568994045257568
+    ],
+    "radius": 1.010770588655292,
+    "__type__": "Framing"
+  },
+  "witnesses": [
+    {
+      "index": 0,
+      "key": "oblique_fl:joint_0:rest",
+      "view": "oblique_fl",
+      "state": {
+        "joint_0": 0
+      },
+      "sha256": "09f3e3df769ac9eb62bbc080194647029de3105f48c347113077e10a8682479e",
+      "exposures": [
+        0
+      ],
+      "perceptible_exposures": [
+        0
+      ]
+    },
+    {
+      "index": 1,
+      "key": "oblique_fl:joint_0:mid",
+      "view": "oblique_fl",
+      "state": {
+        "joint_0": 0.28200000000000003
+      },
+      "sha256": "9e392ee1a08453071746e57ac6852805cbf9bfe821425f3058abb3100be02ada",
+      "exposures": [
+        0
+      ],
+      "perceptible_exposures": [
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "key": "oblique_fl:joint_0:limit",
+      "view": "oblique_fl",
+      "state": {
+        "joint_0": 0.5640000000000001
+      },
+      "sha256": "16d3eeafd4bec317ba0a93f176b7c408aaed5b87f62e706a3bd89b2c99a10c1d",
+      "exposures": [
+        0
+      ],
+      "perceptible_exposures": [
+        0
+      ]
+    }
+  ],
+  "rest_hierarchy": {
+    "candidate": {
+      "property": "hierarchy",
+      "root": {
+        "name": "PM_48686",
+        "type": "Group",
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "children": [
+          {
+            "name": "base",
+            "type": "Group",
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "children": [
+              {
+                "name": "link_1",
+                "type": "Group",
+                "position": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  1.5707963267948966,
+                  -1.570796326794896,
+                  0
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "children": [
+                  {
+                    "name": "joint:joint_0",
+                    "type": "Group",
+                    "position": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "rotation": [
+                      -0.0,
+                      0,
+                      -0.0
+                    ],
+                    "scale": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "children": [
+                      {
+                        "name": "link_0",
+                        "type": "Group",
+                        "position": [
+                          0.10498921550344034,
+                          0.06514936802731998,
+                          -0.1308924156458768
+                        ],
+                        "rotation": [
+                          0,
+                          0,
+                          0
+                        ],
+                        "scale": [
+                          1,
+                          1,
+                          1
+                        ],
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "reference_protocol": {
+    "name": "easy_selected_joint_motion_v1",
+    "states": [
+      {
+        "file": "reference-00.png",
+        "label": {
+          "view": "oblique_fl",
+          "joint_id": "joint_0",
+          "detent": "rest"
+        },
+        "state": {
+          "joint_0": 0
+        },
+        "sha256": "93f12d6552646471c19ed56cccf7b96ead78ad03ac531d10524136252b5a5bcf"
+      },
+      {
+        "file": "reference-01.png",
+        "label": {
+          "view": "oblique_fl",
+          "joint_id": "joint_0",
+          "detent": "mid"
+        },
+        "state": {
+          "joint_0": 0.28200000000000003
+        },
+        "sha256": "62e2dd0912f188ee22d3ceb48a771801df8d0499b0558016747db92c19b0f705"
+      },
+      {
+        "file": "reference-02.png",
+        "label": {
+          "view": "oblique_fl",
+          "joint_id": "joint_0",
+          "detent": "limit"
+        },
+        "state": {
+          "joint_0": 0.5640000000000001
+        },
+        "sha256": "bac8bb2488cbbcff3418ab01777b67fb75a80780d3d2b7d1c658be4ca52e7854"
+      }
+    ],
+    "label_independent": true
+  },
+  "perceptibility": {
+    "min_core_fraction": 0.001,
+    "geometry_failure_required": true
+  },
+  "checker": {
+    "candidate_sha": "1d7731c583e2c529",
+    "reference_sha": "5b6bfb1835102a75",
+    "privileged": true,
+    "used_by_student": false,
+    "checks": [
+      {
+        "checker_id": "geometry.alignment",
+        "passed": false,
+        "invariants": [
+          {
+            "name": "bbox_iou",
+            "value": 0.0,
+            "tolerance": 0.9,
+            "passed": false,
+            "parts": [
+              "link_0"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.12415123834213393,
+            "tolerance": 0.005,
+            "passed": false,
+            "parts": [
+              "link_0"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 0.0,
+            "tolerance": 0.9,
+            "passed": false,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.12415123851983181,
+            "tolerance": 0.005,
+            "passed": false,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 0.0,
+            "tolerance": 0.9,
+            "passed": false,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.12415123741772284,
+            "tolerance": 0.005,
+            "passed": false,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          }
+        ],
+        "score": 0.5,
+        "__type__": "CheckResult"
+      },
+      {
+        "checker_id": "runtime.budget",
+        "passed": true,
+        "invariants": [
+          {
+            "name": "triangles",
+            "value": 872.0,
+            "tolerance": 1000000.0,
+            "passed": true,
+            "parts": [],
+            "state": null,
+            "__type__": "Invariant"
+          },
+          {
+            "name": "draw_calls",
+            "value": 2.0,
+            "tolerance": 1024.0,
+            "passed": true,
+            "parts": [],
+            "state": null,
+            "__type__": "Invariant"
+          }
+        ],
+        "score": 1.0,
+        "__type__": "CheckResult"
+      }
+    ],
+    "code_correct": false
+  },
+  "reviewed_board_pixel_match": true
+}

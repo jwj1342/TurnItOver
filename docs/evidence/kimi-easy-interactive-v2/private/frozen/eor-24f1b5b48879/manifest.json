@@ -1,0 +1,402 @@
+{
+  "schema_version": 2,
+  "id": "eor-24f1b5b48879",
+  "asset_id": "PM_102016",
+  "split": "train",
+  "split_group": "PartNet-Mobility:102016",
+  "candidate_sha": "385016fb1e5e5ea1",
+  "reference_sha": "385016fb1e5e5ea1",
+  "in_frozen_test": false,
+  "split_verification": "Train source split identity; frozen Test never opened",
+  "candidate_joint_limits": {
+    "joint_0": [
+      0,
+      0.812
+    ]
+  },
+  "reference_joint_limits": {
+    "joint_0": [
+      0,
+      0.812
+    ]
+  },
+  "row_sha256": {
+    "gold": "42dfb86b52d28cc357d97123dfccde295302f95d124302a7ce98875721c25b1a",
+    "annotation": "72bcdda80d3c5003f982a5dcb789903cb1f278e8017841ebbead32d7928df6f6"
+  },
+  "framing": {
+    "center": [
+      0.06278398633003235,
+      -0.024860993027687267,
+      0.0074109956622124
+    ],
+    "radius": 1.0341613603262645,
+    "__type__": "Framing"
+  },
+  "witnesses": [
+    {
+      "index": 0,
+      "key": "oblique_fl:joint_0:rest",
+      "view": "oblique_fl",
+      "state": {
+        "joint_0": 0
+      },
+      "sha256": "fe3b174795990188792e79ccf579862662b331a366ff6b132d3a8fe0f410cb15",
+      "exposures": [],
+      "perceptible_exposures": []
+    },
+    {
+      "index": 1,
+      "key": "oblique_fl:joint_0:mid",
+      "view": "oblique_fl",
+      "state": {
+        "joint_0": 0.406
+      },
+      "sha256": "b41ac4f8e2c7f33aaabad9b3ec3135aa468b0e517031a19b4e558d334933c273",
+      "exposures": [],
+      "perceptible_exposures": []
+    },
+    {
+      "index": 2,
+      "key": "oblique_fl:joint_0:limit",
+      "view": "oblique_fl",
+      "state": {
+        "joint_0": 0.812
+      },
+      "sha256": "e939d4285ad3ecfacb3cfecfed5dcddacd2c3b19bdbec9c9860710616d97ddec",
+      "exposures": [],
+      "perceptible_exposures": []
+    }
+  ],
+  "rest_hierarchy": {
+    "candidate": {
+      "property": "hierarchy",
+      "root": {
+        "name": "PM_102016",
+        "type": "Group",
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "children": [
+          {
+            "name": "base",
+            "type": "Group",
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "children": [
+              {
+                "name": "link_1",
+                "type": "Group",
+                "position": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  1.5707963267948966,
+                  -1.570796326794896,
+                  0
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "children": [
+                  {
+                    "name": "joint:joint_0",
+                    "type": "Group",
+                    "position": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "rotation": [
+                      -0.0,
+                      0,
+                      -0.0
+                    ],
+                    "scale": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "children": [
+                      {
+                        "name": "link_0",
+                        "type": "Group",
+                        "position": [
+                          0,
+                          0,
+                          0
+                        ],
+                        "rotation": [
+                          0,
+                          0,
+                          0
+                        ],
+                        "scale": [
+                          1,
+                          1,
+                          1
+                        ],
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "reference_protocol": {
+    "name": "easy_selected_joint_motion_v1",
+    "states": [
+      {
+        "file": "reference-00.png",
+        "label": {
+          "view": "oblique_fl",
+          "joint_id": "joint_0",
+          "detent": "rest"
+        },
+        "state": {
+          "joint_0": 0
+        },
+        "sha256": "fe3b174795990188792e79ccf579862662b331a366ff6b132d3a8fe0f410cb15"
+      },
+      {
+        "file": "reference-01.png",
+        "label": {
+          "view": "oblique_fl",
+          "joint_id": "joint_0",
+          "detent": "mid"
+        },
+        "state": {
+          "joint_0": 0.406
+        },
+        "sha256": "b41ac4f8e2c7f33aaabad9b3ec3135aa468b0e517031a19b4e558d334933c273"
+      },
+      {
+        "file": "reference-02.png",
+        "label": {
+          "view": "oblique_fl",
+          "joint_id": "joint_0",
+          "detent": "limit"
+        },
+        "state": {
+          "joint_0": 0.812
+        },
+        "sha256": "e939d4285ad3ecfacb3cfecfed5dcddacd2c3b19bdbec9c9860710616d97ddec"
+      }
+    ],
+    "label_independent": true
+  },
+  "perceptibility": {
+    "min_core_fraction": 0.001,
+    "geometry_failure_required": true
+  },
+  "checker": {
+    "candidate_sha": "385016fb1e5e5ea1",
+    "reference_sha": "385016fb1e5e5ea1",
+    "privileged": true,
+    "used_by_student": false,
+    "checks": [
+      {
+        "checker_id": "geometry.alignment",
+        "passed": true,
+        "invariants": [
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          }
+        ],
+        "score": 1.0,
+        "__type__": "CheckResult"
+      },
+      {
+        "checker_id": "runtime.budget",
+        "passed": true,
+        "invariants": [
+          {
+            "name": "triangles",
+            "value": 2204.0,
+            "tolerance": 1000000.0,
+            "passed": true,
+            "parts": [],
+            "state": null,
+            "__type__": "Invariant"
+          },
+          {
+            "name": "draw_calls",
+            "value": 2.0,
+            "tolerance": 1024.0,
+            "passed": true,
+            "parts": [],
+            "state": null,
+            "__type__": "Invariant"
+          }
+        ],
+        "score": 1.0,
+        "__type__": "CheckResult"
+      }
+    ],
+    "code_correct": true
+  },
+  "reviewed_board_pixel_match": true
+}

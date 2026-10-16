@@ -1,0 +1,35 @@
+{
+  "experiment": "kimi-easy-interactive-v2",
+  "model": "k3-256k",
+  "budget_including_common_hierarchy": 8,
+  "max_api_calls_per_case": 8,
+  "global_request_cap": 144,
+  "decision_attempts": 1,
+  "pilot_case": "eor-57a7ca1300ca",
+  "episodes_per_case": 1,
+  "prompt_tuning": false,
+  "scope": "one normal-selected joint and fixed human-reviewed view per object",
+  "reference_protocol": "easy_selected_joint_motion_v1",
+  "preflight": {
+    "browser_version": "151.0.7922.34",
+    "cases": 18,
+    "reviewed_board_pixel_matches": 18,
+    "cohort_sha256": "36d9dfe43d569bc3a100857d02b47310424de0472f46cf3ebe7c44b17776c9a6"
+  },
+  "transmission_review_basis": "user-authorized-18-case-PartNet-Train-interactive-teacher-experiment",
+  "input_sha256": {
+    "docs/evidence/partnet-mobility-easy-objects-v2-audit/high_confidence_candidates.jsonl": "36d9dfe43d569bc3a100857d02b47310424de0472f46cf3ebe7c44b17776c9a6",
+    "docs/evidence/partnet-mobility-easy-objects-v2/manifest.json": "a2efe84506ba6589b6cdd63ea99a303c0315cc96ac56d9ba3eee721e222f100c",
+    "docs/evidence/partnet-mobility-easy-objects-v2/human_review.jsonl": "b18c6ea8fc44d057b11e3284c48fb7330a1cb94f1fb479e4a924eb6014f0a7ac",
+    "scripts/run_kimi_easy_interactive.py": "fa74553e8c1a46f65c063bcad9c83823654c9b42ac7f57d6c06958e1f450bf72",
+    "scripts/easy_teacher_data.py": "9aa7c5a76ecbed0c5f64249d3b1184c6664ab903bdd7892220257ed1ff0e15e4",
+    "scripts/easy_teacher_audit.py": "749e2e0cb0b2d63c4c590cfa00a9ec22d65e7c8679a18c66423f8f2cb2e9015a",
+    "turnitover/teacher/prompt.txt": "3f535b4dd4c79ca70fecee41d5adf3bcc24f27b9ab623d50893fddc8c33d2ba0",
+    "turnitover/teacher/part_convention.txt": "28d4b14ee2258a415ea85e385172b06c7ecdf1fec54af9f199c2541e88eab06f"
+  },
+  "boundaries": {
+    "test_read_or_modified": false,
+    "train_started": false,
+    "old_117_merged": false
+  }
+}

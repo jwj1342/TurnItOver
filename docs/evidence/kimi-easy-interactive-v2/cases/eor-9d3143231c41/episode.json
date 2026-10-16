@@ -1,0 +1,470 @@
+{
+  "schema_version": 1,
+  "episode_id": "eor-9d3143231c41",
+  "status": "error",
+  "created_at": "2026-10-16T13:54:45+00:00",
+  "budget": 8,
+  "spent": 4,
+  "context": {
+    "task": "Object category: Dishwasher. Scope=easy_selected_joint_motion_v1. Compare the candidate with the normal reference for joint joint_1 (revolute), moving part link_1, at view oblique_bl, rest/mid/limit. Other joints remain at rest and are outside this declared motion scope. The initial camera is the reference view. Joint and camera state persist. Choose your own observations and when to finish. A scope-complete pass needs candidate observations covering every distinct supplied reference state; a fail must cite only observations visibly supporting its type and location. Use the full taxonomy; do not assume the candidate contains a defect. Only reference images, public hierarchy, runtime queries and executed images are visible.",
+    "parts": [
+      "base",
+      "link_0",
+      "link_1"
+    ],
+    "joints": [
+      "joint_1"
+    ],
+    "views": [
+      "oblique_bl"
+    ],
+    "runtime_properties": [
+      "hierarchy",
+      "joint_state",
+      "stats"
+    ],
+    "action_types": [
+      "request_view",
+      "actuate_joint",
+      "query_runtime"
+    ],
+    "max_triangles": 1000000,
+    "max_draw_calls": 1024
+  },
+  "teacher": {
+    "kind": "kimi",
+    "model": "k3-256k",
+    "paid": true,
+    "max_real_requests": 8,
+    "estimated_input_tokens": 20000,
+    "estimated_max_cost_rmb": null,
+    "cost_cap_rmb": null,
+    "pricing": null,
+    "billing_basis": "unknown_gateway_or_membership_quota"
+  },
+  "trajectory": [
+    {
+      "step": 0,
+      "action": {
+        "property": "hierarchy",
+        "__type__": "QueryRuntime"
+      },
+      "image_ref": null,
+      "payload": {
+        "property": "hierarchy",
+        "root": {
+          "name": "PM_12594",
+          "type": "Group",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "children": [
+            {
+              "name": "base",
+              "type": "Group",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "children": [
+                {
+                  "name": "link_0",
+                  "type": "Group",
+                  "position": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "rotation": [
+                    1.5707963267948966,
+                    -1.570796326794896,
+                    0
+                  ],
+                  "scale": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "children": [
+                    {
+                      "name": "joint:joint_1",
+                      "type": "Group",
+                      "position": [
+                        0.40451000000000015,
+                        -0.6242565289820224,
+                        0.5253691514495505
+                      ],
+                      "rotation": [
+                        -0.0,
+                        0,
+                        -0.0
+                      ],
+                      "scale": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "children": [
+                        {
+                          "name": "link_1",
+                          "type": "Group",
+                          "position": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "rotation": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "scale": [
+                            1,
+                            1,
+                            1
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "elapsed_ms": 1.8250619759783149,
+      "__type__": "Observation",
+      "decision": {
+        "type": "query_runtime",
+        "property": "hierarchy"
+      },
+      "decision_source": "fixed_protocol"
+    },
+    {
+      "step": 1,
+      "action": {
+        "view_id": "oblique_bl",
+        "__type__": "RequestView"
+      },
+      "image_ref": "observations/001.png",
+      "payload": {
+        "render_ms": 0.20000004768371582,
+        "camera": {
+          "position": [
+            -1.7201624443564763,
+            1.3427435045426859,
+            -2.398425289615976
+          ],
+          "target": [
+            -0.0629240008773154,
+            -0.004562501435279864,
+            -0.03164350986480707
+          ],
+          "projection": "perspective"
+        }
+      },
+      "elapsed_ms": 4.601413966156542,
+      "__type__": "Observation",
+      "decision": {
+        "type": "request_view",
+        "view_id": "oblique_bl"
+      },
+      "decision_source": "teacher"
+    },
+    {
+      "step": 2,
+      "action": {
+        "joint_id": "joint_1",
+        "detent": "mid",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/002.png",
+      "payload": {
+        "value": 0.7853981633974483,
+        "render_ms": 0.2999999523162842
+      },
+      "elapsed_ms": 7.852858980186284,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_1",
+        "detent": "mid"
+      },
+      "decision_source": "teacher"
+    },
+    {
+      "step": 3,
+      "action": {
+        "joint_id": "joint_1",
+        "detent": "limit",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/003.png",
+      "payload": {
+        "value": 1.5707963267948966,
+        "render_ms": 0.19999992847442627
+      },
+      "elapsed_ms": 5.1876159850507975,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_1",
+        "detent": "limit"
+      },
+      "decision_source": "teacher"
+    }
+  ],
+  "decisions": [
+    {
+      "call": 0,
+      "remaining": 7,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "request_view",
+          "view_id": "oblique_bl"
+        }
+      }
+    },
+    {
+      "call": 1,
+      "remaining": 6,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_1",
+          "detent": "mid"
+        }
+      }
+    },
+    {
+      "call": 2,
+      "remaining": 5,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_1",
+          "detent": "limit"
+        }
+      }
+    },
+    {
+      "call": 3,
+      "remaining": 4,
+      "valid": false,
+      "decision": {
+        "verdict": {
+          "status": "fail",
+          "confidence": 0.78,
+          "findings": [
+            {
+              "defect_id": "kinematics.joint_axis",
+              "parts": [
+                "link_1"
+              ],
+              "joint_id": "joint_1",
+              "severity": 0.8,
+              "confidence": 0.76,
+              "evidence_steps": [
+                2,
+                3
+              ],
+              "description": "At the mid and limit detents, link_1 sweeps into a diagonal/downward pose across the front instead of following the reference lateral opening arc for joint_1 at the same oblique_bl view.",
+              "suggested_fix": "Correct the joint_1 revolute axis so link_1 rotates along the reference mid-to-limit articulation while other joints remain at rest."
+            }
+          ],
+          "summary": "The candidate matches the rest pose, but the observed joint_1 mid and limit motion are incompatible with the supplied reference articulation for the same view and detents."
+        }
+      },
+      "error": "Decision fields do not match the required schema"
+    }
+  ],
+  "pending_action": null,
+  "model_calls": [
+    {
+      "path": "model_calls/000",
+      "status": "received",
+      "remaining": 7,
+      "image_count": 3,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2099,
+        "completion_tokens": 702,
+        "total_tokens": 2801,
+        "cached_tokens": 6,
+        "completion_tokens_details": {
+          "reasoning_tokens": 674
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 6
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 25098.201538901776
+    },
+    {
+      "path": "model_calls/001",
+      "status": "received",
+      "remaining": 6,
+      "image_count": 4,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2467,
+        "completion_tokens": 1051,
+        "total_tokens": 3518,
+        "cached_tokens": 82,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1017
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 82
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 37470.74649401475
+    },
+    {
+      "path": "model_calls/002",
+      "status": "received",
+      "remaining": 5,
+      "image_count": 5,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2689,
+        "completion_tokens": 1624,
+        "total_tokens": 4313,
+        "cached_tokens": 506,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1590
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 506
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 42210.72722703684
+    },
+    {
+      "path": "model_calls/003",
+      "status": "received",
+      "remaining": 4,
+      "image_count": 6,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2912,
+        "completion_tokens": 2099,
+        "total_tokens": 5011,
+        "cached_tokens": 614,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1910
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 614
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 59478.70013699867
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 10167,
+    "output_tokens": 5476,
+    "total_tokens": 15643
+  },
+  "budget_exhausted": false,
+  "teacher_verdict_missing": true,
+  "data_identity": {
+    "annotation_id": "12594",
+    "archive_sha256": "ec9a31e452306e07075435419ea41b484e3e43ec32774b413c21f2b7844286ec",
+    "asset_id": "PM_12594",
+    "candidate_sha": "4e0b472d9cbb5ad8",
+    "catalog_role": "formal_train_validation",
+    "common_input": "hierarchy",
+    "dataset": "sapien-sim/PartNetMobility",
+    "dataset_revision": "ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f",
+    "experiment_mode": "active",
+    "formal_training": true,
+    "license": "PartNet-Mobility terms: non-commercial research/education; ShapeNet terms also apply",
+    "model_id": "af913c310f1b978ae6488a574e8954a5",
+    "origin": "sapien-sim/PartNetMobility@ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f 12594.zip",
+    "prompt_addenda": [
+      "part_convention.txt"
+    ],
+    "reference_protocol": "easy_selected_joint_motion_v1",
+    "reference_sha": "b62702b09a9e1c0a",
+    "source_asset_id": "12594",
+    "source_content_sha256": "ec9a31e452306e07075435419ea41b484e3e43ec32774b413c21f2b7844286ec",
+    "source_dataset": "sapien-sim/PartNetMobility",
+    "source_id": "partnet-mobility-ee0aa3ef1df1",
+    "source_identity": "PartNet-Mobility:12594",
+    "source_identity_sha256": "a18a553d3589ca816d962f07a7ef78f0f17b87b7895d6227d89d603a77d3ba76",
+    "spec_sha256": "5f0ec679bd36e6ee08dbb6a767d01c5af56d89ccb71f85f898678724e5211eb0",
+    "split": "train",
+    "split_group": "PartNet-Mobility:12594",
+    "third_party_transmission_reviewed": true,
+    "transmission_review_basis": "user-authorized-18-case-PartNet-Train-interactive-teacher-experiment"
+  },
+  "updated_at": "2026-10-16T13:57:29+00:00",
+  "termination": "invalid_decision",
+  "error_type": "DecisionError",
+  "error_message": "Decision fields do not match the required schema",
+  "finished_at": "2026-10-16T13:57:29+00:00",
+  "reference_protocol": "easy_selected_joint_motion_v1",
+  "reference_states": [
+    {
+      "view": "oblique_bl",
+      "joint_id": "joint_1",
+      "detent": "rest"
+    },
+    {
+      "view": "oblique_bl",
+      "joint_id": "joint_1",
+      "detent": "mid"
+    },
+    {
+      "view": "oblique_bl",
+      "joint_id": "joint_1",
+      "detent": "limit"
+    }
+  ],
+  "runtime_joint_limits": {
+    "joint_1": [
+      0,
+      1.5707963267948966
+    ]
+  },
+  "frozen_witness_manifest": {
+    "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/docs/evidence/kimi-easy-interactive-v2/private/frozen/eor-9d3143231c41/manifest.json",
+    "sha256": "3f90abf0983f60d5603e741c4396176c857db4ced6763eba07a6d852a8126619"
+  },
+  "real_api_requests": 4,
+  "usage_cost_rmb_estimate": null,
+  "billing_cost_rmb": null
+}

@@ -1,0 +1,482 @@
+{
+  "schema_version": 1,
+  "episode_id": "eor-d5ba7047c72f",
+  "status": "complete",
+  "created_at": "2026-10-16T14:03:28+00:00",
+  "budget": 8,
+  "spent": 4,
+  "context": {
+    "task": "Object category: Display. Scope=easy_selected_joint_motion_v1. Compare the candidate with the normal reference for joint joint_0 (revolute), moving part link_0, at view oblique_fl, rest/mid/limit. Other joints remain at rest and are outside this declared motion scope. The initial camera is the reference view. Joint and camera state persist. Choose your own observations and when to finish. A scope-complete pass needs candidate observations covering every distinct supplied reference state; a fail must cite only observations visibly supporting its type and location. Use the full taxonomy; do not assume the candidate contains a defect. Only reference images, public hierarchy, runtime queries and executed images are visible.",
+    "parts": [
+      "base",
+      "link_0",
+      "link_1"
+    ],
+    "joints": [
+      "joint_0"
+    ],
+    "views": [
+      "oblique_fl"
+    ],
+    "runtime_properties": [
+      "hierarchy",
+      "joint_state",
+      "stats"
+    ],
+    "action_types": [
+      "request_view",
+      "actuate_joint",
+      "query_runtime"
+    ],
+    "max_triangles": 1000000,
+    "max_draw_calls": 1024
+  },
+  "teacher": {
+    "kind": "kimi",
+    "model": "k3-256k",
+    "paid": true,
+    "max_real_requests": 8,
+    "estimated_input_tokens": 20000,
+    "estimated_max_cost_rmb": null,
+    "cost_cap_rmb": null,
+    "pricing": null,
+    "billing_basis": "unknown_gateway_or_membership_quota"
+  },
+  "trajectory": [
+    {
+      "step": 0,
+      "action": {
+        "property": "hierarchy",
+        "__type__": "QueryRuntime"
+      },
+      "image_ref": null,
+      "payload": {
+        "property": "hierarchy",
+        "root": {
+          "name": "PM_5088",
+          "type": "Group",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "children": [
+            {
+              "name": "base",
+              "type": "Group",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "children": [
+                {
+                  "name": "link_1",
+                  "type": "Group",
+                  "position": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "rotation": [
+                    1.5707963267948966,
+                    -1.570796326794896,
+                    0
+                  ],
+                  "scale": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "children": [
+                    {
+                      "name": "joint:joint_0",
+                      "type": "Group",
+                      "position": [
+                        0.1770090000000002,
+                        0.0014798959410382492,
+                        -0.13340063601159122
+                      ],
+                      "rotation": [
+                        -0.0,
+                        0,
+                        -0.0
+                      ],
+                      "scale": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "children": [
+                        {
+                          "name": "link_0",
+                          "type": "Group",
+                          "position": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "rotation": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "scale": [
+                            1,
+                            1,
+                            1
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "elapsed_ms": 4.236486973240972,
+      "__type__": "Observation",
+      "decision": {
+        "type": "query_runtime",
+        "property": "hierarchy"
+      },
+      "decision_source": "fixed_protocol"
+    },
+    {
+      "step": 1,
+      "action": {
+        "joint_id": "joint_0",
+        "detent": "rest",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/001.png",
+      "payload": {
+        "value": -0.0,
+        "render_ms": 0.30000007152557373
+      },
+      "elapsed_ms": 15.453062951564789,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_0",
+        "detent": "rest"
+      },
+      "decision_source": "teacher"
+    },
+    {
+      "step": 2,
+      "action": {
+        "joint_id": "joint_0",
+        "detent": "mid",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/002.png",
+      "payload": {
+        "value": 0.2607521902479528,
+        "render_ms": 0.2999999523162842
+      },
+      "elapsed_ms": 10.018081055022776,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_0",
+        "detent": "mid"
+      },
+      "decision_source": "teacher"
+    },
+    {
+      "step": 3,
+      "action": {
+        "joint_id": "joint_0",
+        "detent": "limit",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/003.png",
+      "payload": {
+        "value": 0.7728317927830891,
+        "render_ms": 0.19999992847442627
+      },
+      "elapsed_ms": 10.22488996386528,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_0",
+        "detent": "limit"
+      },
+      "decision_source": "teacher"
+    }
+  ],
+  "decisions": [
+    {
+      "call": 0,
+      "remaining": 7,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_0",
+          "detent": "rest"
+        }
+      }
+    },
+    {
+      "call": 1,
+      "remaining": 6,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_0",
+          "detent": "mid"
+        }
+      }
+    },
+    {
+      "call": 2,
+      "remaining": 5,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_0",
+          "detent": "limit"
+        }
+      }
+    },
+    {
+      "call": 3,
+      "remaining": 4,
+      "valid": true,
+      "decision": {
+        "verdict": {
+          "status": "fail",
+          "confidence": 0.82,
+          "findings": [
+            {
+              "defect_id": "kinematics.joint_axis",
+              "parts": [
+                "link_0"
+              ],
+              "joint_id": "joint_0",
+              "severity": 0.85,
+              "confidence": 0.8,
+              "evidence_steps": [
+                2,
+                3
+              ],
+              "description": "At mid and limit, link_0 rolls/tilts diagonally in the image plane instead of following the upright reference opening motion for joint_0 at oblique_fl; the rest pose matches, but the articulated poses do not.",
+              "suggested_fix": "Correct the joint_0 rotation axis so link_0 opens about the same hinge axis as the reference rest/mid/limit sequence."
+            }
+          ],
+          "summary": "The candidate rest pose is compatible, but the observed mid and limit poses show link_0 rotating around a different axis than the reference protocol.",
+          "limitations": []
+        }
+      }
+    }
+  ],
+  "pending_action": null,
+  "model_calls": [
+    {
+      "path": "model_calls/000",
+      "status": "received",
+      "remaining": 7,
+      "image_count": 3,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2189,
+        "completion_tokens": 850,
+        "total_tokens": 3039,
+        "cached_tokens": 1792,
+        "completion_tokens_details": {
+          "reasoning_tokens": 814
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1792
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 33238.4277950041
+    },
+    {
+      "path": "model_calls/001",
+      "status": "received",
+      "remaining": 6,
+      "image_count": 4,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2406,
+        "completion_tokens": 677,
+        "total_tokens": 3083,
+        "cached_tokens": 506,
+        "completion_tokens_details": {
+          "reasoning_tokens": 643
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 506
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 21816.292408038862
+    },
+    {
+      "path": "model_calls/002",
+      "status": "received",
+      "remaining": 5,
+      "image_count": 5,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2628,
+        "completion_tokens": 645,
+        "total_tokens": 3273,
+        "cached_tokens": 514,
+        "completion_tokens_details": {
+          "reasoning_tokens": 611
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 514
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 25692.609181045555
+    },
+    {
+      "path": "model_calls/003",
+      "status": "received",
+      "remaining": 4,
+      "image_count": 6,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2850,
+        "completion_tokens": 2146,
+        "total_tokens": 4996,
+        "cached_tokens": 422,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1951
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 422
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 71966.56645007897
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 10073,
+    "output_tokens": 4318,
+    "total_tokens": 14391
+  },
+  "budget_exhausted": false,
+  "teacher_verdict_missing": false,
+  "data_identity": {
+    "annotation_id": "5088",
+    "archive_sha256": "293a5cdafb749f1735f45a6ea82ead5142009913a44b3e58fab48ea41786529f",
+    "asset_id": "PM_5088",
+    "candidate_sha": "cfdc191d7b939ba4",
+    "catalog_role": "formal_train_validation",
+    "common_input": "hierarchy",
+    "dataset": "sapien-sim/PartNetMobility",
+    "dataset_revision": "ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f",
+    "experiment_mode": "active",
+    "formal_training": true,
+    "license": "PartNet-Mobility terms: non-commercial research/education; ShapeNet terms also apply",
+    "model_id": "87b093f1fa5495968cb623bbd4140197",
+    "origin": "sapien-sim/PartNetMobility@ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f 5088.zip",
+    "prompt_addenda": [
+      "part_convention.txt"
+    ],
+    "reference_protocol": "easy_selected_joint_motion_v1",
+    "reference_sha": "41f9dab054321b1d",
+    "source_asset_id": "5088",
+    "source_content_sha256": "293a5cdafb749f1735f45a6ea82ead5142009913a44b3e58fab48ea41786529f",
+    "source_dataset": "sapien-sim/PartNetMobility",
+    "source_id": "partnet-mobility-ee0aa3ef1df1",
+    "source_identity": "PartNet-Mobility:5088",
+    "source_identity_sha256": "eaa4aa47da3dc855722a328cdbcba448a8d1c506f2e8b57ddc8e361e13e36787",
+    "spec_sha256": "b1859077d6163f6e299f0138d36e34b7065bcdf95e7b9a8fe62069647b6c1bb1",
+    "split": "train",
+    "split_group": "PartNet-Mobility:5088",
+    "third_party_transmission_reviewed": true,
+    "transmission_review_basis": "user-authorized-18-case-PartNet-Train-interactive-teacher-experiment"
+  },
+  "updated_at": "2026-10-16T14:06:01+00:00",
+  "termination": "teacher_finished",
+  "verdict": {
+    "status": "fail",
+    "confidence": 0.82,
+    "findings": [
+      {
+        "defect_id": "kinematics.joint_axis",
+        "parts": [
+          "link_0"
+        ],
+        "joint_id": "joint_0",
+        "severity": 0.85,
+        "confidence": 0.8,
+        "evidence_steps": [
+          2,
+          3
+        ],
+        "description": "At mid and limit, link_0 rolls/tilts diagonally in the image plane instead of following the upright reference opening motion for joint_0 at oblique_fl; the rest pose matches, but the articulated poses do not.",
+        "suggested_fix": "Correct the joint_0 rotation axis so link_0 opens about the same hinge axis as the reference rest/mid/limit sequence."
+      }
+    ],
+    "summary": "The candidate rest pose is compatible, but the observed mid and limit poses show link_0 rotating around a different axis than the reference protocol.",
+    "limitations": []
+  },
+  "finished_at": "2026-10-16T14:06:01+00:00",
+  "reference_protocol": "easy_selected_joint_motion_v1",
+  "reference_states": [
+    {
+      "view": "oblique_fl",
+      "joint_id": "joint_0",
+      "detent": "rest"
+    },
+    {
+      "view": "oblique_fl",
+      "joint_id": "joint_0",
+      "detent": "mid"
+    },
+    {
+      "view": "oblique_fl",
+      "joint_id": "joint_0",
+      "detent": "limit"
+    }
+  ],
+  "runtime_joint_limits": {
+    "joint_0": [
+      -0.25132741228718347,
+      0.7728317927830891
+    ]
+  },
+  "frozen_witness_manifest": {
+    "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/docs/evidence/kimi-easy-interactive-v2/private/frozen/eor-d5ba7047c72f/manifest.json",
+    "sha256": "5923a4b9e35caf588afb11452896be782cd32eecfbbb5dd142b5825a826a850b"
+  },
+  "real_api_requests": 4,
+  "usage_cost_rmb_estimate": null,
+  "billing_cost_rmb": null
+}

@@ -1,0 +1,1 @@
+{"verdict":{"status":"pass","confidence":0.92,"findings":[],"summary":"Candidate observations at oblique_fl cover rest, mid, and limit for joint_0 and visually match the corresponding supplied reference states; hierarchy confirms joint_0 carries link_0 within the declared scope.","limitations":[]}}

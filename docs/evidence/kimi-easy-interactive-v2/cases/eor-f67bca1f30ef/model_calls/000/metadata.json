@@ -1,0 +1,21 @@
+{
+  "path": "model_calls/000",
+  "status": "received",
+  "remaining": 7,
+  "image_count": 3,
+  "model": "k3-256k",
+  "usage": {
+    "prompt_tokens": 2478,
+    "completion_tokens": 812,
+    "total_tokens": 3290,
+    "cached_tokens": 1792,
+    "completion_tokens_details": {
+      "reasoning_tokens": 782
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 1792
+    }
+  },
+  "finish_reason": "stop",
+  "elapsed_ms": 31275.10029799305
+}

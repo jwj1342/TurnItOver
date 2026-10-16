@@ -1,0 +1,1 @@
+{"verdict":{"status":"pass","confidence":0.9,"findings":[],"summary":"Candidate observations at grazing_front cover the supplied rest, mid, and limit states for joint_0 and visually match the corresponding reference states; no defect is indicated within the declared scope.","limitations":[]}}

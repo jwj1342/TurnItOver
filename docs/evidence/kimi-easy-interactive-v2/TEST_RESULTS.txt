@@ -1,0 +1,22 @@
+Unit command:
+python -m pytest tests/unit/test_easy_teacher_audit.py tests/unit/test_teacher.py tests/unit/test_teacher_evidence.py tests/unit/test_teacher_export.py -q
+Exit 0: 51 passed.
+
+Chromium command:
+python -m pytest tests/browser/test_teacher.py -m browser -q
+Exit 0: 1 passed.
+
+Real collection:
+18/18 candidate programs matched human-reviewed board pixels before paid calls.
+18/18 Episode integrity audits passed; 54 teacher-selected observations executed.
+Every Episode covered the declared rest/mid/limit reference states.
+15 legal final verdicts; 10 strictly correct diagnoses; failures retained without retries.
+
+SFT loader:
+52 train actions, 10 train diagnosis, 62 combined rows; validation rows empty.
+Exact teacher/student prompt, target JSON content, ordered images and SHA parity passed.
+Qwen3-VL-2B processor: 62 rows checked, 0 failed, assistant-only masks passed.
+No model weights loaded for training; no training started.
+
+Whitespace: git diff --check passed.
+No full-repository test pass is claimed; frozen Test and old 117 rows remain unchanged.

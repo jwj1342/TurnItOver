@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "loader": {
+    "train.actions": 52,
+    "train.diagnosis": 10,
+    "train.episodes": 62,
+    "validation.actions": 0,
+    "validation.diagnosis": 0,
+    "validation.episodes": 0
+  },
+  "independent_assets": 7,
+  "asset_ids": [
+    "PM_102016",
+    "PM_102379",
+    "PM_10697",
+    "PM_12594",
+    "PM_19836",
+    "PM_48686",
+    "PM_5088"
+  ],
+  "exact_teacher_student_prompt_target_image_parity": true,
+  "errors": [],
+  "old_117_rows_merged": false,
+  "training_started": false
+}

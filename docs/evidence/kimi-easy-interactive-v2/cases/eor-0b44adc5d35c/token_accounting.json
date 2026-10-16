@@ -1,0 +1,16 @@
+{
+  "original_episode_usage": {
+    "input_tokens": 10161,
+    "output_tokens": 5042,
+    "total_tokens": 15203
+  },
+  "accounted_usage": {
+    "input_tokens": 10161,
+    "output_tokens": 5042,
+    "total_tokens": 15203
+  },
+  "unavailable_calls": 0,
+  "actual_total_tokens": 15203,
+  "accounted_usage_is_known_subtotal": true,
+  "source": "saved response metadata and saved provider-error usage only; no new API calls"
+}

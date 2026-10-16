@@ -1,0 +1,40 @@
+{
+  "case_id": "eor-9d3143231c41",
+  "asset_id": "PM_12594",
+  "kind": "joint_axis",
+  "run_record_complete": true,
+  "complete_episode": false,
+  "termination": "invalid_decision",
+  "verdict": null,
+  "field_matches": {
+    "verdict": false,
+    "defect_id": false,
+    "joint_id": false,
+    "parts": false
+  },
+  "strict_correct": false,
+  "evidence_sufficient": true,
+  "scope_coverage": {
+    "rest": true,
+    "mid": true,
+    "limit": true
+  },
+  "localization": [],
+  "evidence_outcome": "no_legal_verdict",
+  "trustworthy_uncertain": false,
+  "failure_reasons": [
+    "missing_legal_terminal_verdict",
+    "teacher_output_not_legal"
+  ],
+  "observations": 4,
+  "teacher_observations": 3,
+  "api_calls": 4,
+  "token_usage": {
+    "input_tokens": 10167,
+    "output_tokens": 5476,
+    "total_tokens": 15643
+  },
+  "billing_cost_rmb": null,
+  "usage_incomplete_calls": 0,
+  "episode_sha256": "72620bba3383df43e5b9683daa01f2106efb2b377f9a2f712240b4b68ece3b96"
+}

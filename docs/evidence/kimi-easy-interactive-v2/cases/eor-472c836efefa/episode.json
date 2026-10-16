@@ -1,0 +1,459 @@
+{
+  "schema_version": 1,
+  "episode_id": "eor-472c836efefa",
+  "status": "complete",
+  "created_at": "2026-10-16T13:43:08+00:00",
+  "budget": 8,
+  "spent": 4,
+  "context": {
+    "task": "Object category: Box. Scope=easy_selected_joint_motion_v1. Compare the candidate with the normal reference for joint joint_0 (revolute), moving part link_0, at view grazing_front, rest/mid/limit. Other joints remain at rest and are outside this declared motion scope. The initial camera is the reference view. Joint and camera state persist. Choose your own observations and when to finish. A scope-complete pass needs candidate observations covering every distinct supplied reference state; a fail must cite only observations visibly supporting its type and location. Use the full taxonomy; do not assume the candidate contains a defect. Only reference images, public hierarchy, runtime queries and executed images are visible.",
+    "parts": [
+      "base",
+      "link_0",
+      "link_1"
+    ],
+    "joints": [
+      "joint_0"
+    ],
+    "views": [
+      "grazing_front"
+    ],
+    "runtime_properties": [
+      "hierarchy",
+      "joint_state",
+      "stats"
+    ],
+    "action_types": [
+      "request_view",
+      "actuate_joint",
+      "query_runtime"
+    ],
+    "max_triangles": 1000000,
+    "max_draw_calls": 1024
+  },
+  "teacher": {
+    "kind": "kimi",
+    "model": "k3-256k",
+    "paid": true,
+    "max_real_requests": 8,
+    "estimated_input_tokens": 20000,
+    "estimated_max_cost_rmb": null,
+    "cost_cap_rmb": null,
+    "pricing": null,
+    "billing_basis": "unknown_gateway_or_membership_quota"
+  },
+  "trajectory": [
+    {
+      "step": 0,
+      "action": {
+        "property": "hierarchy",
+        "__type__": "QueryRuntime"
+      },
+      "image_ref": null,
+      "payload": {
+        "property": "hierarchy",
+        "root": {
+          "name": "PM_102379",
+          "type": "Group",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "children": [
+            {
+              "name": "base",
+              "type": "Group",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "children": [
+                {
+                  "name": "link_1",
+                  "type": "Group",
+                  "position": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "rotation": [
+                    1.5707963267948966,
+                    -1.570796326794896,
+                    0
+                  ],
+                  "scale": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "children": [
+                    {
+                      "name": "joint:joint_0",
+                      "type": "Group",
+                      "position": [
+                        0,
+                        -0.10372877077224477,
+                        -0.23685313234312205
+                      ],
+                      "rotation": [
+                        -0.0,
+                        0,
+                        -0.0
+                      ],
+                      "scale": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "children": [
+                        {
+                          "name": "link_0",
+                          "type": "Group",
+                          "position": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "rotation": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "scale": [
+                            1,
+                            1,
+                            1
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "elapsed_ms": 1.7189120408147573,
+      "__type__": "Observation",
+      "decision": {
+        "type": "query_runtime",
+        "property": "hierarchy"
+      },
+      "decision_source": "fixed_protocol"
+    },
+    {
+      "step": 1,
+      "action": {
+        "view_id": "grazing_front",
+        "__type__": "RequestView"
+      },
+      "image_ref": "observations/001.png",
+      "payload": {
+        "render_ms": 0.09999990463256836,
+        "camera": {
+          "position": [
+            2.7918210034180855,
+            0.27323339809219854,
+            0.7353731914348929
+          ],
+          "target": [
+            -0.14900351206668777,
+            0.01197549700736994,
+            0.21682648382602818
+          ],
+          "projection": "perspective"
+        }
+      },
+      "elapsed_ms": 5.408981931395829,
+      "__type__": "Observation",
+      "decision": {
+        "type": "request_view",
+        "view_id": "grazing_front"
+      },
+      "decision_source": "teacher"
+    },
+    {
+      "step": 2,
+      "action": {
+        "joint_id": "joint_0",
+        "detent": "mid",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/002.png",
+      "payload": {
+        "value": -0.0,
+        "render_ms": 0.20000004768371582
+      },
+      "elapsed_ms": 5.162187968380749,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_0",
+        "detent": "mid"
+      },
+      "decision_source": "teacher"
+    },
+    {
+      "step": 3,
+      "action": {
+        "joint_id": "joint_0",
+        "detent": "limit",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/003.png",
+      "payload": {
+        "value": 1.5707963267948966,
+        "render_ms": 0.3999999761581421
+      },
+      "elapsed_ms": 6.882683024741709,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_0",
+        "detent": "limit"
+      },
+      "decision_source": "teacher"
+    }
+  ],
+  "decisions": [
+    {
+      "call": 0,
+      "remaining": 7,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "request_view",
+          "view_id": "grazing_front"
+        }
+      }
+    },
+    {
+      "call": 1,
+      "remaining": 6,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_0",
+          "detent": "mid"
+        }
+      }
+    },
+    {
+      "call": 2,
+      "remaining": 5,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_0",
+          "detent": "limit"
+        }
+      }
+    },
+    {
+      "call": 3,
+      "remaining": 4,
+      "valid": true,
+      "decision": {
+        "verdict": {
+          "status": "pass",
+          "confidence": 0.9,
+          "findings": [],
+          "summary": "Candidate observations at grazing_front cover the supplied rest, mid, and limit states for joint_0 and visually match the corresponding reference states; no defect is indicated within the declared scope.",
+          "limitations": []
+        }
+      }
+    }
+  ],
+  "pending_action": null,
+  "model_calls": [
+    {
+      "path": "model_calls/000",
+      "status": "received",
+      "remaining": 7,
+      "image_count": 3,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2090,
+        "completion_tokens": 629,
+        "total_tokens": 2719,
+        "cached_tokens": 314,
+        "completion_tokens_details": {
+          "reasoning_tokens": 601
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 314
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 19861.06706596911
+    },
+    {
+      "path": "model_calls/001",
+      "status": "received",
+      "remaining": 6,
+      "image_count": 4,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2459,
+        "completion_tokens": 500,
+        "total_tokens": 2959,
+        "cached_tokens": 406,
+        "completion_tokens_details": {
+          "reasoning_tokens": 466
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 406
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 14716.29147103522
+    },
+    {
+      "path": "model_calls/002",
+      "status": "received",
+      "remaining": 5,
+      "image_count": 5,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2676,
+        "completion_tokens": 1837,
+        "total_tokens": 4513,
+        "cached_tokens": 506,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1803
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 506
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 49526.19884198066
+    },
+    {
+      "path": "model_calls/003",
+      "status": "received",
+      "remaining": 4,
+      "image_count": 6,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2898,
+        "completion_tokens": 1715,
+        "total_tokens": 4613,
+        "cached_tokens": 614,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1642
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 614
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 60892.83531997353
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 10123,
+    "output_tokens": 4681,
+    "total_tokens": 14804
+  },
+  "budget_exhausted": false,
+  "teacher_verdict_missing": false,
+  "data_identity": {
+    "annotation_id": "2379",
+    "archive_sha256": "c99ebb2f6173d3fd89c666c9245b6663ca6c245ca835135306df0dd2d3123f3f",
+    "asset_id": "PM_102379",
+    "candidate_sha": "650d4378fef55c5a",
+    "catalog_role": "formal_train_validation",
+    "common_input": "hierarchy",
+    "dataset": "sapien-sim/PartNetMobility",
+    "dataset_revision": "ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f",
+    "experiment_mode": "active",
+    "formal_training": true,
+    "license": "PartNet-Mobility terms: non-commercial research/education; ShapeNet terms also apply",
+    "model_id": "3ac64751-e075-488d-9938-9123dc88b2b6-0",
+    "origin": "sapien-sim/PartNetMobility@ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f 102379.zip",
+    "prompt_addenda": [
+      "part_convention.txt"
+    ],
+    "reference_protocol": "easy_selected_joint_motion_v1",
+    "reference_sha": "650d4378fef55c5a",
+    "source_asset_id": "102379",
+    "source_content_sha256": "c99ebb2f6173d3fd89c666c9245b6663ca6c245ca835135306df0dd2d3123f3f",
+    "source_dataset": "sapien-sim/PartNetMobility",
+    "source_id": "partnet-mobility-ee0aa3ef1df1",
+    "source_identity": "PartNet-Mobility:102379",
+    "source_identity_sha256": "627c6f6b144b134b5ce1a34223feaf5082e1ca2a8ef9099878a0743c34f2c11d",
+    "spec_sha256": "ff544bd4c64fa303b8a7a0751a9f7878c35e51bdef899d654f79abdda9a4a217",
+    "split": "train",
+    "split_group": "PartNet-Mobility:102379",
+    "third_party_transmission_reviewed": true,
+    "transmission_review_basis": "user-authorized-18-case-PartNet-Train-interactive-teacher-experiment"
+  },
+  "updated_at": "2026-10-16T13:45:33+00:00",
+  "termination": "teacher_finished",
+  "verdict": {
+    "status": "pass",
+    "confidence": 0.9,
+    "findings": [],
+    "summary": "Candidate observations at grazing_front cover the supplied rest, mid, and limit states for joint_0 and visually match the corresponding reference states; no defect is indicated within the declared scope.",
+    "limitations": []
+  },
+  "finished_at": "2026-10-16T13:45:33+00:00",
+  "reference_protocol": "easy_selected_joint_motion_v1",
+  "reference_states": [
+    {
+      "view": "grazing_front",
+      "joint_id": "joint_0",
+      "detent": "rest"
+    },
+    {
+      "view": "grazing_front",
+      "joint_id": "joint_0",
+      "detent": "mid"
+    },
+    {
+      "view": "grazing_front",
+      "joint_id": "joint_0",
+      "detent": "limit"
+    }
+  ],
+  "runtime_joint_limits": {
+    "joint_0": [
+      -1.5707963267948966,
+      1.5707963267948966
+    ]
+  },
+  "frozen_witness_manifest": {
+    "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/docs/evidence/kimi-easy-interactive-v2/private/frozen/eor-472c836efefa/manifest.json",
+    "sha256": "67f4df1cda71056e328eee774a8391db863fa88848a77700f723d337274874d8"
+  },
+  "real_api_requests": 4,
+  "usage_cost_rmb_estimate": null,
+  "billing_cost_rmb": null
+}

@@ -1,0 +1,1 @@
+{"verdict":{"status":"pass","confidence":0.95,"findings":[],"summary":"Candidate observations at oblique_fl cover rest, mid, and limit for joint_0 and visually match the corresponding reference states for the prismatic motion of link_0; no supported defect is observed within the declared scope.","limitations":[]}}

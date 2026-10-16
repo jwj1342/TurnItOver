@@ -1,0 +1,402 @@
+{
+  "schema_version": 2,
+  "id": "eor-95a0f2bbba88",
+  "asset_id": "PM_5088",
+  "split": "train",
+  "split_group": "PartNet-Mobility:5088",
+  "candidate_sha": "41f9dab054321b1d",
+  "reference_sha": "41f9dab054321b1d",
+  "in_frozen_test": false,
+  "split_verification": "Train source split identity; frozen Test never opened",
+  "candidate_joint_limits": {
+    "joint_0": [
+      -0.25132741228718347,
+      0.7728317927830891
+    ]
+  },
+  "reference_joint_limits": {
+    "joint_0": [
+      -0.25132741228718347,
+      0.7728317927830891
+    ]
+  },
+  "row_sha256": {
+    "gold": "e0c22b6bafc357b5ab7a34133cb5c62d5d369866d3d7cc378c85f56e1da7c8cc",
+    "annotation": "49ce701a95000afbc7ea8d1f8e05c6146420c1734d6ea9f0df98581f14de87d7"
+  },
+  "framing": {
+    "center": [
+      -0.003973007202148465,
+      0.015463487688064548,
+      0.1634135107356406
+    ],
+    "radius": 1.011998590715237,
+    "__type__": "Framing"
+  },
+  "witnesses": [
+    {
+      "index": 0,
+      "key": "oblique_fl:joint_0:rest",
+      "view": "oblique_fl",
+      "state": {
+        "joint_0": 0.0
+      },
+      "sha256": "513644eff7f2c59a2b109307efb30f47abe41327673c42da37594b5e982ad341",
+      "exposures": [],
+      "perceptible_exposures": []
+    },
+    {
+      "index": 1,
+      "key": "oblique_fl:joint_0:mid",
+      "view": "oblique_fl",
+      "state": {
+        "joint_0": 0.2607521902479528
+      },
+      "sha256": "c40ec4e4548bb6ceb95cf6657784a53e74f99f0f82498dea9c0fdf022a0b7120",
+      "exposures": [],
+      "perceptible_exposures": []
+    },
+    {
+      "index": 2,
+      "key": "oblique_fl:joint_0:limit",
+      "view": "oblique_fl",
+      "state": {
+        "joint_0": 0.7728317927830891
+      },
+      "sha256": "3bf605a317b150a1cb9b3209ea3d3c30b073bc7bbb58f34984d22d069c3f9500",
+      "exposures": [],
+      "perceptible_exposures": []
+    }
+  ],
+  "rest_hierarchy": {
+    "candidate": {
+      "property": "hierarchy",
+      "root": {
+        "name": "PM_5088",
+        "type": "Group",
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "children": [
+          {
+            "name": "base",
+            "type": "Group",
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "children": [
+              {
+                "name": "link_1",
+                "type": "Group",
+                "position": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  1.5707963267948966,
+                  -1.570796326794896,
+                  0
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "children": [
+                  {
+                    "name": "joint:joint_0",
+                    "type": "Group",
+                    "position": [
+                      0.1770090000000002,
+                      0.0014798959410382492,
+                      -0.13340063601159122
+                    ],
+                    "rotation": [
+                      -0.0,
+                      0,
+                      -0.0
+                    ],
+                    "scale": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "children": [
+                      {
+                        "name": "link_0",
+                        "type": "Group",
+                        "position": [
+                          0,
+                          0,
+                          0
+                        ],
+                        "rotation": [
+                          0,
+                          0,
+                          0
+                        ],
+                        "scale": [
+                          1,
+                          1,
+                          1
+                        ],
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "reference_protocol": {
+    "name": "easy_selected_joint_motion_v1",
+    "states": [
+      {
+        "file": "reference-00.png",
+        "label": {
+          "view": "oblique_fl",
+          "joint_id": "joint_0",
+          "detent": "rest"
+        },
+        "state": {
+          "joint_0": 0.0
+        },
+        "sha256": "513644eff7f2c59a2b109307efb30f47abe41327673c42da37594b5e982ad341"
+      },
+      {
+        "file": "reference-01.png",
+        "label": {
+          "view": "oblique_fl",
+          "joint_id": "joint_0",
+          "detent": "mid"
+        },
+        "state": {
+          "joint_0": 0.2607521902479528
+        },
+        "sha256": "c40ec4e4548bb6ceb95cf6657784a53e74f99f0f82498dea9c0fdf022a0b7120"
+      },
+      {
+        "file": "reference-02.png",
+        "label": {
+          "view": "oblique_fl",
+          "joint_id": "joint_0",
+          "detent": "limit"
+        },
+        "state": {
+          "joint_0": 0.7728317927830891
+        },
+        "sha256": "3bf605a317b150a1cb9b3209ea3d3c30b073bc7bbb58f34984d22d069c3f9500"
+      }
+    ],
+    "label_independent": true
+  },
+  "perceptibility": {
+    "min_core_fraction": 0.001,
+    "geometry_failure_required": true
+  },
+  "checker": {
+    "candidate_sha": "41f9dab054321b1d",
+    "reference_sha": "41f9dab054321b1d",
+    "privileged": true,
+    "used_by_student": false,
+    "checks": [
+      {
+        "checker_id": "geometry.alignment",
+        "passed": true,
+        "invariants": [
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          }
+        ],
+        "score": 1.0,
+        "__type__": "CheckResult"
+      },
+      {
+        "checker_id": "runtime.budget",
+        "passed": true,
+        "invariants": [
+          {
+            "name": "triangles",
+            "value": 5392.0,
+            "tolerance": 1000000.0,
+            "passed": true,
+            "parts": [],
+            "state": null,
+            "__type__": "Invariant"
+          },
+          {
+            "name": "draw_calls",
+            "value": 2.0,
+            "tolerance": 1024.0,
+            "passed": true,
+            "parts": [],
+            "state": null,
+            "__type__": "Invariant"
+          }
+        ],
+        "score": 1.0,
+        "__type__": "CheckResult"
+      }
+    ],
+    "code_correct": true
+  },
+  "reviewed_board_pixel_match": true
+}

@@ -1,0 +1,8 @@
+{
+  "role": "teacher",
+  "provider": "openai_compatible",
+  "model": "k3-256k",
+  "key_configured": true,
+  "max_tokens": 4096,
+  "timeout": 120.0
+}

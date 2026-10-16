@@ -1,0 +1,8 @@
+{
+  "path": "model_calls/003",
+  "status": "failed",
+  "remaining": 4,
+  "image_count": 6,
+  "error_type": "ModelError",
+  "error_message": "openai_compatible connection failed or timed out; no automatic retry"
+}

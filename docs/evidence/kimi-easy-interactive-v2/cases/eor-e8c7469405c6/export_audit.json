@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "episode_id": "eor-e8c7469405c6",
+  "pipeline_ok": true,
+  "teacher_actions_legal": true,
+  "teacher_outputs_legal": true,
+  "teacher_response_received": true,
+  "teacher_verdict_present": true,
+  "budget_exhausted": false,
+  "teacher_verdict_missing": false,
+  "diagnosis_evidence_supported": null,
+  "diagnosis_evidence_reason": "Pixel novelty alone cannot establish semantic support; checker or human review is required.",
+  "informative_observations": 3,
+  "observations": 4,
+  "observation_new_information": [
+    true,
+    false,
+    true,
+    true
+  ],
+  "errors": [],
+  "reference_sha256": [
+    "93f12d6552646471c19ed56cccf7b96ead78ad03ac531d10524136252b5a5bcf",
+    "62e2dd0912f188ee22d3ceb48a771801df8d0499b0558016747db92c19b0f705",
+    "bac8bb2488cbbcff3418ab01777b67fb75a80780d3d2b7d1c658be4ca52e7854"
+  ],
+  "observation_sha256": [
+    "93f12d6552646471c19ed56cccf7b96ead78ad03ac531d10524136252b5a5bcf",
+    "d8a42c2044756c59ff05cf3228263bb771117f10774354b88617c149f30ad2b1",
+    "df3f6cc6b64b6c5b6e11d0e3383ec3c27f01709e5e705dc54c8c80ccda910440"
+  ],
+  "scope": "integrity_and_observation_novelty_not_semantic_ground_truth",
+  "data_identity": {
+    "annotation_id": "48686",
+    "archive_sha256": "001d860a3a6eb91eb260e635c0d82e64a74821cb04262e867e8279623f741e98",
+    "asset_id": "PM_48686",
+    "candidate_sha": "2a98d3432f66d98a",
+    "catalog_role": "formal_train_validation",
+    "common_input": "hierarchy",
+    "dataset": "sapien-sim/PartNetMobility",
+    "dataset_revision": "ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f",
+    "experiment_mode": "active",
+    "formal_training": true,
+    "license": "PartNet-Mobility terms: non-commercial research/education; ShapeNet terms also apply",
+    "model_id": "c4802a2901dcd6e84da5feafe6f1c8fc",
+    "origin": "sapien-sim/PartNetMobility@ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f 48686.zip",
+    "prompt_addenda": [
+      "part_convention.txt"
+    ],
+    "reference_protocol": "easy_selected_joint_motion_v1",
+    "reference_sha": "5b6bfb1835102a75",
+    "source_asset_id": "48686",
+    "source_content_sha256": "001d860a3a6eb91eb260e635c0d82e64a74821cb04262e867e8279623f741e98",
+    "source_dataset": "sapien-sim/PartNetMobility",
+    "source_id": "partnet-mobility-ee0aa3ef1df1",
+    "source_identity": "PartNet-Mobility:48686",
+    "source_identity_sha256": "dfa4fda2f7ace2b5b2f30edcec1523fecb276f2ef5216ba4b796c30e55c11b73",
+    "spec_sha256": "f0aec652e9bc1e72eea128ed39efb03adb8e192a47ddedc7565914c267f4c23e",
+    "split": "train",
+    "split_group": "PartNet-Mobility:48686",
+    "third_party_transmission_reviewed": true,
+    "transmission_review_basis": "user-authorized-18-case-PartNet-Train-interactive-teacher-experiment"
+  },
+  "private_posthoc_comparison": {
+    "gold_defect_ids": [
+      "kinematics.joint_axis"
+    ],
+    "teacher_defect_ids": [
+      "kinematics.joint_axis"
+    ],
+    "exact_defect_ids": true,
+    "teacher_input_excluded_private_gold": true
+  },
+  "independent_evidence_audit": {
+    "accepted": true,
+    "status": "fail",
+    "objective_defect_ids": [
+      "kinematics.joint_axis"
+    ],
+    "supported_findings": [
+      {
+        "defect_id": "kinematics.joint_axis",
+        "joint_id": "joint_0",
+        "evidence_steps": [
+          2,
+          3
+        ],
+        "label_index": 0
+      }
+    ],
+    "localization": [
+      {
+        "defect_id": "kinematics.joint_axis",
+        "joint_id": "joint_0",
+        "parts": [
+          "link_0"
+        ],
+        "defect_type_correct": true,
+        "joint_correct": true,
+        "parts_correct": true,
+        "parts_include_gold": true,
+        "evidence_steps": [
+          2,
+          3
+        ]
+      }
+    ],
+    "action_audit": [
+      {
+        "step": 0,
+        "decision_source": "fixed_protocol",
+        "legal": true,
+        "bound": false,
+        "reason": "runtime_only",
+        "image": false,
+        "property": "hierarchy",
+        "payload_matches_frozen_rest_hierarchy": true,
+        "new_objective_evidence": [],
+        "defect_relevant": false
+      },
+      {
+        "step": 1,
+        "decision_source": "teacher",
+        "legal": true,
+        "state": {
+          "view": "oblique_fl",
+          "joints": {
+            "joint_0": 0
+          }
+        },
+        "live_sha256": "93f12d6552646471c19ed56cccf7b96ead78ad03ac531d10524136252b5a5bcf",
+        "witness_indices": [
+          0
+        ],
+        "witness_keys": [
+          "oblique_fl:joint_0:rest"
+        ],
+        "bound": true,
+        "reference_comparable": true,
+        "exposures": [],
+        "perceptible_exposures": [],
+        "new_objective_evidence": [],
+        "defect_relevant": false
+      },
+      {
+        "step": 2,
+        "decision_source": "teacher",
+        "legal": true,
+        "requested_value": 0.28200000000000003,
+        "actual_value": 0.28200000000000003,
+        "actuation_consistent": true,
+        "state": {
+          "view": "oblique_fl",
+          "joints": {
+            "joint_0": 0.28200000000000003
+          }
+        },
+        "live_sha256": "d8a42c2044756c59ff05cf3228263bb771117f10774354b88617c149f30ad2b1",
+        "witness_indices": [
+          1
+        ],
+        "witness_keys": [
+          "oblique_fl:joint_0:mid"
+        ],
+        "bound": true,
+        "reference_comparable": true,
+        "exposures": [
+          0
+        ],
+        "perceptible_exposures": [
+          0
+        ],
+        "new_objective_evidence": [
+          0
+        ],
+        "defect_relevant": true
+      },
+      {
+        "step": 3,
+        "decision_source": "teacher",
+        "legal": true,
+        "requested_value": 0.5640000000000001,
+        "actual_value": 0.5640000000000001,
+        "actuation_consistent": true,
+        "state": {
+          "view": "oblique_fl",
+          "joints": {
+            "joint_0": 0.5640000000000001
+          }
+        },
+        "live_sha256": "df3f6cc6b64b6c5b6e11d0e3383ec3c27f01709e5e705dc54c8c80ccda910440",
+        "witness_indices": [
+          2
+        ],
+        "witness_keys": [
+          "oblique_fl:joint_0:limit"
+        ],
+        "bound": true,
+        "reference_comparable": true,
+        "exposures": [
+          0
+        ],
+        "perceptible_exposures": [
+          0
+        ],
+        "new_objective_evidence": [],
+        "defect_relevant": true
+      }
+    ],
+    "actions_legal": true,
+    "diagnosis_objective": "first_failure",
+    "evidence_sufficient": true,
+    "objective_evidence_complete": true,
+    "objective_evidence_covered": [
+      0
+    ],
+    "evidence_standard": "perceptible_exposure",
+    "objective_exposure_imperceptible_only": [],
+    "max_credited_changed_fraction": 0.1515655517578125,
+    "objective_exposure_without_visible_reference": [],
+    "diagnosis_outcome": "correct_fail",
+    "comparable_motion_joints": [
+      "joint_0"
+    ],
+    "rejection_reasons": [],
+    "truth_basis": "prepared checker-qualified private gold",
+    "evidence_basis": "live Chromium pixels and actual joint values bound to a frozen witness manifest and a visible reference state",
+    "teacher_input_excluded_private_gold": true,
+    "scope_coverage": {
+      "rest": true,
+      "mid": true,
+      "limit": true
+    },
+    "scope_pass_rule": "easy_selected_joint_motion_v1"
+  },
+  "episode_sha256": "0f8084050a5d4370f0bb518f4cd95761a50fc5b16106104af282c2b2f7ddaf9d"
+}

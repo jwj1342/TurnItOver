@@ -1,0 +1,217 @@
+{
+  "context": {
+    "task": "Object category: USB. Scope=easy_selected_joint_motion_v1. Compare the candidate with the normal reference for joint joint_0 (prismatic), moving part link_0, at view oblique_fl, rest/mid/limit. Other joints remain at rest and are outside this declared motion scope. The initial camera is the reference view. Joint and camera state persist. Choose your own observations and when to finish. A scope-complete pass needs candidate observations covering every distinct supplied reference state; a fail must cite only observations visibly supporting its type and location. Use the full taxonomy; do not assume the candidate contains a defect. Only reference images, public hierarchy, runtime queries and executed images are visible.",
+    "parts": [
+      "base",
+      "link_0",
+      "link_1"
+    ],
+    "joints": [
+      "joint_0"
+    ],
+    "views": [
+      "oblique_fl"
+    ],
+    "runtime_properties": [
+      "hierarchy",
+      "joint_state",
+      "stats"
+    ],
+    "action_types": [
+      "request_view",
+      "actuate_joint",
+      "query_runtime"
+    ],
+    "max_triangles": 1000000,
+    "max_draw_calls": 1024
+  },
+  "remaining": 7,
+  "stop_required": false,
+  "image_order": [
+    {
+      "image": 0,
+      "kind": "reference",
+      "state": {
+        "view": "oblique_fl",
+        "joint_id": "joint_0",
+        "detent": "rest"
+      }
+    },
+    {
+      "image": 1,
+      "kind": "reference",
+      "state": {
+        "view": "oblique_fl",
+        "joint_id": "joint_0",
+        "detent": "mid"
+      }
+    },
+    {
+      "image": 2,
+      "kind": "reference",
+      "state": {
+        "view": "oblique_fl",
+        "joint_id": "joint_0",
+        "detent": "limit"
+      }
+    }
+  ],
+  "history": [
+    {
+      "step": 0,
+      "action": {
+        "property": "hierarchy",
+        "__type__": "QueryRuntime"
+      },
+      "image_ref": null,
+      "payload": {
+        "property": "hierarchy",
+        "root": {
+          "name": "PM_102016",
+          "type": "Group",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "children": [
+            {
+              "name": "base",
+              "type": "Group",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "children": [
+                {
+                  "name": "link_1",
+                  "type": "Group",
+                  "position": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "rotation": [
+                    1.5707963267948966,
+                    -1.570796326794896,
+                    0
+                  ],
+                  "scale": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "children": [
+                    {
+                      "name": "joint:joint_0",
+                      "type": "Group",
+                      "position": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "rotation": [
+                        -0.0,
+                        0,
+                        -0.0
+                      ],
+                      "scale": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "children": [
+                        {
+                          "name": "link_0",
+                          "type": "Group",
+                          "position": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "rotation": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "scale": [
+                            1,
+                            1,
+                            1
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "elapsed_ms": 3.68250603787601,
+      "__type__": "Observation"
+    }
+  ],
+  "taxonomy_ids": [
+    "geometry.thin_sheet",
+    "geometry.open_volume",
+    "geometry.self_intersection",
+    "geometry.global_scale",
+    "geometry.anisotropic_scale",
+    "geometry.missing_part",
+    "geometry.duplicate_part",
+    "geometry.missing_bevel",
+    "structure.wrong_parent",
+    "structure.pivot_offset",
+    "structure.part_offset",
+    "structure.part_rotation",
+    "structure.symmetry_break",
+    "structure.interpenetration",
+    "structure.floating",
+    "kinematics.joint_axis",
+    "kinematics.joint_type",
+    "kinematics.joint_range",
+    "kinematics.joint_anchor",
+    "kinematics.direction_flip",
+    "material.basecolor_as_rough",
+    "material.metalness",
+    "material.tiling_scale",
+    "material.emissive",
+    "material.normal_map",
+    "runtime.triangle_budget",
+    "runtime.draw_calls",
+    "runtime.missing_dispose",
+    "runtime.tick_missing_or_phase"
+  ],
+  "joint_structure": {
+    "joint_0": {
+      "parent_link": "link_1",
+      "moving_child_links": [
+        "link_0"
+      ]
+    }
+  }
+}

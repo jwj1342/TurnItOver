@@ -1,0 +1,53 @@
+{
+  "case_id": "eor-e8c7469405c6",
+  "asset_id": "PM_48686",
+  "kind": "joint_axis",
+  "run_record_complete": true,
+  "complete_episode": true,
+  "termination": "teacher_finished",
+  "verdict": "fail",
+  "field_matches": {
+    "verdict": true,
+    "defect_id": true,
+    "joint_id": true,
+    "parts": true
+  },
+  "strict_correct": true,
+  "evidence_sufficient": true,
+  "scope_coverage": {
+    "rest": true,
+    "mid": true,
+    "limit": true
+  },
+  "localization": [
+    {
+      "defect_id": "kinematics.joint_axis",
+      "joint_id": "joint_0",
+      "parts": [
+        "link_0"
+      ],
+      "defect_type_correct": true,
+      "joint_correct": true,
+      "parts_correct": true,
+      "parts_include_gold": true,
+      "evidence_steps": [
+        2,
+        3
+      ]
+    }
+  ],
+  "evidence_outcome": "correct_fail",
+  "trustworthy_uncertain": false,
+  "failure_reasons": [],
+  "observations": 4,
+  "teacher_observations": 3,
+  "api_calls": 4,
+  "token_usage": {
+    "input_tokens": 10073,
+    "output_tokens": 6761,
+    "total_tokens": 16834
+  },
+  "billing_cost_rmb": null,
+  "usage_incomplete_calls": 0,
+  "episode_sha256": "0f8084050a5d4370f0bb518f4cd95761a50fc5b16106104af282c2b2f7ddaf9d"
+}

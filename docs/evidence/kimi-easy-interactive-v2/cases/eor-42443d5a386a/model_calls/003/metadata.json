@@ -1,0 +1,8 @@
+{
+  "path": "model_calls/003",
+  "status": "failed",
+  "remaining": 4,
+  "image_count": 6,
+  "error_type": "ModelError",
+  "error_message": "Provider returned no text (possibly refusal, token limit or incompatible model); finish_reason=length; usage={\"cached_tokens\": 506, \"completion_tokens\": 4096, \"completion_tokens_details\": {\"reasoning_tokens\": 4096}, \"prompt_tokens\": 2918, \"prompt_tokens_details\": {\"cached_tokens\": 506}, \"total_tokens\": 7014}"
+}

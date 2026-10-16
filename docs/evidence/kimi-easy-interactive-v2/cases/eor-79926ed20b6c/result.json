@@ -1,0 +1,37 @@
+{
+  "case_id": "eor-79926ed20b6c",
+  "asset_id": "PM_10697",
+  "kind": "clean",
+  "run_record_complete": true,
+  "complete_episode": true,
+  "termination": "teacher_finished",
+  "verdict": "pass",
+  "field_matches": {
+    "verdict": true,
+    "defect_id": true,
+    "joint_id": true,
+    "parts": true
+  },
+  "strict_correct": true,
+  "evidence_sufficient": true,
+  "scope_coverage": {
+    "rest": true,
+    "mid": true,
+    "limit": true
+  },
+  "localization": [],
+  "evidence_outcome": "pass_on_clean",
+  "trustworthy_uncertain": false,
+  "failure_reasons": [],
+  "observations": 4,
+  "teacher_observations": 3,
+  "api_calls": 4,
+  "token_usage": {
+    "input_tokens": 10148,
+    "output_tokens": 3621,
+    "total_tokens": 13769
+  },
+  "billing_cost_rmb": null,
+  "usage_incomplete_calls": 0,
+  "episode_sha256": "43e144e3b7b8a46efceac53891bd5b205154de717ff6822228b2f7149eb9b501"
+}

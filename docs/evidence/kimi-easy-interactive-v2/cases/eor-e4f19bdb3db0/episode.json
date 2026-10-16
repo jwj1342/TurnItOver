@@ -1,0 +1,459 @@
+{
+  "schema_version": 1,
+  "episode_id": "eor-e4f19bdb3db0",
+  "status": "complete",
+  "created_at": "2026-10-16T14:06:01+00:00",
+  "budget": 8,
+  "spent": 4,
+  "context": {
+    "task": "Object category: Dishwasher. Scope=easy_selected_joint_motion_v1. Compare the candidate with the normal reference for joint joint_1 (revolute), moving part link_1, at view oblique_bl, rest/mid/limit. Other joints remain at rest and are outside this declared motion scope. The initial camera is the reference view. Joint and camera state persist. Choose your own observations and when to finish. A scope-complete pass needs candidate observations covering every distinct supplied reference state; a fail must cite only observations visibly supporting its type and location. Use the full taxonomy; do not assume the candidate contains a defect. Only reference images, public hierarchy, runtime queries and executed images are visible.",
+    "parts": [
+      "base",
+      "link_0",
+      "link_1"
+    ],
+    "joints": [
+      "joint_1"
+    ],
+    "views": [
+      "oblique_bl"
+    ],
+    "runtime_properties": [
+      "hierarchy",
+      "joint_state",
+      "stats"
+    ],
+    "action_types": [
+      "request_view",
+      "actuate_joint",
+      "query_runtime"
+    ],
+    "max_triangles": 1000000,
+    "max_draw_calls": 1024
+  },
+  "teacher": {
+    "kind": "kimi",
+    "model": "k3-256k",
+    "paid": true,
+    "max_real_requests": 8,
+    "estimated_input_tokens": 20000,
+    "estimated_max_cost_rmb": null,
+    "cost_cap_rmb": null,
+    "pricing": null,
+    "billing_basis": "unknown_gateway_or_membership_quota"
+  },
+  "trajectory": [
+    {
+      "step": 0,
+      "action": {
+        "property": "hierarchy",
+        "__type__": "QueryRuntime"
+      },
+      "image_ref": null,
+      "payload": {
+        "property": "hierarchy",
+        "root": {
+          "name": "PM_12594",
+          "type": "Group",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "children": [
+            {
+              "name": "base",
+              "type": "Group",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "children": [
+                {
+                  "name": "link_0",
+                  "type": "Group",
+                  "position": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "rotation": [
+                    1.5707963267948966,
+                    -1.570796326794896,
+                    0
+                  ],
+                  "scale": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "children": [
+                    {
+                      "name": "joint:joint_1",
+                      "type": "Group",
+                      "position": [
+                        0.40451000000000015,
+                        -0.6242565289820224,
+                        0.5253691514495505
+                      ],
+                      "rotation": [
+                        -0.0,
+                        0,
+                        -0.0
+                      ],
+                      "scale": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "children": [
+                        {
+                          "name": "link_1",
+                          "type": "Group",
+                          "position": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "rotation": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "scale": [
+                            1,
+                            1,
+                            1
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "elapsed_ms": 1.6555539332330227,
+      "__type__": "Observation",
+      "decision": {
+        "type": "query_runtime",
+        "property": "hierarchy"
+      },
+      "decision_source": "fixed_protocol"
+    },
+    {
+      "step": 1,
+      "action": {
+        "view_id": "oblique_bl",
+        "__type__": "RequestView"
+      },
+      "image_ref": "observations/001.png",
+      "payload": {
+        "render_ms": 0.20000004768371582,
+        "camera": {
+          "position": [
+            -1.7201624443564763,
+            1.3427435045426859,
+            -2.398425289615976
+          ],
+          "target": [
+            -0.0629240008773154,
+            -0.004562501435279864,
+            -0.03164350986480707
+          ],
+          "projection": "perspective"
+        }
+      },
+      "elapsed_ms": 4.60396904964,
+      "__type__": "Observation",
+      "decision": {
+        "type": "request_view",
+        "view_id": "oblique_bl"
+      },
+      "decision_source": "teacher"
+    },
+    {
+      "step": 2,
+      "action": {
+        "joint_id": "joint_1",
+        "detent": "mid",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/002.png",
+      "payload": {
+        "value": 0.7853981633974483,
+        "render_ms": 0.20000004768371582
+      },
+      "elapsed_ms": 4.961441038176417,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_1",
+        "detent": "mid"
+      },
+      "decision_source": "teacher"
+    },
+    {
+      "step": 3,
+      "action": {
+        "joint_id": "joint_1",
+        "detent": "limit",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/003.png",
+      "payload": {
+        "value": 1.5707963267948966,
+        "render_ms": 0.20000004768371582
+      },
+      "elapsed_ms": 4.85581299290061,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_1",
+        "detent": "limit"
+      },
+      "decision_source": "teacher"
+    }
+  ],
+  "decisions": [
+    {
+      "call": 0,
+      "remaining": 7,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "request_view",
+          "view_id": "oblique_bl"
+        }
+      }
+    },
+    {
+      "call": 1,
+      "remaining": 6,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_1",
+          "detent": "mid"
+        }
+      }
+    },
+    {
+      "call": 2,
+      "remaining": 5,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_1",
+          "detent": "limit"
+        }
+      }
+    },
+    {
+      "call": 3,
+      "remaining": 4,
+      "valid": true,
+      "decision": {
+        "verdict": {
+          "status": "pass",
+          "confidence": 0.92,
+          "findings": [],
+          "summary": "Candidate observations at oblique_bl cover rest, mid, and limit for joint_1 carrying link_1 and visually match the supplied reference articulation sequence.",
+          "limitations": []
+        }
+      }
+    }
+  ],
+  "pending_action": null,
+  "model_calls": [
+    {
+      "path": "model_calls/000",
+      "status": "received",
+      "remaining": 7,
+      "image_count": 3,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2190,
+        "completion_tokens": 453,
+        "total_tokens": 2643,
+        "cached_tokens": 1792,
+        "completion_tokens_details": {
+          "reasoning_tokens": 423
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1792
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 18521.07336197514
+    },
+    {
+      "path": "model_calls/001",
+      "status": "received",
+      "remaining": 6,
+      "image_count": 4,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2371,
+        "completion_tokens": 872,
+        "total_tokens": 3243,
+        "cached_tokens": 314,
+        "completion_tokens_details": {
+          "reasoning_tokens": 838
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 314
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 31133.615838945843
+    },
+    {
+      "path": "model_calls/002",
+      "status": "received",
+      "remaining": 5,
+      "image_count": 5,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2688,
+        "completion_tokens": 537,
+        "total_tokens": 3225,
+        "cached_tokens": 514,
+        "completion_tokens_details": {
+          "reasoning_tokens": 503
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 514
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 18072.283972986042
+    },
+    {
+      "path": "model_calls/003",
+      "status": "received",
+      "remaining": 4,
+      "image_count": 6,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2910,
+        "completion_tokens": 962,
+        "total_tokens": 3872,
+        "cached_tokens": 614,
+        "completion_tokens_details": {
+          "reasoning_tokens": 894
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 614
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 47601.194930961356
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 10159,
+    "output_tokens": 2824,
+    "total_tokens": 12983
+  },
+  "budget_exhausted": false,
+  "teacher_verdict_missing": false,
+  "data_identity": {
+    "annotation_id": "12594",
+    "archive_sha256": "ec9a31e452306e07075435419ea41b484e3e43ec32774b413c21f2b7844286ec",
+    "asset_id": "PM_12594",
+    "candidate_sha": "b62702b09a9e1c0a",
+    "catalog_role": "formal_train_validation",
+    "common_input": "hierarchy",
+    "dataset": "sapien-sim/PartNetMobility",
+    "dataset_revision": "ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f",
+    "experiment_mode": "active",
+    "formal_training": true,
+    "license": "PartNet-Mobility terms: non-commercial research/education; ShapeNet terms also apply",
+    "model_id": "af913c310f1b978ae6488a574e8954a5",
+    "origin": "sapien-sim/PartNetMobility@ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f 12594.zip",
+    "prompt_addenda": [
+      "part_convention.txt"
+    ],
+    "reference_protocol": "easy_selected_joint_motion_v1",
+    "reference_sha": "b62702b09a9e1c0a",
+    "source_asset_id": "12594",
+    "source_content_sha256": "ec9a31e452306e07075435419ea41b484e3e43ec32774b413c21f2b7844286ec",
+    "source_dataset": "sapien-sim/PartNetMobility",
+    "source_id": "partnet-mobility-ee0aa3ef1df1",
+    "source_identity": "PartNet-Mobility:12594",
+    "source_identity_sha256": "a18a553d3589ca816d962f07a7ef78f0f17b87b7895d6227d89d603a77d3ba76",
+    "spec_sha256": "5f0ec679bd36e6ee08dbb6a767d01c5af56d89ccb71f85f898678724e5211eb0",
+    "split": "train",
+    "split_group": "PartNet-Mobility:12594",
+    "third_party_transmission_reviewed": true,
+    "transmission_review_basis": "user-authorized-18-case-PartNet-Train-interactive-teacher-experiment"
+  },
+  "updated_at": "2026-10-16T14:07:56+00:00",
+  "termination": "teacher_finished",
+  "verdict": {
+    "status": "pass",
+    "confidence": 0.92,
+    "findings": [],
+    "summary": "Candidate observations at oblique_bl cover rest, mid, and limit for joint_1 carrying link_1 and visually match the supplied reference articulation sequence.",
+    "limitations": []
+  },
+  "finished_at": "2026-10-16T14:07:56+00:00",
+  "reference_protocol": "easy_selected_joint_motion_v1",
+  "reference_states": [
+    {
+      "view": "oblique_bl",
+      "joint_id": "joint_1",
+      "detent": "rest"
+    },
+    {
+      "view": "oblique_bl",
+      "joint_id": "joint_1",
+      "detent": "mid"
+    },
+    {
+      "view": "oblique_bl",
+      "joint_id": "joint_1",
+      "detent": "limit"
+    }
+  ],
+  "runtime_joint_limits": {
+    "joint_1": [
+      0,
+      1.5707963267948966
+    ]
+  },
+  "frozen_witness_manifest": {
+    "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/docs/evidence/kimi-easy-interactive-v2/private/frozen/eor-e4f19bdb3db0/manifest.json",
+    "sha256": "7222a6a3f2f8e4c1205fccbc9e22b2d3cadfd4b5f465c1e76d51cd51053486c5"
+  },
+  "real_api_requests": 4,
+  "usage_cost_rmb_estimate": null,
+  "billing_cost_rmb": null
+}

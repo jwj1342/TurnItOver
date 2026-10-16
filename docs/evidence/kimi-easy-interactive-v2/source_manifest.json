@@ -1,0 +1,10 @@
+{
+  "base_commit_before_collection": "05be882",
+  "source_sha256": {
+    "scripts/easy_teacher_data.py": "9aa7c5a76ecbed0c5f64249d3b1184c6664ab903bdd7892220257ed1ff0e15e4",
+    "scripts/easy_teacher_audit.py": "749e2e0cb0b2d63c4c590cfa00a9ec22d65e7c8679a18c66423f8f2cb2e9015a",
+    "scripts/run_kimi_easy_interactive.py": "fa74553e8c1a46f65c063bcad9c83823654c9b42ac7f57d6c06958e1f450bf72",
+    "scripts/summarize_kimi_easy_interactive.py": "c693154797662225e50514980c8737ca347f0e3c7bab9414e4c91f1059825e71"
+  },
+  "collection_inputs_and_prompt_unchanged": true
+}

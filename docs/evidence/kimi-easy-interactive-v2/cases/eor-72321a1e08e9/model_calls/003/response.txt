@@ -1,0 +1,1 @@
+{"verdict":{"status":"pass","confidence":0.88,"findings":[],"summary":"Candidate grazing_front observations cover the scoped joint_1 rest, mid, and limit states and visually correspond to the supplied reference motion sequence; hierarchy also confirms joint_1 carries link_1.","limitations":[]}}

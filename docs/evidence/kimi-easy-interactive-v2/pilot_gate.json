@@ -1,0 +1,13 @@
+{
+  "case_id": "eor-57a7ca1300ca",
+  "pipeline_passed": true,
+  "strict_diagnosis_passed": true,
+  "api_requests": 4,
+  "token_usage_total": 14733,
+  "initial_teacher_selected_observations": ["request_view", "actuate_joint:mid", "actuate_joint:limit"],
+  "loader_smoke": {"actions": 3, "diagnosis": 1, "exact_teacher_student_parity": true},
+  "qwen_processor_smoke": {"rows_checked": 4, "rows_failed": 0, "assistant_only_mask": true},
+  "smoke_rows_are_not_additional_final_dataset_rows": true,
+  "prompt_changed_after_pilot": false,
+  "training_started": false
+}

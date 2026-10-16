@@ -163,4 +163,4 @@ pytest -m browser  # 需要 web/dist 和 Playwright 浏览器
 - [实验说明](docs/experiments.md)：示例复现与当前研究范围。
 - [仓库工作约定](CLAUDE.md)：环境、依赖与提交前检查。
 
-Easy Object 第二轮人工盲审：见 [8 张对照图板与审核说明](docs/evidence/partnet-mobility-easy-objects-v2/README.md)。共 8 个新增 Train 对象、24 个候选，自动通过仅表示 `pending_human_review`；第一轮 9 个案例独立保留。
+Easy Object 第二轮：见 [8 张图板与审核说明](docs/evidence/partnet-mobility-easy-objects-v2/README.md)，8 个新增 Train 对象、24 个候选已完成人审；第一轮 9 个案例独立保留。保守筛选的 18 例已完成 [Kimi 交互采集与 SFT 导出审核](docs/evidence/kimi-easy-interactive-v2/REPORT.md)，未启动训练。

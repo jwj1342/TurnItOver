@@ -1,0 +1,143 @@
+{
+  "cases": 18,
+  "complete_episodes": 15,
+  "strict_correct": 10,
+  "by_kind": {
+    "clean": {
+      "cases": 7,
+      "complete": 7,
+      "strict_correct": 7
+    },
+    "joint_axis": {
+      "cases": 6,
+      "complete": 4,
+      "strict_correct": 3
+    },
+    "part_offset": {
+      "cases": 5,
+      "complete": 4,
+      "strict_correct": 0
+    }
+  },
+  "api_calls": 72,
+  "token_usage": {
+    "input_tokens": 182609,
+    "output_tokens": 78083,
+    "total_tokens": 260692
+  },
+  "usage_incomplete_calls": 2,
+  "billing_cost_rmb": null,
+  "export": {
+    "episodes_seen": 18,
+    "episodes_blocked": 0,
+    "diagnosis_accepted": 10,
+    "diagnosis_rejected": 8,
+    "action_rows": 52,
+    "action_rows_rejected": 2,
+    "terminal_rows": 10
+  },
+  "loader": {
+    "status": "passed",
+    "loader": {
+      "train.actions": 52,
+      "train.diagnosis": 10,
+      "train.episodes": 62,
+      "validation.actions": 0,
+      "validation.diagnosis": 0,
+      "validation.episodes": 0
+    },
+    "independent_assets": 7,
+    "asset_ids": [
+      "PM_102016",
+      "PM_102379",
+      "PM_10697",
+      "PM_12594",
+      "PM_19836",
+      "PM_48686",
+      "PM_5088"
+    ],
+    "exact_teacher_student_prompt_target_image_parity": true,
+    "errors": [],
+    "old_117_rows_merged": false,
+    "training_started": false
+  },
+  "training_started": false,
+  "old_117_merged": false,
+  "test_modified": false,
+  "sft_assets": {
+    "actions": [
+      "PM_102016",
+      "PM_102379",
+      "PM_10697",
+      "PM_12594",
+      "PM_19836",
+      "PM_48686",
+      "PM_5088"
+    ],
+    "diagnosis": [
+      "PM_102016",
+      "PM_102379",
+      "PM_10697",
+      "PM_12594",
+      "PM_19836",
+      "PM_48686",
+      "PM_5088"
+    ]
+  },
+  "diagnosis_by_kind": {
+    "joint_axis": 3,
+    "clean": 7
+  },
+  "action_types": {
+    "request_view": 17,
+    "actuate_joint": 35
+  },
+  "failure_reasons": {
+    "pass_contradicts_objective_defect": 4,
+    "pass_scope_not_supported:task_scope_not_limited_to_an_auditable_single_reference_rule": 4,
+    "missing_legal_terminal_verdict": 3,
+    "teacher_output_not_legal": 3,
+    "finding_lacks_cited_counterfactual_evidence:kinematics.joint_axis": 1
+  },
+  "trustworthy_uncertain": 0,
+  "strict_assets": [
+    "PM_102016",
+    "PM_102379",
+    "PM_10697",
+    "PM_12594",
+    "PM_19836",
+    "PM_48686",
+    "PM_5088"
+  ],
+  "field_correct_by_kind": {
+    "clean": 7,
+    "joint_axis": 4,
+    "part_offset": 0
+  },
+  "primary_outcomes": {
+    "correct": 10,
+    "false_pass_on_defect": 4,
+    "missing_legal_terminal": 3,
+    "unsupported_evidence_citation": 1
+  },
+  "token_usage_original_episode_sum": {
+    "input_tokens": 179691,
+    "output_tokens": 73987,
+    "total_tokens": 253678
+  },
+  "reasoning_tokens_included_in_output_tokens": 74226,
+  "usage_recovered_from_original_error": 1,
+  "usage_unavailable_calls": 1,
+  "token_usage_complete": false,
+  "actual_total_tokens": null,
+  "token_usage_semantics": "Known subtotal only; unavailable call usage is not zero.",
+  "teacher_selected_acquisition_patterns": {
+    "request_view -> actuate_joint:mid -> actuate_joint:limit": 17,
+    "actuate_joint:rest -> actuate_joint:mid -> actuate_joint:limit": 1
+  },
+  "raw_field_correct_by_kind": {
+    "clean": 7,
+    "joint_axis": 5,
+    "part_offset": 0
+  }
+}

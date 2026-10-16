@@ -1,0 +1,16 @@
+{
+  "reviewer": "AI operator posthoc, separate from Kimi; not new human review",
+  "scope": "Accepted teacher descriptions checked against preserved reference/candidate observations and the original human-qualified cohort",
+  "accepted_diagnoses": 10,
+  "clean": {"cases": 7, "basis": "exact normal program identity, checker agreement, full scoped state coverage and human-qualified clean candidates"},
+  "axis": [
+    {"case_id": "eor-57a7ca1300ca", "assessment": "description identifies incorrect revolute screen articulation; dynamic steps 2 and 3 match human-reviewed evidence"},
+    {"case_id": "eor-d5ba7047c72f", "assessment": "description identifies diagonal display tilt instead of the reference plane; dynamic steps 2 and 3 supported"},
+    {"case_id": "eor-e8c7469405c6", "assessment": "description correctly treats the joint as prismatic and identifies extra sideward travel; steps 2 and 3 supported"}
+  ],
+  "additional_semantic_holds_on_accepted_diagnoses": [],
+  "severity_and_confidence_are_teacher_estimates_not_independently_calibrated_gold": true,
+  "does_not_establish_free_joint_search_or_general_visual_diagnosis": true,
+  "offset_misses_have_scope_wording_confound": true,
+  "raw_teacher_targets_not_rewritten": true
+}

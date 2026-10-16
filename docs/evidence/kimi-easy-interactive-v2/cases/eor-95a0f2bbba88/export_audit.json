@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "episode_id": "eor-95a0f2bbba88",
+  "pipeline_ok": true,
+  "teacher_actions_legal": true,
+  "teacher_outputs_legal": true,
+  "teacher_response_received": true,
+  "teacher_verdict_present": true,
+  "budget_exhausted": false,
+  "teacher_verdict_missing": false,
+  "diagnosis_evidence_supported": null,
+  "diagnosis_evidence_reason": "No diagnosis finding was emitted.",
+  "informative_observations": 1,
+  "observations": 4,
+  "observation_new_information": [
+    true,
+    false,
+    false,
+    false
+  ],
+  "errors": [],
+  "reference_sha256": [
+    "513644eff7f2c59a2b109307efb30f47abe41327673c42da37594b5e982ad341",
+    "c40ec4e4548bb6ceb95cf6657784a53e74f99f0f82498dea9c0fdf022a0b7120",
+    "3bf605a317b150a1cb9b3209ea3d3c30b073bc7bbb58f34984d22d069c3f9500"
+  ],
+  "observation_sha256": [
+    "513644eff7f2c59a2b109307efb30f47abe41327673c42da37594b5e982ad341",
+    "c40ec4e4548bb6ceb95cf6657784a53e74f99f0f82498dea9c0fdf022a0b7120",
+    "3bf605a317b150a1cb9b3209ea3d3c30b073bc7bbb58f34984d22d069c3f9500"
+  ],
+  "scope": "integrity_and_observation_novelty_not_semantic_ground_truth",
+  "data_identity": {
+    "annotation_id": "5088",
+    "archive_sha256": "293a5cdafb749f1735f45a6ea82ead5142009913a44b3e58fab48ea41786529f",
+    "asset_id": "PM_5088",
+    "candidate_sha": "41f9dab054321b1d",
+    "catalog_role": "formal_train_validation",
+    "common_input": "hierarchy",
+    "dataset": "sapien-sim/PartNetMobility",
+    "dataset_revision": "ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f",
+    "experiment_mode": "active",
+    "formal_training": true,
+    "license": "PartNet-Mobility terms: non-commercial research/education; ShapeNet terms also apply",
+    "model_id": "87b093f1fa5495968cb623bbd4140197",
+    "origin": "sapien-sim/PartNetMobility@ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f 5088.zip",
+    "prompt_addenda": [
+      "part_convention.txt"
+    ],
+    "reference_protocol": "easy_selected_joint_motion_v1",
+    "reference_sha": "41f9dab054321b1d",
+    "source_asset_id": "5088",
+    "source_content_sha256": "293a5cdafb749f1735f45a6ea82ead5142009913a44b3e58fab48ea41786529f",
+    "source_dataset": "sapien-sim/PartNetMobility",
+    "source_id": "partnet-mobility-ee0aa3ef1df1",
+    "source_identity": "PartNet-Mobility:5088",
+    "source_identity_sha256": "eaa4aa47da3dc855722a328cdbcba448a8d1c506f2e8b57ddc8e361e13e36787",
+    "spec_sha256": "b1859077d6163f6e299f0138d36e34b7065bcdf95e7b9a8fe62069647b6c1bb1",
+    "split": "train",
+    "split_group": "PartNet-Mobility:5088",
+    "third_party_transmission_reviewed": true,
+    "transmission_review_basis": "user-authorized-18-case-PartNet-Train-interactive-teacher-experiment"
+  },
+  "private_posthoc_comparison": {
+    "gold_defect_ids": [],
+    "teacher_defect_ids": [],
+    "exact_defect_ids": true,
+    "teacher_input_excluded_private_gold": true
+  },
+  "independent_evidence_audit": {
+    "accepted": true,
+    "status": "pass",
+    "objective_defect_ids": [],
+    "supported_findings": [],
+    "localization": [],
+    "action_audit": [
+      {
+        "step": 0,
+        "decision_source": "fixed_protocol",
+        "legal": true,
+        "bound": false,
+        "reason": "runtime_only",
+        "image": false,
+        "property": "hierarchy",
+        "payload_matches_frozen_rest_hierarchy": true,
+        "new_objective_evidence": [],
+        "defect_relevant": false
+      },
+      {
+        "step": 1,
+        "decision_source": "teacher",
+        "legal": true,
+        "state": {
+          "view": "oblique_fl",
+          "joints": {
+            "joint_0": 0.0
+          }
+        },
+        "live_sha256": "513644eff7f2c59a2b109307efb30f47abe41327673c42da37594b5e982ad341",
+        "witness_indices": [
+          0
+        ],
+        "witness_keys": [
+          "oblique_fl:joint_0:rest"
+        ],
+        "bound": true,
+        "reference_comparable": true,
+        "exposures": [],
+        "perceptible_exposures": [],
+        "new_objective_evidence": [],
+        "defect_relevant": false
+      },
+      {
+        "step": 2,
+        "decision_source": "teacher",
+        "legal": true,
+        "requested_value": 0.2607521902479528,
+        "actual_value": 0.2607521902479528,
+        "actuation_consistent": true,
+        "state": {
+          "view": "oblique_fl",
+          "joints": {
+            "joint_0": 0.2607521902479528
+          }
+        },
+        "live_sha256": "c40ec4e4548bb6ceb95cf6657784a53e74f99f0f82498dea9c0fdf022a0b7120",
+        "witness_indices": [
+          1
+        ],
+        "witness_keys": [
+          "oblique_fl:joint_0:mid"
+        ],
+        "bound": true,
+        "reference_comparable": true,
+        "exposures": [],
+        "perceptible_exposures": [],
+        "new_objective_evidence": [],
+        "defect_relevant": false
+      },
+      {
+        "step": 3,
+        "decision_source": "teacher",
+        "legal": true,
+        "requested_value": 0.7728317927830891,
+        "actual_value": 0.7728317927830891,
+        "actuation_consistent": true,
+        "state": {
+          "view": "oblique_fl",
+          "joints": {
+            "joint_0": 0.7728317927830891
+          }
+        },
+        "live_sha256": "3bf605a317b150a1cb9b3209ea3d3c30b073bc7bbb58f34984d22d069c3f9500",
+        "witness_indices": [
+          2
+        ],
+        "witness_keys": [
+          "oblique_fl:joint_0:limit"
+        ],
+        "bound": true,
+        "reference_comparable": true,
+        "exposures": [],
+        "perceptible_exposures": [],
+        "new_objective_evidence": [],
+        "defect_relevant": false
+      }
+    ],
+    "actions_legal": true,
+    "diagnosis_objective": "first_failure",
+    "evidence_sufficient": true,
+    "objective_evidence_complete": true,
+    "objective_evidence_covered": [],
+    "evidence_standard": "perceptible_exposure",
+    "objective_exposure_imperceptible_only": [],
+    "max_credited_changed_fraction": null,
+    "objective_exposure_without_visible_reference": [],
+    "diagnosis_outcome": "pass_on_clean",
+    "comparable_motion_joints": [
+      "joint_0"
+    ],
+    "rejection_reasons": [],
+    "truth_basis": "prepared checker-qualified private gold",
+    "evidence_basis": "live Chromium pixels and actual joint values bound to a frozen witness manifest and a visible reference state",
+    "teacher_input_excluded_private_gold": true,
+    "scope_coverage": {
+      "rest": true,
+      "mid": true,
+      "limit": true
+    },
+    "scope_pass_rule": "easy_selected_joint_motion_v1"
+  },
+  "episode_sha256": "b5693ea406e6447bd2b4024edf301500c8cdf313b86b447f1b51b48dfed7e795"
+}

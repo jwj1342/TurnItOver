@@ -1,0 +1,40 @@
+{
+  "case_id": "eor-0b44adc5d35c",
+  "asset_id": "PM_48686",
+  "kind": "part_offset",
+  "run_record_complete": true,
+  "complete_episode": true,
+  "termination": "teacher_finished",
+  "verdict": "pass",
+  "field_matches": {
+    "verdict": false,
+    "defect_id": false,
+    "joint_id": false,
+    "parts": false
+  },
+  "strict_correct": false,
+  "evidence_sufficient": true,
+  "scope_coverage": {
+    "rest": true,
+    "mid": true,
+    "limit": true
+  },
+  "localization": [],
+  "evidence_outcome": "pass_on_defect",
+  "trustworthy_uncertain": false,
+  "failure_reasons": [
+    "pass_contradicts_objective_defect",
+    "pass_scope_not_supported:task_scope_not_limited_to_an_auditable_single_reference_rule"
+  ],
+  "observations": 4,
+  "teacher_observations": 3,
+  "api_calls": 4,
+  "token_usage": {
+    "input_tokens": 10161,
+    "output_tokens": 5042,
+    "total_tokens": 15203
+  },
+  "billing_cost_rmb": null,
+  "usage_incomplete_calls": 0,
+  "episode_sha256": "ffd7f7f23232e02411e7f8c94623d5fd238ff32549d3bf6084e08dcf7d310f59"
+}

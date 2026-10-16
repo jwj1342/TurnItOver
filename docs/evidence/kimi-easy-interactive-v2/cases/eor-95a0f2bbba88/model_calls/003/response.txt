@@ -1,0 +1,1 @@
+{"verdict":{"status":"pass","confidence":0.95,"findings":[],"summary":"Candidate observations at oblique_fl for joint_0 rest, mid, and limit match the corresponding reference states; no defect is visible within the declared scope.","limitations":[]}}

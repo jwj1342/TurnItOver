@@ -1,0 +1,410 @@
+{
+  "schema_version": 2,
+  "id": "eor-57a7ca1300ca",
+  "asset_id": "PM_10697",
+  "split": "train",
+  "split_group": "PartNet-Mobility:10697",
+  "candidate_sha": "bb87872a0e52002d",
+  "reference_sha": "4136dc06f5e97938",
+  "in_frozen_test": false,
+  "split_verification": "Train source split identity; frozen Test never opened",
+  "candidate_joint_limits": {
+    "joint_1": [
+      -1.9540706305328512,
+      1.0744246875277093
+    ]
+  },
+  "reference_joint_limits": {
+    "joint_1": [
+      -1.9540706305328512,
+      1.0744246875277093
+    ]
+  },
+  "row_sha256": {
+    "gold": "a4ea048bb5f83aa2aa2c1993f5cac75068f5d617ddcc6b56bccafc8e89c4f232",
+    "annotation": "e58c656b73b682be963c2f45e4502b0b8e70ba5684d2de1e1d86751138bb5cb2"
+  },
+  "framing": {
+    "center": [
+      -0.163855996977198,
+      0.0014239744682313926,
+      0.23840598771812746
+    ],
+    "radius": 0.9988895615000525,
+    "__type__": "Framing"
+  },
+  "witnesses": [
+    {
+      "index": 0,
+      "key": "grazing_front:joint_1:rest",
+      "view": "grazing_front",
+      "state": {
+        "joint_1": 0.0
+      },
+      "sha256": "0a4aa8ffb1dff534b689ff426b15b28326b0dce1e24c0c86b00027888eef7f1a",
+      "exposures": [],
+      "perceptible_exposures": []
+    },
+    {
+      "index": 1,
+      "key": "grazing_front:joint_1:mid",
+      "view": "grazing_front",
+      "state": {
+        "joint_1": -0.439822971502571
+      },
+      "sha256": "ee163f876131f0294f181d861b87131124a2b5f4044922e718ccca196b235ce8",
+      "exposures": [
+        0
+      ],
+      "perceptible_exposures": [
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "key": "grazing_front:joint_1:limit",
+      "view": "grazing_front",
+      "state": {
+        "joint_1": 1.0744246875277093
+      },
+      "sha256": "b023ed4c4d5093cf0b804b57a096db20bed705fbfa33c7796aa9348485be3b61",
+      "exposures": [
+        0
+      ],
+      "perceptible_exposures": [
+        0
+      ]
+    }
+  ],
+  "rest_hierarchy": {
+    "candidate": {
+      "property": "hierarchy",
+      "root": {
+        "name": "PM_10697",
+        "type": "Group",
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "children": [
+          {
+            "name": "base",
+            "type": "Group",
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "children": [
+              {
+                "name": "link_0",
+                "type": "Group",
+                "position": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  1.5707963267948966,
+                  -1.570796326794896,
+                  0
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "children": [
+                  {
+                    "name": "joint:joint_1",
+                    "type": "Group",
+                    "position": [
+                      0.5929480000000003,
+                      -0.16421338896270138,
+                      -0.16091839025237575
+                    ],
+                    "rotation": [
+                      -0.0,
+                      0,
+                      -0.0
+                    ],
+                    "scale": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "children": [
+                      {
+                        "name": "link_1",
+                        "type": "Group",
+                        "position": [
+                          0,
+                          0,
+                          0
+                        ],
+                        "rotation": [
+                          0,
+                          0,
+                          0
+                        ],
+                        "scale": [
+                          1,
+                          1,
+                          1
+                        ],
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "reference_protocol": {
+    "name": "easy_selected_joint_motion_v1",
+    "states": [
+      {
+        "file": "reference-00.png",
+        "label": {
+          "view": "grazing_front",
+          "joint_id": "joint_1",
+          "detent": "rest"
+        },
+        "state": {
+          "joint_1": 0.0
+        },
+        "sha256": "0a4aa8ffb1dff534b689ff426b15b28326b0dce1e24c0c86b00027888eef7f1a"
+      },
+      {
+        "file": "reference-01.png",
+        "label": {
+          "view": "grazing_front",
+          "joint_id": "joint_1",
+          "detent": "mid"
+        },
+        "state": {
+          "joint_1": -0.439822971502571
+        },
+        "sha256": "29fc94d2158ef056d4bdad91f09e1b252b7b0229328a7970bbad6a2251c29428"
+      },
+      {
+        "file": "reference-02.png",
+        "label": {
+          "view": "grazing_front",
+          "joint_id": "joint_1",
+          "detent": "limit"
+        },
+        "state": {
+          "joint_1": 1.0744246875277093
+        },
+        "sha256": "71d19c1cc7d5b082787c9addc665229d3cdb61d3a9cacfe3fa87d80fbe491ef2"
+      }
+    ],
+    "label_independent": true
+  },
+  "perceptibility": {
+    "min_core_fraction": 0.001,
+    "geometry_failure_required": true
+  },
+  "checker": {
+    "candidate_sha": "bb87872a0e52002d",
+    "reference_sha": "4136dc06f5e97938",
+    "privileged": true,
+    "used_by_student": false,
+    "checks": [
+      {
+        "checker_id": "geometry.alignment",
+        "passed": false,
+        "invariants": [
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_1"
+            ],
+            "state": "rest",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 0.1560249626636505,
+            "tolerance": 0.9,
+            "passed": false,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.10667057310440484,
+            "tolerance": 0.005,
+            "passed": false,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:mid",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 1.0,
+            "tolerance": 0.9,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.0,
+            "tolerance": 0.005,
+            "passed": true,
+            "parts": [
+              "link_0"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "bbox_iou",
+            "value": 0.09138693660497665,
+            "tolerance": 0.9,
+            "passed": false,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          },
+          {
+            "name": "chamfer_m",
+            "value": 0.2760173971618842,
+            "tolerance": 0.005,
+            "passed": false,
+            "parts": [
+              "link_1"
+            ],
+            "state": "joint:target:limit",
+            "__type__": "Invariant"
+          }
+        ],
+        "score": 0.6666666666666666,
+        "__type__": "CheckResult"
+      },
+      {
+        "checker_id": "runtime.budget",
+        "passed": true,
+        "invariants": [
+          {
+            "name": "triangles",
+            "value": 3052.0,
+            "tolerance": 1000000.0,
+            "passed": true,
+            "parts": [],
+            "state": null,
+            "__type__": "Invariant"
+          },
+          {
+            "name": "draw_calls",
+            "value": 2.0,
+            "tolerance": 1024.0,
+            "passed": true,
+            "parts": [],
+            "state": null,
+            "__type__": "Invariant"
+          }
+        ],
+        "score": 1.0,
+        "__type__": "CheckResult"
+      }
+    ],
+    "code_correct": false
+  },
+  "reviewed_board_pixel_match": true
+}

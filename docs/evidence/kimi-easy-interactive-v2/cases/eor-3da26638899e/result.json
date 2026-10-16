@@ -1,0 +1,40 @@
+{
+  "case_id": "eor-3da26638899e",
+  "asset_id": "PM_102016",
+  "kind": "part_offset",
+  "run_record_complete": true,
+  "complete_episode": true,
+  "termination": "teacher_finished",
+  "verdict": "pass",
+  "field_matches": {
+    "verdict": false,
+    "defect_id": false,
+    "joint_id": false,
+    "parts": false
+  },
+  "strict_correct": false,
+  "evidence_sufficient": true,
+  "scope_coverage": {
+    "rest": true,
+    "mid": true,
+    "limit": true
+  },
+  "localization": [],
+  "evidence_outcome": "pass_on_defect",
+  "trustworthy_uncertain": false,
+  "failure_reasons": [
+    "pass_contradicts_objective_defect",
+    "pass_scope_not_supported:task_scope_not_limited_to_an_auditable_single_reference_rule"
+  ],
+  "observations": 4,
+  "teacher_observations": 3,
+  "api_calls": 4,
+  "token_usage": {
+    "input_tokens": 10237,
+    "output_tokens": 5101,
+    "total_tokens": 15338
+  },
+  "billing_cost_rmb": null,
+  "usage_incomplete_calls": 0,
+  "episode_sha256": "8f1e302f0eca5afb2c650905a38d38d43b26354d72dbd0d6d5669310ff49fcfd"
+}

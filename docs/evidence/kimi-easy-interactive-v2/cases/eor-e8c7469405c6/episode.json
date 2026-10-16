@@ -1,0 +1,491 @@
+{
+  "schema_version": 1,
+  "episode_id": "eor-e8c7469405c6",
+  "status": "complete",
+  "created_at": "2026-10-16T14:07:56+00:00",
+  "budget": 8,
+  "spent": 4,
+  "context": {
+    "task": "Object category: StorageFurniture. Scope=easy_selected_joint_motion_v1. Compare the candidate with the normal reference for joint joint_0 (prismatic), moving part link_0, at view oblique_fl, rest/mid/limit. Other joints remain at rest and are outside this declared motion scope. The initial camera is the reference view. Joint and camera state persist. Choose your own observations and when to finish. A scope-complete pass needs candidate observations covering every distinct supplied reference state; a fail must cite only observations visibly supporting its type and location. Use the full taxonomy; do not assume the candidate contains a defect. Only reference images, public hierarchy, runtime queries and executed images are visible.",
+    "parts": [
+      "base",
+      "link_0",
+      "link_1"
+    ],
+    "joints": [
+      "joint_0"
+    ],
+    "views": [
+      "oblique_fl"
+    ],
+    "runtime_properties": [
+      "hierarchy",
+      "joint_state",
+      "stats"
+    ],
+    "action_types": [
+      "request_view",
+      "actuate_joint",
+      "query_runtime"
+    ],
+    "max_triangles": 1000000,
+    "max_draw_calls": 1024
+  },
+  "teacher": {
+    "kind": "kimi",
+    "model": "k3-256k",
+    "paid": true,
+    "max_real_requests": 8,
+    "estimated_input_tokens": 20000,
+    "estimated_max_cost_rmb": null,
+    "cost_cap_rmb": null,
+    "pricing": null,
+    "billing_basis": "unknown_gateway_or_membership_quota"
+  },
+  "trajectory": [
+    {
+      "step": 0,
+      "action": {
+        "property": "hierarchy",
+        "__type__": "QueryRuntime"
+      },
+      "image_ref": null,
+      "payload": {
+        "property": "hierarchy",
+        "root": {
+          "name": "PM_48686",
+          "type": "Group",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "children": [
+            {
+              "name": "base",
+              "type": "Group",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "children": [
+                {
+                  "name": "link_1",
+                  "type": "Group",
+                  "position": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "rotation": [
+                    1.5707963267948966,
+                    -1.570796326794896,
+                    0
+                  ],
+                  "scale": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "children": [
+                    {
+                      "name": "joint:joint_0",
+                      "type": "Group",
+                      "position": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "rotation": [
+                        -0.0,
+                        0,
+                        -0.0
+                      ],
+                      "scale": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "children": [
+                        {
+                          "name": "link_0",
+                          "type": "Group",
+                          "position": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "rotation": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "scale": [
+                            1,
+                            1,
+                            1
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "elapsed_ms": 1.451639924198389,
+      "__type__": "Observation",
+      "decision": {
+        "type": "query_runtime",
+        "property": "hierarchy"
+      },
+      "decision_source": "fixed_protocol"
+    },
+    {
+      "step": 1,
+      "action": {
+        "view_id": "oblique_fl",
+        "__type__": "RequestView"
+      },
+      "image_ref": "observations/001.png",
+      "payload": {
+        "render_ms": 0.2999999523162842,
+        "camera": {
+          "position": [
+            -1.6311713997892385,
+            1.3254449236260315,
+            2.3082929670791996
+          ],
+          "target": [
+            -0.018086507916450306,
+            0.01403498649597168,
+            0.004568994045257568
+          ],
+          "projection": "perspective"
+        }
+      },
+      "elapsed_ms": 7.143063936382532,
+      "__type__": "Observation",
+      "decision": {
+        "type": "request_view",
+        "view_id": "oblique_fl"
+      },
+      "decision_source": "teacher"
+    },
+    {
+      "step": 2,
+      "action": {
+        "joint_id": "joint_0",
+        "detent": "mid",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/002.png",
+      "payload": {
+        "value": 0.28200000000000003,
+        "render_ms": 0.19999992847442627
+      },
+      "elapsed_ms": 5.020682001486421,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_0",
+        "detent": "mid"
+      },
+      "decision_source": "teacher"
+    },
+    {
+      "step": 3,
+      "action": {
+        "joint_id": "joint_0",
+        "detent": "limit",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/003.png",
+      "payload": {
+        "value": 0.5640000000000001,
+        "render_ms": 0.20000004768371582
+      },
+      "elapsed_ms": 5.705920979380608,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_0",
+        "detent": "limit"
+      },
+      "decision_source": "teacher"
+    }
+  ],
+  "decisions": [
+    {
+      "call": 0,
+      "remaining": 7,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "request_view",
+          "view_id": "oblique_fl"
+        }
+      }
+    },
+    {
+      "call": 1,
+      "remaining": 6,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_0",
+          "detent": "mid"
+        }
+      }
+    },
+    {
+      "call": 2,
+      "remaining": 5,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_0",
+          "detent": "limit"
+        }
+      }
+    },
+    {
+      "call": 3,
+      "remaining": 4,
+      "valid": true,
+      "decision": {
+        "verdict": {
+          "status": "fail",
+          "confidence": 0.8,
+          "findings": [
+            {
+              "defect_id": "kinematics.joint_axis",
+              "parts": [
+                "link_0"
+              ],
+              "joint_id": "joint_0",
+              "severity": 0.85,
+              "confidence": 0.78,
+              "evidence_steps": [
+                2,
+                3
+              ],
+              "description": "At the matching oblique_fl view, the rest pose is consistent, but joint_0 mid and limit poses move link_0 toward the right side/opening rather than following the reference front sliding articulation for the same detents.",
+              "suggested_fix": "Correct the joint_0 prismatic axis so link_0 translates in the reference direction instead of opening toward the side."
+            }
+          ],
+          "summary": "The candidate covers rest, mid, and limit, and the mid/limit observations visibly diverge from the compatible reference motion for joint_0.",
+          "limitations": []
+        }
+      }
+    }
+  ],
+  "pending_action": null,
+  "model_calls": [
+    {
+      "path": "model_calls/000",
+      "status": "received",
+      "remaining": 7,
+      "image_count": 3,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2169,
+        "completion_tokens": 1255,
+        "total_tokens": 3424,
+        "cached_tokens": 82,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1227
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 82
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 35502.31829693075
+    },
+    {
+      "path": "model_calls/001",
+      "status": "received",
+      "remaining": 6,
+      "image_count": 4,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2447,
+        "completion_tokens": 377,
+        "total_tokens": 2824,
+        "cached_tokens": 398,
+        "completion_tokens_details": {
+          "reasoning_tokens": 343
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 398
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 16693.181363050826
+    },
+    {
+      "path": "model_calls/002",
+      "status": "received",
+      "remaining": 5,
+      "image_count": 5,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2669,
+        "completion_tokens": 1226,
+        "total_tokens": 3895,
+        "cached_tokens": 506,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1192
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 506
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 29606.21760005597
+    },
+    {
+      "path": "model_calls/003",
+      "status": "received",
+      "remaining": 4,
+      "image_count": 6,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2788,
+        "completion_tokens": 3903,
+        "total_tokens": 6691,
+        "cached_tokens": 6,
+        "completion_tokens_details": {
+          "reasoning_tokens": 3713
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 6
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 108226.4689829899
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 10073,
+    "output_tokens": 6761,
+    "total_tokens": 16834
+  },
+  "budget_exhausted": false,
+  "teacher_verdict_missing": false,
+  "data_identity": {
+    "annotation_id": "48686",
+    "archive_sha256": "001d860a3a6eb91eb260e635c0d82e64a74821cb04262e867e8279623f741e98",
+    "asset_id": "PM_48686",
+    "candidate_sha": "2a98d3432f66d98a",
+    "catalog_role": "formal_train_validation",
+    "common_input": "hierarchy",
+    "dataset": "sapien-sim/PartNetMobility",
+    "dataset_revision": "ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f",
+    "experiment_mode": "active",
+    "formal_training": true,
+    "license": "PartNet-Mobility terms: non-commercial research/education; ShapeNet terms also apply",
+    "model_id": "c4802a2901dcd6e84da5feafe6f1c8fc",
+    "origin": "sapien-sim/PartNetMobility@ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f 48686.zip",
+    "prompt_addenda": [
+      "part_convention.txt"
+    ],
+    "reference_protocol": "easy_selected_joint_motion_v1",
+    "reference_sha": "5b6bfb1835102a75",
+    "source_asset_id": "48686",
+    "source_content_sha256": "001d860a3a6eb91eb260e635c0d82e64a74821cb04262e867e8279623f741e98",
+    "source_dataset": "sapien-sim/PartNetMobility",
+    "source_id": "partnet-mobility-ee0aa3ef1df1",
+    "source_identity": "PartNet-Mobility:48686",
+    "source_identity_sha256": "dfa4fda2f7ace2b5b2f30edcec1523fecb276f2ef5216ba4b796c30e55c11b73",
+    "spec_sha256": "f0aec652e9bc1e72eea128ed39efb03adb8e192a47ddedc7565914c267f4c23e",
+    "split": "train",
+    "split_group": "PartNet-Mobility:48686",
+    "third_party_transmission_reviewed": true,
+    "transmission_review_basis": "user-authorized-18-case-PartNet-Train-interactive-teacher-experiment"
+  },
+  "updated_at": "2026-10-16T14:11:06+00:00",
+  "termination": "teacher_finished",
+  "verdict": {
+    "status": "fail",
+    "confidence": 0.8,
+    "findings": [
+      {
+        "defect_id": "kinematics.joint_axis",
+        "parts": [
+          "link_0"
+        ],
+        "joint_id": "joint_0",
+        "severity": 0.85,
+        "confidence": 0.78,
+        "evidence_steps": [
+          2,
+          3
+        ],
+        "description": "At the matching oblique_fl view, the rest pose is consistent, but joint_0 mid and limit poses move link_0 toward the right side/opening rather than following the reference front sliding articulation for the same detents.",
+        "suggested_fix": "Correct the joint_0 prismatic axis so link_0 translates in the reference direction instead of opening toward the side."
+      }
+    ],
+    "summary": "The candidate covers rest, mid, and limit, and the mid/limit observations visibly diverge from the compatible reference motion for joint_0.",
+    "limitations": []
+  },
+  "finished_at": "2026-10-16T14:11:06+00:00",
+  "reference_protocol": "easy_selected_joint_motion_v1",
+  "reference_states": [
+    {
+      "view": "oblique_fl",
+      "joint_id": "joint_0",
+      "detent": "rest"
+    },
+    {
+      "view": "oblique_fl",
+      "joint_id": "joint_0",
+      "detent": "mid"
+    },
+    {
+      "view": "oblique_fl",
+      "joint_id": "joint_0",
+      "detent": "limit"
+    }
+  ],
+  "runtime_joint_limits": {
+    "joint_0": [
+      0,
+      0.5640000000000001
+    ]
+  },
+  "frozen_witness_manifest": {
+    "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/docs/evidence/kimi-easy-interactive-v2/private/frozen/eor-e8c7469405c6/manifest.json",
+    "sha256": "6b6a39b3ac8afde5f538b1940883177d902e36da01ee2955824035c59d9db43b"
+  },
+  "real_api_requests": 4,
+  "usage_cost_rmb_estimate": null,
+  "billing_cost_rmb": null
+}

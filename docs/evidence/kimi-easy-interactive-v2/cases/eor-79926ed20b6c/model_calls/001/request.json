@@ -1,0 +1,248 @@
+{
+  "context": {
+    "task": "Object category: Laptop. Scope=easy_selected_joint_motion_v1. Compare the candidate with the normal reference for joint joint_1 (revolute), moving part link_1, at view grazing_front, rest/mid/limit. Other joints remain at rest and are outside this declared motion scope. The initial camera is the reference view. Joint and camera state persist. Choose your own observations and when to finish. A scope-complete pass needs candidate observations covering every distinct supplied reference state; a fail must cite only observations visibly supporting its type and location. Use the full taxonomy; do not assume the candidate contains a defect. Only reference images, public hierarchy, runtime queries and executed images are visible.",
+    "parts": [
+      "base",
+      "link_0",
+      "link_1"
+    ],
+    "joints": [
+      "joint_1"
+    ],
+    "views": [
+      "grazing_front"
+    ],
+    "runtime_properties": [
+      "hierarchy",
+      "joint_state",
+      "stats"
+    ],
+    "action_types": [
+      "request_view",
+      "actuate_joint",
+      "query_runtime"
+    ],
+    "max_triangles": 1000000,
+    "max_draw_calls": 1024
+  },
+  "remaining": 6,
+  "stop_required": false,
+  "image_order": [
+    {
+      "image": 0,
+      "kind": "reference",
+      "state": {
+        "view": "grazing_front",
+        "joint_id": "joint_1",
+        "detent": "rest"
+      }
+    },
+    {
+      "image": 1,
+      "kind": "reference",
+      "state": {
+        "view": "grazing_front",
+        "joint_id": "joint_1",
+        "detent": "mid"
+      }
+    },
+    {
+      "image": 2,
+      "kind": "reference",
+      "state": {
+        "view": "grazing_front",
+        "joint_id": "joint_1",
+        "detent": "limit"
+      }
+    },
+    {
+      "image": 3,
+      "kind": "observation",
+      "step": 1
+    }
+  ],
+  "history": [
+    {
+      "step": 0,
+      "action": {
+        "property": "hierarchy",
+        "__type__": "QueryRuntime"
+      },
+      "image_ref": null,
+      "payload": {
+        "property": "hierarchy",
+        "root": {
+          "name": "PM_10697",
+          "type": "Group",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "children": [
+            {
+              "name": "base",
+              "type": "Group",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "children": [
+                {
+                  "name": "link_0",
+                  "type": "Group",
+                  "position": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "rotation": [
+                    1.5707963267948966,
+                    -1.570796326794896,
+                    0
+                  ],
+                  "scale": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "children": [
+                    {
+                      "name": "joint:joint_1",
+                      "type": "Group",
+                      "position": [
+                        0.5929480000000003,
+                        -0.16421338896270138,
+                        -0.16091839025237575
+                      ],
+                      "rotation": [
+                        -0.0,
+                        0,
+                        -0.0
+                      ],
+                      "scale": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "children": [
+                        {
+                          "name": "link_1",
+                          "type": "Group",
+                          "position": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "rotation": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "scale": [
+                            1,
+                            1,
+                            1
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "elapsed_ms": 1.852724002674222,
+      "__type__": "Observation"
+    },
+    {
+      "step": 1,
+      "action": {
+        "view_id": "grazing_front",
+        "__type__": "RequestView"
+      },
+      "image_ref": "observations/001.png",
+      "payload": {
+        "render_ms": 0.2999999523162842,
+        "camera": {
+          "position": [
+            2.844649256118235,
+            0.26869451838806413,
+            0.7688866354420016
+          ],
+          "target": [
+            -0.163855996977198,
+            0.0014239744682313926,
+            0.23840598771812746
+          ],
+          "projection": "perspective"
+        }
+      },
+      "elapsed_ms": 11.775825987569988,
+      "__type__": "Observation"
+    }
+  ],
+  "taxonomy_ids": [
+    "geometry.thin_sheet",
+    "geometry.open_volume",
+    "geometry.self_intersection",
+    "geometry.global_scale",
+    "geometry.anisotropic_scale",
+    "geometry.missing_part",
+    "geometry.duplicate_part",
+    "geometry.missing_bevel",
+    "structure.wrong_parent",
+    "structure.pivot_offset",
+    "structure.part_offset",
+    "structure.part_rotation",
+    "structure.symmetry_break",
+    "structure.interpenetration",
+    "structure.floating",
+    "kinematics.joint_axis",
+    "kinematics.joint_type",
+    "kinematics.joint_range",
+    "kinematics.joint_anchor",
+    "kinematics.direction_flip",
+    "material.basecolor_as_rough",
+    "material.metalness",
+    "material.tiling_scale",
+    "material.emissive",
+    "material.normal_map",
+    "runtime.triangle_budget",
+    "runtime.draw_calls",
+    "runtime.missing_dispose",
+    "runtime.tick_missing_or_phase"
+  ],
+  "joint_structure": {
+    "joint_1": {
+      "parent_link": "link_0",
+      "moving_child_links": [
+        "link_1"
+      ]
+    }
+  }
+}

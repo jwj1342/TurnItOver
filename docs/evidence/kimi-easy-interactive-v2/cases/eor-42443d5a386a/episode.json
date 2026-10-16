@@ -1,0 +1,427 @@
+{
+  "schema_version": 1,
+  "episode_id": "eor-42443d5a386a",
+  "status": "error",
+  "created_at": "2026-10-16T13:40:01+00:00",
+  "budget": 8,
+  "spent": 4,
+  "context": {
+    "task": "Object category: Box. Scope=easy_selected_joint_motion_v1. Compare the candidate with the normal reference for joint joint_0 (revolute), moving part link_0, at view grazing_front, rest/mid/limit. Other joints remain at rest and are outside this declared motion scope. The initial camera is the reference view. Joint and camera state persist. Choose your own observations and when to finish. A scope-complete pass needs candidate observations covering every distinct supplied reference state; a fail must cite only observations visibly supporting its type and location. Use the full taxonomy; do not assume the candidate contains a defect. Only reference images, public hierarchy, runtime queries and executed images are visible.",
+    "parts": [
+      "base",
+      "link_0",
+      "link_1"
+    ],
+    "joints": [
+      "joint_0"
+    ],
+    "views": [
+      "grazing_front"
+    ],
+    "runtime_properties": [
+      "hierarchy",
+      "joint_state",
+      "stats"
+    ],
+    "action_types": [
+      "request_view",
+      "actuate_joint",
+      "query_runtime"
+    ],
+    "max_triangles": 1000000,
+    "max_draw_calls": 1024
+  },
+  "teacher": {
+    "kind": "kimi",
+    "model": "k3-256k",
+    "paid": true,
+    "max_real_requests": 8,
+    "estimated_input_tokens": 20000,
+    "estimated_max_cost_rmb": null,
+    "cost_cap_rmb": null,
+    "pricing": null,
+    "billing_basis": "unknown_gateway_or_membership_quota"
+  },
+  "trajectory": [
+    {
+      "step": 0,
+      "action": {
+        "property": "hierarchy",
+        "__type__": "QueryRuntime"
+      },
+      "image_ref": null,
+      "payload": {
+        "property": "hierarchy",
+        "root": {
+          "name": "PM_102379",
+          "type": "Group",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "children": [
+            {
+              "name": "base",
+              "type": "Group",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "children": [
+                {
+                  "name": "link_1",
+                  "type": "Group",
+                  "position": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "rotation": [
+                    1.5707963267948966,
+                    -1.570796326794896,
+                    0
+                  ],
+                  "scale": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "children": [
+                    {
+                      "name": "joint:joint_0",
+                      "type": "Group",
+                      "position": [
+                        0,
+                        -0.10372877077224477,
+                        -0.23685313234312205
+                      ],
+                      "rotation": [
+                        -0.0,
+                        0,
+                        -0.0
+                      ],
+                      "scale": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "children": [
+                        {
+                          "name": "link_0",
+                          "type": "Group",
+                          "position": [
+                            -0.16939392710168044,
+                            -0.03502882077445116,
+                            0.04978633523590528
+                          ],
+                          "rotation": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "scale": [
+                            1,
+                            1,
+                            1
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "elapsed_ms": 2.421734039671719,
+      "__type__": "Observation",
+      "decision": {
+        "type": "query_runtime",
+        "property": "hierarchy"
+      },
+      "decision_source": "fixed_protocol"
+    },
+    {
+      "step": 1,
+      "action": {
+        "view_id": "grazing_front",
+        "__type__": "RequestView"
+      },
+      "image_ref": "observations/001.png",
+      "payload": {
+        "render_ms": 0.3999999761581421,
+        "camera": {
+          "position": [
+            2.7918210034180855,
+            0.27323339809219854,
+            0.7353731914348929
+          ],
+          "target": [
+            -0.14900351206668777,
+            0.01197549700736994,
+            0.21682648382602818
+          ],
+          "projection": "perspective"
+        }
+      },
+      "elapsed_ms": 7.017477066256106,
+      "__type__": "Observation",
+      "decision": {
+        "type": "request_view",
+        "view_id": "grazing_front"
+      },
+      "decision_source": "teacher"
+    },
+    {
+      "step": 2,
+      "action": {
+        "joint_id": "joint_0",
+        "detent": "mid",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/002.png",
+      "payload": {
+        "value": -0.0,
+        "render_ms": 0.20000004768371582
+      },
+      "elapsed_ms": 11.276616947725415,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_0",
+        "detent": "mid"
+      },
+      "decision_source": "teacher"
+    },
+    {
+      "step": 3,
+      "action": {
+        "joint_id": "joint_0",
+        "detent": "limit",
+        "__type__": "ActuateJoint"
+      },
+      "image_ref": "observations/003.png",
+      "payload": {
+        "value": 1.5707963267948966,
+        "render_ms": 0.2999999523162842
+      },
+      "elapsed_ms": 6.198797025717795,
+      "__type__": "Observation",
+      "decision": {
+        "type": "actuate_joint",
+        "joint_id": "joint_0",
+        "detent": "limit"
+      },
+      "decision_source": "teacher"
+    }
+  ],
+  "decisions": [
+    {
+      "call": 0,
+      "remaining": 7,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "request_view",
+          "view_id": "grazing_front"
+        }
+      }
+    },
+    {
+      "call": 1,
+      "remaining": 6,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_0",
+          "detent": "mid"
+        }
+      }
+    },
+    {
+      "call": 2,
+      "remaining": 5,
+      "valid": true,
+      "decision": {
+        "action": {
+          "type": "actuate_joint",
+          "joint_id": "joint_0",
+          "detent": "limit"
+        }
+      }
+    }
+  ],
+  "pending_action": null,
+  "model_calls": [
+    {
+      "path": "model_calls/000",
+      "status": "received",
+      "remaining": 7,
+      "image_count": 3,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2201,
+        "completion_tokens": 705,
+        "total_tokens": 2906,
+        "cached_tokens": 82,
+        "completion_tokens_details": {
+          "reasoning_tokens": 677
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 82
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 26432.81279108487
+    },
+    {
+      "path": "model_calls/001",
+      "status": "received",
+      "remaining": 6,
+      "image_count": 4,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2479,
+        "completion_tokens": 625,
+        "total_tokens": 3104,
+        "cached_tokens": 398,
+        "completion_tokens_details": {
+          "reasoning_tokens": 589
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 398
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 25851.83982399758
+    },
+    {
+      "path": "model_calls/002",
+      "status": "received",
+      "remaining": 5,
+      "image_count": 5,
+      "model": "k3-256k",
+      "usage": {
+        "prompt_tokens": 2597,
+        "completion_tokens": 1090,
+        "total_tokens": 3687,
+        "cached_tokens": 6,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1056
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 6
+        }
+      },
+      "finish_reason": "stop",
+      "elapsed_ms": 27702.47375499457
+    },
+    {
+      "path": "model_calls/003",
+      "status": "failed",
+      "remaining": 4,
+      "image_count": 6,
+      "error_type": "ModelError",
+      "error_message": "Provider returned no text (possibly refusal, token limit or incompatible model); finish_reason=length; usage={\"cached_tokens\": 506, \"completion_tokens\": 4096, \"completion_tokens_details\": {\"reasoning_tokens\": 4096}, \"prompt_tokens\": 2918, \"prompt_tokens_details\": {\"cached_tokens\": 506}, \"total_tokens\": 7014}"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 7277,
+    "output_tokens": 2420,
+    "total_tokens": 9697
+  },
+  "budget_exhausted": false,
+  "teacher_verdict_missing": true,
+  "data_identity": {
+    "annotation_id": "2379",
+    "archive_sha256": "c99ebb2f6173d3fd89c666c9245b6663ca6c245ca835135306df0dd2d3123f3f",
+    "asset_id": "PM_102379",
+    "candidate_sha": "6d0ad125585fb636",
+    "catalog_role": "formal_train_validation",
+    "common_input": "hierarchy",
+    "dataset": "sapien-sim/PartNetMobility",
+    "dataset_revision": "ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f",
+    "experiment_mode": "active",
+    "formal_training": true,
+    "license": "PartNet-Mobility terms: non-commercial research/education; ShapeNet terms also apply",
+    "model_id": "3ac64751-e075-488d-9938-9123dc88b2b6-0",
+    "origin": "sapien-sim/PartNetMobility@ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f 102379.zip",
+    "prompt_addenda": [
+      "part_convention.txt"
+    ],
+    "reference_protocol": "easy_selected_joint_motion_v1",
+    "reference_sha": "650d4378fef55c5a",
+    "source_asset_id": "102379",
+    "source_content_sha256": "c99ebb2f6173d3fd89c666c9245b6663ca6c245ca835135306df0dd2d3123f3f",
+    "source_dataset": "sapien-sim/PartNetMobility",
+    "source_id": "partnet-mobility-ee0aa3ef1df1",
+    "source_identity": "PartNet-Mobility:102379",
+    "source_identity_sha256": "627c6f6b144b134b5ce1a34223feaf5082e1ca2a8ef9099878a0743c34f2c11d",
+    "spec_sha256": "ff544bd4c64fa303b8a7a0751a9f7878c35e51bdef899d654f79abdda9a4a217",
+    "split": "train",
+    "split_group": "PartNet-Mobility:102379",
+    "third_party_transmission_reviewed": true,
+    "transmission_review_basis": "user-authorized-18-case-PartNet-Train-interactive-teacher-experiment"
+  },
+  "updated_at": "2026-10-16T13:43:08+00:00",
+  "termination": "model_error",
+  "error_type": "ModelError",
+  "error_message": "Provider returned no text (possibly refusal, token limit or incompatible model); finish_reason=length; usage={\"cached_tokens\": 506, \"completion_tokens\": 4096, \"completion_tokens_details\": {\"reasoning_tokens\": 4096}, \"prompt_tokens\": 2918, \"prompt_tokens_details\": {\"cached_tokens\": 506}, \"total_tokens\": 7014}",
+  "finished_at": "2026-10-16T13:43:08+00:00",
+  "reference_protocol": "easy_selected_joint_motion_v1",
+  "reference_states": [
+    {
+      "view": "grazing_front",
+      "joint_id": "joint_0",
+      "detent": "rest"
+    },
+    {
+      "view": "grazing_front",
+      "joint_id": "joint_0",
+      "detent": "mid"
+    },
+    {
+      "view": "grazing_front",
+      "joint_id": "joint_0",
+      "detent": "limit"
+    }
+  ],
+  "runtime_joint_limits": {
+    "joint_0": [
+      -1.5707963267948966,
+      1.5707963267948966
+    ]
+  },
+  "frozen_witness_manifest": {
+    "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/docs/evidence/kimi-easy-interactive-v2/private/frozen/eor-42443d5a386a/manifest.json",
+    "sha256": "9a92544ee7fdb06e793f5ed19c701ec9eef9df1374694e45e801e94ea9f0d479"
+  },
+  "real_api_requests": 4,
+  "usage_cost_rmb_estimate": null,
+  "billing_cost_rmb": null
+}

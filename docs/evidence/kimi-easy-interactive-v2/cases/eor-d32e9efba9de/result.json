@@ -1,0 +1,40 @@
+{
+  "case_id": "eor-d32e9efba9de",
+  "asset_id": "PM_19836",
+  "kind": "joint_axis",
+  "run_record_complete": true,
+  "complete_episode": false,
+  "termination": "model_error",
+  "verdict": null,
+  "field_matches": {
+    "verdict": false,
+    "defect_id": false,
+    "joint_id": false,
+    "parts": false
+  },
+  "strict_correct": false,
+  "evidence_sufficient": true,
+  "scope_coverage": {
+    "rest": true,
+    "mid": true,
+    "limit": true
+  },
+  "localization": [],
+  "evidence_outcome": "no_legal_verdict",
+  "trustworthy_uncertain": false,
+  "failure_reasons": [
+    "missing_legal_terminal_verdict",
+    "teacher_output_not_legal"
+  ],
+  "observations": 4,
+  "teacher_observations": 3,
+  "api_calls": 4,
+  "token_usage": {
+    "input_tokens": 8148,
+    "output_tokens": 2276,
+    "total_tokens": 10424
+  },
+  "billing_cost_rmb": null,
+  "usage_incomplete_calls": 1,
+  "episode_sha256": "de54a782df299c76e22bf8f6095e2cef5608023de262d96fe14b53d44ea9887f"
+}
