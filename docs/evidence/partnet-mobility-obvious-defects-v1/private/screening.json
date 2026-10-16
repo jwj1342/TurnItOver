@@ -1,0 +1,900 @@
+{
+  "assets": [
+    {
+      "asset_id": "PM_12036",
+      "role": "cabinet door",
+      "semantic_prescreen": {
+        "reviewer": "AI operator",
+        "final_human_review": "required",
+        "reference": "The full-height door swings laterally through a large arc.",
+        "joint_axis": "At mid and limit the full door leaves the lateral hinge plane and flips upward/outward.",
+        "part_offset": "The full door is displaced relative to the cabinet at rest and remains displaced while moving."
+      },
+      "wrong_target_attempts": [
+        {
+          "kind": "part_offset",
+          "seed": 2100,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_2"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2101,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_1"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2103,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_1"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2104,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_2"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2105,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_1"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2107,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_1"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2108,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_2"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2109,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_1"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2110,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_2"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2111,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_2"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2112,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_1"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2113,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_2"
+          ]
+        }
+      ],
+      "visibility_screening": {
+        "selected": {
+          "view": "oblique_bl",
+          "axis_seed": 1100,
+          "offset_seed": 2102,
+          "reference_motion_core": 0.1812896728515625,
+          "axis_core": 0.1474151611328125,
+          "offset_core": 0.0276336669921875,
+          "axis_region_px": 7354,
+          "offset_region_px": 968,
+          "passed": true,
+          "score": 2.86016669921875,
+          "status": "pending_human_review"
+        },
+        "combination_counts": {
+          "total": 108,
+          "passed": 9,
+          "visibility_gate_failed": 99,
+          "eligible_not_selected": 8
+        },
+        "targeted_attempts": [
+          {
+            "kind": "joint_axis",
+            "seed": 1100,
+            "status": "selected",
+            "reason": "selected",
+            "best_core_fraction": 0.2024688720703125,
+            "best_core_region_px": 11735
+          },
+          {
+            "kind": "joint_axis",
+            "seed": 1101,
+            "status": "rejected",
+            "reason": "not_selected_after_stable_tiebreak",
+            "best_core_fraction": 0.1604156494140625,
+            "best_core_region_px": 9454
+          },
+          {
+            "kind": "joint_axis",
+            "seed": 1102,
+            "status": "rejected",
+            "reason": "not_selected_after_stable_tiebreak",
+            "best_core_fraction": 0.273590087890625,
+            "best_core_region_px": 17930
+          },
+          {
+            "kind": "part_offset",
+            "seed": 2102,
+            "status": "selected",
+            "reason": "selected",
+            "best_core_fraction": 0.0443115234375,
+            "best_core_region_px": 2468
+          },
+          {
+            "kind": "part_offset",
+            "seed": 2106,
+            "status": "rejected",
+            "reason": "lower_combined_visibility_score",
+            "best_core_fraction": 0.0436859130859375,
+            "best_core_region_px": 1877
+          },
+          {
+            "kind": "part_offset",
+            "seed": 2114,
+            "status": "rejected",
+            "reason": "lower_combined_visibility_score",
+            "best_core_fraction": 0.0401153564453125,
+            "best_core_region_px": 1673
+          }
+        ],
+        "selected_pair_views": [
+          {
+            "view": "front",
+            "axis_seed": 1100,
+            "offset_seed": 2102,
+            "reference_motion_core": 0.0,
+            "axis_core": 0.0970001220703125,
+            "offset_core": 0.0,
+            "axis_region_px": 6357,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "back",
+            "axis_seed": 1100,
+            "offset_seed": 2102,
+            "reference_motion_core": 0.0,
+            "axis_core": 0.0970001220703125,
+            "offset_core": 0.0,
+            "axis_region_px": 6357,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "left",
+            "axis_seed": 1100,
+            "offset_seed": 2102,
+            "reference_motion_core": 0.148040771484375,
+            "axis_core": 0.1900177001953125,
+            "offset_core": 0.0,
+            "axis_region_px": 9454,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "right",
+            "axis_seed": 1100,
+            "offset_seed": 2102,
+            "reference_motion_core": 0.144256591796875,
+            "axis_core": 0.1900177001953125,
+            "offset_core": 0.0,
+            "axis_region_px": 9454,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "top",
+            "axis_seed": 1100,
+            "offset_seed": 2102,
+            "reference_motion_core": 0.14178466796875,
+            "axis_core": 0.2024688720703125,
+            "offset_core": 0.0,
+            "axis_region_px": 9448,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "bottom",
+            "axis_seed": 1100,
+            "offset_seed": 2102,
+            "reference_motion_core": 0.1417388916015625,
+            "axis_core": 0.2024688720703125,
+            "offset_core": 0.0,
+            "axis_region_px": 9448,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "oblique_fr",
+            "axis_seed": 1100,
+            "offset_seed": 2102,
+            "reference_motion_core": 0.0,
+            "axis_core": 0.1790618896484375,
+            "offset_core": 0.0,
+            "axis_region_px": 11735,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "oblique_fl",
+            "axis_seed": 1100,
+            "offset_seed": 2102,
+            "reference_motion_core": 0.1270294189453125,
+            "axis_core": 0.192535400390625,
+            "offset_core": 0.009185791015625,
+            "axis_region_px": 10269,
+            "offset_region_px": 602,
+            "passed": false,
+            "score": 0.9787791015625,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "oblique_br",
+            "axis_seed": 1100,
+            "offset_seed": 2102,
+            "reference_motion_core": 0.017730712890625,
+            "axis_core": 0.0731048583984375,
+            "offset_core": 0.0017242431640625,
+            "axis_region_px": 4003,
+            "offset_region_px": 53,
+            "passed": false,
+            "score": 0.17772431640625,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "oblique_bl",
+            "axis_seed": 1100,
+            "offset_seed": 2102,
+            "reference_motion_core": 0.1812896728515625,
+            "axis_core": 0.1474151611328125,
+            "offset_core": 0.0276336669921875,
+            "axis_region_px": 7354,
+            "offset_region_px": 968,
+            "passed": true,
+            "score": 2.86016669921875,
+            "reason": "selected"
+          },
+          {
+            "view": "grazing_front",
+            "axis_seed": 1100,
+            "offset_seed": 2102,
+            "reference_motion_core": 0.0860137939453125,
+            "axis_core": 0.1289825439453125,
+            "offset_core": 0.0,
+            "axis_region_px": 5637,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "grazing_top",
+            "axis_seed": 1100,
+            "offset_seed": 2102,
+            "reference_motion_core": 0.07830810546875,
+            "axis_core": 0.1631011962890625,
+            "offset_core": 0.0,
+            "axis_region_px": 5419,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          }
+        ]
+      }
+    },
+    {
+      "asset_id": "PM_25308",
+      "role": "drawer",
+      "semantic_prescreen": {
+        "reviewer": "AI operator",
+        "final_human_review": "required",
+        "reference": "The large drawer translates horizontally out of the furniture body.",
+        "joint_axis": "The drawer moves upward/inward instead of following the horizontal slide direction.",
+        "part_offset": "The complete drawer box is vertically and laterally misregistered in all three states."
+      },
+      "wrong_target_attempts": [
+        {
+          "kind": "part_offset",
+          "seed": 2200,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_0"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2201,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_2"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2203,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_0"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2205,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_2"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2206,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_2"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2207,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_2"
+          ]
+        },
+        {
+          "kind": "part_offset",
+          "seed": 2208,
+          "reason": "wrong_target",
+          "actual_joint": null,
+          "actual_parts": [
+            "link_0"
+          ]
+        }
+      ],
+      "visibility_screening": {
+        "selected": {
+          "view": "oblique_bl",
+          "axis_seed": 1200,
+          "offset_seed": 2209,
+          "reference_motion_core": 0.0382843017578125,
+          "axis_core": 0.0464935302734375,
+          "offset_core": 0.0113067626953125,
+          "axis_region_px": 2576,
+          "offset_region_px": 405,
+          "passed": true,
+          "score": 1.17117626953125,
+          "status": "pending_human_review"
+        },
+        "combination_counts": {
+          "total": 108,
+          "passed": 3,
+          "visibility_gate_failed": 105,
+          "eligible_not_selected": 2
+        },
+        "targeted_attempts": [
+          {
+            "kind": "joint_axis",
+            "seed": 1200,
+            "status": "selected",
+            "reason": "selected",
+            "best_core_fraction": 0.0464935302734375,
+            "best_core_region_px": 2576
+          },
+          {
+            "kind": "joint_axis",
+            "seed": 1201,
+            "status": "rejected",
+            "reason": "not_selected_after_stable_tiebreak",
+            "best_core_fraction": 0.055938720703125,
+            "best_core_region_px": 3641
+          },
+          {
+            "kind": "joint_axis",
+            "seed": 1202,
+            "status": "rejected",
+            "reason": "not_selected_after_stable_tiebreak",
+            "best_core_fraction": 0.0536956787109375,
+            "best_core_region_px": 3089
+          },
+          {
+            "kind": "part_offset",
+            "seed": 2202,
+            "status": "rejected",
+            "reason": "lower_combined_visibility_score",
+            "best_core_fraction": 0.0490264892578125,
+            "best_core_region_px": 2711
+          },
+          {
+            "kind": "part_offset",
+            "seed": 2204,
+            "status": "rejected",
+            "reason": "lower_combined_visibility_score",
+            "best_core_fraction": 0.0527801513671875,
+            "best_core_region_px": 3429
+          },
+          {
+            "kind": "part_offset",
+            "seed": 2209,
+            "status": "selected",
+            "reason": "selected",
+            "best_core_fraction": 0.03057861328125,
+            "best_core_region_px": 1906
+          }
+        ],
+        "selected_pair_views": [
+          {
+            "view": "front",
+            "axis_seed": 1200,
+            "offset_seed": 2209,
+            "reference_motion_core": 0.03009033203125,
+            "axis_core": 0.025665283203125,
+            "offset_core": 0.0062255859375,
+            "axis_region_px": 1532,
+            "offset_region_px": 408,
+            "passed": false,
+            "score": 0.66335859375,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "back",
+            "axis_seed": 1200,
+            "offset_seed": 2209,
+            "reference_motion_core": 0.03009033203125,
+            "axis_core": 0.02581787109375,
+            "offset_core": 0.0062255859375,
+            "axis_region_px": 1542,
+            "offset_region_px": 408,
+            "passed": false,
+            "score": 0.66335859375,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "left",
+            "axis_seed": 1200,
+            "offset_seed": 2209,
+            "reference_motion_core": 0.0,
+            "axis_core": 0.015899658203125,
+            "offset_core": 0.0,
+            "axis_region_px": 624,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "right",
+            "axis_seed": 1200,
+            "offset_seed": 2209,
+            "reference_motion_core": 0.0,
+            "axis_core": 0.0149688720703125,
+            "offset_core": 0.0,
+            "axis_region_px": 585,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "top",
+            "axis_seed": 1200,
+            "offset_seed": 2209,
+            "reference_motion_core": 0.0104827880859375,
+            "axis_core": 0.0159454345703125,
+            "offset_core": 0.0026092529296875,
+            "axis_region_px": 685,
+            "offset_region_px": 171,
+            "passed": false,
+            "score": 0.27802529296875,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "bottom",
+            "axis_seed": 1200,
+            "offset_seed": 2209,
+            "reference_motion_core": 0.0104217529296875,
+            "axis_core": 0.0159149169921875,
+            "offset_core": 0.0026092529296875,
+            "axis_region_px": 683,
+            "offset_region_px": 171,
+            "passed": false,
+            "score": 0.27802529296875,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "oblique_fr",
+            "axis_seed": 1200,
+            "offset_seed": 2209,
+            "reference_motion_core": 0.01971435546875,
+            "axis_core": 0.028076171875,
+            "offset_core": 0.0012054443359375,
+            "axis_region_px": 1292,
+            "offset_region_px": 74,
+            "passed": false,
+            "score": 0.12794443359375,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "oblique_fl",
+            "axis_seed": 1200,
+            "offset_seed": 2209,
+            "reference_motion_core": 0.0285797119140625,
+            "axis_core": 0.041015625,
+            "offset_core": 0.0,
+            "axis_region_px": 1600,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "oblique_br",
+            "axis_seed": 1200,
+            "offset_seed": 2209,
+            "reference_motion_core": 0.005401611328125,
+            "axis_core": 0.0172271728515625,
+            "offset_core": 0.0012664794921875,
+            "axis_region_px": 1129,
+            "offset_region_px": 77,
+            "passed": false,
+            "score": 0.13434794921875,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "oblique_bl",
+            "axis_seed": 1200,
+            "offset_seed": 2209,
+            "reference_motion_core": 0.0382843017578125,
+            "axis_core": 0.0464935302734375,
+            "offset_core": 0.0113067626953125,
+            "axis_region_px": 2576,
+            "offset_region_px": 405,
+            "passed": true,
+            "score": 1.17117626953125,
+            "reason": "selected"
+          },
+          {
+            "view": "grazing_front",
+            "axis_seed": 1200,
+            "offset_seed": 2209,
+            "reference_motion_core": 0.0,
+            "axis_core": 0.011962890625,
+            "offset_core": 0.0,
+            "axis_region_px": 424,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "grazing_top",
+            "axis_seed": 1200,
+            "offset_seed": 2209,
+            "reference_motion_core": 0.01849365234375,
+            "axis_core": 0.035430908203125,
+            "offset_core": 0.00469970703125,
+            "axis_region_px": 1212,
+            "offset_region_px": 308,
+            "passed": false,
+            "score": 0.500770703125,
+            "reason": "visibility_gate_failed"
+          }
+        ]
+      }
+    },
+    {
+      "asset_id": "PM_102257",
+      "role": "flip lid",
+      "semantic_prescreen": {
+        "reviewer": "AI operator",
+        "final_human_review": "required",
+        "reference": "The large front lid follows a clear revolute opening arc.",
+        "joint_axis": "The lid takes a strongly different out-of-plane arc at mid and limit.",
+        "part_offset": "The complete lid is shifted relative to the can; the mismatch is clearest at mid and limit."
+      },
+      "wrong_target_attempts": [],
+      "visibility_screening": {
+        "selected": {
+          "view": "oblique_fr",
+          "axis_seed": 1300,
+          "offset_seed": 2301,
+          "reference_motion_core": 0.0655670166015625,
+          "axis_core": 0.131011962890625,
+          "offset_core": 0.0174102783203125,
+          "axis_region_px": 4494,
+          "offset_region_px": 499,
+          "passed": true,
+          "score": 1.79092783203125,
+          "status": "pending_human_review"
+        },
+        "combination_counts": {
+          "total": 108,
+          "passed": 3,
+          "visibility_gate_failed": 105,
+          "eligible_not_selected": 2
+        },
+        "targeted_attempts": [
+          {
+            "kind": "joint_axis",
+            "seed": 1300,
+            "status": "selected",
+            "reason": "selected",
+            "best_core_fraction": 0.131011962890625,
+            "best_core_region_px": 5386
+          },
+          {
+            "kind": "joint_axis",
+            "seed": 1301,
+            "status": "rejected",
+            "reason": "not_selected_after_stable_tiebreak",
+            "best_core_fraction": 0.149688720703125,
+            "best_core_region_px": 9798
+          },
+          {
+            "kind": "joint_axis",
+            "seed": 1302,
+            "status": "rejected",
+            "reason": "not_selected_after_stable_tiebreak",
+            "best_core_fraction": 0.1386260986328125,
+            "best_core_region_px": 9085
+          },
+          {
+            "kind": "part_offset",
+            "seed": 2300,
+            "status": "rejected",
+            "reason": "lower_combined_visibility_score",
+            "best_core_fraction": 0.0406036376953125,
+            "best_core_region_px": 1590
+          },
+          {
+            "kind": "part_offset",
+            "seed": 2301,
+            "status": "selected",
+            "reason": "selected",
+            "best_core_fraction": 0.055694580078125,
+            "best_core_region_px": 2230
+          },
+          {
+            "kind": "part_offset",
+            "seed": 2302,
+            "status": "rejected",
+            "reason": "lower_combined_visibility_score",
+            "best_core_fraction": 0.0603790283203125,
+            "best_core_region_px": 1986
+          }
+        ],
+        "selected_pair_views": [
+          {
+            "view": "front",
+            "axis_seed": 1300,
+            "offset_seed": 2301,
+            "reference_motion_core": 0.0762786865234375,
+            "axis_core": 0.082183837890625,
+            "offset_core": 0.0048828125,
+            "axis_region_px": 5386,
+            "offset_region_px": 278,
+            "passed": false,
+            "score": 0.51608125,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "back",
+            "axis_seed": 1300,
+            "offset_seed": 2301,
+            "reference_motion_core": 0.0681304931640625,
+            "axis_core": 0.078338623046875,
+            "offset_core": 0.0012054443359375,
+            "axis_region_px": 5134,
+            "offset_region_px": 65,
+            "passed": false,
+            "score": 0.12704443359375,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "left",
+            "axis_seed": 1300,
+            "offset_seed": 2301,
+            "reference_motion_core": 0.0436553955078125,
+            "axis_core": 0.0400848388671875,
+            "offset_core": 1.52587890625e-05,
+            "axis_region_px": 1759,
+            "offset_region_px": 1,
+            "passed": false,
+            "score": 0.00162587890625,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "right",
+            "axis_seed": 1300,
+            "offset_seed": 2301,
+            "reference_motion_core": 0.041900634765625,
+            "axis_core": 0.060821533203125,
+            "offset_core": 0.0004730224609375,
+            "axis_region_px": 3986,
+            "offset_region_px": 31,
+            "passed": false,
+            "score": 0.05040224609375,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "top",
+            "axis_seed": 1300,
+            "offset_seed": 2301,
+            "reference_motion_core": 0.0,
+            "axis_core": 0.0567169189453125,
+            "offset_core": 0.0,
+            "axis_region_px": 3717,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "bottom",
+            "axis_seed": 1300,
+            "offset_seed": 2301,
+            "reference_motion_core": 0.0,
+            "axis_core": 0.0567169189453125,
+            "offset_core": 0.0,
+            "axis_region_px": 3717,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "oblique_fr",
+            "axis_seed": 1300,
+            "offset_seed": 2301,
+            "reference_motion_core": 0.0655670166015625,
+            "axis_core": 0.131011962890625,
+            "offset_core": 0.0174102783203125,
+            "axis_region_px": 4494,
+            "offset_region_px": 499,
+            "passed": true,
+            "score": 1.79092783203125,
+            "reason": "selected"
+          },
+          {
+            "view": "oblique_fl",
+            "axis_seed": 1300,
+            "offset_seed": 2301,
+            "reference_motion_core": 0.040435791015625,
+            "axis_core": 0.03228759765625,
+            "offset_core": 0.000823974609375,
+            "axis_region_px": 2003,
+            "offset_region_px": 36,
+            "passed": false,
+            "score": 0.0859974609375,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "oblique_br",
+            "axis_seed": 1300,
+            "offset_seed": 2301,
+            "reference_motion_core": 0.040771484375,
+            "axis_core": 0.0420379638671875,
+            "offset_core": 0.0001068115234375,
+            "axis_region_px": 2755,
+            "offset_region_px": 7,
+            "passed": false,
+            "score": 0.01138115234375,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "oblique_bl",
+            "axis_seed": 1300,
+            "offset_seed": 2301,
+            "reference_motion_core": 1.52587890625e-05,
+            "axis_core": 0.0129241943359375,
+            "offset_core": 0.0,
+            "axis_region_px": 847,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "grazing_front",
+            "axis_seed": 1300,
+            "offset_seed": 2301,
+            "reference_motion_core": 0.0484771728515625,
+            "axis_core": 0.0770721435546875,
+            "offset_core": 0.0016326904296875,
+            "axis_region_px": 3361,
+            "offset_region_px": 43,
+            "passed": false,
+            "score": 0.16756904296875,
+            "reason": "visibility_gate_failed"
+          },
+          {
+            "view": "grazing_top",
+            "axis_seed": 1300,
+            "offset_seed": 2301,
+            "reference_motion_core": 0.0005035400390625,
+            "axis_core": 0.0622711181640625,
+            "offset_core": 0.0,
+            "axis_region_px": 4081,
+            "offset_region_px": 0,
+            "passed": false,
+            "score": 0.0,
+            "reason": "visibility_gate_failed"
+          }
+        ]
+      }
+    }
+  ]
+}

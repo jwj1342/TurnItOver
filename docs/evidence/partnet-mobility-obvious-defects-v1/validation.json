@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "cases": 9,
+  "train_assets": 3,
+  "pending_human_review": 9,
+  "clean_checker_passed": 3,
+  "single_defect_checker_rejected": 6,
+  "native_image_size": [
+    256,
+    256
+  ],
+  "public_answer_fields": [],
+  "test_rows_touched": 0,
+  "model_calls": 0,
+  "sft_training_runs": 0
+}

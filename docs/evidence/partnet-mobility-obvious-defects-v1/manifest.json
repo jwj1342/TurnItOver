@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "status": "complete",
+  "review_status": "pending_human_review",
+  "scope": "PartNet-Mobility Train only",
+  "cases": 9,
+  "assets": 3,
+  "variants_per_asset": 3,
+  "student_image_size": [
+    256,
+    256
+  ],
+  "model_calls": 0,
+  "sft_training_runs": 0,
+  "test_rows_touched": 0,
+  "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/assets/partnet-mobility-trainval-v1/catalog.json",
+  "catalog_sha256": "c0a2f2516ac1c166dfa524d7007119cb586aaffd155aa28e3fed96824c8d6423",
+  "splits": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/assets/partnet-mobility-trainval-v1/splits.json",
+  "splits_sha256": "812af706d9e8ff3cfd79d8edefd1118e6f7b897b205d249bb9172efcea994576",
+  "config": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/configs/generate_partnet_mobility_supervision.yaml",
+  "config_sha256": "1721cf59af826f83101b50b29d121276e420f1b4c8b29f6a14b900afbc76ee1c",
+  "generation": {
+    "axis_angle_deg": 60.0,
+    "part_offset_m": 0.18,
+    "targeted_attempts_per_defect": 3,
+    "corruptions": [
+      "kinematics.joint_axis",
+      "structure.part_offset"
+    ]
+  },
+  "files": {
+    "REPRODUCE.md": "62f288897988ab1b99ec0d8c9196e296e44adaa57445ee271a919c1c1fa8069e",
+    "boards/odr-0475067092fd.png": "86952638e8cdb45cefe64b8437814cbbb713419cbc68a31470922ff17ea7677f",
+    "boards/odr-485c93213d2f.png": "4132c10d24264d8a7c8cb928b7296c25025a6f85aa7416050ade8fee7007dcfe",
+    "boards/odr-602d5a570ecf.png": "542be0f396f0389ab8ff4d6996cdf3807c79ce5ab2d6cd5850d7c606de263e34",
+    "boards/odr-8afcabd9c65c.png": "85eebaec59c82334dcfd16223b8f2a8ccd0134ee8d5389a4f399254e97da4805",
+    "boards/odr-902e87011e30.png": "a8b8ceeff3d0b7fc355d2dc8afa4ac47468e51387cf4204c13ce32ee074dca97",
+    "boards/odr-93a73fb99bd3.png": "4f5c171ded2c1d7a3a5b343f2f85b004ffc3448148debb594280dd71e06350c1",
+    "boards/odr-b7e040cf82d9.png": "03acef4a88b553bc3284645f1ec5232393803c3d779007962eb9a40b56c29a27",
+    "boards/odr-d11b5f796913.png": "f0ab7b532a5f4429f3900ac9f66ba2dce6758ddd6a9a573b9b1af1143f2ac924",
+    "boards/odr-ff7157e0a125.png": "ef30fb4ef9f94adcb1cb83e9717a377b51e59ccfc8ee5a2a1e72c5e071a57385",
+    "human_review.jsonl": "631c56b1c115c64b9cd83c21d952e0f55237ccbe9ac9f64eb8110c9b045124b2",
+    "private/checks.jsonl": "3516cf421aa8df4184f2f45adf0abb421fda2da79a45a72a432fb801af3a59c6",
+    "private/gold.jsonl": "1f7bcb352aa599bd2a26f6497984ef9fc6c4d637aaca98739cc791d113944e79",
+    "private/screening.json": "605c3676fbe6be7c91c76220920309d4f9742042668e6dcd5b107596b51e416c",
+    "review_manifest.jsonl": "ca2a5bebef0784c38fdbea81b3fbfe8567b88b35a9bb3272ead5fe0cdb36615d",
+    "validation.json": "37cc63a6a58d66edee465f8cc5e9af0e9d904927d07bf3baa14399cd7117788c"
+  }
+}
