@@ -1,0 +1,10 @@
+Command: python -m pytest tests/unit tests/browser/test_preview.py -q
+Exit: 0
+........................................................................ [ 26%]
+..........................................s.s........................... [ 53%]
+........................................................................ [ 80%]
+....................................................                     [100%]
+
+Real Chromium generation: 10 normal assets, 8 selected assets, 48 targeted corruptions plus clean checks.
+Python: 3.12.7
+Playwright: 1.62.0

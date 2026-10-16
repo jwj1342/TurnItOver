@@ -1,0 +1,14 @@
+{
+  "reviewer": "AI operator, not human",
+  "status": "all pending human confirmation",
+  "notes": {
+    "PM_10697": "Axis has clearly altered panel plane at mid; offset visible at rest but side-on view may make attachment interpretation harder. Limit axis clips.",
+    "PM_12594": "Axis lifts door obliquely rather than reference arc; offset shifts seam at rest. Reference and candidate limit approach or cross image edge; use mid as primary evidence.",
+    "PM_48686": "Axis drawer moves obliquely and down; offset front visibly misregistered at rest. Human should distinguish installation error from different drawer articulation.",
+    "PM_102379": "Axis changes large panel opening plane at limit; mid equals rest. Offset shifts silhouette at rest; attachment diagnosis needs human confirmation.",
+    "PM_5088": "Axis yields diagonal panel tilt; offset shifts panel relative to stand at rest. Need human terminology and joint localization confirmation.",
+    "PM_102016": "Axis slides component diagonally instead of reference straight travel. Offset changes housing alignment at rest; may be subtle at thumbnail size.",
+    "PM_19836": "Axis drawer trajectory differs at mid/limit; offset drawer misregistration at rest is comparatively subtle because neighboring drawers overlap. Prioritize human review.",
+    "PM_8867": "Axis door takes diagonal opening plane and clips at limit; offset displaces panel relative to frame at rest. Left view is geometrically clear but category appearance is unusual."
+  }
+}

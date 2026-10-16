@@ -1,0 +1,15 @@
+{
+  "protocol": "normal-only shortlist and view freeze before injection; three fixed targeted seeds, 60 degrees / 0.18 m; first automatic pass; no model selection",
+  "normal_shortlist": [
+    {"asset_id":"PM_10697","joint_id":"joint_1","selected":true,"reason":"Single large laptop panel; unobstructed hinge motion. Mid crosses signed range; rest not necessarily closed."},
+    {"asset_id":"PM_12594","joint_id":"joint_1","selected":true,"reason":"Single large dishwasher door; clear body attachment and opening arc; limit may approach frame boundary."},
+    {"asset_id":"PM_48686","joint_id":"joint_0","selected":true,"reason":"Single broad drawer front translates against fixed cabinet; normal motion smaller but visible."},
+    {"asset_id":"PM_102379","joint_id":"joint_0","selected":true,"reason":"Single large box panel; direct hinge opening; signed symmetric limits make mid equal rest."},
+    {"asset_id":"PM_5088","joint_id":"joint_0","selected":true,"reason":"Single large display panel on fixed stand; visible tilt, little occlusion."},
+    {"asset_id":"PM_102016","joint_id":"joint_0","selected":true,"reason":"Single broad USB sliding component; large translational travel and clear housing."},
+    {"asset_id":"PM_3971","joint_id":"joint_0","selected":false,"reason":"Kettle moving handle is thin, occluded; body dominates normal frames."},
+    {"asset_id":"PM_102314","joint_id":"joint_0","selected":false,"reason":"Folding chair has thin intersecting frame and less intuitive motion despite one joint."},
+    {"asset_id":"PM_19836","joint_id":"joint_0","selected":true,"reason":"Three drawers but only one actuated; broad drawer box and clear slide, other joints fixed at rest; lower priority than single joint."},
+    {"asset_id":"PM_8867","joint_id":"joint_1","selected":true,"reason":"Two joints but chosen large door panel has clear opening against fixed frame; secondary joint stays rest."}
+  ]
+}

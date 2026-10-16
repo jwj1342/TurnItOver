@@ -1,0 +1,32 @@
+{
+  "easy_objects": {
+    "shortlisted": 10,
+    "passed": 8,
+    "train_pool": 28,
+    "baseline_assets_excluded": [
+      "PM_102257",
+      "PM_12036",
+      "PM_25308"
+    ]
+  },
+  "types": {
+    "joint_axis": {
+      "attempts": 24,
+      "automatic_pass": 24,
+      "selected_pending": 8
+    },
+    "part_offset": {
+      "attempts": 24,
+      "automatic_pass": 21,
+      "selected_pending": 8
+    }
+  },
+  "cases": 24,
+  "boards": 8,
+  "pending_human_review": 24,
+  "model_calls": 0,
+  "sft_training_runs": 0,
+  "test_rows_touched": 0,
+  "selection_sha256_before_injection": "07604fe66069f66844bb1e436ceb8474938409d0f62526732a6b0814d3ca61c6",
+  "claim_scope": "Automatic geometry and visibility only; human semantic diagnosability unconfirmed."
+}
