@@ -671,3 +671,23 @@ CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.evaluate_m
 ```
 
 逐案例公开输入和图像清单位于 `inputs.jsonl`，原始输出分别位于各评测目录的 `predictions.jsonl`，状态/camera/几何真值、可视审核、逐例私有评分和汇总分别为 `gold.private.jsonl`、`geometry.audit.json`、`visual-review.private.json`、`scores.private.jsonl` 和 `metrics.json`。`manifest.json` / `inputs.jsonl` / `metrics.json` / `geometry.audit.json` SHA-256依次为 `bda76a5b0c63ede7808bb4396658c9ca99201e948f657b92d9e0caed491f6e78`、`5e7513967923e706f92f69225875d244235be0c3b995a64ff7a0c338eb09e312`、`17314fed72ed789dc6331589633508a6b7a15e81b5df78f57225338d184df818`、`adffe5833e8a794fd4435917fc9c7fb7e637df9090f41972183d0cdf3e90b8f9`。相关32项测试通过。未调用付费API、未训练模型、未读取或修改冻结Part 2 Test。
+
+## 运动诊断专项 SFT（2026-10-16）
+
+本轮选择性复用 dataset `b64ab7b` 的真实关节值对齐、`rest != lower-limit zero` 语义、冻结 witness 扩展规则、可感知核心变化阈值和合法 rest hierarchy；没有移植 Kimi API、策略或采集器。合格 axis+offset 候选经 `core_changed_fraction >= 0.001` 的同状态参考门禁后，保留20个独立 Train 物体和4个独立 Validation 物体，形成80/16行：每物体三条 `axis/offset/clean` 全运动对照和一条 axis 候选的双视角 rest-only `uncertain`。公开输入包含共同 hierarchy 与实际 `rest/lower/mid/upper` 数值，同物体三类 prompt、camera、state 和槽位完全一致；Train/Validation 原始物体零重叠，冻结 Test 未读取或修改。另有7 Train / 1 Validation 候选因至少一种缺陷不可感知被拒绝。
+
+普通组与证据组使用相同 Qwen3-VL-2B、80行输入、seed `20261016`、LoRA rank 8/alpha 16、3 epochs/240步；唯一监督差异是 rest-only 行：普通组给隐藏 axis，证据组给 `uncertain`。两组 checkpoint SHA-256 分别为 `966d983e7d1cfc79d98d31c12a538d1b6ae977e4ce00dc779a908a89e25fb497` 和 `6e27e7ba00cbc5f1ac57dc6dc8e95ed6ed9daf3f165bd4698432d8c62d14ed53`。
+
+4个留出物体的16行评测中，普通→证据的类别正确为4/16→8/16、完整正确3/16→8/16、证据步骤正确7/16→9/16；rest-only `uncertain` 为0/4→4/4。但充分运动证据三分类两组都只有4/12，offset均0/4：普通组按物体输出axis或clean，证据组主要输出clean，仍不能区分三联反事实。上一轮冻结A/B/C/D的跨协议复测进一步否定泛化：B为4/12→3/12，C两组仍12/12判clean、0 uncertain，D为0/6→1/6完整正确；A使用旧Verifier verdict schema，与本轮专项schema不兼容，保留原始输出但不计能力。因此证据约束只在同协议缺证判断上有真实提升，尚未获得可靠axis/offset/clean视觉诊断，也不能开始停止决策或主动观察整合。
+
+主要复现命令：
+
+```bash
+export PLAYWRIGHT_BROWSERS_PATH=/91004t2/laq/code/ThreejsJudge/TurnItOver/.cache/ms-playwright
+../TurnItOver/.venv-local/bin/python -m scripts.build_motion_diagnosis --out output/partnet-motion-diagnosis-v1
+python -m scripts.audit_motion_diagnosis --root output/partnet-motion-diagnosis-v1 --out output/partnet-motion-diagnosis-v1.audit.json
+CUDA_VISIBLE_DEVICES=0 ../TurnItOver/.venv-qwen/bin/python -m scripts.train_qwen_motion_diagnosis --dataset output/partnet-motion-diagnosis-v1 --model ../TurnItOver/models/Qwen3-VL-2B-Instruct --out output/partnet-qwen3vl2b-motion-ordinary-v1 --supervision ordinary --seed 20261016 --epochs 3 --learning-rate 2e-4 --lora-rank 8 --lora-alpha 16
+CUDA_VISIBLE_DEVICES=1 ../TurnItOver/.venv-qwen/bin/python -m scripts.train_qwen_motion_diagnosis --dataset output/partnet-motion-diagnosis-v1 --model ../TurnItOver/models/Qwen3-VL-2B-Instruct --out output/partnet-qwen3vl2b-motion-evidence-v1 --supervision evidence --seed 20261016 --epochs 3 --learning-rate 2e-4 --lora-rank 8 --lora-alpha 16
+```
+
+数据 manifest/审计、loss、checkpoint、逐条预测和混淆矩阵分别保存在 `output/partnet-motion-diagnosis-v1/`、`output/partnet-motion-diagnosis-v1.audit.json`、两个训练目录、两个 `*-eval-v1/` 目录和 `output/motion-diagnosis-frozen-abcd-v1/`。未调用付费API，未混合v5停止任务，未训练主动策略或双LoRA，未自动push。

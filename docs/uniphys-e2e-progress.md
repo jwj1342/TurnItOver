@@ -99,9 +99,11 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 **真实revolute运动诊断归因已经收束（2026-10-15）。** 从4个具有冻结axis+offset真值的独立Validation物体构造12个axis/offset/clean反事实；真实浏览器在rest/mid/end和两个视角输出严格对齐reference/candidate，世界坐标刚体拟合与逐例图像审核确认Gold。充分证据B中，底座与v4都把12/12判为axis：axis recall虽为4/4，但precision仅4/12，offset和clean各4/4全部误报axis，完整正确均4/12；逐物体没有一个能同时正确三类。明确上下排配对的D中，v4仍6/6判axis且两个axis的joint/part均错。rest-only C中两模型都把12/12判clean、0 uncertain，既漏掉仍静态可见的4个offset，也把8个无法证明正常运动的axis/clean当成clean。故旧闭环证据协议确有缺口，但正确补齐运动图像仍不能带来可靠诊断；当前P0改为有证据约束的运动诊断专项SFT，显式加入同物体axis/offset/clean与删状态uncertain对照。详见[训练数据记录](training-dataset-expansion.md)。
 
+**运动诊断专项普通/证据约束SFT已完成，但只改善同协议uncertain（2026-10-16）。** 20个独立Train物体、80行同物体受控监督上，两组Qwen3-VL-2B各训练240步；4个独立Validation物体16行中，证据组相对普通组类别正确4→8、完整正确3→8，rest-only uncertain 0/4→4/4。但充分证据axis/offset/clean两组都仅4/12，offset均0/4；冻结B/C/D跨协议复测也只有3/12、0/12、1/6完整正确。故尚未摆脱物体级类别塌缩，不能进入停止决策或主动观察整合。详见[训练数据记录](training-dataset-expansion.md)。
+
 ## 下一步（按优先级）
 
-1. **P0｜直接开展证据约束的运动诊断专项SFT。** 统一同camera/joint/state的reference-candidate输入；同一物体成组监督axis/offset/clean和删运动状态后的uncertain，并显式监督支持类型的最小步骤、joint和part。先在独立物体留出上通过三类判别、clean/offset误报、候选定位和证据不足四个门禁；不要再投入停止策略调参或仅修协议。
+1. **P0｜扩大合格运动诊断物体并消除物体级类别塌缩。** 当前专项SFT只在同协议rest-only学会uncertain，充分证据三分类仍失败；下一轮须增加可感知offset与跨物体同结构对照，先通过axis/offset/clean门禁，再讨论停止或主动观察。
 2. **P0｜按实测漏斗继续扩充 PartNet-Mobility。** 优先补 Train 混合关节、未覆盖类别和更大的独立 Validation；达到80–100个合格原物体前持续保存许可、来源/内容 SHA、运动审核及冻结 Test 去重证据。
 3. **P0｜消除特权动作教师依赖。** 动作选择不读取私有 label/exposure，或显式学习可观测条件下的动作分布；完成前不把 terminal SFT 解释为主动取证训练。
 4. **P1｜收集自然错误独立人工 Gold。** 固定 Generator，由不读取注入标签的人工依据真实渲染标注；GAPartNet 仅在取得完整官方包和额外许可后接入。
@@ -111,4 +113,4 @@ python -m scripts.convert_uniphys40k --root data/uniphys40k-pilot --out output/u
 
 ---
 
-最近同步：**2026-10-15 · 真实revolute运动诊断归因**；4个独立物体、12个axis/offset/clean案例的A/B/C及小型D已完成真实GPU推理。充分证据下底座与v4均将12/12判axis，缺证时又12/12判clean，说明首要瓶颈是运动类型判别与证据充分性，其次是结构化定位；下一步已冻结为运动诊断专项SFT。本轮未训练、未构建v6，冻结Part 2 Test未读取或修改。
+最近同步：**2026-10-16 · 运动诊断专项SFT**；20个独立Train物体完成普通/证据组真实GPU训练。证据组在同协议rest-only上4/4输出uncertain，但充分证据三分类仍4/12且offset 0/4，冻结B/C/D也未泛化；当前不能开始停止决策与主动观察整合。冻结Part 2 Test未读取或修改。
