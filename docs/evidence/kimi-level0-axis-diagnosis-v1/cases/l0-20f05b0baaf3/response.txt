@@ -1,0 +1,2 @@
+verdict: pass
+motion: The reference part swings outward to the right from rest to limit, and the candidate follows the same rightward outward direction.

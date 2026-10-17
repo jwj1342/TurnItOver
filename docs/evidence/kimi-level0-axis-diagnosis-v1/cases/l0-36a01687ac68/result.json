@@ -1,0 +1,35 @@
+{
+  "case_id": "l0-36a01687ac68",
+  "kind": "joint_axis",
+  "image_sha256": "519ecbec12aeea9a6a47d5f786d7e5405641f2a95a3c9f621feff5eb63e7c859",
+  "pixel_baseline": {
+    "reference_candidate_rest_mae": 0.0,
+    "reference_candidate_limit_mae": 0.016783790662884712,
+    "max_mae": 0.016783790662884712,
+    "threshold": 0.005,
+    "predicted_status": "fail"
+  },
+  "model_call": {
+    "status": "completed",
+    "model": "k3-256k",
+    "usage": {
+      "prompt_tokens": 557,
+      "completion_tokens": 1036,
+      "total_tokens": 1593,
+      "cached_tokens": 82,
+      "completion_tokens_details": {
+        "reasoning_tokens": 985
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 82
+      }
+    },
+    "finish_reason": "stop",
+    "elapsed_ms": 43166.90222208854
+  },
+  "prediction": {
+    "verdict": "fail",
+    "motion": "The normal/reference motion extends a part downward from the block, while the candidate moves a piece sideways out to the right, so their directions do not match.",
+    "format_valid": true
+  }
+}

@@ -1,0 +1,2 @@
+verdict: fail
+motion: The normal/reference motion extends a part downward from the block, while the candidate moves a piece sideways out to the right, so their directions do not match.

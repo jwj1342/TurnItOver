@@ -1,0 +1,2 @@
+verdict: pass
+motion: The candidate rotates in the same direction as the normal/reference motion, collapsing from the broad rest view to the same thin edge-on limit.

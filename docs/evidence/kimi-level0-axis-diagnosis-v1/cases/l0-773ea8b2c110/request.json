@@ -1,0 +1,18 @@
+{
+  "order": 7,
+  "model": {
+    "role": "teacher",
+    "provider": "openai_compatible",
+    "model": "k3-256k",
+    "key_configured": true,
+    "max_tokens": 4096,
+    "timeout": 120.0
+  },
+  "prompt": "The image is a 2x2 motion comparison. Top row: reference rest, reference limit. Bottom row: candidate rest, candidate limit. Decide whether the candidate motion matches the reference. Reply in exactly two lines:\nverdict: pass or fail\nmotion: one sentence comparing the normal and candidate motion directions.",
+  "image": "input.png",
+  "image_sha256": "d16421a8b32f6ca1fbd34c5b75400ba4e259197db6827e9aec96d47cdc840fab",
+  "images_per_call": 1,
+  "gold_or_review_sent": false,
+  "asset_id_sent": false,
+  "corruption_parameters_sent": false
+}

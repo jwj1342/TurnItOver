@@ -1,0 +1,31 @@
+{
+  "case_id": "l0-0345ca7d11c7",
+  "kind": "joint_axis",
+  "image_sha256": "f1b1f225eebce7f8d20faf9a2fde4ca3b41933f5e7829e4616de9331bae8ebd4",
+  "pixel_baseline": {
+    "reference_candidate_rest_mae": 0.0,
+    "reference_candidate_limit_mae": 0.029374444857239723,
+    "max_mae": 0.029374444857239723,
+    "threshold": 0.005,
+    "predicted_status": "fail"
+  },
+  "model_call": {
+    "status": "completed",
+    "model": "k3-256k",
+    "usage": {
+      "prompt_tokens": 557,
+      "completion_tokens": 738,
+      "total_tokens": 1295,
+      "completion_tokens_details": {
+        "reasoning_tokens": 688
+      }
+    },
+    "finish_reason": "stop",
+    "elapsed_ms": 27872.78401607182
+  },
+  "prediction": {
+    "verdict": "fail",
+    "motion": "the reference folds edge-on around a vertical hinge, while the candidate swings the panel clockwise/down-right in the image plane, so the motion directions differ.",
+    "format_valid": true
+  }
+}

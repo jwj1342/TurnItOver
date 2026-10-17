@@ -1,0 +1,479 @@
+{
+  "version": 1,
+  "status": "complete",
+  "model": {
+    "role": "teacher",
+    "provider": "openai_compatible",
+    "model": "k3-256k",
+    "key_configured": true,
+    "max_tokens": 4096,
+    "timeout": 120.0
+  },
+  "source_commit": "f34b07c127266b401564592bfe38bb6c9e7121fb",
+  "preflight": {
+    "human_review_sha256": "516cb44812b5525abdedf3574d1c20aedcee80399c2724217c4801f53249e303",
+    "gold_sha256": "3c97b51a559d430146a25a8746af6d44725a5fb0ce45ab834a0a3a87e9bcfa17",
+    "checks_sha256": "7393b0903b3edc7b43e9405d8fa37233f1b5f4393de5e6f0523901a70b1fc34e",
+    "input_sha256": {
+      "l0-0345ca7d11c7": "f1b1f225eebce7f8d20faf9a2fde4ca3b41933f5e7829e4616de9331bae8ebd4",
+      "l0-18bffea53090": "89027c7b3de767883810c2947fffb83de30aaf1bac1e7f8e29627e82d5750520",
+      "l0-20f05b0baaf3": "41be2d3f56c8cf34b9b1a4e7ee420a13881d962620fa9dce13700bf9fc47bc18",
+      "l0-2bac52a22825": "a36b420d906683b69c33cd758befe08e522eab999d79c52b51cc1314d6ccefdf",
+      "l0-36a01687ac68": "519ecbec12aeea9a6a47d5f786d7e5405641f2a95a3c9f621feff5eb63e7c859",
+      "l0-3b82bd9c5729": "411c7e179dbb3951e2ee29129ff607b51dab11f47308fe8c8fc5485e6c8c0496",
+      "l0-44bdad092cb1": "22015a2ab83e75fa1604d0242d662d4677c8216fedaf929d038d73dc599d566b",
+      "l0-773ea8b2c110": "d16421a8b32f6ca1fbd34c5b75400ba4e259197db6827e9aec96d47cdc840fab",
+      "l0-92541cdf9298": "a85312840a336cdbf12183154c1ea3d8aba9b6c77b4327a522e055cef8e79e33",
+      "l0-9af6bfe1a9ee": "06b10a18801059c3489fe2ce63863bb79acb5f04d80012a0278533707e3d963c"
+    }
+  },
+  "protocol": {
+    "cases": 10,
+    "independent_assets": 5,
+    "calls_per_case": 1,
+    "real_api_requests": 10,
+    "retries": 0,
+    "few_shot": false,
+    "images_per_call": 1,
+    "prompt_identical": true,
+    "posthoc_gold_join_only": true,
+    "sft_training": false,
+    "test_modified": false,
+    "transmission_review_basis": "user-requested-fixed-evidence-Level-0-diagnostic"
+  },
+  "counts": {
+    "clean": {
+      "total": 5,
+      "pass_fail_correct": 5,
+      "incorrect": 0,
+      "format_invalid": 0
+    },
+    "joint_axis": {
+      "total": 5,
+      "pass_fail_correct": 5,
+      "incorrect": 0,
+      "format_invalid": 0
+    }
+  },
+  "pixel_baseline": {
+    "rule": "fail iff max paired-tile MAE > 0.005",
+    "threshold": 0.005,
+    "correct": 10,
+    "total": 10,
+    "motion_understanding": "not measured; this baseline only detects pixel mismatch"
+  },
+  "cases": [
+    {
+      "case_id": "l0-0345ca7d11c7",
+      "kind": "joint_axis",
+      "image_sha256": "f1b1f225eebce7f8d20faf9a2fde4ca3b41933f5e7829e4616de9331bae8ebd4",
+      "pixel_baseline": {
+        "reference_candidate_rest_mae": 0.0,
+        "reference_candidate_limit_mae": 0.029374444857239723,
+        "max_mae": 0.029374444857239723,
+        "threshold": 0.005,
+        "predicted_status": "fail"
+      },
+      "model_call": {
+        "status": "completed",
+        "model": "k3-256k",
+        "usage": {
+          "prompt_tokens": 557,
+          "completion_tokens": 738,
+          "total_tokens": 1295,
+          "completion_tokens_details": {
+            "reasoning_tokens": 688
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 27872.78401607182
+      },
+      "prediction": {
+        "verdict": "fail",
+        "motion": "the reference folds edge-on around a vertical hinge, while the candidate swings the panel clockwise/down-right in the image plane, so the motion directions differ.",
+        "format_valid": true
+      },
+      "posthoc": {
+        "gold_status": "fail",
+        "human_status": "fail",
+        "pass_fail_correct": true,
+        "baseline_correct": true
+      }
+    },
+    {
+      "case_id": "l0-18bffea53090",
+      "kind": "clean",
+      "image_sha256": "89027c7b3de767883810c2947fffb83de30aaf1bac1e7f8e29627e82d5750520",
+      "pixel_baseline": {
+        "reference_candidate_rest_mae": 0.0,
+        "reference_candidate_limit_mae": 0.0,
+        "max_mae": 0.0,
+        "threshold": 0.005,
+        "predicted_status": "pass"
+      },
+      "model_call": {
+        "status": "completed",
+        "model": "k3-256k",
+        "usage": {
+          "prompt_tokens": 557,
+          "completion_tokens": 2360,
+          "total_tokens": 2917,
+          "cached_tokens": 82,
+          "completion_tokens_details": {
+            "reasoning_tokens": 2311
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 82
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 75989.77631900925
+      },
+      "prediction": {
+        "verdict": "pass",
+        "motion": "The candidate rotates in the same direction as the normal/reference motion, collapsing from the broad rest view to the same thin edge-on limit.",
+        "format_valid": true
+      },
+      "posthoc": {
+        "gold_status": "pass",
+        "human_status": "pass",
+        "pass_fail_correct": true,
+        "baseline_correct": true
+      }
+    },
+    {
+      "case_id": "l0-20f05b0baaf3",
+      "kind": "clean",
+      "image_sha256": "41be2d3f56c8cf34b9b1a4e7ee420a13881d962620fa9dce13700bf9fc47bc18",
+      "pixel_baseline": {
+        "reference_candidate_rest_mae": 0.0,
+        "reference_candidate_limit_mae": 0.0,
+        "max_mae": 0.0,
+        "threshold": 0.005,
+        "predicted_status": "pass"
+      },
+      "model_call": {
+        "status": "completed",
+        "model": "k3-256k",
+        "usage": {
+          "prompt_tokens": 557,
+          "completion_tokens": 1453,
+          "total_tokens": 2010,
+          "cached_tokens": 82,
+          "completion_tokens_details": {
+            "reasoning_tokens": 1409
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 82
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 47475.4073160002
+      },
+      "prediction": {
+        "verdict": "pass",
+        "motion": "The reference part swings outward to the right from rest to limit, and the candidate follows the same rightward outward direction.",
+        "format_valid": true
+      },
+      "posthoc": {
+        "gold_status": "pass",
+        "human_status": "pass",
+        "pass_fail_correct": true,
+        "baseline_correct": true
+      }
+    },
+    {
+      "case_id": "l0-2bac52a22825",
+      "kind": "joint_axis",
+      "image_sha256": "a36b420d906683b69c33cd758befe08e522eab999d79c52b51cc1314d6ccefdf",
+      "pixel_baseline": {
+        "reference_candidate_rest_mae": 0.0,
+        "reference_candidate_limit_mae": 0.023332523182034492,
+        "max_mae": 0.023332523182034492,
+        "threshold": 0.005,
+        "predicted_status": "fail"
+      },
+      "model_call": {
+        "status": "completed",
+        "model": "k3-256k",
+        "usage": {
+          "prompt_tokens": 557,
+          "completion_tokens": 1395,
+          "total_tokens": 1952,
+          "cached_tokens": 82,
+          "completion_tokens_details": {
+            "reasoning_tokens": 1354
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 82
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 50266.734927892685
+      },
+      "prediction": {
+        "verdict": "fail",
+        "motion": "The reference opens/extends toward the right, while the candidate moves toward the opposite left side.",
+        "format_valid": true
+      },
+      "posthoc": {
+        "gold_status": "fail",
+        "human_status": "fail",
+        "pass_fail_correct": true,
+        "baseline_correct": true
+      }
+    },
+    {
+      "case_id": "l0-36a01687ac68",
+      "kind": "joint_axis",
+      "image_sha256": "519ecbec12aeea9a6a47d5f786d7e5405641f2a95a3c9f621feff5eb63e7c859",
+      "pixel_baseline": {
+        "reference_candidate_rest_mae": 0.0,
+        "reference_candidate_limit_mae": 0.016783790662884712,
+        "max_mae": 0.016783790662884712,
+        "threshold": 0.005,
+        "predicted_status": "fail"
+      },
+      "model_call": {
+        "status": "completed",
+        "model": "k3-256k",
+        "usage": {
+          "prompt_tokens": 557,
+          "completion_tokens": 1036,
+          "total_tokens": 1593,
+          "cached_tokens": 82,
+          "completion_tokens_details": {
+            "reasoning_tokens": 985
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 82
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 43166.90222208854
+      },
+      "prediction": {
+        "verdict": "fail",
+        "motion": "The normal/reference motion extends a part downward from the block, while the candidate moves a piece sideways out to the right, so their directions do not match.",
+        "format_valid": true
+      },
+      "posthoc": {
+        "gold_status": "fail",
+        "human_status": "fail",
+        "pass_fail_correct": true,
+        "baseline_correct": true
+      }
+    },
+    {
+      "case_id": "l0-3b82bd9c5729",
+      "kind": "joint_axis",
+      "image_sha256": "411c7e179dbb3951e2ee29129ff607b51dab11f47308fe8c8fc5485e6c8c0496",
+      "pixel_baseline": {
+        "reference_candidate_rest_mae": 0.0,
+        "reference_candidate_limit_mae": 0.04399402067065239,
+        "max_mae": 0.04399402067065239,
+        "threshold": 0.005,
+        "predicted_status": "fail"
+      },
+      "model_call": {
+        "status": "completed",
+        "model": "k3-256k",
+        "usage": {
+          "prompt_tokens": 557,
+          "completion_tokens": 694,
+          "total_tokens": 1251,
+          "cached_tokens": 82,
+          "completion_tokens_details": {
+            "reasoning_tokens": 642
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 82
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 30754.99409995973
+      },
+      "prediction": {
+        "verdict": "fail",
+        "motion": "The reference yaws the panel out-of-plane from face-on to edge-on toward the disk, while the candidate rotates the panel in-plane into a diagonal tilt.",
+        "format_valid": true
+      },
+      "posthoc": {
+        "gold_status": "fail",
+        "human_status": "fail",
+        "pass_fail_correct": true,
+        "baseline_correct": true
+      }
+    },
+    {
+      "case_id": "l0-44bdad092cb1",
+      "kind": "clean",
+      "image_sha256": "22015a2ab83e75fa1604d0242d662d4677c8216fedaf929d038d73dc599d566b",
+      "pixel_baseline": {
+        "reference_candidate_rest_mae": 0.0,
+        "reference_candidate_limit_mae": 0.0,
+        "max_mae": 0.0,
+        "threshold": 0.005,
+        "predicted_status": "pass"
+      },
+      "model_call": {
+        "status": "completed",
+        "model": "k3-256k",
+        "usage": {
+          "prompt_tokens": 557,
+          "completion_tokens": 3304,
+          "total_tokens": 3861,
+          "cached_tokens": 82,
+          "completion_tokens_details": {
+            "reasoning_tokens": 3262
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 82
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 100324.02503699996
+      },
+      "prediction": {
+        "verdict": "pass",
+        "motion": "The normal and candidate motions both extend the inner section outward and swing the lower panel downward in the same direction.",
+        "format_valid": true
+      },
+      "posthoc": {
+        "gold_status": "pass",
+        "human_status": "pass",
+        "pass_fail_correct": true,
+        "baseline_correct": true
+      }
+    },
+    {
+      "case_id": "l0-773ea8b2c110",
+      "kind": "joint_axis",
+      "image_sha256": "d16421a8b32f6ca1fbd34c5b75400ba4e259197db6827e9aec96d47cdc840fab",
+      "pixel_baseline": {
+        "reference_candidate_rest_mae": 0.0,
+        "reference_candidate_limit_mae": 0.04776455834507942,
+        "max_mae": 0.04776455834507942,
+        "threshold": 0.005,
+        "predicted_status": "fail"
+      },
+      "model_call": {
+        "status": "completed",
+        "model": "k3-256k",
+        "usage": {
+          "prompt_tokens": 557,
+          "completion_tokens": 454,
+          "total_tokens": 1011,
+          "cached_tokens": 82,
+          "completion_tokens_details": {
+            "reasoning_tokens": 408
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 82
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 14818.64857499022
+      },
+      "prediction": {
+        "verdict": "fail",
+        "motion": "The reference extends/swings mainly to the right while staying roughly horizontal, whereas the candidate folds downward into a vertical L-shaped pose.",
+        "format_valid": true
+      },
+      "posthoc": {
+        "gold_status": "fail",
+        "human_status": "fail",
+        "pass_fail_correct": true,
+        "baseline_correct": true
+      }
+    },
+    {
+      "case_id": "l0-92541cdf9298",
+      "kind": "clean",
+      "image_sha256": "a85312840a336cdbf12183154c1ea3d8aba9b6c77b4327a522e055cef8e79e33",
+      "pixel_baseline": {
+        "reference_candidate_rest_mae": 0.0,
+        "reference_candidate_limit_mae": 0.0,
+        "max_mae": 0.0,
+        "threshold": 0.005,
+        "predicted_status": "pass"
+      },
+      "model_call": {
+        "status": "completed",
+        "model": "k3-256k",
+        "usage": {
+          "prompt_tokens": 557,
+          "completion_tokens": 1369,
+          "total_tokens": 1926,
+          "cached_tokens": 82,
+          "completion_tokens_details": {
+            "reasoning_tokens": 1324
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 82
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 49459.081097040325
+      },
+      "prediction": {
+        "verdict": "pass",
+        "motion": "The reference and candidate both go from compact rest to extended limit by sliding the right segment outward in the same rightward direction.",
+        "format_valid": true
+      },
+      "posthoc": {
+        "gold_status": "pass",
+        "human_status": "pass",
+        "pass_fail_correct": true,
+        "baseline_correct": true
+      }
+    },
+    {
+      "case_id": "l0-9af6bfe1a9ee",
+      "kind": "clean",
+      "image_sha256": "06b10a18801059c3489fe2ce63863bb79acb5f04d80012a0278533707e3d963c",
+      "pixel_baseline": {
+        "reference_candidate_rest_mae": 0.0,
+        "reference_candidate_limit_mae": 0.0,
+        "max_mae": 0.0,
+        "threshold": 0.005,
+        "predicted_status": "pass"
+      },
+      "model_call": {
+        "status": "completed",
+        "model": "k3-256k",
+        "usage": {
+          "prompt_tokens": 557,
+          "completion_tokens": 2653,
+          "total_tokens": 3210,
+          "cached_tokens": 82,
+          "completion_tokens_details": {
+            "reasoning_tokens": 2605
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 82
+          }
+        },
+        "finish_reason": "stop",
+        "elapsed_ms": 59672.377564013004
+      },
+      "prediction": {
+        "verdict": "pass",
+        "motion": "The candidate moves in the same direction as the reference, rotating the plate/knob from the frontal rest pose toward the right-side limit pose.",
+        "format_valid": true
+      },
+      "posthoc": {
+        "gold_status": "pass",
+        "human_status": "pass",
+        "pass_fail_correct": true,
+        "baseline_correct": true
+      }
+    }
+  ],
+  "boundaries": {
+    "training_labels_created": false,
+    "api_output_used_as_label": false,
+    "test_accessed": false,
+    "old_pending_manifest_used_for_selection": false
+  }
+}

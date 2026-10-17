@@ -1,0 +1,35 @@
+{
+  "case_id": "l0-2bac52a22825",
+  "kind": "joint_axis",
+  "image_sha256": "a36b420d906683b69c33cd758befe08e522eab999d79c52b51cc1314d6ccefdf",
+  "pixel_baseline": {
+    "reference_candidate_rest_mae": 0.0,
+    "reference_candidate_limit_mae": 0.023332523182034492,
+    "max_mae": 0.023332523182034492,
+    "threshold": 0.005,
+    "predicted_status": "fail"
+  },
+  "model_call": {
+    "status": "completed",
+    "model": "k3-256k",
+    "usage": {
+      "prompt_tokens": 557,
+      "completion_tokens": 1395,
+      "total_tokens": 1952,
+      "cached_tokens": 82,
+      "completion_tokens_details": {
+        "reasoning_tokens": 1354
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 82
+      }
+    },
+    "finish_reason": "stop",
+    "elapsed_ms": 50266.734927892685
+  },
+  "prediction": {
+    "verdict": "fail",
+    "motion": "The reference opens/extends toward the right, while the candidate moves toward the opposite left side.",
+    "format_valid": true
+  }
+}

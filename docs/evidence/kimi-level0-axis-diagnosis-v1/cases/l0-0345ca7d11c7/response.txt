@@ -1,0 +1,2 @@
+verdict: fail
+motion: the reference folds edge-on around a vertical hinge, while the candidate swings the panel clockwise/down-right in the image plane, so the motion directions differ.

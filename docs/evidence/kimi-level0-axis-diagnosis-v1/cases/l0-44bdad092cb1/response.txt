@@ -1,0 +1,2 @@
+verdict: pass
+motion: The normal and candidate motions both extend the inner section outward and swing the lower panel downward in the same direction.

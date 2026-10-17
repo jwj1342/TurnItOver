@@ -1,0 +1,35 @@
+{
+  "case_id": "l0-20f05b0baaf3",
+  "kind": "clean",
+  "image_sha256": "41be2d3f56c8cf34b9b1a4e7ee420a13881d962620fa9dce13700bf9fc47bc18",
+  "pixel_baseline": {
+    "reference_candidate_rest_mae": 0.0,
+    "reference_candidate_limit_mae": 0.0,
+    "max_mae": 0.0,
+    "threshold": 0.005,
+    "predicted_status": "pass"
+  },
+  "model_call": {
+    "status": "completed",
+    "model": "k3-256k",
+    "usage": {
+      "prompt_tokens": 557,
+      "completion_tokens": 1453,
+      "total_tokens": 2010,
+      "cached_tokens": 82,
+      "completion_tokens_details": {
+        "reasoning_tokens": 1409
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 82
+      }
+    },
+    "finish_reason": "stop",
+    "elapsed_ms": 47475.4073160002
+  },
+  "prediction": {
+    "verdict": "pass",
+    "motion": "The reference part swings outward to the right from rest to limit, and the candidate follows the same rightward outward direction.",
+    "format_valid": true
+  }
+}

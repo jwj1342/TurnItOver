@@ -1,0 +1,35 @@
+{
+  "case_id": "l0-773ea8b2c110",
+  "kind": "joint_axis",
+  "image_sha256": "d16421a8b32f6ca1fbd34c5b75400ba4e259197db6827e9aec96d47cdc840fab",
+  "pixel_baseline": {
+    "reference_candidate_rest_mae": 0.0,
+    "reference_candidate_limit_mae": 0.04776455834507942,
+    "max_mae": 0.04776455834507942,
+    "threshold": 0.005,
+    "predicted_status": "fail"
+  },
+  "model_call": {
+    "status": "completed",
+    "model": "k3-256k",
+    "usage": {
+      "prompt_tokens": 557,
+      "completion_tokens": 454,
+      "total_tokens": 1011,
+      "cached_tokens": 82,
+      "completion_tokens_details": {
+        "reasoning_tokens": 408
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 82
+      }
+    },
+    "finish_reason": "stop",
+    "elapsed_ms": 14818.64857499022
+  },
+  "prediction": {
+    "verdict": "fail",
+    "motion": "The reference extends/swings mainly to the right while staying roughly horizontal, whereas the candidate folds downward into a vertical L-shaped pose.",
+    "format_valid": true
+  }
+}

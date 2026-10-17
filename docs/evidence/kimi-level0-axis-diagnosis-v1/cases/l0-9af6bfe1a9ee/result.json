@@ -1,0 +1,35 @@
+{
+  "case_id": "l0-9af6bfe1a9ee",
+  "kind": "clean",
+  "image_sha256": "06b10a18801059c3489fe2ce63863bb79acb5f04d80012a0278533707e3d963c",
+  "pixel_baseline": {
+    "reference_candidate_rest_mae": 0.0,
+    "reference_candidate_limit_mae": 0.0,
+    "max_mae": 0.0,
+    "threshold": 0.005,
+    "predicted_status": "pass"
+  },
+  "model_call": {
+    "status": "completed",
+    "model": "k3-256k",
+    "usage": {
+      "prompt_tokens": 557,
+      "completion_tokens": 2653,
+      "total_tokens": 3210,
+      "cached_tokens": 82,
+      "completion_tokens_details": {
+        "reasoning_tokens": 2605
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 82
+      }
+    },
+    "finish_reason": "stop",
+    "elapsed_ms": 59672.377564013004
+  },
+  "prediction": {
+    "verdict": "pass",
+    "motion": "The candidate moves in the same direction as the reference, rotating the plate/knob from the frontal rest pose toward the right-side limit pose.",
+    "format_valid": true
+  }
+}

@@ -1,0 +1,2 @@
+verdict: fail
+motion: The reference extends/swings mainly to the right while staying roughly horizontal, whereas the candidate folds downward into a vertical L-shaped pose.

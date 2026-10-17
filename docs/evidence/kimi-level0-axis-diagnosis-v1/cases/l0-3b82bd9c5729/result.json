@@ -1,0 +1,35 @@
+{
+  "case_id": "l0-3b82bd9c5729",
+  "kind": "joint_axis",
+  "image_sha256": "411c7e179dbb3951e2ee29129ff607b51dab11f47308fe8c8fc5485e6c8c0496",
+  "pixel_baseline": {
+    "reference_candidate_rest_mae": 0.0,
+    "reference_candidate_limit_mae": 0.04399402067065239,
+    "max_mae": 0.04399402067065239,
+    "threshold": 0.005,
+    "predicted_status": "fail"
+  },
+  "model_call": {
+    "status": "completed",
+    "model": "k3-256k",
+    "usage": {
+      "prompt_tokens": 557,
+      "completion_tokens": 694,
+      "total_tokens": 1251,
+      "cached_tokens": 82,
+      "completion_tokens_details": {
+        "reasoning_tokens": 642
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 82
+      }
+    },
+    "finish_reason": "stop",
+    "elapsed_ms": 30754.99409995973
+  },
+  "prediction": {
+    "verdict": "fail",
+    "motion": "The reference yaws the panel out-of-plane from face-on to edge-on toward the disk, while the candidate rotates the panel in-plane into a diagonal tilt.",
+    "format_valid": true
+  }
+}

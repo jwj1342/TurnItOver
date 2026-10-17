@@ -1,0 +1,2 @@
+verdict: fail
+motion: The reference yaws the panel out-of-plane from face-on to edge-on toward the disk, while the candidate rotates the panel in-plane into a diagonal tilt.

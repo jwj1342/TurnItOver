@@ -1,0 +1,2 @@
+verdict: fail
+motion: The reference opens/extends toward the right, while the candidate moves toward the opposite left side.

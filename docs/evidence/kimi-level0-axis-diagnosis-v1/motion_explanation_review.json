@@ -1,0 +1,19 @@
+{
+  "reviewer": "posthoc visual audit",
+  "rubric": "A response passes only if it explicitly compares reference and candidate rest-to-limit direction, correctly states match versus mismatch, and does not misclassify the USB prismatic motion as rotation.",
+  "cases": [
+    {"case_id": "l0-0345ca7d11c7", "image_consistent": true, "note": "Correctly contrasts edge-on reference folding with the diagonal candidate swing."},
+    {"case_id": "l0-18bffea53090", "image_consistent": true, "note": "Correctly identifies the shared broad-to-edge-on motion."},
+    {"case_id": "l0-20f05b0baaf3", "image_consistent": true, "note": "Correctly identifies matching outward/rightward motion."},
+    {"case_id": "l0-2bac52a22825", "image_consistent": true, "note": "Correctly contrasts the reference extension with the opposite folded candidate trajectory."},
+    {"case_id": "l0-36a01687ac68", "image_consistent": true, "note": "Correctly contrasts downward reference motion with the candidate's sideways departure."},
+    {"case_id": "l0-3b82bd9c5729", "image_consistent": true, "note": "Correctly contrasts out-of-plane yaw with in-plane diagonal tilt."},
+    {"case_id": "l0-44bdad092cb1", "image_consistent": true, "note": "Correctly identifies the matching outward and downward motion."},
+    {"case_id": "l0-773ea8b2c110", "image_consistent": true, "note": "Correctly identifies horizontal reference sliding versus a downward folded candidate; it does not assume rotation."},
+    {"case_id": "l0-92541cdf9298", "image_consistent": true, "note": "Correctly identifies matching rightward prismatic sliding."},
+    {"case_id": "l0-9af6bfe1a9ee", "image_consistent": true, "note": "Correctly identifies matching rotational motion."}
+  ],
+  "total": 10,
+  "image_consistent": 10,
+  "incorrect": 0
+}

@@ -1,0 +1,3 @@
+The image is a 2x2 motion comparison. Top row: reference rest, reference limit. Bottom row: candidate rest, candidate limit. Decide whether the candidate motion matches the reference. Reply in exactly two lines:
+verdict: pass or fail
+motion: one sentence comparing the normal and candidate motion directions.

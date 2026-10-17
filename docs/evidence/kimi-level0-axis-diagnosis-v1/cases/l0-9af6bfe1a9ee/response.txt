@@ -1,0 +1,2 @@
+verdict: pass
+motion: The candidate moves in the same direction as the reference, rotating the plate/knob from the frontal rest pose toward the right-side limit pose.

@@ -1,0 +1,2 @@
+verdict: pass
+motion: The reference and candidate both go from compact rest to extended limit by sliding the right segment outward in the same rightward direction.

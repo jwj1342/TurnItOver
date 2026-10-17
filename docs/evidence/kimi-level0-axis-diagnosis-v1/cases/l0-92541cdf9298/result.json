@@ -1,0 +1,35 @@
+{
+  "case_id": "l0-92541cdf9298",
+  "kind": "clean",
+  "image_sha256": "a85312840a336cdbf12183154c1ea3d8aba9b6c77b4327a522e055cef8e79e33",
+  "pixel_baseline": {
+    "reference_candidate_rest_mae": 0.0,
+    "reference_candidate_limit_mae": 0.0,
+    "max_mae": 0.0,
+    "threshold": 0.005,
+    "predicted_status": "pass"
+  },
+  "model_call": {
+    "status": "completed",
+    "model": "k3-256k",
+    "usage": {
+      "prompt_tokens": 557,
+      "completion_tokens": 1369,
+      "total_tokens": 1926,
+      "cached_tokens": 82,
+      "completion_tokens_details": {
+        "reasoning_tokens": 1324
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 82
+      }
+    },
+    "finish_reason": "stop",
+    "elapsed_ms": 49459.081097040325
+  },
+  "prediction": {
+    "verdict": "pass",
+    "motion": "The reference and candidate both go from compact rest to extended limit by sliding the right segment outward in the same rightward direction.",
+    "format_valid": true
+  }
+}
