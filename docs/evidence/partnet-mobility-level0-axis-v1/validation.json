@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "assets": 5,
+  "cases": 10,
+  "variants_per_asset": 2,
+  "pending_human_review": 10,
+  "clean_checker_passed": 5,
+  "joint_axis_checker_rejected": 5,
+  "axis_angle_deg": 90.0,
+  "part_offset_cases": 0,
+  "test_rows_touched": 0,
+  "model_calls": 0,
+  "sft_training_runs": 0,
+  "native_image_size": [
+    256,
+    256
+  ]
+}
