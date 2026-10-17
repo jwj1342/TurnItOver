@@ -1,0 +1,38 @@
+{
+  "status": "complete",
+  "task": "motion_diagnosis",
+  "supervision": "evidence",
+  "examples": 108,
+  "epochs": 2,
+  "steps_planned": 216,
+  "seed": 20261016,
+  "learning_rate": 0.0002,
+  "lora": {
+    "rank": 8,
+    "alpha": 16,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ]
+  },
+  "dataset": "/91004t2/laq/code/ThreejsJudge/TurnItOver-sft/output/motion-grounded-v2-20261017/direct-panels",
+  "dataset_manifest_sha256": "bfaf67fd2e4ce5c6470c0b9208aece924bfb79009161371298d736e4fa310e10",
+  "train_sha256": "f976cf60978fef372d42d581c18ce73fd7b34433cf2d21831840d45820e4d4ad",
+  "base_model": "/91004t2/laq/code/ThreejsJudge/TurnItOver/models/Qwen3-VL-2B-Instruct",
+  "base_model_config_sha256": "bec4b3d446efa05807365c9e1cec03ac590836879d02f3a6da879971154bdd3b",
+  "python": "3.12.12",
+  "torch": "2.6.0+cu124",
+  "cuda": "12.4",
+  "gpu": "NVIDIA GeForce RTX 4090 D",
+  "steps": 216,
+  "checkpoint": "checkpoint",
+  "loss": {
+    "first": 0.9200347065925598,
+    "last": 0.012292356230318546,
+    "minimum": 0.003007474122568965,
+    "mean": 0.0776671733754618
+  },
+  "checkpoint_sha256": "c8dd52d3d29a802262f4bae0b30d8d0a32b01c0fc815f7369de19aee53c47155"
+}

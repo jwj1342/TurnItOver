@@ -87,3 +87,7 @@ python scripts/compare_qwen_sft.py --base output/partnet-qwen3vl2b-base-val-v3/m
 Validation 只有7个原始物体、28例，且类别来自同一 PartNet-Mobility来源；当前指标不能估计跨来源泛化。数据只有 `fail/uncertain`，无法评估有证据的 `pass`。观察序列由私有教师预先取得，本轮只比较固定观察后的诊断与停止，不评价主动动作。普通组与证据组 target token 数不同，虽然样本、输入、步数、优化器和 seed 相同，token 级监督量并非完全相等。
 
 下一轮优先进行：多 seed 置信区间；按 target token 或 optimizer token 匹配预算；将单缺陷与组合缺陷分层；加入自然错误人工 Gold；在不读取隐藏反事实的条件下训练动作/停止联合策略。完成 Validation 方案冻结前不运行 Part 2 Test。
+
+## 2026-10-17：Motion-grounded SFT v2 已完成
+
+两组 Qwen3-VL-2B 像素面板对照各完成216步真实GPU训练和三组评测；显式运动比较中间监督未改善冻结B上的offset（均0/4）、clean（均0/4）或完整诊断（均4/12）。停止重复2B LoRA，暂不接入v5停止/主动策略；上述早期后续计划不作为本轮继续训练依据。完整结果、审计、checkpoint路径和复现命令见[本轮报告](evidence/motion-grounded-v2-20261017/REPORT.md)。

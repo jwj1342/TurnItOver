@@ -1,0 +1,16 @@
+{
+  "reviewer": "/root/integrity_audit",
+  "model": "gpt-6-astra",
+  "reasoning": "ultra",
+  "review_independence": "same-family",
+  "final_signoff": "unavailable_usage_limit",
+  "delivered_verifications": [
+    "New direct-panels/intermediate-panels independently PASS: 108 train + 30 validation; identical visible prompts/images/diagnosis targets.",
+    "Both paired trainings complete: each 216 sequential finite steps/108 unique IDs; checkpoint SHA and train hashes match.",
+    "Independent alternative raw rescoring agrees on all 536 rows across the 10 final outputs (class/evidence/full).",
+    "Direct image/no-image CATEGORY identical 30/30, full diagnosis identical 27/30; intermediate both25/30.",
+    "All 10 final score dirs verify common scorer SHA and group counts exactly recompute from scored rows."
+  ],
+  "last_error": "Agent errored: You have hit your usage limit",
+  "trace_kind": "executor_transcription_of_delivered_review_messages"
+}

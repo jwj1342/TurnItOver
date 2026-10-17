@@ -50,6 +50,9 @@ def main(args):
                     evidence_ok=any(set(pair)<=set(steps) for pair in pairs)
                 elif predicted=="offset":
                     evidence_ok=bool(steps) and set(steps)<=set(source["gold"]["comparison"]["static_steps"])
+            public=json.loads(source['messages'][0]['content'].split('Public input: ',1)[1])
+            legal_steps={s['step'] for s in public['states']}
+            evidence_ok=evidence_ok and all(type(s) is int for s in steps) and len(set(steps))==len(steps) and set(steps)<=legal_steps
             full=valid and class_ok and joint_ok and part_ok and evidence_ok
             comparison=pred.get("comparison",{})
             expected_comparison=source.get("gold",{}).get("comparison",{})
@@ -66,7 +69,7 @@ def main(args):
                  "full_correct":full,"comparison_scores":comparison_scores,"expected_comparison":expected_comparison,"error":error,"raw":raw,"input_tokens":int(inputs["input_ids"].shape[1]),
                  "output_tokens":int(ids.shape[1]),"seconds":time.perf_counter()-start}
             stream.write(json.dumps(row)+"\n");stream.flush();print(json.dumps({k:v for k,v in row.items() if k!='raw'}),flush=True)
-    full_rows=sum(1 for _,_,s in examples if s["condition"]=="full_motion")
+    full_rows=sum(1 for _,_,s in examples if s["condition"].endswith("full_motion"))
     metrics={"status":"complete","n":counts["n"],"full_motion_n":full_rows,
       **{k:counts[k]/counts["n"] for k in ("valid","class_correct","joint_correct","part_correct","evidence_correct","full_correct")},
       "comparison_correct":{k:counts["comparison_"+k] for k in ("static_rest","static_steps","motion_change","motion_pairs")},

@@ -1,0 +1,29 @@
+{
+  "audit_skill": "experiment-audit",
+  "verdict": "WARN",
+  "integrity_status": "warn",
+  "acceptance_status": "provisional",
+  "review_independence": "same-family",
+  "final_independent_signoff": false,
+  "final_signoff_unavailable_reason": "reviewer_usage_limit",
+  "independent_initial_verdict": "FAIL_old_frozen_evidence_scoring",
+  "final_deterministic_check": "536 rows independently verified across 10 uniformly rescored evaluations",
+  "reviewer_model": "gpt-6-astra",
+  "reviewer_reasoning": "ultra",
+  "trace_path": "docs/evidence/motion-grounded-v2-20261017/reviewer-trace.json",
+  "scorer_sha256": "09f8575ed2f7a0d9677d60f7de09a917132ade95b1c55b66fba3cfc854f83e60",
+  "reproduction_check": {
+    "status": "passed",
+    "rows": 616,
+    "row_json_exact": true,
+    "all_image_hashes_match": true,
+    "executor": "primary agent",
+    "gpu_training_repeated": false
+  },
+  "claim_supported": {
+    "reliable_diagnosis_improvement": false,
+    "offset_solved": false,
+    "stop_repeating_2b_lora": true
+  },
+  "author": "executor_consolidation_of_independent_review_and_final_checks"
+}

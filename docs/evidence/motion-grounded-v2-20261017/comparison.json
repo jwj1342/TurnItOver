@@ -1,0 +1,2815 @@
+{
+  "status": "complete",
+  "scorer_sha256": "09f8575ed2f7a0d9677d60f7de09a917132ade95b1c55b66fba3cfc854f83e60",
+  "paired_train_rows": 108,
+  "steps_each": 216,
+  "frozen_sources_hash_unchanged": true,
+  "results": {
+    "pixel-direct-main": {
+      "status": "complete",
+      "n": 30,
+      "dataset_sha256": "046ae9ff9c3f4eb78411e02c509e2467114b455f95bafadbdd34b9e1bc26821a",
+      "predictions_sha256": "070397f11bd942826244b268c89fc365ff6430a660870c77368bdc01374624ab",
+      "frozen_gold_sha256": "004bb228e3895c35156ba3e226b733760342c7e830c63b0313fa0866453428a9",
+      "scorer_sha256": "09f8575ed2f7a0d9677d60f7de09a917132ade95b1c55b66fba3cfc854f83e60",
+      "groups": {
+        "full_motion": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 5,
+          "raw_class_correct": 5,
+          "full_correct": 4,
+          "finding": 15,
+          "supported_finding": 5,
+          "unsupported_finding": 11,
+          "evidence_supported": 5,
+          "defect_n": 9,
+          "defect_part_correct": 5,
+          "axis_n": 5,
+          "axis_joint_correct": 5,
+          "abstention_n": 1,
+          "abstention_correct": 0,
+          "confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "uncertain": {
+              "axis": 1
+            },
+            "clean": {
+              "axis": 5
+            },
+            "offset": {
+              "axis": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "offset": {
+              "axis": 5
+            },
+            "clean": {
+              "axis": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 5,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 0
+            }
+          }
+        },
+        "rest_only": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 12,
+          "raw_class_correct": 12,
+          "full_correct": 12,
+          "finding": 0,
+          "supported_finding": 0,
+          "unsupported_finding": 0,
+          "evidence_supported": 12,
+          "abstention_n": 12,
+          "abstention_correct": 12,
+          "defect_n": 3,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 12
+            },
+            "offset": {
+              "uncertain": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 5
+            },
+            "offset": {
+              "uncertain": 5
+            },
+            "clean": {
+              "uncertain": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 5,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        }
+      }
+    },
+    "pixel-intermediate-main": {
+      "status": "complete",
+      "n": 30,
+      "dataset_sha256": "86a099e81445cd4de8da478bcfc33ae1bfda387fa0388ef9d8e880dec196ef1e",
+      "predictions_sha256": "c42cdd7b0c977c33850d51d45ff1ffd718c43c5be189d5ee4bbf6c82012daeac",
+      "frozen_gold_sha256": "004bb228e3895c35156ba3e226b733760342c7e830c63b0313fa0866453428a9",
+      "scorer_sha256": "09f8575ed2f7a0d9677d60f7de09a917132ade95b1c55b66fba3cfc854f83e60",
+      "groups": {
+        "full_motion": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 6,
+          "raw_class_correct": 6,
+          "full_correct": 2,
+          "finding": 13,
+          "supported_finding": 5,
+          "unsupported_finding": 12,
+          "evidence_supported": 6,
+          "defect_n": 9,
+          "defect_part_correct": 1,
+          "axis_n": 5,
+          "axis_joint_correct": 5,
+          "abstention_n": 1,
+          "abstention_correct": 0,
+          "confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "uncertain": {
+              "clean": 1
+            },
+            "clean": {
+              "clean": 1,
+              "axis": 4
+            },
+            "offset": {
+              "axis": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "offset": {
+              "clean": 1,
+              "axis": 4
+            },
+            "clean": {
+              "clean": 1,
+              "axis": 4
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 4,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 1
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 0
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 0
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 0
+            }
+          }
+        },
+        "rest_only": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 12,
+          "raw_class_correct": 12,
+          "full_correct": 12,
+          "finding": 0,
+          "supported_finding": 0,
+          "unsupported_finding": 0,
+          "evidence_supported": 12,
+          "abstention_n": 12,
+          "abstention_correct": 12,
+          "defect_n": 3,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 12
+            },
+            "offset": {
+              "uncertain": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 5
+            },
+            "offset": {
+              "uncertain": 5
+            },
+            "clean": {
+              "uncertain": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 5,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        }
+      }
+    },
+    "pixel-direct-transfer": {
+      "status": "complete",
+      "n": 32,
+      "dataset_sha256": "95571b97d61b09a2421743850ce750efb8c18306329c73b1c17cee8d02780d9f",
+      "predictions_sha256": "bb532c708c839c97524df6ae2641d3935366ea404edbd8932f90b631f4a46224",
+      "frozen_gold_sha256": "004bb228e3895c35156ba3e226b733760342c7e830c63b0313fa0866453428a9",
+      "scorer_sha256": "09f8575ed2f7a0d9677d60f7de09a917132ade95b1c55b66fba3cfc854f83e60",
+      "groups": {
+        "extra/full_motion": {
+          "n": 4,
+          "valid": 4,
+          "class_correct": 0,
+          "raw_class_correct": 0,
+          "full_correct": 0,
+          "finding": 4,
+          "supported_finding": 0,
+          "unsupported_finding": 4,
+          "evidence_supported": 0,
+          "abstention_n": 2,
+          "abstention_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "axis": 2
+            },
+            "clean": {
+              "axis": 2
+            }
+          },
+          "latent_confusion": {
+            "offset": {
+              "axis": 2
+            },
+            "clean": {
+              "axis": 2
+            }
+          },
+          "triplets": 0,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_10797": {
+              "n": 2,
+              "class_correct": 0,
+              "full_correct": 0
+            },
+            "PM_45759": {
+              "n": 2,
+              "class_correct": 0,
+              "full_correct": 0
+            }
+          }
+        },
+        "extra/rest_only": {
+          "n": 4,
+          "valid": 4,
+          "class_correct": 4,
+          "raw_class_correct": 4,
+          "full_correct": 4,
+          "finding": 0,
+          "supported_finding": 0,
+          "unsupported_finding": 0,
+          "evidence_supported": 4,
+          "abstention_n": 4,
+          "abstention_correct": 4,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 4
+            }
+          },
+          "latent_confusion": {
+            "offset": {
+              "uncertain": 2
+            },
+            "clean": {
+              "uncertain": 2
+            }
+          },
+          "triplets": 0,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_10797": {
+              "n": 2,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_45759": {
+              "n": 2,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        },
+        "frozen_B/full_motion": {
+          "n": 12,
+          "valid": 12,
+          "class_correct": 4,
+          "raw_class_correct": 4,
+          "full_correct": 4,
+          "finding": 12,
+          "supported_finding": 4,
+          "unsupported_finding": 8,
+          "evidence_supported": 4,
+          "defect_n": 8,
+          "defect_part_correct": 5,
+          "axis_n": 4,
+          "axis_joint_correct": 4,
+          "confusion": {
+            "axis": {
+              "axis": 4
+            },
+            "offset": {
+              "axis": 4
+            },
+            "clean": {
+              "axis": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 4
+            },
+            "offset": {
+              "axis": 4
+            },
+            "clean": {
+              "axis": 4
+            }
+          },
+          "triplets": 4,
+          "collapsed_triplets": 4,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            }
+          }
+        },
+        "frozen_C/rest_only": {
+          "n": 12,
+          "valid": 12,
+          "class_correct": 8,
+          "raw_class_correct": 8,
+          "full_correct": 8,
+          "finding": 0,
+          "supported_finding": 0,
+          "unsupported_finding": 0,
+          "evidence_supported": 8,
+          "abstention_n": 8,
+          "abstention_correct": 8,
+          "defect_n": 4,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 8
+            },
+            "offset": {
+              "uncertain": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 4
+            },
+            "offset": {
+              "uncertain": 4
+            },
+            "clean": {
+              "uncertain": 4
+            }
+          },
+          "triplets": 4,
+          "collapsed_triplets": 4,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        }
+      }
+    },
+    "pixel-intermediate-transfer": {
+      "status": "complete",
+      "n": 32,
+      "dataset_sha256": "6ec6f5a05c43cf8ce2fdd8be3a4199a50bc2b4509cf283b6425377659f5bdb2e",
+      "predictions_sha256": "801856b1645242bf869f0e02a61fbd00e7cd48ebb7e130d42b55a20b599c8499",
+      "frozen_gold_sha256": "004bb228e3895c35156ba3e226b733760342c7e830c63b0313fa0866453428a9",
+      "scorer_sha256": "09f8575ed2f7a0d9677d60f7de09a917132ade95b1c55b66fba3cfc854f83e60",
+      "groups": {
+        "extra/full_motion": {
+          "n": 4,
+          "valid": 4,
+          "class_correct": 1,
+          "raw_class_correct": 1,
+          "full_correct": 1,
+          "finding": 3,
+          "supported_finding": 0,
+          "unsupported_finding": 3,
+          "evidence_supported": 1,
+          "abstention_n": 2,
+          "abstention_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "axis": 2
+            },
+            "clean": {
+              "clean": 1,
+              "axis": 1
+            }
+          },
+          "latent_confusion": {
+            "offset": {
+              "axis": 2
+            },
+            "clean": {
+              "clean": 1,
+              "axis": 1
+            }
+          },
+          "triplets": 0,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_10797": {
+              "n": 2,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_45759": {
+              "n": 2,
+              "class_correct": 0,
+              "full_correct": 0
+            }
+          }
+        },
+        "extra/rest_only": {
+          "n": 4,
+          "valid": 4,
+          "class_correct": 4,
+          "raw_class_correct": 4,
+          "full_correct": 4,
+          "finding": 0,
+          "supported_finding": 0,
+          "unsupported_finding": 0,
+          "evidence_supported": 4,
+          "abstention_n": 4,
+          "abstention_correct": 4,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 4
+            }
+          },
+          "latent_confusion": {
+            "offset": {
+              "uncertain": 2
+            },
+            "clean": {
+              "uncertain": 2
+            }
+          },
+          "triplets": 0,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_10797": {
+              "n": 2,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_45759": {
+              "n": 2,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        },
+        "frozen_B/full_motion": {
+          "n": 12,
+          "valid": 12,
+          "class_correct": 4,
+          "raw_class_correct": 4,
+          "full_correct": 4,
+          "finding": 10,
+          "supported_finding": 4,
+          "unsupported_finding": 6,
+          "evidence_supported": 4,
+          "defect_n": 8,
+          "defect_part_correct": 4,
+          "axis_n": 4,
+          "axis_joint_correct": 4,
+          "confusion": {
+            "axis": {
+              "axis": 4
+            },
+            "offset": {
+              "uncertain": 1,
+              "axis": 3
+            },
+            "clean": {
+              "uncertain": 1,
+              "axis": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 4
+            },
+            "offset": {
+              "uncertain": 1,
+              "axis": 3
+            },
+            "clean": {
+              "uncertain": 1,
+              "axis": 3
+            }
+          },
+          "triplets": 4,
+          "collapsed_triplets": 3,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            }
+          }
+        },
+        "frozen_C/rest_only": {
+          "n": 12,
+          "valid": 12,
+          "class_correct": 8,
+          "raw_class_correct": 8,
+          "full_correct": 8,
+          "finding": 0,
+          "supported_finding": 0,
+          "unsupported_finding": 0,
+          "evidence_supported": 8,
+          "abstention_n": 8,
+          "abstention_correct": 8,
+          "defect_n": 4,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 8
+            },
+            "offset": {
+              "uncertain": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 4
+            },
+            "offset": {
+              "uncertain": 4
+            },
+            "clean": {
+              "uncertain": 4
+            }
+          },
+          "triplets": 4,
+          "collapsed_triplets": 4,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        }
+      }
+    },
+    "pixel-direct-no-images": {
+      "status": "complete",
+      "n": 30,
+      "dataset_sha256": "28bad3d9a202800f3d044c1a9ebf5ee4c15a7a8cdfc68446b0abf2c50ed30289",
+      "predictions_sha256": "e618a31ee38cde7ceaf2a252a5e9a47fafb5d30a41ed1017f1cdbd9515644903",
+      "frozen_gold_sha256": "004bb228e3895c35156ba3e226b733760342c7e830c63b0313fa0866453428a9",
+      "scorer_sha256": "09f8575ed2f7a0d9677d60f7de09a917132ade95b1c55b66fba3cfc854f83e60",
+      "groups": {
+        "full_motion": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 5,
+          "raw_class_correct": 5,
+          "full_correct": 5,
+          "finding": 15,
+          "supported_finding": 5,
+          "unsupported_finding": 10,
+          "evidence_supported": 5,
+          "defect_n": 9,
+          "defect_part_correct": 6,
+          "axis_n": 5,
+          "axis_joint_correct": 5,
+          "abstention_n": 1,
+          "abstention_correct": 0,
+          "confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "uncertain": {
+              "axis": 1
+            },
+            "clean": {
+              "axis": 5
+            },
+            "offset": {
+              "axis": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "offset": {
+              "axis": 5
+            },
+            "clean": {
+              "axis": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 5,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            }
+          }
+        },
+        "rest_only": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 12,
+          "raw_class_correct": 12,
+          "full_correct": 12,
+          "finding": 0,
+          "supported_finding": 0,
+          "unsupported_finding": 0,
+          "evidence_supported": 12,
+          "abstention_n": 12,
+          "abstention_correct": 12,
+          "defect_n": 3,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 12
+            },
+            "offset": {
+              "uncertain": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 5
+            },
+            "offset": {
+              "uncertain": 5
+            },
+            "clean": {
+              "uncertain": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 5,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        }
+      }
+    },
+    "pixel-intermediate-no-images": {
+      "status": "complete",
+      "n": 30,
+      "dataset_sha256": "546dc13cc3a10a4b863e0bb9fdf4f37f603d9251bd819c53489c217c51a51931",
+      "predictions_sha256": "30c717d0ef27fc8c86fbbf96430a89b6d8429b265a3535968b738136616ed7a1",
+      "frozen_gold_sha256": "004bb228e3895c35156ba3e226b733760342c7e830c63b0313fa0866453428a9",
+      "scorer_sha256": "09f8575ed2f7a0d9677d60f7de09a917132ade95b1c55b66fba3cfc854f83e60",
+      "groups": {
+        "full_motion": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 5,
+          "raw_class_correct": 5,
+          "full_correct": 2,
+          "finding": 12,
+          "supported_finding": 4,
+          "unsupported_finding": 11,
+          "evidence_supported": 5,
+          "defect_n": 9,
+          "defect_part_correct": 1,
+          "axis_n": 5,
+          "axis_joint_correct": 4,
+          "abstention_n": 1,
+          "abstention_correct": 0,
+          "confusion": {
+            "axis": {
+              "axis": 4,
+              "clean": 1
+            },
+            "uncertain": {
+              "axis": 1
+            },
+            "clean": {
+              "axis": 4,
+              "clean": 1
+            },
+            "offset": {
+              "axis": 3,
+              "clean": 1
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 4,
+              "clean": 1
+            },
+            "offset": {
+              "axis": 4,
+              "clean": 1
+            },
+            "clean": {
+              "axis": 4,
+              "clean": 1
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 5,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 0
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 0
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 0
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            }
+          }
+        },
+        "rest_only": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 12,
+          "raw_class_correct": 12,
+          "full_correct": 12,
+          "finding": 0,
+          "supported_finding": 0,
+          "unsupported_finding": 0,
+          "evidence_supported": 12,
+          "abstention_n": 12,
+          "abstention_correct": 12,
+          "defect_n": 3,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 12
+            },
+            "offset": {
+              "uncertain": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 5
+            },
+            "offset": {
+              "uncertain": 5
+            },
+            "clean": {
+              "uncertain": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 5,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        }
+      }
+    },
+    "features-direct-main": {
+      "status": "complete",
+      "n": 30,
+      "dataset_sha256": "ce32f9770fe7456f27ccfa8da03408511f25d201a575279ddc75c33527247255",
+      "predictions_sha256": "a579dd146e67b655a85a4b3b74d05c3483387f17c2fffb4c42084eb53ea5707d",
+      "frozen_gold_sha256": "004bb228e3895c35156ba3e226b733760342c7e830c63b0313fa0866453428a9",
+      "scorer_sha256": "09f8575ed2f7a0d9677d60f7de09a917132ade95b1c55b66fba3cfc854f83e60",
+      "groups": {
+        "full_motion": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 14,
+          "raw_class_correct": 14,
+          "full_correct": 10,
+          "finding": 10,
+          "supported_finding": 6,
+          "unsupported_finding": 5,
+          "evidence_supported": 11,
+          "defect_n": 9,
+          "defect_part_correct": 5,
+          "axis_n": 5,
+          "axis_joint_correct": 5,
+          "abstention_n": 1,
+          "abstention_correct": 0,
+          "confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "uncertain": {
+              "offset": 1
+            },
+            "clean": {
+              "clean": 5
+            },
+            "offset": {
+              "offset": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "offset": {
+              "offset": 5
+            },
+            "clean": {
+              "clean": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            }
+          }
+        },
+        "rest_only": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 13,
+          "raw_class_correct": 13,
+          "full_correct": 10,
+          "finding": 5,
+          "supported_finding": 1,
+          "unsupported_finding": 5,
+          "evidence_supported": 11,
+          "abstention_n": 12,
+          "abstention_correct": 10,
+          "defect_n": 3,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 10,
+              "offset": 2
+            },
+            "offset": {
+              "offset": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 5
+            },
+            "offset": {
+              "offset": 5
+            },
+            "clean": {
+              "uncertain": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            }
+          }
+        }
+      }
+    },
+    "features-intermediate-main": {
+      "status": "complete",
+      "n": 30,
+      "dataset_sha256": "d477b094f75f8ed9e9802fd0dfa758dc2aec41861396379396a09d0e24fc270c",
+      "predictions_sha256": "eb1930c84a5126be98dc2240fc567e0bd72f71b5b03d064e7ad4ab8f4c5e2034",
+      "frozen_gold_sha256": "004bb228e3895c35156ba3e226b733760342c7e830c63b0313fa0866453428a9",
+      "scorer_sha256": "09f8575ed2f7a0d9677d60f7de09a917132ade95b1c55b66fba3cfc854f83e60",
+      "groups": {
+        "full_motion": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 13,
+          "raw_class_correct": 13,
+          "full_correct": 11,
+          "finding": 10,
+          "supported_finding": 7,
+          "unsupported_finding": 4,
+          "evidence_supported": 12,
+          "defect_n": 9,
+          "defect_part_correct": 6,
+          "axis_n": 5,
+          "axis_joint_correct": 5,
+          "abstention_n": 1,
+          "abstention_correct": 0,
+          "confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "uncertain": {
+              "axis": 1
+            },
+            "clean": {
+              "clean": 5
+            },
+            "offset": {
+              "offset": 3,
+              "axis": 1
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "offset": {
+              "axis": 2,
+              "offset": 3
+            },
+            "clean": {
+              "clean": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        },
+        "rest_only": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 13,
+          "raw_class_correct": 13,
+          "full_correct": 11,
+          "finding": 5,
+          "supported_finding": 2,
+          "unsupported_finding": 4,
+          "evidence_supported": 12,
+          "abstention_n": 12,
+          "abstention_correct": 10,
+          "defect_n": 3,
+          "defect_part_correct": 1,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 10,
+              "offset": 2
+            },
+            "offset": {
+              "offset": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 5
+            },
+            "offset": {
+              "offset": 5
+            },
+            "clean": {
+              "uncertain": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            }
+          }
+        }
+      }
+    },
+    "features-direct-transfer": {
+      "status": "complete",
+      "n": 146,
+      "dataset_sha256": "593fa4a3fd306a7b55e2393092d47e8697dbe043fb55c001fe5a52a8e91fe212",
+      "predictions_sha256": "7a8bfd873456961bb63e3e255728b57de7ea4279ccec686879b65c88e5c350fb",
+      "frozen_gold_sha256": "004bb228e3895c35156ba3e226b733760342c7e830c63b0313fa0866453428a9",
+      "scorer_sha256": "09f8575ed2f7a0d9677d60f7de09a917132ade95b1c55b66fba3cfc854f83e60",
+      "groups": {
+        "reverse/full_motion": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 14,
+          "raw_class_correct": 14,
+          "full_correct": 10,
+          "finding": 10,
+          "supported_finding": 6,
+          "unsupported_finding": 5,
+          "evidence_supported": 11,
+          "defect_n": 9,
+          "defect_part_correct": 5,
+          "axis_n": 5,
+          "axis_joint_correct": 5,
+          "abstention_n": 1,
+          "abstention_correct": 0,
+          "confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "uncertain": {
+              "offset": 1
+            },
+            "clean": {
+              "clean": 5
+            },
+            "offset": {
+              "offset": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "offset": {
+              "offset": 5
+            },
+            "clean": {
+              "clean": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            }
+          }
+        },
+        "pixels_only/full_motion": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 4,
+          "raw_class_correct": 4,
+          "full_correct": 1,
+          "finding": 15,
+          "supported_finding": 1,
+          "unsupported_finding": 14,
+          "evidence_supported": 1,
+          "defect_n": 9,
+          "defect_part_correct": 3,
+          "axis_n": 5,
+          "axis_joint_correct": 2,
+          "abstention_n": 1,
+          "abstention_correct": 0,
+          "confusion": {
+            "axis": {
+              "axis": 2,
+              "offset": 3
+            },
+            "uncertain": {
+              "axis": 1
+            },
+            "clean": {
+              "offset": 3,
+              "axis": 2
+            },
+            "offset": {
+              "offset": 2,
+              "axis": 2
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 2,
+              "offset": 3
+            },
+            "offset": {
+              "axis": 3,
+              "offset": 2
+            },
+            "clean": {
+              "offset": 3,
+              "axis": 2
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 3,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 0
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 0
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 0,
+              "full_correct": 0
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 0
+            }
+          }
+        },
+        "features_only/full_motion": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 13,
+          "raw_class_correct": 13,
+          "full_correct": 9,
+          "finding": 10,
+          "supported_finding": 5,
+          "unsupported_finding": 6,
+          "evidence_supported": 10,
+          "defect_n": 9,
+          "defect_part_correct": 5,
+          "axis_n": 5,
+          "axis_joint_correct": 4,
+          "abstention_n": 1,
+          "abstention_correct": 0,
+          "confusion": {
+            "axis": {
+              "offset": 1,
+              "axis": 4
+            },
+            "uncertain": {
+              "offset": 1
+            },
+            "clean": {
+              "clean": 5
+            },
+            "offset": {
+              "offset": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "offset": 1,
+              "axis": 4
+            },
+            "offset": {
+              "offset": 5
+            },
+            "clean": {
+              "clean": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            }
+          }
+        },
+        "reverse/rest_only": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 13,
+          "raw_class_correct": 13,
+          "full_correct": 10,
+          "finding": 5,
+          "supported_finding": 1,
+          "unsupported_finding": 5,
+          "evidence_supported": 11,
+          "abstention_n": 12,
+          "abstention_correct": 10,
+          "defect_n": 3,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 10,
+              "offset": 2
+            },
+            "offset": {
+              "offset": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 5
+            },
+            "offset": {
+              "offset": 5
+            },
+            "clean": {
+              "uncertain": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            }
+          }
+        },
+        "pixels_only/rest_only": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 12,
+          "raw_class_correct": 12,
+          "full_correct": 12,
+          "finding": 0,
+          "supported_finding": 0,
+          "unsupported_finding": 0,
+          "evidence_supported": 12,
+          "abstention_n": 12,
+          "abstention_correct": 12,
+          "defect_n": 3,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 12
+            },
+            "offset": {
+              "uncertain": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 5
+            },
+            "offset": {
+              "uncertain": 5
+            },
+            "clean": {
+              "uncertain": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 5,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        },
+        "features_only/rest_only": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 13,
+          "raw_class_correct": 13,
+          "full_correct": 10,
+          "finding": 5,
+          "supported_finding": 1,
+          "unsupported_finding": 5,
+          "evidence_supported": 11,
+          "abstention_n": 12,
+          "abstention_correct": 10,
+          "defect_n": 3,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 10,
+              "offset": 2
+            },
+            "offset": {
+              "offset": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 5
+            },
+            "offset": {
+              "offset": 5
+            },
+            "clean": {
+              "uncertain": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            }
+          }
+        },
+        "v1_frozen/full_motion": {
+          "n": 12,
+          "valid": 12,
+          "class_correct": 12,
+          "raw_class_correct": 12,
+          "full_correct": 8,
+          "finding": 8,
+          "supported_finding": 5,
+          "unsupported_finding": 4,
+          "evidence_supported": 9,
+          "defect_n": 8,
+          "defect_part_correct": 4,
+          "axis_n": 4,
+          "axis_joint_correct": 4,
+          "confusion": {
+            "axis": {
+              "axis": 4
+            },
+            "offset": {
+              "offset": 4
+            },
+            "clean": {
+              "clean": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 4
+            },
+            "offset": {
+              "offset": 4
+            },
+            "clean": {
+              "clean": 4
+            }
+          },
+          "triplets": 4,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            }
+          }
+        },
+        "v1_frozen/rest_only": {
+          "n": 12,
+          "valid": 12,
+          "class_correct": 11,
+          "raw_class_correct": 11,
+          "full_correct": 8,
+          "finding": 4,
+          "supported_finding": 1,
+          "unsupported_finding": 4,
+          "evidence_supported": 9,
+          "abstention_n": 9,
+          "abstention_correct": 8,
+          "defect_n": 3,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 8,
+              "offset": 1
+            },
+            "offset": {
+              "offset": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 4
+            },
+            "offset": {
+              "offset": 4
+            },
+            "clean": {
+              "uncertain": 4
+            }
+          },
+          "triplets": 4,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            }
+          }
+        },
+        "extra/full_motion": {
+          "n": 4,
+          "valid": 4,
+          "class_correct": 2,
+          "raw_class_correct": 2,
+          "full_correct": 2,
+          "finding": 2,
+          "supported_finding": 0,
+          "unsupported_finding": 2,
+          "evidence_supported": 2,
+          "abstention_n": 2,
+          "abstention_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "offset": 2
+            },
+            "clean": {
+              "clean": 2
+            }
+          },
+          "latent_confusion": {
+            "offset": {
+              "offset": 2
+            },
+            "clean": {
+              "clean": 2
+            }
+          },
+          "triplets": 0,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_10797": {
+              "n": 2,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_45759": {
+              "n": 2,
+              "class_correct": 1,
+              "full_correct": 1
+            }
+          }
+        },
+        "extra/rest_only": {
+          "n": 4,
+          "valid": 4,
+          "class_correct": 3,
+          "raw_class_correct": 3,
+          "full_correct": 3,
+          "finding": 1,
+          "supported_finding": 0,
+          "unsupported_finding": 1,
+          "evidence_supported": 3,
+          "abstention_n": 4,
+          "abstention_correct": 3,
+          "confusion": {
+            "uncertain": {
+              "offset": 1,
+              "uncertain": 3
+            }
+          },
+          "latent_confusion": {
+            "offset": {
+              "offset": 1,
+              "uncertain": 1
+            },
+            "clean": {
+              "uncertain": 2
+            }
+          },
+          "triplets": 0,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_10797": {
+              "n": 2,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_45759": {
+              "n": 2,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        },
+        "frozen_B/full_motion": {
+          "n": 12,
+          "valid": 12,
+          "class_correct": 9,
+          "raw_class_correct": 9,
+          "full_correct": 6,
+          "finding": 7,
+          "supported_finding": 5,
+          "unsupported_finding": 5,
+          "evidence_supported": 9,
+          "defect_n": 8,
+          "defect_part_correct": 3,
+          "axis_n": 4,
+          "axis_joint_correct": 2,
+          "confusion": {
+            "axis": {
+              "offset": 2,
+              "axis": 2
+            },
+            "offset": {
+              "offset": 3,
+              "clean": 1
+            },
+            "clean": {
+              "clean": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "offset": 2,
+              "axis": 2
+            },
+            "offset": {
+              "offset": 3,
+              "clean": 1
+            },
+            "clean": {
+              "clean": 4
+            }
+          },
+          "triplets": 4,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 1
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 1
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        },
+        "frozen_C/rest_only": {
+          "n": 12,
+          "valid": 12,
+          "class_correct": 12,
+          "raw_class_correct": 12,
+          "full_correct": 8,
+          "finding": 4,
+          "supported_finding": 3,
+          "unsupported_finding": 4,
+          "evidence_supported": 11,
+          "abstention_n": 8,
+          "abstention_correct": 8,
+          "defect_n": 4,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 8
+            },
+            "offset": {
+              "offset": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 4
+            },
+            "offset": {
+              "offset": 4
+            },
+            "clean": {
+              "uncertain": 4
+            }
+          },
+          "triplets": 4,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            }
+          }
+        }
+      }
+    },
+    "features-intermediate-transfer": {
+      "status": "complete",
+      "n": 146,
+      "dataset_sha256": "64606b9e5074305924b4ade0b061ffc640299286d0967a4ecfab427e8bb8a3e9",
+      "predictions_sha256": "5b17f683e997f81a93aa41bccee410ec0c9abec1f3d09fe3c7773fec5e36e739",
+      "frozen_gold_sha256": "004bb228e3895c35156ba3e226b733760342c7e830c63b0313fa0866453428a9",
+      "scorer_sha256": "09f8575ed2f7a0d9677d60f7de09a917132ade95b1c55b66fba3cfc854f83e60",
+      "groups": {
+        "reverse/full_motion": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 13,
+          "raw_class_correct": 13,
+          "full_correct": 11,
+          "finding": 10,
+          "supported_finding": 7,
+          "unsupported_finding": 4,
+          "evidence_supported": 12,
+          "defect_n": 9,
+          "defect_part_correct": 6,
+          "axis_n": 5,
+          "axis_joint_correct": 5,
+          "abstention_n": 1,
+          "abstention_correct": 0,
+          "confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "uncertain": {
+              "offset": 1
+            },
+            "clean": {
+              "clean": 5
+            },
+            "offset": {
+              "offset": 3,
+              "axis": 1
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "offset": {
+              "offset": 4,
+              "axis": 1
+            },
+            "clean": {
+              "clean": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        },
+        "pixels_only/full_motion": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 5,
+          "raw_class_correct": 5,
+          "full_correct": 5,
+          "finding": 3,
+          "supported_finding": 1,
+          "unsupported_finding": 2,
+          "evidence_supported": 5,
+          "defect_n": 9,
+          "defect_part_correct": 1,
+          "axis_n": 5,
+          "axis_joint_correct": 1,
+          "abstention_n": 1,
+          "abstention_correct": 0,
+          "confusion": {
+            "axis": {
+              "axis": 1,
+              "clean": 4
+            },
+            "uncertain": {
+              "axis": 1
+            },
+            "clean": {
+              "axis": 1,
+              "clean": 4
+            },
+            "offset": {
+              "clean": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 1,
+              "clean": 4
+            },
+            "offset": {
+              "axis": 1,
+              "clean": 4
+            },
+            "clean": {
+              "axis": 1,
+              "clean": 4
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 5,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 1,
+              "full_correct": 1
+            }
+          }
+        },
+        "features_only/full_motion": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 14,
+          "raw_class_correct": 14,
+          "full_correct": 11,
+          "finding": 10,
+          "supported_finding": 8,
+          "unsupported_finding": 4,
+          "evidence_supported": 13,
+          "defect_n": 9,
+          "defect_part_correct": 7,
+          "axis_n": 5,
+          "axis_joint_correct": 5,
+          "abstention_n": 1,
+          "abstention_correct": 0,
+          "confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "uncertain": {
+              "axis": 1
+            },
+            "clean": {
+              "clean": 5
+            },
+            "offset": {
+              "offset": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 5
+            },
+            "offset": {
+              "axis": 1,
+              "offset": 4
+            },
+            "clean": {
+              "clean": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            }
+          }
+        },
+        "reverse/rest_only": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 13,
+          "raw_class_correct": 13,
+          "full_correct": 11,
+          "finding": 5,
+          "supported_finding": 2,
+          "unsupported_finding": 4,
+          "evidence_supported": 12,
+          "abstention_n": 12,
+          "abstention_correct": 10,
+          "defect_n": 3,
+          "defect_part_correct": 1,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 10,
+              "offset": 2
+            },
+            "offset": {
+              "offset": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 5
+            },
+            "offset": {
+              "offset": 5
+            },
+            "clean": {
+              "uncertain": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            }
+          }
+        },
+        "pixels_only/rest_only": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 12,
+          "raw_class_correct": 12,
+          "full_correct": 12,
+          "finding": 0,
+          "supported_finding": 0,
+          "unsupported_finding": 0,
+          "evidence_supported": 12,
+          "abstention_n": 12,
+          "abstention_correct": 12,
+          "defect_n": 3,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 12
+            },
+            "offset": {
+              "uncertain": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 5
+            },
+            "offset": {
+              "uncertain": 5
+            },
+            "clean": {
+              "uncertain": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 5,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        },
+        "features_only/rest_only": {
+          "n": 15,
+          "valid": 15,
+          "class_correct": 13,
+          "raw_class_correct": 13,
+          "full_correct": 12,
+          "finding": 5,
+          "supported_finding": 2,
+          "unsupported_finding": 3,
+          "evidence_supported": 12,
+          "abstention_n": 12,
+          "abstention_correct": 10,
+          "defect_n": 3,
+          "defect_part_correct": 3,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 10,
+              "offset": 2
+            },
+            "offset": {
+              "offset": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 5
+            },
+            "offset": {
+              "offset": 5
+            },
+            "clean": {
+              "uncertain": 5
+            }
+          },
+          "triplets": 5,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            }
+          }
+        },
+        "v1_frozen/full_motion": {
+          "n": 12,
+          "valid": 12,
+          "class_correct": 10,
+          "raw_class_correct": 10,
+          "full_correct": 9,
+          "finding": 8,
+          "supported_finding": 6,
+          "unsupported_finding": 3,
+          "evidence_supported": 10,
+          "defect_n": 8,
+          "defect_part_correct": 5,
+          "axis_n": 4,
+          "axis_joint_correct": 4,
+          "confusion": {
+            "axis": {
+              "axis": 4
+            },
+            "offset": {
+              "offset": 2,
+              "axis": 2
+            },
+            "clean": {
+              "clean": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 4
+            },
+            "offset": {
+              "offset": 2,
+              "axis": 2
+            },
+            "clean": {
+              "clean": 4
+            }
+          },
+          "triplets": 4,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        },
+        "v1_frozen/rest_only": {
+          "n": 12,
+          "valid": 12,
+          "class_correct": 12,
+          "raw_class_correct": 12,
+          "full_correct": 9,
+          "finding": 3,
+          "supported_finding": 2,
+          "unsupported_finding": 3,
+          "evidence_supported": 11,
+          "abstention_n": 9,
+          "abstention_correct": 9,
+          "defect_n": 3,
+          "defect_part_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 9
+            },
+            "offset": {
+              "offset": 3
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 4
+            },
+            "offset": {
+              "uncertain": 1,
+              "offset": 3
+            },
+            "clean": {
+              "uncertain": 4
+            }
+          },
+          "triplets": 4,
+          "collapsed_triplets": 1,
+          "per_object": {
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 3
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_34610": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            }
+          }
+        },
+        "extra/full_motion": {
+          "n": 4,
+          "valid": 4,
+          "class_correct": 2,
+          "raw_class_correct": 2,
+          "full_correct": 2,
+          "finding": 2,
+          "supported_finding": 0,
+          "unsupported_finding": 2,
+          "evidence_supported": 2,
+          "abstention_n": 2,
+          "abstention_correct": 0,
+          "confusion": {
+            "uncertain": {
+              "axis": 1,
+              "offset": 1
+            },
+            "clean": {
+              "clean": 2
+            }
+          },
+          "latent_confusion": {
+            "offset": {
+              "axis": 1,
+              "offset": 1
+            },
+            "clean": {
+              "clean": 2
+            }
+          },
+          "triplets": 0,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_10797": {
+              "n": 2,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_45759": {
+              "n": 2,
+              "class_correct": 1,
+              "full_correct": 1
+            }
+          }
+        },
+        "extra/rest_only": {
+          "n": 4,
+          "valid": 4,
+          "class_correct": 2,
+          "raw_class_correct": 2,
+          "full_correct": 2,
+          "finding": 2,
+          "supported_finding": 0,
+          "unsupported_finding": 2,
+          "evidence_supported": 2,
+          "abstention_n": 4,
+          "abstention_correct": 2,
+          "confusion": {
+            "uncertain": {
+              "offset": 2,
+              "uncertain": 2
+            }
+          },
+          "latent_confusion": {
+            "offset": {
+              "offset": 2
+            },
+            "clean": {
+              "uncertain": 2
+            }
+          },
+          "triplets": 0,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_10797": {
+              "n": 2,
+              "class_correct": 1,
+              "full_correct": 1
+            },
+            "PM_45759": {
+              "n": 2,
+              "class_correct": 1,
+              "full_correct": 1
+            }
+          }
+        },
+        "frozen_B/full_motion": {
+          "n": 12,
+          "valid": 12,
+          "class_correct": 8,
+          "raw_class_correct": 8,
+          "full_correct": 8,
+          "finding": 8,
+          "supported_finding": 4,
+          "unsupported_finding": 4,
+          "evidence_supported": 8,
+          "defect_n": 8,
+          "defect_part_correct": 4,
+          "axis_n": 4,
+          "axis_joint_correct": 4,
+          "confusion": {
+            "axis": {
+              "axis": 4
+            },
+            "offset": {
+              "axis": 4
+            },
+            "clean": {
+              "clean": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "axis": 4
+            },
+            "offset": {
+              "axis": 4
+            },
+            "clean": {
+              "clean": 4
+            }
+          },
+          "triplets": 4,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 2,
+              "full_correct": 2
+            }
+          }
+        },
+        "frozen_C/rest_only": {
+          "n": 12,
+          "valid": 12,
+          "class_correct": 12,
+          "raw_class_correct": 12,
+          "full_correct": 8,
+          "finding": 4,
+          "supported_finding": 3,
+          "unsupported_finding": 4,
+          "evidence_supported": 11,
+          "abstention_n": 8,
+          "abstention_correct": 8,
+          "defect_n": 4,
+          "defect_part_correct": 1,
+          "confusion": {
+            "uncertain": {
+              "uncertain": 8
+            },
+            "offset": {
+              "offset": 4
+            }
+          },
+          "latent_confusion": {
+            "axis": {
+              "uncertain": 4
+            },
+            "offset": {
+              "offset": 4
+            },
+            "clean": {
+              "uncertain": 4
+            }
+          },
+          "triplets": 4,
+          "collapsed_triplets": 0,
+          "per_object": {
+            "PM_100202": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_102252": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_102590": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            },
+            "PM_1280": {
+              "n": 3,
+              "class_correct": 3,
+              "full_correct": 2
+            }
+          }
+        }
+      }
+    }
+  }
+}

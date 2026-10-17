@@ -1,0 +1,161 @@
+{
+  "audit_skill": "experiment-audit",
+  "reviewer": "fresh Codex reviewer",
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "agent_id": "/root/integrity_audit",
+  "verdict": "FAIL",
+  "overall_verdict": "fail",
+  "integrity_status": "fail",
+  "reason_code": "mixed_evidence_ground_truth_and_impossible_frozen_support",
+  "generated_at": "2026-10-17T06:40:10.165281+00:00",
+  "audit_stage": "old_artifacts_complete_new_training_pending",
+  "summary": "Old training and raw results exist, but frozen full/evidence scoring is inconsistent with semantic labels. New corrected pixel-only input pairing and image provenance pass; new models/results are pending.",
+  "checks": {
+    "gt_provenance": {
+      "status": "WARN",
+      "details": "No model outputs generate targets. Main labels are construction labels gated by fixed pixel threshold; comparison targets are deterministic RGB proxies. Frozen B/C semantic labels have independent construction and geometry checks, but derived evidence scoring loses original visibility semantics.",
+      "evidence": [
+        "scripts/build_motion_grounded.py:56-76",
+        "scripts/build_motion_grounded.py:94-109",
+        "turnitover/oracle/motion_grounding.py:46-65",
+        "scripts/build_motion_attribution.py:76-96",
+        "output/motion-attribution-v1/geometry.audit.json:234"
+      ]
+    },
+    "score_normalization": {
+      "status": "PASS",
+      "details": "Rates use count / dataset row count. No prediction maximum, minimum, or mean denominator. Per-object counts and raw prediction records exist.",
+      "evidence": [
+        "scripts/evaluate_qwen_motion_diagnosis.py:70-80"
+      ]
+    },
+    "result_existence": {
+      "status": "WARN",
+      "details": "Old paired runs each have 216 finite loss records, 108 unique IDs and 12,878,000-byte adapters matching recorded SHA. All five old eval metric rates exactly recompute from raw predictions. New pixel runs in progress at initial snapshot. Failed initial panel artifacts have 16 image-reference hash mismatches each and must be excluded.",
+      "evidence": [
+        "output/motion-grounded-v2-model/run.json:1",
+        "output/motion-grounded-v2-control/run.json:1",
+        "output/motion-grounded-v2-20261017/direct-data/manifest.json:1"
+      ]
+    },
+    "dead_code": {
+      "status": "FAIL",
+      "details": "Comparison metrics are called, but direct arm has no required comparison output so its zeros are not comparable errors. Old full_motion_n is 0 for the 146-row suite because exact condition equality ignores cohort prefixes. Four frozen offset rows have no admissible evidence under proxy scoring.",
+      "evidence": [
+        "scripts/evaluate_qwen_motion_diagnosis.py:42-52",
+        "scripts/evaluate_qwen_motion_diagnosis.py:72",
+        "output/motion-grounded-v2-eval-suite-final/validation.jsonl:125",
+        "output/motion-grounded-v2-eval-suite-final/validation.jsonl:126",
+        "output/motion-grounded-v2-eval-suite-final/validation.jsonl:143",
+        "output/motion-grounded-v2-eval-suite-final/validation.jsonl:144"
+      ]
+    },
+    "scope": {
+      "status": "WARN",
+      "details": "18 train objects, 5 main validation objects, 2 extra objects; transferred v1 and frozen objects overlap main. One seed. Extra targets are 6 uncertain and 2 clean, zero axis/offset. All axis target joints equal the supplied public joint.",
+      "evidence": [
+        "output/motion-grounded-v2-intermediate/manifest.json:6",
+        "scripts/audit_motion_grounded.py:72-76",
+        "scripts/build_motion_grounded.py:68"
+      ]
+    },
+    "eval_type": {
+      "status": "WARN",
+      "classification": "simulation_only",
+      "details": "Underlying real assets rendered with controlled synthetic corruptions. Main is simulation semantic-label plus deterministic observability proxy; comparison is self_supervised_proxy. Frozen B/C classes are simulation semantic GT; not human_eval, not natural-error real-world GT, not model-generated synthetic_proxy."
+    }
+  },
+  "audited_input_hashes": {
+    "output/motion-attribution-v1/geometry.audit.json": "sha256:adffe5833e8a794fd4435917fc9c7fb7e637df9090f41972183d0cdf3e90b8f9",
+    "output/motion-attribution-v1/gold.private.jsonl": "sha256:004bb228e3895c35156ba3e226b733760342c7e830c63b0313fa0866453428a9",
+    "output/motion-grounded-v2-20261017/direct-data/manifest.json": "sha256:6694e5171ace091ea1295766567a7d3b8c017e60c96be882283ec708b0fe0a62",
+    "output/motion-grounded-v2-20261017/direct-data/train.jsonl": "sha256:0eb831b000695cca62fe44bb1003a2c213efc9337709dcb00f928b1eb0929dd4",
+    "output/motion-grounded-v2-20261017/direct-data/validation.jsonl": "sha256:187f6cb2e8c327d204e0d0a3ecbe5ae56fef550a57071cf94c855a21e12e3217",
+    "output/motion-grounded-v2-20261017/direct-panels/manifest.json": "sha256:bfaf67fd2e4ce5c6470c0b9208aece924bfb79009161371298d736e4fa310e10",
+    "output/motion-grounded-v2-20261017/direct-panels/train.jsonl": "sha256:f976cf60978fef372d42d581c18ce73fd7b34433cf2d21831840d45820e4d4ad",
+    "output/motion-grounded-v2-20261017/direct-panels/validation.jsonl": "sha256:046ae9ff9c3f4eb78411e02c509e2467114b455f95bafadbdd34b9e1bc26821a",
+    "output/motion-grounded-v2-20261017/direct-transfer/manifest.json": "sha256:6b08fb9936da8e7cf0e4fd9854eead461cb8bc449b410ffbbfcdbd0f300ffdb4",
+    "output/motion-grounded-v2-20261017/direct-transfer/train.jsonl": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/motion-grounded-v2-20261017/direct-transfer/validation.jsonl": "sha256:95571b97d61b09a2421743850ce750efb8c18306329c73b1c17cee8d02780d9f",
+    "output/motion-grounded-v2-20261017/intermediate-data/manifest.json": "sha256:49af872f60507168bca57836d5d64e36cca24804d192f9b0413b526aca331a23",
+    "output/motion-grounded-v2-20261017/intermediate-data/train.jsonl": "sha256:5a9605171487fbab04f039eb27449713b93fd285d5d79e9e5316d5026c7dc4a3",
+    "output/motion-grounded-v2-20261017/intermediate-data/validation.jsonl": "sha256:d338f714d9b14e77b311f9f2420c8d6c71d3d2f769685f47018a82f7b35a4fc4",
+    "output/motion-grounded-v2-20261017/intermediate-panels/manifest.json": "sha256:d2eefc030e78d0f491372c510641369ca06be5f0e964680ed7aad64696aa5427",
+    "output/motion-grounded-v2-20261017/intermediate-panels/train.jsonl": "sha256:18f37944bf9ca1805c5e35f7bb2b536e404972f7f49a1a6be856f77516d65875",
+    "output/motion-grounded-v2-20261017/intermediate-panels/validation.jsonl": "sha256:86a099e81445cd4de8da478bcfc33ae1bfda387fa0388ef9d8e880dec196ef1e",
+    "output/motion-grounded-v2-20261017/intermediate-transfer/manifest.json": "sha256:37a4f38a1efa537fd9dcdc8f1c283e2744842098e866b13b90912f214a9a351c",
+    "output/motion-grounded-v2-20261017/intermediate-transfer/train.jsonl": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/motion-grounded-v2-20261017/intermediate-transfer/validation.jsonl": "sha256:6ec6f5a05c43cf8ce2fdd8be3a4199a50bc2b4509cf283b6425377659f5bdb2e",
+    "output/motion-grounded-v2-control/loss.jsonl": "sha256:ec65da6e3939000fdf6493be102bb716eed88f26ae24a1013008c1a5a1f37a00",
+    "output/motion-grounded-v2-control/run.json": "sha256:cc7a65f15c4defe805486891324bb00723655c06146981ee4f5f5f555ebbd934",
+    "output/motion-grounded-v2-control-eval/metrics.json": "sha256:82a31b7dd3e133bad51679dd7c1704a6ab1d1b2245892b58803785fed82f0b27",
+    "output/motion-grounded-v2-control-eval/predictions.jsonl": "sha256:a579dd146e67b655a85a4b3b74d05c3483387f17c2fffb4c42084eb53ea5707d",
+    "output/motion-grounded-v2-control-suite/manifest.json": "sha256:df7c25c933ce504164f83287161137c139302c26b384b10c5b79a8c59f6d5b01",
+    "output/motion-grounded-v2-control-suite/train.jsonl": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/motion-grounded-v2-control-suite/validation.jsonl": "sha256:593fa4a3fd306a7b55e2393092d47e8697dbe043fb55c001fe5a52a8e91fe212",
+    "output/motion-grounded-v2-control-suite-eval/metrics.json": "sha256:e1f1bd257bd406114db8059cc8ef433502187bff1c9e39f4ac7186a6a438478e",
+    "output/motion-grounded-v2-control-suite-eval/predictions.jsonl": "sha256:7a8bfd873456961bb63e3e255728b57de7ea4279ccec686879b65c88e5c350fb",
+    "output/motion-grounded-v2-control-suite-final/manifest.json": "sha256:45b78d5fd134c8f4c966aa0f9f784704c6303da9dad1e7be17718e9ad7b70343",
+    "output/motion-grounded-v2-control-suite-final/train.jsonl": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/motion-grounded-v2-control-suite-final/validation.jsonl": "sha256:593fa4a3fd306a7b55e2393092d47e8697dbe043fb55c001fe5a52a8e91fe212",
+    "output/motion-grounded-v2-direct/manifest.json": "sha256:a13878f112d24dd1b06d400b8c21f2dc1b544247b586634ec82430ffe91f0431",
+    "output/motion-grounded-v2-direct/train.jsonl": "sha256:22f83f18ec311cb2498b463dae938c3c324ccf343743b21d6aae6b65ce56f0f8",
+    "output/motion-grounded-v2-direct/validation.jsonl": "sha256:ce32f9770fe7456f27ccfa8da03408511f25d201a575279ddc75c33527247255",
+    "output/motion-grounded-v2-direct/visual-audit.private.json": "sha256:ae1f8bbc98cc318b237f6b7d141d2d437c5ac6f89f4da2164eb63fb3c17bbda1",
+    "output/motion-grounded-v2-eval/metrics.json": "sha256:89131b31f59bb93da709fbd03ce455b14d09a2ca6e00052d9510fad3c9be97bf",
+    "output/motion-grounded-v2-eval/predictions.jsonl": "sha256:eb1930c84a5126be98dc2240fc567e0bd72f71b5b03d064e7ad4ab8f4c5e2034",
+    "output/motion-grounded-v2-eval-suite/manifest.json": "sha256:7a483750c05d2c9913f34b72370094ad75ff5cf0ebb981e95ac7d250a1ec9c9e",
+    "output/motion-grounded-v2-eval-suite/train.jsonl": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/motion-grounded-v2-eval-suite/validation.jsonl": "sha256:64606b9e5074305924b4ade0b061ffc640299286d0967a4ecfab427e8bb8a3e9",
+    "output/motion-grounded-v2-eval-suite-final/manifest.json": "sha256:70a5c602e5445cd290890952da5fa1e801c2b1c6cd36f463293177d4eaf32a27",
+    "output/motion-grounded-v2-eval-suite-final/train.jsonl": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/motion-grounded-v2-eval-suite-final/validation.jsonl": "sha256:64606b9e5074305924b4ade0b061ffc640299286d0967a4ecfab427e8bb8a3e9",
+    "output/motion-grounded-v2-extra-render/manifest.json": "sha256:6352a35e849d3265eba071b778da9a5f99939a954dae6c395a0b27cfc04b514c",
+    "output/motion-grounded-v2-extra-render/train.jsonl": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/motion-grounded-v2-extra-render/validation.jsonl": "sha256:ddb566280ec79359ecf4e6f95d997ce74b278746ef23d89ea08ef1a26ec6f3fc",
+    "output/motion-grounded-v2-intermediate/manifest.json": "sha256:086d98fab1693b5e1be1306c32c3cd03825f671fa4aa48928ac62e65cd9276af",
+    "output/motion-grounded-v2-intermediate/train.jsonl": "sha256:23e87ce492ca7f42e759f4b0fd67a1be7026772b50a1b32bad0118c68b722b16",
+    "output/motion-grounded-v2-intermediate/validation.jsonl": "sha256:d477b094f75f8ed9e9802fd0dfa758dc2aec41861396379396a09d0e24fc270c",
+    "output/motion-grounded-v2-intermediate/visual-audit.private.json": "sha256:ae1f8bbc98cc318b237f6b7d141d2d437c5ac6f89f4da2164eb63fb3c17bbda1",
+    "output/motion-grounded-v2-model/loss.jsonl": "sha256:ab35b6f6adc99fb48a1a36c7308bea149346d5865d0c0611fd5b05ed16ac27fd",
+    "output/motion-grounded-v2-model/run.json": "sha256:92da2b71c425810622f6c488cb405246e2897da725ac2042512abdea61a6df3d",
+    "output/motion-grounded-v2-provenance/training-config.json": "sha256:d3a52164c4cda96e8842e373fb2e8a7ddc3949b5e624d3373555fed23a06357b",
+    "output/motion-grounded-v2-render/manifest.json": "sha256:87236a8335c29087cf16795b76951300ed18618ecdb977fd0d913b64d81ff73b",
+    "output/motion-grounded-v2-render/train.jsonl": "sha256:c7e54e9fb0304ff03cf93fc96bbfc15d3cb76d65eee310800d3c812cb75dfa5d",
+    "output/motion-grounded-v2-render/validation.jsonl": "sha256:ae0c8c4d9a99123aca6ca6a19807c37c81085eca8211484560e0bd57e4ce5fab",
+    "output/motion-grounded-v2-suite-eval/metrics.json": "sha256:6c420f677e391182228fa7b2b88c67066ba31e55097fa578251cba3d64f07f34",
+    "output/motion-grounded-v2-suite-eval/predictions.jsonl": "sha256:5b17f683e997f81a93aa41bccee410ec0c9abec1f3d09fe3c7773fec5e36e739",
+    "output/motion-grounded-v2-v1-transfer-eval/metrics.json": "sha256:eacc31d885eeeafe8f81874782cb2ca684eab9bac3d487faae49cb9fb561328f",
+    "output/motion-grounded-v2-v1-transfer-eval/predictions.jsonl": "sha256:6b0a975047fe6c661dd851d7c8ad03597e876f32b7d6d8f1c6afbb2b808c9961",
+    "scripts/audit_motion_grounded.py": "sha256:38ff668eb283d43815f7d2b7cd7593d8c0beff19c0633c4da964ed95fd66301e",
+    "scripts/build_motion_grounded.py": "sha256:3247430ac7e57ff28c4f194d44aaa8ee2f70b01b2c27c30dcfddb9561fe8d740",
+    "scripts/evaluate_qwen_motion_diagnosis.py": "sha256:94a628cd9a1e5d4f63ec047c40ebbeb653e30a6d8e7a10ef3130ce41e0b79d5e",
+    "scripts/prepare_motion_grounded_eval.py": "sha256:dacb791593cd76de98839d235c3488da6a348181a75da0aa24729c1046b9dcb4",
+    "scripts/prepare_motion_pixel_control.py": "sha256:8a661ffb6df660af134203be6e41e8296239f61e94226ba64d00178fb765d747",
+    "scripts/train_qwen_motion_diagnosis.py": "sha256:63d502e796b9237cf98201d9ee93f65aa51f99e8354168b0ab8cfbfa881e722a",
+    "turnitover/oracle/motion_diagnosis.py": "sha256:a4fe86f303abe7a2fe6a501a42ba03fcd48659dfc77831d5c62881bdd36239a4",
+    "turnitover/oracle/motion_grounding.py": "sha256:e796a9193f8a2b1be2d4f2cc1841d2dbd04d7f4f5ec633355d0bc9f32c4f70b3",
+    "turnitover/oracle/training.py": "sha256:77496f63a27a459e2ed2974c01b907242fa2ac075fd788abb0230a3dd1f8bab3"
+  },
+  "deterministic_verified": {
+    "old_paired_training_steps_each": 216,
+    "old_adapter_bytes_each": 12878000,
+    "old_main_intermediate_class": 26,
+    "old_main_direct_class": 27,
+    "old_main_intermediate_full": 22,
+    "old_main_direct_full": 20,
+    "old_main_n": 30,
+    "new_paired_train_rows": 108,
+    "new_paired_validation_rows": 30,
+    "new_panel_verified_source_tiles": 1656,
+    "new_panel_verified_image_references_each": 552,
+    "new_panel_unique_pngs_each": 458,
+    "failed_initial_panel_hash_mismatches_each": 16
+  },
+  "pending": [
+    "Final new training run status/loss/checkpoint SHA",
+    "New raw eval metrics and frozen evidence repair",
+    "Final source/eval provenance after executor changes"
+  ]
+}

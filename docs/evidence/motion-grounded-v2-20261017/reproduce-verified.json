@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "rows": 616,
+  "row_json_exact": true,
+  "all_image_hashes_match": true,
+  "executor": "primary agent",
+  "gpu_training_repeated": false
+}
