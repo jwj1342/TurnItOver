@@ -1,0 +1,22 @@
+{
+  "clean": {
+    "n": 9,
+    "uncertain": 9,
+    "target_findings": 0
+  },
+  "kinematics.joint_axis+structure.part_offset": {
+    "n": 10,
+    "fail": 10,
+    "target_findings": 10
+  },
+  "kinematics.joint_axis": {
+    "n": 4,
+    "fail": 4,
+    "target_findings": 4
+  },
+  "structure.part_offset": {
+    "n": 5,
+    "fail": 5,
+    "target_findings": 5
+  }
+}

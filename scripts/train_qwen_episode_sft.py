@@ -35,7 +35,7 @@ def _write_log(path: Path, row: dict) -> None:
 def train(dataset: Path, model_path: Path, output: Path, *, seed: int, epochs: int,
           learning_rate: float, lora_rank: int, lora_alpha: int,
           supervision: str = "evidence", diagnosis_weight: float = 1.0,
-          stopping_weight: float | None = None) -> dict:
+          stopping_weight: float | None = None, max_steps: int | None = None) -> dict:
     import torch
     from peft import LoraConfig, get_peft_model
     from transformers import AutoProcessor, Qwen3VLForConditionalGeneration
@@ -54,6 +54,8 @@ def train(dataset: Path, model_path: Path, output: Path, *, seed: int, epochs: i
     torch.use_deterministic_algorithms(True, warn_only=True)
 
     examples = list(load_multitask_training_examples(dataset, "train", supervision))
+    if max_steps is not None and not 0 < max_steps <= epochs * len(examples):
+        raise ValueError("max_steps must fit within the requested epochs")
     if not examples:
         raise ValueError("No formal multitask training examples")
     objective_counts = {
@@ -71,6 +73,7 @@ def train(dataset: Path, model_path: Path, output: Path, *, seed: int, epochs: i
     manifest = {
         "version": 2, "status": "running", "scope": "terminal_diagnosis_and_prefix_stopping",
         "seed": seed, "epochs": epochs, "learning_rate": learning_rate,
+        "max_steps": max_steps,
         "supervision": supervision,
         "objectives": {
             "counts": objective_counts,
@@ -121,6 +124,8 @@ def train(dataset: Path, model_path: Path, output: Path, *, seed: int, epochs: i
         for epoch in range(epochs):
             random.Random(seed + epoch).shuffle(order)
             for position, index in enumerate(order):
+                if max_steps is not None and global_step >= max_steps:
+                    break
                 record, images = examples[index]
                 batch = tokenize_example(processor, record, images).to(model.device)
                 optimizer.zero_grad(set_to_none=True)
@@ -179,12 +184,13 @@ def main() -> None:
     parser.add_argument("--supervision", choices=SUPERVISION_MODES, default="evidence")
     parser.add_argument("--diagnosis-weight", type=float, default=1.0)
     parser.add_argument("--stopping-weight", type=float)
+    parser.add_argument("--max-steps", type=int)
     args = parser.parse_args()
     report = train(args.dataset.resolve(), args.model.resolve(), args.out.resolve(),
                    seed=args.seed, epochs=args.epochs, learning_rate=args.learning_rate,
                    lora_rank=args.lora_rank, lora_alpha=args.lora_alpha,
                    supervision=args.supervision, diagnosis_weight=args.diagnosis_weight,
-                   stopping_weight=args.stopping_weight)
+                   stopping_weight=args.stopping_weight, max_steps=args.max_steps)
     print(json.dumps(report, indent=2))
 
 

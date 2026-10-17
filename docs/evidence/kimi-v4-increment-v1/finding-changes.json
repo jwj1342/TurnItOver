@@ -1,0 +1,219 @@
+[
+  {
+    "id": "750796de0febcb6e917f9e61:verdict",
+    "asset_id": "PM_100202",
+    "expected": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_2"
+        ]
+      ]
+    ],
+    "baseline": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_4"
+        ]
+      ]
+    ],
+    "experiment": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_3"
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "a9c6a70d3178cee5283dda21:verdict",
+    "asset_id": "PM_100202",
+    "expected": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_1"
+        ]
+      ]
+    ],
+    "baseline": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_4"
+        ]
+      ]
+    ],
+    "experiment": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_3"
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "6ba47ca5a0c4c7519d9b88a6:verdict",
+    "asset_id": "PM_102252",
+    "expected": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_1"
+        ]
+      ]
+    ],
+    "baseline": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_2"
+        ]
+      ]
+    ],
+    "experiment": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_1"
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "fe2bf9013f52ef303dc47c28:verdict",
+    "asset_id": "PM_102590",
+    "expected": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_0"
+        ]
+      ]
+    ],
+    "baseline": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_2"
+        ]
+      ]
+    ],
+    "experiment": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_1"
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "873a775b1dedfd3be942d055:verdict",
+    "asset_id": "PM_1280",
+    "expected": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_0"
+        ]
+      ]
+    ],
+    "baseline": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_2"
+        ]
+      ]
+    ],
+    "experiment": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_1"
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "463029325e71882436ea8e5d:verdict",
+    "asset_id": "PM_1280",
+    "expected": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_1"
+        ]
+      ]
+    ],
+    "baseline": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_2"
+        ]
+      ]
+    ],
+    "experiment": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_1"
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "25df51b717a0c0526562a5e0:verdict",
+    "asset_id": "PM_1280",
+    "expected": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_2"
+        ]
+      ]
+    ],
+    "baseline": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_2"
+        ]
+      ]
+    ],
+    "experiment": [
+      [
+        "structure.part_offset",
+        null,
+        [
+          "link_1"
+        ]
+      ]
+    ]
+  }
+]

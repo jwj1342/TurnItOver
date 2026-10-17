@@ -1,0 +1,74 @@
+{
+  "version": 2,
+  "status": "complete",
+  "scope": "terminal_diagnosis_and_prefix_stopping",
+  "seed": 20261013,
+  "epochs": 3,
+  "learning_rate": 0.0002,
+  "max_steps": 1617,
+  "supervision": "evidence",
+  "objectives": {
+    "counts": {
+      "diagnosis": 120,
+      "stopping": 429
+    },
+    "loss_weights": {
+      "diagnosis": 1.0,
+      "stopping": 0.2564102564102564
+    },
+    "loss": "assistant-token mean cross entropy multiplied by objective weight per optimizer step",
+    "selection": "all formal Train terminal diagnoses plus all formal Train causal stopping prefixes",
+    "supervision_sha256": "5a3ed7d4b98db8269bdcbef8609a1b3a4d508b62fc0180888e1ee666678d4595"
+  },
+  "lora": {
+    "rank": 8,
+    "alpha": 16,
+    "dropout": 0.0,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ]
+  },
+  "dataset": "/home/laq/experiments/kimi-v4-increment-v1/data/experiment",
+  "dataset_manifest_sha256": "4f14b988204114d00b69666bed7fb57429202e018190976e7d0f10605395f5d1",
+  "train_episodes_sha256": "f66946f279061850bb0b20ea882cac6a7ddc5f20d5ef3bcc52be808e68b4f179",
+  "train_stopping_sha256": "6cc89f336b84640600fa07836df788151a87ff1b3c321f20a582d96128235c10",
+  "base_model": "/home/laq/experiments/kimi-v4-increment-v1/models/Qwen3-VL-2B-Instruct",
+  "base_model_config_sha256": "bec4b3d446efa05807365c9e1cec03ac590836879d02f3a6da879971154bdd3b",
+  "examples": 549,
+  "python": "3.11.15",
+  "torch": "2.10.0+cu128",
+  "cuda": "12.8",
+  "gpu": "NVIDIA GeForce RTX 5090 D v2",
+  "limitations": [
+    "Diagnosis is supervised only at terminal prefixes; stop decisions use every causal prefix.",
+    "Privileged Oracle action targets are excluded.",
+    "Ordinary diagnosis includes annotated findings beyond current visible evidence; evidence diagnosis does not."
+  ],
+  "trainable_parameters": 3211264,
+  "total_parameters": 2130743296,
+  "steps": 1617,
+  "loss": {
+    "first": 0.6912581920623779,
+    "last": 1.2665549547818955e-05,
+    "minimum": 3.184259639965603e-06,
+    "mean": 0.059557556021351425
+  },
+  "objective_raw_loss": {
+    "diagnosis": {
+      "first": 2.0406739711761475,
+      "last": 0.9553513526916504,
+      "minimum": 3.7724425055785105e-05,
+      "mean": 0.250560072383887
+    },
+    "stopping": {
+      "first": 2.6959068775177,
+      "last": 4.939563950756565e-05,
+      "minimum": 1.2418611731845886e-05,
+      "mean": 0.026498275377524135
+    }
+  },
+  "checkpoint": "checkpoint"
+}

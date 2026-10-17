@@ -1,0 +1,6 @@
+{
+  "scripts/prepare_kimi_v4_increment.py": "b6f1097a5f61b713576eb08c683cc2695e875125fcf76d2213561ad6a62d825f",
+  "scripts/score_kimi_v4_increment.py": "d84e09035787c3e738c7521f857d3f5d6a9c71fdccd4d4c67870319089d071cf",
+  "scripts/audit_kimi_v4_run.py": "fa46969974901fa80d212b01737800bf19624b596b3d0ebe9e864c8e0ac97529",
+  "tests/unit/test_kimi_increment_scoring.py": "fe0a45cc6cb0857995d9542fbf96fe3a160d72888a92d635d923d441f40ee5ee"
+}

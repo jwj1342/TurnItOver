@@ -1,0 +1,62 @@
+{
+  "generation_witness_tokens": 2,
+  "status": "passed",
+  "torch": "2.10.0+cu128",
+  "transformers": "5.5.0",
+  "peft": "0.18.0",
+  "gpu": "NVIDIA GeForce RTX 5090 D v2",
+  "loss": 1.5238226652145386,
+  "new_processor_rows": [
+    {
+      "id": "eor-57a7ca1300ca:active:verdict",
+      "prefix_tokens": 2789,
+      "assistant_tokens": 209
+    },
+    {
+      "id": "eor-0407b54342e0:active:verdict",
+      "prefix_tokens": 2711,
+      "assistant_tokens": 79
+    },
+    {
+      "id": "eor-24f1b5b48879:active:verdict",
+      "prefix_tokens": 2710,
+      "assistant_tokens": 75
+    },
+    {
+      "id": "eor-472c836efefa:active:verdict",
+      "prefix_tokens": 2760,
+      "assistant_tokens": 70
+    },
+    {
+      "id": "eor-79926ed20b6c:active:verdict",
+      "prefix_tokens": 2788,
+      "assistant_tokens": 123
+    },
+    {
+      "id": "eor-95a0f2bbba88:active:verdict",
+      "prefix_tokens": 2793,
+      "assistant_tokens": 66
+    },
+    {
+      "id": "eor-a76c53e335c6:active:verdict",
+      "prefix_tokens": 3007,
+      "assistant_tokens": 75
+    },
+    {
+      "id": "eor-d5ba7047c72f:active:verdict",
+      "prefix_tokens": 2669,
+      "assistant_tokens": 204
+    },
+    {
+      "id": "eor-e4f19bdb3db0:active:verdict",
+      "prefix_tokens": 2786,
+      "assistant_tokens": 66
+    },
+    {
+      "id": "eor-e8c7469405c6:active:verdict",
+      "prefix_tokens": 2742,
+      "assistant_tokens": 202
+    }
+  ],
+  "supervision_sha256": "5a3ed7d4b98db8269bdcbef8609a1b3a4d508b62fc0180888e1ee666678d4595"
+}

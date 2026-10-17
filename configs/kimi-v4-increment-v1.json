@@ -1,0 +1,32 @@
+{
+  "source_commit": "3125b7b7c301b8522e8c9cfb44f5d35d8b66214d",
+  "source_path": "docs/evidence/kimi-easy-interactive-v2/sft/train.diagnosis.jsonl",
+  "training_base_commit": "9f8bef2043f05f5e2312b9faf8ea1d354884d0e5",
+  "baseline": "original v4: 110 terminal diagnoses + 429 stopping prefixes",
+  "experiment": "same v4 + 10 Kimi diagnoses, unchanged targets and public inputs",
+  "base_model": "Qwen3-VL-2B-Instruct",
+  "seed": 20261013,
+  "epochs_ceiling": 3,
+  "optimizer_steps_per_arm": 1617,
+  "optimizer": "AdamW",
+  "learning_rate": 0.0002,
+  "diagnosis_weight": 1.0,
+  "stopping_weight": 0.2564102564102564,
+  "lora_rank": 8,
+  "lora_alpha": 16,
+  "lora_dropout": 0.0,
+  "target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj"
+  ],
+  "dtype": "bfloat16",
+  "attention": "sdpa",
+  "gradient_checkpointing": true,
+  "decode": "greedy",
+  "max_new_tokens": 512,
+  "validation": "original v4 terminal rows; 28 episodes on 7 independent original assets",
+  "frozen_test_used": false,
+  "fairness_limit": "Same optimizer steps, not identical visual/text token FLOPs. Extra rows change deterministic shuffled order and replace 30 original-row exposures at fixed budget. No hyperparameter search."
+}

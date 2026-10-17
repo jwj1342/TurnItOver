@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "review_independence": "fresh-agent-same-family",
+  "acceptance_status": "provisional",
+  "verbatim_invocation": true,
+  "blocking_divergences": [],
+  "loss": 1.5238226652145386,
+  "generation_tokens": 2,
+  "assistant_mask_rows": 10
+}

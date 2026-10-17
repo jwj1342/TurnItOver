@@ -1,0 +1,8 @@
+{
+  "scripts/train_qwen_episode_sft.py": "f4eb37e33903bcfd69739eeb82791f830083450182b5e5d914abf384ff0e93b0",
+  "turnitover/oracle/sft_data.py": "b16a57457b183d62ea003c933d452c91a7464ba6710e55962b58f3929f57c318",
+  "turnitover/oracle/supervision.py": "5b6767e265c5327df1465f70818c0a9b797f15205bd41c489279332ab872fc5f",
+  "turnitover/oracle/training.py": "77496f63a27a459e2ed2974c01b907242fa2ac075fd788abb0230a3dd1f8bab3",
+  "turnitover/verifier/contracts.py": "7342f9c9dcd2646a463c9a776427d62688c646b0cd4cd5bf93f494796fea7481",
+  "scripts/evaluate_qwen_episode_sft.py": "02e0bb8fd80ff51b2f310e59f90d2b3a0b6d4892a5eebe0a20716842f4bd7b76"
+}

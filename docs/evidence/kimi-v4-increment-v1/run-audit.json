@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "arms": {
+    "baseline": {
+      "steps": 1617,
+      "objective_steps": {
+        "diagnosis": 330,
+        "stopping": 1287
+      },
+      "checkpoint_sha256": "8950cb61ec06d8e0ea6964a3c5f1ce644df679aee1e5efed5d817e981c450c90",
+      "train_run_sha256": "b84c858cf1cc103e768b397a90081cb4e10a2bc402e1f1e0d45cff3606b98635",
+      "loss_sha256": "d32ed45da2703067e9bf289747b986e115b55c6f586cb71573a620147ad0dc5b",
+      "predictions_sha256": "1b69daa59c1e19f335b5907bc2a548d15a5ca36efde65cdaaabd699513804a3b",
+      "metrics_sha256": "c928c1d40f2c29018f63b059c5cb07e2d7e22fa072e51f88ca7cecfecaa8d7ba",
+      "actual_order_matches_plan": true,
+      "kimi_exposures": 0,
+      "kimi_class_exposures": {}
+    },
+    "experiment": {
+      "steps": 1617,
+      "objective_steps": {
+        "stopping": 1267,
+        "diagnosis": 350
+      },
+      "checkpoint_sha256": "215d6974cfad883028fb33df59dd5df32c3c49eaba7b5b4429618119a68c1e13",
+      "train_run_sha256": "a29ff40367f06a800ab17217148807a4676a7780ed377aeea0238e41ff77b93f",
+      "loss_sha256": "74125f4ae1f9528d74f87101353347ef2523b14b9ec8c1b1ad37f27d70100adc",
+      "predictions_sha256": "71f623af5a75e8e1b7346610d592de847d30ae8063535ce3a06e1fa90d5a5444",
+      "metrics_sha256": "fb2901be18c3d6ab1386b2b056976388a28daa64047f763b6f2a2479daaa5a94",
+      "actual_order_matches_plan": true,
+      "kimi_exposures": 30,
+      "kimi_class_exposures": {
+        "clean": 21,
+        "kinematics.joint_axis": 9
+      }
+    }
+  },
+  "test_used": false,
+  "selection": "final step only; no Validation checkpoint selection"
+}

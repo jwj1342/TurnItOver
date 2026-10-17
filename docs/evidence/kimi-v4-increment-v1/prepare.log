@@ -1,0 +1,56 @@
+2026-10-16 22:35:58.901730: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-10-16 22:35:58.937617: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-10-16 22:36:00.039911: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+{"id": "eor-57a7ca1300ca:active:verdict", "category": "kinematics.joint_axis", "input_tokens": 2789, "assistant_tokens": 209}
+{"id": "eor-0407b54342e0:active:verdict", "category": "clean", "input_tokens": 2711, "assistant_tokens": 79}
+{"id": "eor-24f1b5b48879:active:verdict", "category": "clean", "input_tokens": 2710, "assistant_tokens": 75}
+{"id": "eor-472c836efefa:active:verdict", "category": "clean", "input_tokens": 2760, "assistant_tokens": 70}
+{"id": "eor-79926ed20b6c:active:verdict", "category": "clean", "input_tokens": 2788, "assistant_tokens": 123}
+{"id": "eor-95a0f2bbba88:active:verdict", "category": "clean", "input_tokens": 2793, "assistant_tokens": 66}
+{"id": "eor-a76c53e335c6:active:verdict", "category": "clean", "input_tokens": 3007, "assistant_tokens": 75}
+{"id": "eor-d5ba7047c72f:active:verdict", "category": "kinematics.joint_axis", "input_tokens": 2669, "assistant_tokens": 204}
+{"id": "eor-e4f19bdb3db0:active:verdict", "category": "clean", "input_tokens": 2786, "assistant_tokens": 66}
+{"id": "eor-e8c7469405c6:active:verdict", "category": "kinematics.joint_axis", "input_tokens": 2742, "assistant_tokens": 202}
+{
+  "status": "passed",
+  "source_commit": "3125b7b7c301b8522e8c9cfb44f5d35d8b66214d",
+  "training_code_base_commit": "9f8bef2043f05f5e2312b9faf8ea1d354884d0e5",
+  "source_diagnosis_sha256": "21e8b2100e4f7af444fe21a2dd70f152c48425825704aad4ea338fc82cb984ec",
+  "source_manifest_sha256": "6877a168283e464c6770e91434b84ac42cb0abccda9d557a9ba29731868c8549",
+  "classes": {
+    "kinematics.joint_axis": 3,
+    "clean": 7
+  },
+  "used": 10,
+  "excluded_actions": 52,
+  "excluded_old_teacher_rows": 117,
+  "baseline_examples": 539,
+  "experiment_examples": 549,
+  "validation_examples": 28,
+  "validation_assets": [
+    "100202",
+    "102252",
+    "102590",
+    "10797",
+    "1280",
+    "34610",
+    "45759"
+  ],
+  "no_train_validation_overlap_checked": [
+    "source_asset_id",
+    "source_identity_sha256",
+    "source_content_sha256",
+    "split_group"
+  ],
+  "baseline_supervision_sha256": "bf6a8ee617cfda24a336bcc5d1b484390da6de3642f6e53995748619c53d589a",
+  "experiment_supervision_sha256": "5a3ed7d4b98db8269bdcbef8609a1b3a4d508b62fc0180888e1ee666678d4595",
+  "baseline_input_hashes": {
+    "manifest.json": "4f14b988204114d00b69666bed7fb57429202e018190976e7d0f10605395f5d1",
+    "train.episodes.jsonl": "65ece86314c9c2039984c00bdebe622db181518e09b830edc088f8caf30b96a6",
+    "train.stopping.jsonl": "6cc89f336b84640600fa07836df788151a87ff1b3c321f20a582d96128235c10",
+    "validation.episodes.jsonl": "7e53237a9932f7070cef7103b9c96cb4041e5b7d0361200b17dc1b6abaf46bd3",
+    "validation.stopping.jsonl": "176122695444631cd7e72f4454344e379ecb8eefdf1213ad4e47e9bb1f50401f"
+  },
+  "adaptation": "Only filesystem image paths are prefixed; all model-visible messages and image bytes preserved."
+}

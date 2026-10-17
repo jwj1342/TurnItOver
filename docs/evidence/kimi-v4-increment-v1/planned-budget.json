@@ -1,0 +1,14 @@
+{
+  "baseline": {
+    "steps": 1617,
+    "kimi_exposures": 0,
+    "diagnosis_steps": 330,
+    "stopping_steps": 1287
+  },
+  "experiment": {
+    "steps": 1617,
+    "kimi_exposures": 30,
+    "diagnosis_steps": 350,
+    "stopping_steps": 1267
+  }
+}

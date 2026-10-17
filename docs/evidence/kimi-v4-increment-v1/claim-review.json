@@ -1,0 +1,26 @@
+{
+  "claim_supported": "partial",
+  "what_results_support": [
+    "单 seed、1617步对照：strict_all 17/28→18/28，2胜1负25不变；F1 .4211→.4737、unsupported 11→10主要反映同一个净增定位。",
+    "status 28/28、defect/joint 25/28均不变；clean9/9、axis4/4、offset1/5均不变，组合来源3/10→4/10。"
+  ],
+  "what_results_dont_support": [
+    "7条finding变化均为offset部件编号减1：5条link_2→link_1、2条link_4→link_3；类型、关节、evidence_steps均不变，不能证明视觉诊断或证据选择学习。",
+    "PM_1280一胜一负抵消，唯一净增资产PM_102252；不支持稳定跨资产收益。",
+    "组合来源10行均为first-failure单个offset目标，不表示同时识别两种缺陷。",
+    "不支持pass、停止时机、自由关节搜索、完整交互能力。"
+  ],
+  "missing_evidence": [
+    "一个seed、7个Validation原始资产。",
+    "新增7clean3axis0offset；新多状态协议没有独立held-out评估。",
+    "改变shuffle及diagnosis/stopping曝光，未隔离教师语义、样本顺序、任务配比和token/FLOPs。",
+    "缺少图像驱动定位与部件编号先验的区分；独立AI复核不是新增人工Gold。"
+  ],
+  "suggested_claim_revision": "本次固定预算试验只显示弱的局部数值信号，尚不足以确认可靠视觉诊断学习或归因于教师语义内容。",
+  "confidence": "medium",
+  "next_step": "扩充可信 Kimi 诊断数据",
+  "next_step_reason": "新增0条offset正例，而19条非空Validation目标中15条为offset；优先补充独立定位/证据审核的offset诊断、易混淆部件对照和更多原始资产，不能保证有效，本轮不追加采集或训练。",
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "integrity_status": "unavailable"
+}
