@@ -1,7 +1,8 @@
 name: auto-merge
 
-# Arms GitHub auto-merge on pull requests opened from branches of this repository.
+# Arms GitHub auto-merge on pull requests opened from branches of this repository against main.
 # The merge itself waits for the branch protection rule on main (one approving review).
+# Other base branches are not protected, so auto-merge there would merge immediately; skip them.
 # pull_request_target runs the workflow from main and never checks out PR code.
 on:
   pull_request_target:
@@ -13,7 +14,7 @@ permissions:
 
 jobs:
   enable:
-    if: ${{ !github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.repository }}
+    if: ${{ !github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.base.ref == 'main' }}
     runs-on: ubuntu-latest
     steps:
       - name: Enable auto-merge (squash)
