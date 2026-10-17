@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.streamlit/secrets.toml
+.DS_Store
+
+# Local model credentials/config. Keep the template versioned.
+.env
+.env.*
+!.env.example
+
+# Chatbox trajectories are intentionally versioned in this PRIVATE repository
+# so Streamlit Community Cloud can read session.json and resources directly.
+# Do not make the repository public before reviewing/sanitizing session data.
+!data/sessions/**
+
+# Native inference/runtime outputs are local experiment artifacts by default.
+data/runs/

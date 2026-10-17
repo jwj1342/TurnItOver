@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>pose harness v2</title></head>
+<body style="margin:0">
+<canvas id="scene" width="320" height="240" style="width:320px;height:240px"></canvas>
+<script>
+const canvas = document.getElementById('scene');
+const ctx = canvas.getContext('2d');
+let pose = {azimuth_deg: 0, elevation_deg: 30, distance_scale: 1.0};
+
+function draw() {
+  const {azimuth_deg, elevation_deg, distance_scale} = pose;
+  ctx.fillStyle = '#18202b';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const x = 160 + Math.cos(azimuth_deg * Math.PI / 180) * 60;
+  const y = 120 - elevation_deg * 0.7;
+  const radius = 24 / distance_scale;
+  ctx.fillStyle = '#e9c46a';
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#2a9d8f';
+  ctx.fillRect(20, 210, Math.max(4, azimuth_deg % 300), 8);
+}
+
+window.__img2threejsCameraV2 = {
+  setPose(next) {
+    pose = {
+      azimuth_deg: Number(next.azimuth_deg),
+      elevation_deg: Number(next.elevation_deg),
+      distance_scale: Number(next.distance_scale),
+    };
+    draw();
+  },
+  getPose() {
+    return {...pose};
+  }
+};
+
+draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>valid canvas</title></head>
+<body style="margin:0">
+<canvas id="scene" width="320" height="240" style="width:320px;height:240px"></canvas>
+<script>
+const canvas = document.getElementById('scene');
+const ctx = canvas.getContext('2d');
+ctx.fillStyle = '#202938';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+ctx.fillStyle = '#e9c46a';
+ctx.fillRect(60, 50, 180, 110);
+ctx.fillStyle = '#2a9d8f';
+ctx.beginPath();
+ctx.arc(230, 70, 35, 0, Math.PI * 2);
+ctx.fill();
+</script>
+</body>
+</html>

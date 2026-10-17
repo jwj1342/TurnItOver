@@ -10,6 +10,8 @@
 [已提交测量快照](results/2026-09-12/README.md) 可直接核对指标、真实模型补丁与费用，无需 API 或 GPU。
 修复试验中固定观察成功 1/3，三种额外反馈条件各成功 3/3；仅三个损坏案例，不能作为训练收益或泛化结论。
 
+`handoff/img2threejs/` 保存一套尚未融入正式 `turnitover` 包的 Image-to-Three.js 研究原型，供维护者审阅其生成—渲染门槛—主动验证—视觉修改闭环与 trajectory Viewer。交付边界见 [Img2Three.js prototype 交接说明](docs/img2threejs-handoff.md)，对应的实验设想见 [生成—验证—修复闭环实验方案](docs/iterative-synthesis-study.md)。
+
 ## 项目结构
 
 ```text

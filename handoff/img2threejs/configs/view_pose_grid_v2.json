@@ -1,0 +1,21 @@
+{
+  "harness_name": "__img2threejsCameraV2",
+  "initial_view_id": "az000_el030_d100",
+  "poses": [
+    {"view_id": "az000_el000_d100", "azimuth_deg": 0, "elevation_deg": 0, "distance_scale": 1.0},
+    {"view_id": "az000_el030_d100", "azimuth_deg": 0, "elevation_deg": 30, "distance_scale": 1.0},
+    {"view_id": "az045_el030_d100", "azimuth_deg": 45, "elevation_deg": 30, "distance_scale": 1.0},
+    {"view_id": "az090_el030_d100", "azimuth_deg": 90, "elevation_deg": 30, "distance_scale": 1.0},
+    {"view_id": "az135_el030_d100", "azimuth_deg": 135, "elevation_deg": 30, "distance_scale": 1.0},
+    {"view_id": "az180_el030_d100", "azimuth_deg": 180, "elevation_deg": 30, "distance_scale": 1.0},
+    {"view_id": "az225_el030_d100", "azimuth_deg": 225, "elevation_deg": 30, "distance_scale": 1.0},
+    {"view_id": "az270_el030_d100", "azimuth_deg": 270, "elevation_deg": 30, "distance_scale": 1.0},
+    {"view_id": "az315_el030_d100", "azimuth_deg": 315, "elevation_deg": 30, "distance_scale": 1.0},
+    {"view_id": "az000_el060_d100", "azimuth_deg": 0, "elevation_deg": 60, "distance_scale": 1.0},
+    {"view_id": "az090_el060_d100", "azimuth_deg": 90, "elevation_deg": 60, "distance_scale": 1.0},
+    {"view_id": "az180_el060_d100", "azimuth_deg": 180, "elevation_deg": 60, "distance_scale": 1.0},
+    {"view_id": "az270_el060_d100", "azimuth_deg": 270, "elevation_deg": 60, "distance_scale": 1.0},
+    {"view_id": "az000_el030_d080", "azimuth_deg": 0, "elevation_deg": 30, "distance_scale": 0.8},
+    {"view_id": "az000_el030_d130", "azimuth_deg": 0, "elevation_deg": 30, "distance_scale": 1.3}
+  ]
+}
