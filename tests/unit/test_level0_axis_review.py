@@ -35,3 +35,18 @@ def test_generated_level0_bundle_is_balanced_pending_and_checked():
     assert {row["case_id"]: checks[row["case_id"]]["code_correct"] for row in gold} == {
         row["case_id"]: row["kind"] == "clean" for row in gold
     }
+
+
+def test_completed_human_review_matches_private_mapping_and_checker():
+    review = {row["case_id"]: row for row in map(json.loads, (DEFAULT_OUT / "human_review.jsonl").read_text().splitlines())}
+    gold = {row["case_id"]: row for row in map(json.loads, (DEFAULT_OUT / "private/gold.jsonl").read_text().splitlines())}
+    checks = {row["case_id"]: row for row in map(json.loads, (DEFAULT_OUT / "private/checks.jsonl").read_text().splitlines())}
+    assert set(review) == set(gold) == set(checks)
+    for case_id, row in review.items():
+        judgment, expected = row["human_judgment"], gold[case_id]
+        assert row["status"] == "human_review_complete"
+        assert judgment["one_glance"] is True
+        assert judgment["evidence_states"] == ["mid", "limit"]
+        assert judgment["verdict"] == expected["expected_status"]
+        assert judgment["defect_id"] == expected["defect_id"]
+        assert checks[case_id]["code_correct"] == (expected["kind"] == "clean")
