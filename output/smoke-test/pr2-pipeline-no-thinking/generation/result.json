@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "status": "complete",
+  "images": [
+    {
+      "path": "input-00.png",
+      "sha256": "69792b3220d52ed6680294540fe165130db63cfc801e85a0f2a93154645967b4"
+    }
+  ],
+  "prompt_sha256": "b746a4345eba8858f5f6725e672a5c324b8fcde29677f074d30a1ba88111b751",
+  "program_sha": "a5a7b6c3d8593c20",
+  "model": {
+    "model": "qwen3.7-plus",
+    "usage": {
+      "prompt_tokens": 1640,
+      "total_tokens": 4708,
+      "completion_tokens": 3068,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "image_tokens": 1154,
+        "text_tokens": 486
+      },
+      "completion_tokens_details": {
+        "text_tokens": 3068
+      }
+    },
+    "finish_reason": "stop",
+    "elapsed_ms": 55157.68181400199
+  }
+}

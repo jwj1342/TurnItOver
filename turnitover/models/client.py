@@ -33,6 +33,13 @@ class ModelResult:
     elapsed_ms: float
 
 
+NORMAL_FINISH_REASONS = frozenset({"completed", "end_turn", "STOP", "stop"})
+
+
+def is_normal_finish_reason(reason: str) -> bool:
+    return reason in NORMAL_FINISH_REASONS
+
+
 def image_part(path: Path) -> tuple[str, str]:
     with Image.open(path) as image:
         mime = Image.MIME.get(image.format)
@@ -68,8 +75,12 @@ def request_payload(cfg: ModelConfig, prompt: str, images: list[Path]) -> tuple[
             "max_output_tokens": cfg.max_tokens, "input": [{"role": "user", "content": content}]}
     content = [{"type": "image_url", "image_url": {"url": f"data:{mime};base64,{data}"}} for mime, data in parts]
     content.append({"type": "text", "text": prompt})
-    return cfg.base_url + "/chat/completions", headers, {"model": cfg.model, "max_tokens": cfg.max_tokens,
-        "messages": [{"role": "user", "content": content}]}
+    body = {"model": cfg.model, "max_tokens": cfg.max_tokens,
+            "messages": [{"role": "user", "content": content}]}
+    if (cfg.provider == "openai_compatible" and cfg.model.startswith("qwen3.7-plus")
+            and cfg.enable_thinking is not None):
+        body["enable_thinking"] = cfg.enable_thinking
+    return cfg.base_url + "/chat/completions", headers, body
 
 
 def parse_response(provider: str, data: dict, elapsed_ms: float) -> ModelResult:

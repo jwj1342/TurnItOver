@@ -1,0 +1,16 @@
+Reconstruct the single articulated object shown in the supplied reference image(s) as an editable Three.js TypeScript program. Multiple images, if supplied, show the same object. This is a single-pass baseline, not a claim of recovered ground-truth hidden geometry or joints.
+
+Match visible silhouette, proportions, component layout, colors and materials. Use cylinders, extrusions, curved surfaces and custom BufferGeometry where warranted; do not reduce every component to a box. Preserve meaningful parts. Infer hidden geometry conservatively. Do not use image planes to imitate the photograph. Record ambiguous joints or hidden details in source comments.
+
+Runtime contract (Three.js 0.170.0):
+- Return only one TypeScript code block, containing a self-contained ES module.
+- Default export: function createObject(THREE) returning {root, joints, dispose}.
+- THREE is supplied as an argument. No runtime imports, network access, files, external textures, DOM access, timers or animation loops. No renderer, camera or lighting setup: the harness provides those.
+- root is a THREE.Group. Every semantic part is a uniquely named Group with meshes as children. Use stable readable ASCII part IDs. Name meshes '<part_id>#mesh'. Avoid extra named wrapper groups being mistaken for parts.
+- Joint pivot groups are named 'joint:<joint_id>'. All parts and pivots descend from root.
+- joints is a dictionary, possibly empty. Every entry is {type:'revolute'|'prismatic', part:<part_id>, limits:[lo,hi], set(value)}. set is absolute (never incremental), clamps to limits and updates the corresponding pivot. Revolute units are radians; prismatic units are meters. Include zero in limits and make set(0) the reference pose. Initialize all joints with set(0).
+- Use Y up and +Z facing the object's front. Use plausible meter-scale dimensions; do not claim measured scale from an uncalibrated photo.
+- dispose releases every allocated geometry and material.
+- Construct finite, non-empty geometry. Do not use SkinnedMesh or InstancedMesh because the current checker geometry export does not support their deformation/instances.
+
+Output code only. Keep geometry details sufficient for a useful visual comparison while keeping total triangle count below 50,000.

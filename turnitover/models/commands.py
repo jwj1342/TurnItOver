@@ -7,7 +7,7 @@ import json
 import re
 from pathlib import Path
 
-from turnitover.models.client import complete
+from turnitover.models.client import complete, is_normal_finish_reason
 from turnitover.models.config import ROLES, model_config, read_environment
 from turnitover.telemetry import git_state, now_iso
 
@@ -73,7 +73,7 @@ def run_call(args, repo_root: Path, *, reconstruct: bool = False) -> int:
         manifest["response"] = {k: v for k, v in dataclasses.asdict(result).items() if k != "text"}
         manifest["status"] = "responded"
         if reconstruct:
-            if result.finish_reason not in {"completed", "end_turn", "STOP", "stop"}:
+            if not is_normal_finish_reason(result.finish_reason):
                 raise ValueError("Model response did not finish normally; inspect response.txt before using it")
             source = extract_program(result.text)
             (output / "program.ts").write_text(source, encoding="utf-8")

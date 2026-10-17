@@ -23,4 +23,4 @@ Read `docs/architecture.md` first. `RP.md` is the research proposal that this co
 - `pytest` before every commit (unit tests, no browser). `pytest -m browser` when touching `web/` or `turnitover/render/`.
 - Randomness only through an explicit `numpy.random.Generator`. No global state in workers; a shard must be reproducible from `(config, shard index)`.
 - One responsibility per module. Checkers consume browser-exported evidence only, never `AssetSpec`.
-- Out of scope until the corresponding milestone: model training, RL, the LLM generation loop, real asset converters.
+- Out of scope until the corresponding milestone: model training, RL, formal real-photo evaluation, real asset converters.

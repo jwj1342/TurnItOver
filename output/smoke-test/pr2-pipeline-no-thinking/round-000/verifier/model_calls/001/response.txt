@@ -1,0 +1,1 @@
+{"action":{"type":"actuate_joint","joint_id":"drawer_0","detent":"limit"}}

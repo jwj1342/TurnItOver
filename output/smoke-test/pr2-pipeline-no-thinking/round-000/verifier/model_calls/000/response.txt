@@ -1,0 +1,1 @@
+{"action":{"type":"request_view","view_id":"front"}}

@@ -53,12 +53,16 @@ class ModelConfig:
     api_key: str = field(repr=False)
     max_tokens: int = 4096
     timeout: float = 120
+    enable_thinking: bool | None = None
 
     def public(self) -> dict:
         # Endpoint URLs can contain private routing information; do not log them.
-        return {"role": self.role, "provider": self.provider, "model": self.model,
-                "key_configured": bool(self.api_key), "max_tokens": self.max_tokens,
-                "timeout": self.timeout}
+        result = {"role": self.role, "provider": self.provider, "model": self.model,
+                  "key_configured": bool(self.api_key), "max_tokens": self.max_tokens,
+                  "timeout": self.timeout}
+        if self.enable_thinking is not None:
+            result["enable_thinking"] = self.enable_thinking
+        return result
 
     def validate(self, require_key: bool = True) -> None:
         if not self.model:
@@ -74,6 +78,7 @@ def model_config(role: str, env: dict[str, str]) -> ModelConfig:
     provider = env.get(f"{prefix}_PROVIDER", "openai")
     if provider not in PROVIDERS:
         raise ValueError(f"Unsupported provider for {role}")
+    model = env.get(f"{prefix}_MODEL", "").strip()
     provider_prefix, default_url = PROVIDERS[provider]
     base = env.get(f"{prefix}_BASE_URL") or env.get(f"{provider_prefix}_BASE_URL") or default_url
     url = urlsplit(base)
@@ -90,5 +95,11 @@ def model_config(role: str, env: dict[str, str]) -> ModelConfig:
         raise ValueError("Model token limit and timeout must be numeric") from None
     if limit <= 0 or not math.isfinite(timeout) or timeout <= 0:
         raise ValueError("Model token limit and timeout must be positive and finite")
-    return ModelConfig(role, provider, env.get(f"{prefix}_MODEL", "").strip(), base.rstrip("/"),
-                       env.get(key_name, ""), limit, timeout)
+    enable_thinking = None
+    if provider == "openai_compatible" and model.startswith("qwen3.7-plus"):
+        value = env.get("TIO_QWEN37_ENABLE_THINKING", "false").strip().lower()
+        if value not in {"true", "false"}:
+            raise ValueError("TIO_QWEN37_ENABLE_THINKING must be true or false")
+        enable_thinking = value == "true"
+    return ModelConfig(role, provider, model, base.rstrip("/"), env.get(key_name, ""),
+                       limit, timeout, enable_thinking)

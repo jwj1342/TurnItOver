@@ -11,9 +11,9 @@ import numpy as np
 
 from turnitover.core.actions import Observation, QueryRuntime, RuntimeProperty
 from turnitover.core.serde import to_dict
-from turnitover.models.client import ModelError, ModelResult
+from turnitover.models.client import ModelError, ModelResult, is_normal_finish_reason
 from turnitover.taxonomy import load_taxonomy
-from turnitover.verifier.contracts import Context, parse_json
+from turnitover.verifier.contracts import Context, DecisionError, parse_json
 
 
 def action_plan(context: Context) -> list[dict]:
@@ -42,7 +42,8 @@ class VisionPolicy:
         self.calls: list[dict] = []
         self._plan = None
 
-    def decide(self, context: Context, history: Sequence[Observation], remaining: int) -> dict:
+    def decide(self, context: Context, history: Sequence[Observation], remaining: int,
+               validation_feedback: str | None = None) -> dict:
         if self._plan is None:
             self._plan = action_plan(context)
             if self.mode == "random":
@@ -61,6 +62,8 @@ class VisionPolicy:
         final_only = remaining == 0 or self.mode != "active"
         protocol = resources.files("turnitover.verifier").joinpath("final_prompt.txt" if final_only else "prompt.txt").read_text()
         prompt = protocol + "\nObserved task data:\n" + json.dumps(data, ensure_ascii=False)
+        if validation_feedback:
+            prompt += "\n\nValidation feedback from your previous response:\n" + validation_feedback
         if self.mode != "active":
             prompt += "\nFixed observation collection has finished. Return a final verdict now."
         call_dir = self.output / "model_calls" / f"{len(self.calls):03d}"
@@ -73,12 +76,12 @@ class VisionPolicy:
             response = self.call(prompt, images)
             (call_dir / "response.txt").write_text(response.text)
             record.update({k: v for k, v in dataclasses.asdict(response).items() if k != "text"})
-            if response.finish_reason not in {"completed", "end_turn", "STOP", "stop"}:
+            if not is_normal_finish_reason(response.finish_reason):
                 raise ModelError("Judge response is incomplete")
             parsed = parse_json(response.text)
+            if not isinstance(parsed, dict):
+                raise DecisionError("Judge decision must be a JSON object")
             if self.mode != "active" and "verdict" not in parsed:
-                from turnitover.verifier.contracts import DecisionError
-
                 raise DecisionError("Fixed/random baseline must return a final verdict")
             record["status"] = "received"
             return parsed
@@ -93,7 +96,8 @@ class RuntimePolicy:
     """Checks observable budget violations only; never claims reference/geometry validity."""
     calls: tuple = ()
 
-    def decide(self, context: Context, history: Sequence[Observation], remaining: int) -> dict:
+    def decide(self, context: Context, history: Sequence[Observation], remaining: int,
+               validation_feedback: str | None = None) -> dict:
         plan = action_plan(context)
         if remaining and len(history) < len(plan):
             return {"action": plan[len(history)]}
