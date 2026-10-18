@@ -28,7 +28,16 @@ def test_easy_bundle_is_train_only_blind_and_normal_first():
         cases = [r for r in public if r['asset_id']==asset['asset_id']]
         assert len(cases) == 3 and {r['view'] for r in cases} == {asset['view']}
         assert all(r['states']==['rest','mid','limit'] for r in cases)
-    assert all(r['human_judgment']['verdict'] is None for r in rows(root/'human_review.jsonl'))
+    review = rows(root/'human_review.jsonl')
+    assert {r['case_id'] for r in review} == {r['case_id'] for r in public}
+    for row in review:
+        judgment = row['human_judgment']
+        if row['status'] == 'pending_human_review':
+            assert judgment['verdict'] is None
+        else:
+            assert row['status'] == 'human_review_complete'
+            assert judgment['verdict'] in {'pass', 'fail'}
+            assert judgment['notes']  # Preserve recorded human decisions.
 
 
 def test_single_corruption_isolation_preserves_motion_mechanism():

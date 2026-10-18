@@ -1,0 +1,75 @@
+{
+  "unit": "independent_source_object",
+  "objects": [
+    {
+      "asset_id": "PM_102016",
+      "split_group": "PartNet-Mobility:102016",
+      "split": "train",
+      "case_ids": [
+        "l0-773ea8b2c110",
+        "l0-92541cdf9298"
+      ],
+      "training_eligible": true
+    },
+    {
+      "asset_id": "PM_102314",
+      "split_group": "PartNet-Mobility:102314",
+      "split": "train",
+      "case_ids": [
+        "l0-615fc02263ab",
+        "l0-9d641c250aa2"
+      ],
+      "training_eligible": true
+    },
+    {
+      "asset_id": "PM_10697",
+      "split_group": "PartNet-Mobility:10697",
+      "split": "train",
+      "case_ids": [
+        "l0-0345ca7d11c7",
+        "l0-18bffea53090"
+      ],
+      "training_eligible": true
+    },
+    {
+      "asset_id": "PM_12036",
+      "split_group": "PartNet-Mobility:12036",
+      "split": "train",
+      "case_ids": [
+        "l0-36a01687ac68",
+        "l0-44bdad092cb1"
+      ],
+      "training_eligible": true
+    },
+    {
+      "asset_id": "PM_12594",
+      "split_group": "PartNet-Mobility:12594",
+      "split": "train",
+      "case_ids": [
+        "l0-20f05b0baaf3",
+        "l0-2bac52a22825"
+      ],
+      "training_eligible": true
+    },
+    {
+      "asset_id": "PM_5088",
+      "split_group": "PartNet-Mobility:5088",
+      "split": "train",
+      "case_ids": [
+        "l0-3b82bd9c5729",
+        "l0-9af6bfe1a9ee"
+      ],
+      "training_eligible": true
+    },
+    {
+      "asset_id": "PM_8867",
+      "split_group": "PartNet-Mobility:8867",
+      "split": "train",
+      "case_ids": [
+        "l0-208b6ba1bb16",
+        "l0-d1dca183c02b"
+      ],
+      "training_eligible": true
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{"case_id": "l0-0345ca7d11c7", "defect_id": "kinematics.joint_axis", "expected_status": "fail", "motion_description": "The reference screen tilts around the keyboard hinge; the candidate swings diagonally away from that opening plane."}
+{"case_id": "l0-18bffea53090", "defect_id": null, "expected_status": "pass", "motion_description": "The candidate screen follows the reference keyboard-hinge opening motion."}
+{"case_id": "l0-208b6ba1bb16", "defect_id": null, "expected_status": "pass", "motion_description": "The candidate door follows the same hinge swing as the reference at mid and limit."}
+{"case_id": "l0-20f05b0baaf3", "defect_id": null, "expected_status": "pass", "motion_description": "The candidate door follows the reference downward folding motion."}
+{"case_id": "l0-2bac52a22825", "defect_id": "kinematics.joint_axis", "expected_status": "fail", "motion_description": "The reference door folds downward; the candidate turns upward and diagonally instead."}
+{"case_id": "l0-36a01687ac68", "defect_id": "kinematics.joint_axis", "expected_status": "fail", "motion_description": "The reference refrigerator door swings sideways; the candidate flips outward and upward instead."}
+{"case_id": "l0-3b82bd9c5729", "defect_id": "kinematics.joint_axis", "expected_status": "fail", "motion_description": "The reference display panel tilts around its stand; the candidate rotates across the stand instead."}
+{"case_id": "l0-44bdad092cb1", "defect_id": null, "expected_status": "pass", "motion_description": "The candidate refrigerator door follows the reference side-swing motion."}
+{"case_id": "l0-615fc02263ab", "defect_id": "kinematics.joint_axis", "expected_status": "fail", "motion_description": "The reference chair panel folds within the frame; the candidate tilts out of that plane and becomes nearly horizontal at limit."}
+{"case_id": "l0-773ea8b2c110", "defect_id": "kinematics.joint_axis", "expected_status": "fail", "motion_description": "The reference USB component slides straight from its housing; the candidate turns in a perpendicular direction instead."}
+{"case_id": "l0-92541cdf9298", "defect_id": null, "expected_status": "pass", "motion_description": "The candidate USB component follows the reference straight sliding motion."}
+{"case_id": "l0-9af6bfe1a9ee", "defect_id": null, "expected_status": "pass", "motion_description": "The candidate display panel follows the reference tilt around its stand."}
+{"case_id": "l0-9d641c250aa2", "defect_id": null, "expected_status": "pass", "motion_description": "The candidate chair panel follows the same folding motion as the reference at mid and limit."}
+{"case_id": "l0-d1dca183c02b", "defect_id": "kinematics.joint_axis", "expected_status": "fail", "motion_description": "The reference door swings about its normal hinge; the candidate tilts diagonally and rotates down across the reference swing plane."}

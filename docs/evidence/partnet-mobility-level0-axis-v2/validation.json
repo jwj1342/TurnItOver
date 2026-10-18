@@ -1,0 +1,154 @@
+{
+  "status": "automatic_checks_passed",
+  "acceptance": "target_not_met",
+  "screened_train_objects": 28,
+  "automatic_pass_objects": 7,
+  "automatic_pass_cases": 14,
+  "clean_cases": 7,
+  "axis_cases": 7,
+  "training_eligible_objects": 7,
+  "training_eligible_cases": 14,
+  "training_clean_cases": 7,
+  "training_axis_cases": 7,
+  "human_review_complete": 14,
+  "pending_human_review": 0,
+  "rejected_objects": [
+    {
+      "asset_id": "PM_100054",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_100934",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_101714",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_101870",
+      "reasons": {
+        "reference_motion_too_small_all_views": 2
+      }
+    },
+    {
+      "asset_id": "PM_102080",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_102257",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_102288",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_102292",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_102379",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_102569",
+      "reasons": {
+        "reference_motion_too_small_all_views": 2
+      }
+    },
+    {
+      "asset_id": "PM_102961",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_103275",
+      "reasons": {
+        "reference_motion_too_small_all_views": 2
+      }
+    },
+    {
+      "asset_id": "PM_10902",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_11103",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_1288",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_14306",
+      "reasons": {
+        "reference_motion_too_small_all_views": 3
+      }
+    },
+    {
+      "asset_id": "PM_15084",
+      "reasons": {
+        "reference_motion_too_small_all_views": 3
+      }
+    },
+    {
+      "asset_id": "PM_19836",
+      "reasons": {
+        "reference_motion_too_small_all_views": 3
+      }
+    },
+    {
+      "asset_id": "PM_25308",
+      "reasons": {
+        "reference_motion_too_small_all_views": 2
+      }
+    },
+    {
+      "asset_id": "PM_3971",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    },
+    {
+      "asset_id": "PM_48686",
+      "reasons": {
+        "reference_motion_too_small_all_views": 1
+      }
+    }
+  ],
+  "clean_checker_passed": 7,
+  "axis_checker_rejected": 7,
+  "axis_angle_deg": 90,
+  "native_image_size": [
+    256,
+    256
+  ],
+  "part_offset_cases": 0,
+  "validation_test_rows_touched": 0,
+  "model_calls": 0,
+  "sft_training_runs": 0
+}
