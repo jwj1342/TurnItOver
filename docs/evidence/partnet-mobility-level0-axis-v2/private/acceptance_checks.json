@@ -1,0 +1,36 @@
+{
+  "recorded_on": "2026-10-18",
+  "kind": "automated_verification_only",
+  "human_review": false,
+  "unit": {
+    "command": "python -m pytest -o addopts= tests/unit -q",
+    "passed": 283,
+    "skipped": 2,
+    "stdout": "........................................................................ [ 25%]\n...........................................................s.s.......... [ 50%]\n........................................................................ [ 75%]\n.....................................................................    [100%]\n283 passed, 2 skipped in 59.07s\n"
+  },
+  "browser": {
+    "command": "python -m pytest -o addopts= tests/browser/test_level0_axis_v2.py tests/browser/test_harness_roundtrip.py tests/browser/test_urdf.py tests/browser/test_generate_smoke.py -m browser -q",
+    "passed": 9,
+    "skipped": 0,
+    "stdout": ".........                                                                [100%]\n9 passed in 113.50s (0:01:53)\n"
+  },
+  "review_gate_regression": {
+    "passed": 7,
+    "stdout": ".......                                                                  [100%]\n7 passed in 46.23s\n"
+  },
+  "replay": {
+    "status": "passed",
+    "cases": 56,
+    "independent_objects": 28,
+    "native_image_files_reproduced": 336,
+    "native_image_size": [
+      256,
+      256
+    ],
+    "source_manifest_sha256": "b9d047da54659fbcb35c205dc1c8c67d6a264712598ca17e1555a64ea7207cb9",
+    "checker_replayed": true,
+    "all_image_sha256_matched": true,
+    "source_files_changed": 0
+  },
+  "replay_source_manifest": "private/replay_source_manifest.json"
+}

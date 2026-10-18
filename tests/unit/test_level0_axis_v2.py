@@ -23,20 +23,33 @@ def test_v2_checksums_splits_balance_and_review_isolation():
     reviews = {r['case_id']: r for r in rows(DEFAULT_OUT / 'human_review.jsonl')}
     prior = {r['case_id']: r for r in rows(V1 / 'human_review.jsonl')}
     exported = rows(DEFAULT_OUT / 'train_manifest.jsonl')
-    splits = json.loads(DEFAULT_SPLITS.read_text())['groups']
+    original_splits = json.loads(DEFAULT_SPLITS.read_text())['groups']
+    splits = json.loads((DEFAULT_OUT / manifest['expanded_splits']).read_text())['groups']
+    assert all(splits[k] == v for k, v in original_splits.items())
     assert len(public) == len(gold) == len(reviews)
-    assert Counter(g['kind'] for g in gold) == {'clean': 7, 'joint_axis': 7}
-    assert len({g['asset_id'] for g in gold}) == 7
+    objects = len({g['asset_id'] for g in gold})
+    assert objects >= 28
+    assert Counter(g['kind'] for g in gold) == {'clean': objects, 'joint_axis': objects}
     assert all(splits[f"PartNet-Mobility:{g['asset_id'][3:]}"] == 'train' for g in gold)
     assert all(not {'kind', 'defect_id', 'expected_status', 'parameters', 'joint_id', 'asset_id'} & p.keys() for p in public)
     assert all(reviews[k] == v for k, v in prior.items())
-    assert {r['case_id'] for r in exported} == set(reviews)
-    assert all(r['status'] == 'human_review_complete' for r in reviews.values())
+    expected_export = set()
+    for asset in {g['asset_id'] for g in gold}:
+        pair = [g for g in gold if g['asset_id'] == asset]
+        if all(accepted(reviews[g['case_id']], g, g['case_id'] in prior) for g in pair):
+            expected_export.update(g['case_id'] for g in pair)
+    assert {r['case_id'] for r in exported} == expected_export
     for case_id, row in reviews.items():
-        if case_id not in prior:
-            assert row['reviewer'] == 'user'
-            assert '我已人工审查' in row['review_source']
-            assert row['reviewed_at_precision'] == 'date'
+        if row['status'] == 'pending_human_review':
+            assert row['reviewer'] is None
+            assert row['human_judgment']['verdict'] is None
+            assert case_id not in {r['case_id'] for r in exported}
+        elif row['status'] == 'human_review_rejected':
+            assert row['human_judgment']['notes']
+            assert case_id not in {r['case_id'] for r in exported}
+        elif case_id not in prior:
+            assert row['reviewer']
+            assert row['reviewed_at']
             assert accepted(row, next(g for g in gold if g['case_id'] == case_id))
     for row in public:
         preview = Image.open(DEFAULT_OUT / row['input_preview'])
@@ -64,6 +77,35 @@ def test_default_approval_is_not_completed_visual_review():
     assert not accepted(wrong, gold)
 
 
+def test_expansion_preserves_reviewed_native_inputs_and_independent_sources():
+    manifest = json.loads((DEFAULT_OUT / 'private/expansion_base_manifest.json').read_text())
+    for name, digest in manifest['files'].items():
+        if name.startswith(('boards/', 'inputs/', 'frames/')) or name.startswith('private/l0-'):
+            assert sha256_path(DEFAULT_OUT / name) == digest
+    catalog = json.loads((DEFAULT_OUT / 'private/source_catalog/catalog.json').read_text())
+    entries = catalog['assets']
+    assert len(entries) == 28
+    assert len({e['model_id'] for e in entries}) == 28
+    assert len({e['original_geometry_fingerprint'] for e in entries}) == 28
+    assert all(e['upstream_structural_checks']['frozen_test_overlap'] is False for e in entries)
+
+
+def test_full_geometry_projection_rejects_objects_outside_frozen_camera():
+    import numpy as np
+    from scripts.level0_expansion_search import inside_camera
+    from turnitover.checkers.base import PartMesh
+    from turnitover.core.sample import Framing
+    from turnitover.render.views import ViewDef
+    def rendered(point):
+        return {'geometry': {'rest': {'part': PartMesh(np.array([point]), np.empty((0, 3), dtype=int))}}}
+    framing = Framing(center=(0., 0., 0.), radius=1.)
+    for projection in ('orthographic', 'perspective'):
+        view = ViewDef('front', 0., 0., projection)
+        assert inside_camera(rendered([0., 0., 0.]), framing, view)[0]
+        assert not inside_camera(rendered([10., 0., 0.]), framing, view)[0]
+        assert not inside_camera(rendered([0., 0., 10.]), framing, view)[0]
+
+
 def test_finalize_rejects_tampered_image_before_export(tmp_path):
     bundle = tmp_path / 'bundle'
     shutil.copytree(DEFAULT_OUT, bundle)
@@ -78,8 +120,10 @@ def test_finalize_is_idempotent_and_validates_axis_only_specs(tmp_path):
     shutil.copytree(DEFAULT_OUT, bundle)
     before = (bundle / 'manifest.json').read_bytes()
     result = finalize(bundle)
-    assert result['training_eligible_objects'] == 7
-    assert result['pending_human_review'] == 0
+    published = json.loads((DEFAULT_OUT / 'validation.json').read_text())
+    assert result['training_eligible_objects'] == published['training_eligible_objects']
+    assert result['pending_human_review'] == published['pending_human_review']
+    assert result['automatic_pass_objects'] == 28
     assert (bundle / 'manifest.json').read_bytes() == before
 
 
@@ -88,6 +132,7 @@ def test_pair_requires_both_reviews_and_rejected_partner_blocks_export(tmp_path)
     bundle = tmp_path / 'synthetic-review-fixture'
     shutil.copytree(DEFAULT_OUT, bundle)
     gold = rows(bundle / 'private/gold.jsonl')
+    baseline = json.loads((bundle / 'validation.json').read_text())['training_eligible_objects']
     review = rows(bundle / 'human_review.jsonl')
     pair = [g for g in gold if g['asset_id'] == 'PM_102314']
     selected = {g['case_id']: g for g in pair}
@@ -103,8 +148,8 @@ def test_pair_requires_both_reviews_and_rejected_partner_blocks_export(tmp_path)
     partner = next(r for r in review if r['case_id'] == pair[1]['case_id'])
     partner['status'] = 'human_review_rejected'
     write_jsonl(bundle / 'human_review.jsonl', review)
-    assert finalize(bundle)['training_eligible_objects'] == 6
+    assert finalize(bundle)['training_eligible_objects'] == baseline - 1
     partner['status'] = 'human_review_complete'
     write_jsonl(bundle / 'human_review.jsonl', review)
-    assert finalize(bundle)['training_eligible_objects'] == 7
-    assert len(rows(bundle / 'train_manifest.jsonl')) == 14
+    assert finalize(bundle)['training_eligible_objects'] == baseline
+    assert len(rows(bundle / 'train_manifest.jsonl')) == 2 * baseline

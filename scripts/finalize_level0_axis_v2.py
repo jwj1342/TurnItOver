@@ -79,8 +79,15 @@ def finalize(out: Path):
         raise ValueError('Case ID sets differ')
     config_path = next(Path(p) for p in manifest['inputs'] if p.endswith('.yaml') and 'generate_' in p)
     splits_path = next(Path(p) for p in manifest['inputs'] if p.endswith('/splits.json'))
-    catalog = CatalogSource(load_generate_config(config_path).asset_source['manifest'])
-    splits = json.loads(splits_path.read_text())
+    catalog = CatalogSource(str(out / manifest['source_catalog']) if 'source_catalog' in manifest
+                            else load_generate_config(config_path).asset_source['manifest'])
+    original_splits = json.loads(splits_path.read_text())
+    splits = (json.loads((out / manifest['expanded_splits']).read_text())
+              if 'expanded_splits' in manifest else original_splits)
+    if any(splits['groups'].get(k) != v for k, v in original_splits['groups'].items()):
+        raise ValueError('Original split assignments changed')
+    if any(v != 'train' for k, v in splits['groups'].items() if k not in original_splits['groups']):
+        raise ValueError('New source objects must be Train only')
     validate_specs(gold, catalog, out)
     provenance = json.loads((out / 'private/inherited_review_provenance.json').read_text())
     for case_id, source in provenance.items():
@@ -115,7 +122,9 @@ def finalize(out: Path):
     for asset, group in sorted(groups.items()):
         object_splits.append({'asset_id': asset, 'split_group': catalog.metadata(asset)['split_group'],
             'split': 'train', 'case_ids': sorted(g['case_id'] for g in group),
-            'training_eligible': asset in eligible})
+            'training_eligible': asset in eligible,
+            'source_model_id': catalog.metadata(asset).get('model_id'),
+            'source_archive_sha256': catalog.metadata(asset).get('archive_sha256')})
         for g in group:
             case_id = g['case_id']
             g['training_eligibility'] = 'eligible' if asset in eligible else 'pending_or_rejected_human_review'
@@ -140,16 +149,35 @@ def finalize(out: Path):
     write_jsonl(out / 'private/gold.jsonl', gold)
     write_jsonl(out / 'train_manifest.jsonl', sorted(exported, key=lambda r: r['case_id']))
     write_jsonl(out / 'private/train_targets.jsonl', sorted(targets, key=lambda r: r['case_id']))
+    if 'source_catalog' in manifest:
+        from scripts.level0_expansion_review import write_review_page
+        write_review_page(out, public, reviews)
+        for source in (Path(__file__).resolve(), Path(__file__).with_name('level0_expansion_review.py').resolve()):
+            manifest['inputs'][str(source)] = sha256_path(source)
     (out / 'object_splits.json').write_text(json.dumps({'unit': 'independent_source_object', 'objects': object_splits}, indent=2))
     audit = json.loads((out / 'private/screening.json').read_text())['assets']
+    if 'source_catalog' in manifest:
+        by_asset = {a['asset_id']: a for a in audit}
+        by_asset.update({a['asset_id']: a for a in json.loads((out / 'private/expansion_screening.json').read_text())['assets']})
+        audit = list(by_asset.values())
     rejected = [a for a in audit if a['status'] == 'rejected']
-    validation = {'status': 'automatic_checks_passed', 'acceptance': 'complete' if len(eligible) >= 20 else 'target_not_met',
+    target = manifest.get('target_objects', 20)
+    validation = {'status': 'automatic_checks_passed',
+        'acceptance': ('complete' if len(eligible) >= target else
+                       'pending_human_review' if len(groups) >= target else 'target_not_met'),
+        'target_objects': target, 'target_cases': 2 * target,
+        'construction_target_met': len(groups) >= target,
+        'base_objects': manifest.get('base_objects', len(groups)),
+        'new_objects': len(groups) - manifest.get('base_objects', len(groups)),
         'screened_train_objects': len(audit), 'automatic_pass_objects': len(groups), 'automatic_pass_cases': len(gold),
         'clean_cases': len(groups), 'axis_cases': len(groups), 'training_eligible_objects': len(eligible),
         'training_eligible_cases': len(exported), 'training_clean_cases': len(eligible), 'training_axis_cases': len(eligible),
         'human_review_complete': sum(r['status'] == 'human_review_complete' for r in reviews.values()),
         'pending_human_review': sum(r['status'] == 'pending_human_review' for r in reviews.values()),
-        'rejected_objects': [{'asset_id': a['asset_id'], 'reasons': a['rejection_reason_counts']} for a in rejected],
+        'rejected_objects': [{'asset_id': a['asset_id'], 'reasons': a.get('rejection_reason_counts',
+            sorted({r for j in a.get('joints', []) for r in j.get('rejection_reasons', [])} |
+                   {r for j in a.get('joints', []) for attempt in j.get('attempts', [])
+                    for r in attempt['rejection_reasons']}))} for a in rejected],
         'clean_checker_passed': sum(c['code_correct'] for c in checks.values()),
         'axis_checker_rejected': sum(not c['code_correct'] for c in checks.values()),
         'axis_angle_deg': 90, 'native_image_size': [256, 256], 'part_offset_cases': 0,
@@ -157,14 +185,15 @@ def finalize(out: Path):
     (out / 'validation.json').write_text(json.dumps(validation, indent=2) + '\n')
     (out / 'README.md').write_text(
         '# PartNet-Mobility Level 0 v2\n\n'
-        f'筛选 {len(audit)} 个现有 Train 物体；自动通过 {len(groups)} 个物体、{len(gold)} 个样本'
+        f'筛选 {len(audit)} 个同源 Train 候选物体；自动通过 {len(groups)} 个物体、{len(gold)} 个样本'
         f'（clean/axis 各 {len(groups)}）。训练合格 {len(eligible)} 个物体、{len(exported)} 个样本；'
-        f'待人工审核 {validation["pending_human_review"]} 个样本。目标为至少 20 个物体、40 个样本，'
+        f'待人工审核 {validation["pending_human_review"]} 个样本。目标为至少 {target} 个物体、{2*target} 个样本，'
         f'当前状态：{validation["acceptance"]}。\n\n'
         'train_manifest.jsonl 是唯一训练输入清单；图像路径相对于本目录。'
         'private/train_targets.jsonl 由 case_id 连接监督答案，勿作为普通模型输入。'
         'object_splits.json 按独立源物体记录 Train 分组和成对资格。'
         'review_manifest.jsonl 包括待审核样本，不能直接作为训练清单。\n\n'
+        '新增待审核样本可打开 review-expansion.html 逐图查看，原生四图和 mid 六图板均可直接复核。\n\n'
         '四图顺序：参考 rest、参考 limit、候选 rest、候选 limit；frames/ 为原生 256×256 PNG，'
         'inputs/ 为同图四宫格，boards/ 额外展示 mid。private/ 保存 Gold、程序、checker、'
         '逐关节/视角/seed 筛选诊断及旧审核记录来源。SHA 清单见 manifest.json。\n\n'
@@ -175,11 +204,14 @@ def finalize(out: Path):
         'status=human_review_rejected，并记录 notes；默认批准和自动筛选均不能替代逐图审核。'
         '只有同物体 clean/axis 两行均满足审核门禁才可导出。\n\n'
         '复现（仓库根目录、全新输出路径）：\n\n```bash\n'
+        + ('python -m scripts.replay_level0_axis_v2 --dataset docs/evidence/partnet-mobility-level0-axis-v2 --out /tmp/level0-axis-v2-repro\n'
+           '# 命令逐例重跑 checker 和门禁，自动核对所有重建图像 SHA。\n'
+           if 'source_catalog' in manifest else
         'python -m scripts.prepare_level0_axis_v2 --out /tmp/level0-axis-v2-repro\n'
         '# 人工记录为独立输入，确认图像/程序复现一致后，沿用已完成的真实审核：\n'
         'cp docs/evidence/partnet-mobility-level0-axis-v2/human_review.jsonl /tmp/level0-axis-v2-repro/human_review.jsonl\n'
         'python -m scripts.finalize_level0_axis_v2 --out /tmp/level0-axis-v2-repro\n'
-        'diff -rq docs/evidence/partnet-mobility-level0-axis-v2 /tmp/level0-axis-v2-repro\n'
+        'diff -rq docs/evidence/partnet-mobility-level0-axis-v2 /tmp/level0-axis-v2-repro\n') +
         '```\n\n人工填写审核文件后执行：\n\n```bash\n'
         'python -m scripts.finalize_level0_axis_v2 --out docs/evidence/partnet-mobility-level0-axis-v2\n'
         '```\n\n仅 human_review.jsonl 允许审核时编辑，验收先校验其余文件及源输入 SHA，'
@@ -187,6 +219,10 @@ def finalize(out: Path):
         '包含人工修改后，复现渲染应比较图像和程序；人工审核记录须单独保留，不能由生成器重建。\n',
         encoding='utf-8')
     seal(out, manifest['inputs'])
+    if 'source_catalog' in manifest:
+        sealed = json.loads((out / 'manifest.json').read_text())
+        sealed.update({k: v for k, v in manifest.items() if k not in {'version', 'scope', 'inputs', 'files'}})
+        (out / 'manifest.json').write_text(json.dumps(sealed, indent=2) + '\n')
     return validation
 
 

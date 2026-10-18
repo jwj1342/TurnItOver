@@ -1,16 +1,21 @@
 {
   "status": "automatic_checks_passed",
-  "acceptance": "target_not_met",
-  "screened_train_objects": 28,
-  "automatic_pass_objects": 7,
-  "automatic_pass_cases": 14,
-  "clean_cases": 7,
-  "axis_cases": 7,
-  "training_eligible_objects": 7,
-  "training_eligible_cases": 14,
-  "training_clean_cases": 7,
-  "training_axis_cases": 7,
-  "human_review_complete": 14,
+  "acceptance": "complete",
+  "target_objects": 28,
+  "target_cases": 56,
+  "construction_target_met": true,
+  "base_objects": 7,
+  "new_objects": 21,
+  "screened_train_objects": 57,
+  "automatic_pass_objects": 28,
+  "automatic_pass_cases": 56,
+  "clean_cases": 28,
+  "axis_cases": 28,
+  "training_eligible_objects": 28,
+  "training_eligible_cases": 56,
+  "training_clean_cases": 28,
+  "training_axis_cases": 28,
+  "human_review_complete": 56,
   "pending_human_review": 0,
   "rejected_objects": [
     {
@@ -45,9 +50,12 @@
     },
     {
       "asset_id": "PM_102257",
-      "reasons": {
-        "reference_motion_too_small_all_views": 1
-      }
+      "reasons": [
+        "axis_limit_trajectory_difference_too_small",
+        "candidate_limit_motion_too_small",
+        "candidate_mid_motion_too_small",
+        "normal_motion_or_framing_gate_failed"
+      ]
     },
     {
       "asset_id": "PM_102288",
@@ -57,12 +65,6 @@
     },
     {
       "asset_id": "PM_102292",
-      "reasons": {
-        "reference_motion_too_small_all_views": 1
-      }
-    },
-    {
-      "asset_id": "PM_102379",
       "reasons": {
         "reference_motion_too_small_all_views": 1
       }
@@ -117,15 +119,15 @@
     },
     {
       "asset_id": "PM_19836",
-      "reasons": {
-        "reference_motion_too_small_all_views": 3
-      }
+      "reasons": [
+        "normal_motion_or_framing_gate_failed"
+      ]
     },
     {
       "asset_id": "PM_25308",
-      "reasons": {
-        "reference_motion_too_small_all_views": 2
-      }
+      "reasons": [
+        "normal_motion_or_framing_gate_failed"
+      ]
     },
     {
       "asset_id": "PM_3971",
@@ -135,13 +137,73 @@
     },
     {
       "asset_id": "PM_48686",
-      "reasons": {
-        "reference_motion_too_small_all_views": 1
-      }
+      "reasons": [
+        "normal_motion_or_framing_gate_failed"
+      ]
+    },
+    {
+      "asset_id": "PM_102632",
+      "reasons": [
+        "normal_motion_or_framing_gate_failed"
+      ]
+    },
+    {
+      "asset_id": "PM_102639",
+      "reasons": [
+        "normal_motion_or_framing_gate_failed"
+      ]
+    },
+    {
+      "asset_id": "PM_102688",
+      "reasons": [
+        "normal_motion_or_framing_gate_failed"
+      ]
+    },
+    {
+      "asset_id": "PM_103129",
+      "reasons": [
+        "normal_motion_or_framing_gate_failed"
+      ]
+    },
+    {
+      "asset_id": "PM_103419",
+      "reasons": [
+        "normal_motion_or_framing_gate_failed"
+      ]
+    },
+    {
+      "asset_id": "PM_103549",
+      "reasons": [
+        "normal_motion_or_framing_gate_failed"
+      ]
+    },
+    {
+      "asset_id": "PM_30341",
+      "reasons": [
+        "axis_mid_region_too_small",
+        "axis_mid_trajectory_difference_too_small",
+        "candidate_limit_clipped",
+        "candidate_limit_motion_too_small",
+        "candidate_mid_motion_too_small",
+        "geometry_outside_frozen_camera",
+        "normal_motion_or_framing_gate_failed"
+      ]
+    },
+    {
+      "asset_id": "PM_45910",
+      "reasons": [
+        "normal_motion_or_framing_gate_failed"
+      ]
+    },
+    {
+      "asset_id": "PM_46439",
+      "reasons": [
+        "normal_motion_or_framing_gate_failed"
+      ]
     }
   ],
-  "clean_checker_passed": 7,
-  "axis_checker_rejected": 7,
+  "clean_checker_passed": 28,
+  "axis_checker_rejected": 28,
   "axis_angle_deg": 90,
   "native_image_size": [
     256,
