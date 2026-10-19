@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "date": "2026-10-19",
+  "scope": "historical_manifest_and_source_only",
+  "status": "original_bundle_missing",
+  "current_experiment_results": false,
+  "test_samples_read": false,
+  "artifacts": {
+    "results/2026-09-12/data/benchmarks/oracle-action-distributions-v1/manifest.json": "29a783c1fa26327c7144ad96e4a57567ce2444b770532d069d3c2b8dbf726638",
+    "results/2026-09-12/data/benchmarks/oracle-v1/manifest.json": "9d28164154ef20443ea8206c3ae647db6224cf06733d0a6f7c2b25175f53da11",
+    "results/2026-09-12/data/benchmarks/replicacad-v1/splits.json": "489079565751c298bfd1a8aa3cc3666788fbec8919110af993d71ad3f2ff7997",
+    "results/2026-09-12/data/benchmarks/replicacad-v1/benchmark.json": "e54849a9a24c5dbacc7891c148ba8571fcb932a00f9e0bf48dc59758794b0d80"
+  },
+  "source_manifest_link_matches": true,
+  "historical_source_path": "/scratch/jwj/TurnItOver/data/benchmarks/oracle-v1",
+  "historical_claims": {
+    "split_unit": "split_group",
+    "train_objects": ["replicacad:cabinet", "replicacad:chest_of_drawers", "replicacad:kitchen_counter", "replicacad:fridge"],
+    "validation_objects": ["replicacad:kitchen_cupboards"],
+    "independent_validation_objects": 1,
+    "train_validation_group_intersection": [],
+    "train_cases": 64,
+    "validation_cases": 16,
+    "train_source_action_rows": 384,
+    "validation_source_action_rows": 96,
+    "train_observable_groups": 266,
+    "train_weighted_examples": 275,
+    "validation_observable_groups": 64,
+    "validation_weighted_examples": 65,
+    "train_conflicting_groups": 4,
+    "train_conflict_source_rows": 30,
+    "validation_conflicting_groups": 1,
+    "validation_conflict_source_rows": 6,
+    "teacher_target_semantics": "empirical privileged-teacher action frequencies conditional on exact public prefix"
+  },
+  "unverified_original_data": ["action JSONL contents and SHA", "image bytes and SHA", "group membership and probability weights", "raw/prepared sample identities and asset content isolation"],
+  "validation_budget_audit": {
+    "budgets": [2, 4, 6],
+    "status": "unavailable",
+    "historical_validation_upper_bound": null,
+    "reason": "Available historical exposure curves aggregate all splits; no Validation-only annotation trajectories are present."
+  },
+  "required_training_objective": "Keep all variants of each public-input group and normalize weighted assistant-token loss within the group; never select an arbitrary single Gold action.",
+  "questions": {
+    "can_small_model_learn_existing_supervision": "not_evaluated",
+    "does_learned_selection_improve_evidence": "not_evaluated"
+  }
+}

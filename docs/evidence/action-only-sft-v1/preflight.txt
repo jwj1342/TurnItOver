@@ -1,0 +1,20 @@
+2026-10-19 10:42:00.488253: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-10-19 10:42:00.802669: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-10-19 10:42:02.241064: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+Traceback (most recent call last):
+  File "/91004t2/laq/code/ThreejsJudge/TurnItOver-sft/scripts/train_qwen_action_sft.py", line 120, in <module>
+    train(args)
+  File "/91004t2/laq/code/ThreejsJudge/TurnItOver-sft/scripts/train_qwen_action_sft.py", line 22, in train
+    groups = list(load_action_groups(args.dataset, 'train'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/91004t2/laq/code/ThreejsJudge/TurnItOver-sft/turnitover/oracle/supervision.py", line 90, in load_action_groups
+    for record, images in load_examples(root, split):
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/91004t2/laq/code/ThreejsJudge/TurnItOver-sft/turnitover/oracle/supervision.py", line 51, in load_examples
+    with (root / f"{split}.{kind}.jsonl").open() as stream:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/laq/anaconda3/envs/mle-bench/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'results/2026-09-12/data/benchmarks/oracle-action-distributions-v1/train.actions.jsonl'
