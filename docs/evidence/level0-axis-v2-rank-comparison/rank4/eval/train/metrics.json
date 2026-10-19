@@ -1,0 +1,285 @@
+{
+  "status": "complete",
+  "cohort": "train",
+  "n": 44,
+  "correct": 44,
+  "accuracy": 1.0,
+  "invalid": 0,
+  "prompt": "The image is a four-panel comparison. Top row: normal reference at rest, then limit. Bottom row: candidate at rest, then limit. Does the candidate motion match the reference? Answer exactly one word: pass or fail.",
+  "adapter": "/home/laq/experiments/level0-axis-v2-rank-comparison/output/rank4/train/checkpoint",
+  "dataset_split_sha256": "5881c1d371827b6920ba4159a9bdf707ddc7ac9a33bb3d0322378b5968336a54",
+  "base_model": "/home/laq/experiments/kimi-v4-increment-v1/models/Qwen3-VL-2B-Instruct",
+  "base_model_config_sha256": "bec4b3d446efa05807365c9e1cec03ac590836879d02f3a6da879971154bdd3b",
+  "adapter_sha256": "b65cbd7235d073f77337a90bb32a9b69cf9e9ee6b43c996cde0dd82466180f25",
+  "generation": {
+    "max_new_tokens": 4,
+    "do_sample": false
+  },
+  "seconds": 4.435767825925723,
+  "cases": [
+    {
+      "case_id": "l0-0345ca7d11c7",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-04058545ea2f",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-07c37d192e17",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-07f60cc870eb",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-1104f9fd2a6a",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-18bffea53090",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-1dacbb4d9ce0",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-1ee901b89ad4",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-208b6ba1bb16",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-20f05b0baaf3",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-2bac52a22825",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-2de930f45a26",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-2e117a8d8d3f",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-2f61d22575b9",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-33ccfb0aaf16",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-36a01687ac68",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-3b82bd9c5729",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-40565352e465",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-44bdad092cb1",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-53175ab911fe",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-615fc02263ab",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-773ea8b2c110",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-87d2df248064",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-87ebacc85b71",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-92541cdf9298",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-9622b1617bb5",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-9af6bfe1a9ee",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-9b222a9b7444",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-9d641c250aa2",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-ae98749b9304",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-b94734e89868",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-bb89fdc7b633",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-c011aebd64c1",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-c9c9fd469206",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-cc1de507dfb4",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-cd08c64e2d72",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-d1dca183c02b",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-db41bdbe3150",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-e164b340442c",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-eb22785f114e",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-ebf50e8b5d19",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-ee6474bbdcf9",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    },
+    {
+      "case_id": "l0-f92262fd8466",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-ffbb18d604da",
+      "expected": "fail",
+      "predicted": "fail",
+      "correct": true
+    }
+  ]
+}

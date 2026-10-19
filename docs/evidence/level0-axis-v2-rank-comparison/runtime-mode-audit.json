@@ -1,0 +1,67 @@
+{
+  "versions": {
+    "transformers": "5.5.0",
+    "torch": "2.10.0+cu128",
+    "peft": "0.18.0"
+  },
+  "attention_dropout": 0.0,
+  "arms": {
+    "4": {
+      "peft_training": true,
+      "base_wrapper_training": true,
+      "qwen_training": false,
+      "checkpoint_enabled_modules": 54,
+      "checkpoint_enabled_and_training_modules": 0,
+      "nonzero_dropout_modules": [],
+      "trainable_parameters": 1605632
+    },
+    "8": {
+      "peft_training": true,
+      "base_wrapper_training": true,
+      "qwen_training": false,
+      "checkpoint_enabled_modules": 54,
+      "checkpoint_enabled_and_training_modules": 0,
+      "nonzero_dropout_modules": [],
+      "trainable_parameters": 3211264
+    }
+  },
+  "from_pretrained_eval": {
+    "file": "/home/laq/miniconda3/envs/qwen/lib/python3.11/site-packages/transformers/modeling_utils.py",
+    "matches": [
+      {
+        "line": 3699,
+        "source": "The model is set in evaluation mode by default using `model.eval()` (Dropout modules are deactivated). To train"
+      },
+      {
+        "line": 4134,
+        "source": "model.eval()  # Set model in evaluation mode to deactivate Dropout modules by default"
+      }
+    ]
+  },
+  "checkpoint_gate": {
+    "file": "/home/laq/miniconda3/envs/qwen/lib/python3.11/site-packages/transformers/modeling_layers.py",
+    "matches": [
+      {
+        "line": 60,
+        "source": "if self.gradient_checkpointing and self.training:"
+      }
+    ]
+  },
+  "audited_at_utc": "2026-10-19T01:52:05.851573+00:00",
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "probe_command": [
+    "ssh",
+    "-S",
+    "/tmp/level0-v2-ssh",
+    "-o",
+    "BatchMode=yes",
+    "laq@10.201.129.199",
+    "PYTHONDONTWRITEBYTECODE=1 /home/laq/experiments/kimi-v4-increment-v1/venv/bin/python -"
+  ],
+  "probe_python": "import inspect,json,torch,transformers,peft\nfrom transformers import Qwen3VLForConditionalGeneration,Qwen3VLConfig\nfrom peft import get_peft_model,LoraConfig\nfrom transformers.modeling_layers import GradientCheckpointingLayer\nc=Qwen3VLConfig.from_pretrained('/home/laq/experiments/kimi-v4-increment-v1/models/Qwen3-VL-2B-Instruct',local_files_only=True)\nr={'versions':{'transformers':transformers.__version__,'torch':torch.__version__,'peft':peft.__version__},'attention_dropout':c.text_config.attention_dropout,'arms':{}}\nfor rank in (4,8):\n with torch.device('meta'):\n  m=Qwen3VLForConditionalGeneration(c);m.eval();m.config.use_cache=False;m.gradient_checkpointing_enable();m.enable_input_require_grads()\n  m=get_peft_model(m,LoraConfig(r=rank,lora_alpha=rank*2,lora_dropout=0.0,bias='none',task_type='CAUSAL_LM',target_modules=['q_proj','k_proj','v_proj','o_proj']))\n layers=[x for x in m.modules() if getattr(x,'gradient_checkpointing',False)]\n r['arms'][str(rank)]={'peft_training':m.training,'base_wrapper_training':m.base_model.training,'qwen_training':m.base_model.model.training,'checkpoint_enabled_modules':len(layers),'checkpoint_enabled_and_training_modules':sum(x.training for x in layers),'nonzero_dropout_modules':[(n,x.p) for n,x in m.named_modules() if isinstance(x,torch.nn.Dropout) and x.p],'trainable_parameters':sum(x.numel() for x in m.parameters() if x.requires_grad)}\n del m\nfor key,obj,term in [('from_pretrained_eval',transformers.modeling_utils.PreTrainedModel.from_pretrained,'model.eval()'),('checkpoint_gate',GradientCheckpointingLayer.__call__,'self.gradient_checkpointing and self.training')]:\n lines,start=inspect.getsourcelines(obj);r[key]={'file':inspect.getsourcefile(obj),'matches':[{'line':start+i,'source':line.strip()} for i,line in enumerate(lines) if term in line]}\nprint(json.dumps(r))\n",
+  "probe_scope": "CPU/meta reconstruction with explicit eval() reproducing verified from_pretrained default; no GPU allocation, training, or evaluation",
+  "conclusion": "Checkpoint flags enabled but inactive in both arms because Qwen layers retained eval mode. Attention and LoRA dropout are zero. This does not disable gradients or optimizer updates.",
+  "model_recorded_file_hashes_verified": true,
+  "runtime_code_local_remote_hashes_verified": true
+}

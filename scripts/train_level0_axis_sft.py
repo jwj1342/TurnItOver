@@ -5,6 +5,7 @@ import argparse
 import json
 import platform
 import random
+import time
 from pathlib import Path
 
 from turnitover.oracle.level0_axis import PROMPT, records_by_split, sha256
@@ -24,6 +25,7 @@ def main(args: argparse.Namespace) -> None:
         raise ValueError("Fresh output and CUDA are required")
     records = records_by_split(args.dataset, args.split, "train")
     args.out.mkdir(parents=True)
+    start = time.perf_counter()
     random.seed(args.seed); torch.manual_seed(args.seed); torch.cuda.manual_seed_all(args.seed)
     torch.use_deterministic_algorithms(True, warn_only=True)
     processor = AutoProcessor.from_pretrained(args.model, local_files_only=True)
@@ -31,6 +33,9 @@ def main(args: argparse.Namespace) -> None:
     preprocess = {k: list(v.shape) for k, v in first.items() if hasattr(v, "shape")}
     manifest = {"status": "running", "task": "level0_axis_binary", "epochs": args.epochs,
         "steps_planned": len(records) * args.epochs, "seed": args.seed, "learning_rate": args.learning_rate,
+        "batch_size": 1, "gradient_accumulation_steps": 1, "prompt": PROMPT,
+        "optimizer": {"name": "AdamW", "betas": [0.9, 0.999], "eps": 1e-8, "weight_decay": 0.01},
+        "scheduler": "constant", "max_grad_norm": 1.0, "initial_adapter": None,
         "lora": {"rank": args.lora_rank, "alpha": args.lora_alpha,
                  "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj"]},
         "dataset": str(args.dataset), "split_sha256": sha256(args.split), "base_model": str(args.model),
@@ -43,6 +48,8 @@ def main(args: argparse.Namespace) -> None:
     model.config.use_cache = False; model.gradient_checkpointing_enable(); model.enable_input_require_grads()
     model = get_peft_model(model, LoraConfig(r=args.lora_rank, lora_alpha=args.lora_alpha, lora_dropout=0.0,
         bias="none", task_type="CAUSAL_LM", target_modules=manifest["lora"]["target_modules"]))
+    manifest["trainable_parameters"] = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    manifest["total_parameters"] = sum(p.numel() for p in model.parameters())
     optimizer = torch.optim.AdamW((p for p in model.parameters() if p.requires_grad), lr=args.learning_rate)
     losses = []; step = 0
     with (args.out / "loss.jsonl").open("w") as stream:
@@ -59,6 +66,7 @@ def main(args: argparse.Namespace) -> None:
                 stream.write(json.dumps(row) + "\n"); stream.flush(); print(json.dumps(row), flush=True); step += 1
     checkpoint = args.out / "checkpoint"; checkpoint.mkdir(); model.save_pretrained(checkpoint, safe_serialization=True); processor.save_pretrained(checkpoint)
     manifest.update(status="complete", steps=step, checkpoint="checkpoint", checkpoint_sha256=sha256(checkpoint / "adapter_model.safetensors"),
+                    seconds=time.perf_counter() - start, peak_allocated_bytes=torch.cuda.max_memory_allocated(),
                     loss={"first": losses[0], "last": losses[-1], "minimum": min(losses), "mean": sum(losses) / len(losses)})
     (args.out / "run.json").write_text(json.dumps(manifest, indent=2) + "\n")
 

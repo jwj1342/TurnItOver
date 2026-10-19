@@ -1,0 +1,46 @@
+{
+  "host": "laq@10.201.129.199",
+  "environment_reused": "/home/laq/experiments/kimi-v4-increment-v1/venv",
+  "environment_changed": false,
+  "python": "3.11.15",
+  "torch": "2.10.0+cu128",
+  "transformers": "5.5.0",
+  "peft": "0.18.0",
+  "cuda_witness": {
+    "seed": 20261017,
+    "input_shape": [
+      8,
+      8
+    ],
+    "operation": "(x @ x).sum()",
+    "output": 16.453990936279297
+  },
+  "gpu_preflight": [
+    {
+      "index": 0,
+      "name": "NVIDIA GeForce RTX 5090 D v2",
+      "memory_used_mib": 67,
+      "memory_total_mib": 24455,
+      "utilization_percent": 0
+    },
+    {
+      "index": 1,
+      "name": "NVIDIA GeForce RTX 5090 D v2",
+      "memory_used_mib": 24,
+      "memory_total_mib": 24455,
+      "utilization_percent": 0
+    }
+  ],
+  "gpu_after_all_jobs": [
+    {
+      "index": 0,
+      "memory_used_mib": 67,
+      "utilization_percent": 0
+    },
+    {
+      "index": 1,
+      "memory_used_mib": 24,
+      "utilization_percent": 0
+    }
+  ]
+}

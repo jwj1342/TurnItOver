@@ -1,0 +1,16 @@
+{
+  "remote": "https://github.com/jwj1342/TurnItOver",
+  "branch": "laq/sft-dataset",
+  "commit": "d5cbc085a4dbb7b573aa17f42ec67b322d0003b3",
+  "subtree": "docs/evidence/partnet-mobility-level0-axis-v2",
+  "files_git_blob_verified": 413,
+  "remote_branch_verified_with": "git ls-remote origin refs/heads/laq/sft-dataset",
+  "split_sha256": "5881c1d371827b6920ba4159a9bdf707ddc7ac9a33bb3d0322378b5968336a54",
+  "frozen_split_remote_mtime": "2026-10-18T21:57:28+08:00",
+  "training_run_manifest_completed_remote_mtime": "2026-10-18T21:58:11+08:00",
+  "all_evaluations_finished_before": "2026-10-18T21:59:00+08:00",
+  "model_weight_sha256": "7de1838c87a5349b016c26a1c3f7d2bc400a3d485f95ef39a7059ffd734977a0",
+  "host": "laq@10.201.129.199",
+  "remote_root": "/home/laq/experiments/level0-axis-v2-rank-comparison",
+  "initial_training_code_commit": "25164b9d2dafe9fc86bb961c7cea37b59d2d1742"
+}

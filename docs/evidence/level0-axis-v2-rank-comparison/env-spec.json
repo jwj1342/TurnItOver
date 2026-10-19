@@ -1,0 +1,20 @@
+{
+  "base": "/home/laq/miniconda3/envs/qwen/bin/python",
+  "shape": "direct_ssh_venv_system_site_packages",
+  "host": "10.201.129.199",
+  "torch": "2.10.0+cu128",
+  "transformers": "5.5.0",
+  "pip_phases": [
+    [
+      "peft==0.18.0"
+    ]
+  ],
+  "env": {
+    "OMP_NUM_THREADS": "4",
+    "MKL_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "4",
+    "TOKENIZERS_PARALLELISM": "false"
+  },
+  "weights": "/home/laq/experiments/kimi-v4-increment-v1/models/Qwen3-VL-2B-Instruct",
+  "smoke": "docs/evidence/kimi-v4-increment-v1/remote-smoke.py"
+}

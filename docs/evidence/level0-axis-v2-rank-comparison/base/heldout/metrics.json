@@ -1,0 +1,93 @@
+{
+  "status": "complete",
+  "cohort": "heldout",
+  "n": 12,
+  "correct": 6,
+  "accuracy": 0.5,
+  "invalid": 0,
+  "prompt": "The image is a four-panel comparison. Top row: normal reference at rest, then limit. Bottom row: candidate at rest, then limit. Does the candidate motion match the reference? Answer exactly one word: pass or fail.",
+  "adapter": null,
+  "dataset_split_sha256": "5881c1d371827b6920ba4159a9bdf707ddc7ac9a33bb3d0322378b5968336a54",
+  "base_model": "/home/laq/experiments/kimi-v4-increment-v1/models/Qwen3-VL-2B-Instruct",
+  "base_model_config_sha256": "bec4b3d446efa05807365c9e1cec03ac590836879d02f3a6da879971154bdd3b",
+  "adapter_sha256": null,
+  "generation": {
+    "max_new_tokens": 4,
+    "do_sample": false
+  },
+  "seconds": 2.0894566379720345,
+  "cases": [
+    {
+      "case_id": "l0-24df3ba7b2a9",
+      "expected": "fail",
+      "predicted": "pass",
+      "correct": false
+    },
+    {
+      "case_id": "l0-29cdda903051",
+      "expected": "fail",
+      "predicted": "pass",
+      "correct": false
+    },
+    {
+      "case_id": "l0-57ef55662e3d",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-5fd1c5cf9b11",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-7d83ddd677ad",
+      "expected": "fail",
+      "predicted": "pass",
+      "correct": false
+    },
+    {
+      "case_id": "l0-7e8591a86553",
+      "expected": "fail",
+      "predicted": "pass",
+      "correct": false
+    },
+    {
+      "case_id": "l0-818c44be1ab7",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-87ab439b77ed",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-bf9f79844851",
+      "expected": "fail",
+      "predicted": "pass",
+      "correct": false
+    },
+    {
+      "case_id": "l0-c0609ef9e708",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    },
+    {
+      "case_id": "l0-d624f1459458",
+      "expected": "fail",
+      "predicted": "pass",
+      "correct": false
+    },
+    {
+      "case_id": "l0-ee63ca7c932c",
+      "expected": "pass",
+      "predicted": "pass",
+      "correct": true
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "audit_skill": "experiment-audit",
+  "verdict": "WARN",
+  "reason_code": "limited_scope_and_checkpointing_inactive",
+  "summary": "All source identities, labels, predictions, checkpoints and metrics verified; one seed/six heldout objects and inactive gradient checkpointing require qualifications, now recorded in report.",
+  "audited_input_hashes": {
+    "docs/evidence/level0-axis-v2-rank-comparison/REPORT.md": "sha256:1360763aeba29535605fe1c73c6dce4877d2b583dc502090889ee9dd7d263d5b",
+    "docs/evidence/level0-axis-v2-rank-comparison/base/heldout/metrics.json": "sha256:42251bf1e0ff4339edfd80129c58a18e1c390ffe3968e9b83b5375c991c12ce7",
+    "docs/evidence/level0-axis-v2-rank-comparison/base/heldout/predictions.jsonl": "sha256:87fcb5f79d5d4954cff0e3f670d592364c5dcf95afc1bea49b61e1c52a532b64",
+    "docs/evidence/level0-axis-v2-rank-comparison/base/train/metrics.json": "sha256:14063ad0c3d70485b412defdf191553114b2f00f9b07b74c73494c2ebec424bc",
+    "docs/evidence/level0-axis-v2-rank-comparison/base/train/predictions.jsonl": "sha256:a55748334208e3a64bf54b4ec481676caa3e44d20350bece2939caf5e55ae6ae",
+    "docs/evidence/level0-axis-v2-rank-comparison/code-sha256.json": "sha256:831ea537b3476c113d08c45e4dd918cddd266eb31ba3b4477868fb8698213c48",
+    "docs/evidence/level0-axis-v2-rank-comparison/data-audit.json": "sha256:73d47b7e7f0ebe0ea4b864fe2daba6da48b43c695bac1f5800631fddd0f0b5ce",
+    "docs/evidence/level0-axis-v2-rank-comparison/env-spec.json": "sha256:72cfbdcce82b8ee778666f366dd9181c10388d529ec23d773e5df2fed79e3ad8",
+    "docs/evidence/level0-axis-v2-rank-comparison/environment-validation.json": "sha256:dccba63eae1d70d960f293fd8a0eabcb15bca20ab4670abf607c230cf224d109",
+    "docs/evidence/level0-axis-v2-rank-comparison/logs/base-heldout.log": "sha256:e963a16b22cad705ad8e407eb837a58fbf6fe28491c54b3406f56447d500f401",
+    "docs/evidence/level0-axis-v2-rank-comparison/logs/base-train.log": "sha256:a27b25718963cda457460e8d5b2aa83258bfdb88dd91cbc40e803d87878b3779",
+    "docs/evidence/level0-axis-v2-rank-comparison/logs/pixel.log": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/evidence/level0-axis-v2-rank-comparison/logs/rank4/eval-heldout.log": "sha256:88baf3b037378bf3e77accf3cf02470240faaf9fe3c58aab6e586131e362b01b",
+    "docs/evidence/level0-axis-v2-rank-comparison/logs/rank4/eval-train.log": "sha256:72bf1a25d4e9228ae9b695b560e52a11cb0a24b1c66a974dd9b912456fe7add0",
+    "docs/evidence/level0-axis-v2-rank-comparison/logs/rank4-train.log": "sha256:05f80346e4da245d79159131af8a7d29c86c8cb4ea97f9ced1f0cff5882541eb",
+    "docs/evidence/level0-axis-v2-rank-comparison/logs/rank8/eval-heldout.log": "sha256:92c76bc53829e27c63fcc56c775b110a1ad842714dbbacd58c86bab140851ff2",
+    "docs/evidence/level0-axis-v2-rank-comparison/logs/rank8/eval-train.log": "sha256:fde30fdafdb528021cde225a7728164dc012ee202341651a67d7655d4b1c0e37",
+    "docs/evidence/level0-axis-v2-rank-comparison/logs/rank8-train.log": "sha256:6982a3484b8fee12e6b6c63fb7b64a764296ccc0847d412712ca829f9c6eff0e",
+    "docs/evidence/level0-axis-v2-rank-comparison/model-sha256.txt": "sha256:6922072f2d341f97e659e9ccab3ff6fdd1d7831d4df96bf78cfa897c3c0344cd",
+    "docs/evidence/level0-axis-v2-rank-comparison/pip-freeze.txt": "sha256:464a90ad5515347339a19f60388e0d6ab2202c10e2ed3b7617cafa70ce3f92f4",
+    "docs/evidence/level0-axis-v2-rank-comparison/pixel/metrics.json": "sha256:6e4c212fdca84b7f7441e77d9eb6cb25179251546f02366c54590305adc930dd",
+    "docs/evidence/level0-axis-v2-rank-comparison/pixel/predictions.jsonl": "sha256:1d7922c6e0ed1985c81085034cc6c794ea8678cda32f192698e8bb5536c69263",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank4/eval/heldout/metrics.json": "sha256:47fd8b38ef387baa2e8a02acde81c2337eb90c0235dba0d5d014720bbb94d5a6",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank4/eval/heldout/predictions.jsonl": "sha256:263137a83d6850364f455314442cfe2a87e23e36cb8b8f0c505645c9867a3661",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank4/eval/train/metrics.json": "sha256:2232549258af284fc944433b1be684764522d923e0c39305ebdfa8ad05297d93",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank4/eval/train/predictions.jsonl": "sha256:2b147d194b1b08bf6aab6594125b6d538a41599909a04c6bcade0d5f3c39714d",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank4/train/adapter_config.json": "sha256:7758de3cf908961188de0d3bc2483a3a655bc746392087e186881f89e5050d4e",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank4/train/loss.jsonl": "sha256:69c70ee92bbc839df9acf9eadeca60056e34ac07ca383148395facb49834c927",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank4/train/run.json": "sha256:006d7699b0a710307b023153d674e3b5ba9db76d5bc5d35434a477397eca0193",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank8/eval/heldout/metrics.json": "sha256:b559e3c5496f0eb9402ba13202270255c56ef7686667bd8444a9bfd3fa568ac0",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank8/eval/heldout/predictions.jsonl": "sha256:53ad369fcc7c330ca4f2661285efe3e54b428d803d17e455ea88f1785e1323fe",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank8/eval/train/metrics.json": "sha256:5d8fe0f35dca577a69d000b9bea8d7f4124bf99af86e9e386155c0c532f7fadc",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank8/eval/train/predictions.jsonl": "sha256:34969981d514829bad4e3600d29ecebaae7978eb661dccc273b91a4f98cc3f79",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank8/train/adapter_config.json": "sha256:2e36c3d68cecec3fce9d97bc21a185d2894260c460fe152eec100796ced086f8",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank8/train/loss.jsonl": "sha256:e5731c09bd08ca11179c3a19331e79aa91d1d9822ebb4846e90f546c42727aef",
+    "docs/evidence/level0-axis-v2-rank-comparison/rank8/train/run.json": "sha256:cbb67317fbe9352e2c37ed72ad9273ed2ec28b1faefe297f2b7f97e56dbf0df0",
+    "docs/evidence/level0-axis-v2-rank-comparison/runtime-mode-audit.json": "sha256:fc839a5f6e3cda2f109c86623aab490d89c8e404d94b37b7669b5d98ffbeda7e",
+    "docs/evidence/level0-axis-v2-rank-comparison/source-identity.json": "sha256:d2370ddcbeb8f7bbe2659f03f08d1075406d9610d26c8ae004fae975073b1623",
+    "docs/evidence/level0-axis-v2-rank-comparison/split.json": "sha256:5881c1d371827b6920ba4159a9bdf707ddc7ac9a33bb3d0322378b5968336a54",
+    "docs/evidence/level0-axis-v2-rank-comparison/summary.json": "sha256:299d37c7b040c923c6efc045fb250f36409794320d8314cb84d42cc4c5b7e6eb",
+    "docs/evidence/level0-axis-v2-rank-comparison/tests.txt": "sha256:7fbe48a210592a779d1985e1c94dd144a51f8f27be8619d5b3a8852d9cb4bac3",
+    "scripts/evaluate_level0_axis.py": "sha256:f81fe00da6b40a9e362b00280ff785446bc0cd532cd20e38d2f1af7027c6cef9",
+    "scripts/evaluate_level0_pixel_baseline.py": "sha256:f5da85d63383b29501893de62782dd9732b555fc2ef8236052617e1404c83555",
+    "scripts/run_level0_axis_rank_comparison.sh": "sha256:82343397c08d3be0a06b00917f465fb4ba78102ecf32dc2bbab61de819d15d32",
+    "scripts/summarize_level0_axis_rank_comparison.py": "sha256:f050c180737b661ecb06ac4883a89dbe8fe295b715869b20cc51170726645056",
+    "scripts/train_level0_axis_sft.py": "sha256:36292a3985fecaee10bdcdb6da6d65bb4cb3110bd00c550e58367a8e9ca27215",
+    "turnitover/oracle/level0_axis.py": "sha256:bee45d3674868d8959a2118d3811b0d249e9b04edffdfa646d87e92b8dd313b2",
+    "turnitover/oracle/level0_axis_v2.py": "sha256:e6061371af67636a591ba8e3e276c25b7fd3f3e057cb37fa582bbe8ff98ef6fc",
+    "turnitover/oracle/training.py": "sha256:77496f63a27a459e2ed2974c01b907242fa2ac075fd788abb0230a3dd1f8bab3"
+  },
+  "trace_path": ".aris/traces/experiment-audit/2026-10-18_run01/",
+  "agent_id": "/root/integrity_audit",
+  "verdict_id": "/root/integrity_audit-final-20261019",
+  "executor_family": "openai",
+  "reviewer_model": "gpt-6-astra",
+  "reviewer_family": "openai",
+  "reviewer_reasoning": "ultra",
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "generated_at": "2026-10-19T01:53:26.824908+00:00",
+  "date": "2026-10-19",
+  "overall_verdict": "warn",
+  "integrity_status": "warn",
+  "checks": {
+    "gt_provenance": {
+      "status": "pass",
+      "details": "413 source Git blobs and 412 manifest hashes match; 56 reviewed/Gold/target labels agree."
+    },
+    "score_normalization": {
+      "status": "pass",
+      "details": "Correct / all samples; pixel threshold fitted on train only."
+    },
+    "result_existence": {
+      "status": "pass",
+      "details": "Predictions, 132-step loss logs and actual adapter hashes/sizes match."
+    },
+    "dead_code": {
+      "status": "warn",
+      "details": "Gradient checkpointing enabled but ineffective with underlying Qwen eval mode; documented."
+    },
+    "scope": {
+      "status": "warn",
+      "details": "One seed and six independent heldout objects, with paired correlated samples."
+    },
+    "eval_type": "simulation_only"
+  },
+  "claims": [
+    {
+      "id": "rank4_current_protocol_transfer",
+      "impact": "supported"
+    },
+    {
+      "id": "rank8_additional_generalization_benefit",
+      "impact": "unsupported"
+    },
+    {
+      "id": "prefer_rank4_for_next_small_experiment",
+      "impact": "supported_with_small_sample_qualification"
+    },
+    {
+      "id": "stable_rank_order_or_axis_semantics",
+      "impact": "unsupported"
+    }
+  ]
+}

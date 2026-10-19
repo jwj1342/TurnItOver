@@ -1,0 +1,19 @@
+{
+  "status": "complete",
+  "method": "mean absolute difference of reference-vs-candidate temporal RGB deltas",
+  "threshold_fit": "midpoint(max train pass score, min train fail score)",
+  "threshold": 1.3589630126953125,
+  "split_sha256": "5881c1d371827b6920ba4159a9bdf707ddc7ac9a33bb3d0322378b5968336a54",
+  "cohorts": {
+    "train": {
+      "n": 44,
+      "correct": 44,
+      "accuracy": 1.0
+    },
+    "heldout": {
+      "n": 12,
+      "correct": 12,
+      "accuracy": 1.0
+    }
+  }
+}

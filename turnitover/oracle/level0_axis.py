@@ -23,13 +23,29 @@ def read_jsonl(path: Path) -> list[dict]:
 
 def load_records(dataset: Path) -> list[dict]:
     """Load only opaque case IDs, pixels, and human-reviewed binary targets."""
-    reviews = {row["case_id"]: row for row in read_jsonl(dataset / "human_review.jsonl")}
+    review_rows = read_jsonl(dataset / "human_review.jsonl")
+    reviews = {row["case_id"]: row for row in review_rows}
+    if len(reviews) != len(review_rows):
+        raise ValueError("Duplicate human review case")
+    manifest_path = dataset / "train_manifest.jsonl"
+    manifest = read_jsonl(manifest_path) if manifest_path.exists() else None
+    if manifest is not None:
+        case_ids = [row["case_id"] for row in manifest]
+        if len(set(case_ids)) != len(case_ids) or set(case_ids) - set(reviews):
+            raise ValueError("Invalid training manifest membership")
+        previews = {row["case_id"]: row["input_preview"] for row in manifest}
+    else:
+        case_ids = sorted(reviews)
+        previews = {case: f"inputs/{case}.png" for case in case_ids}
     records = []
-    for case_id, review in sorted(reviews.items()):
+    for case_id in sorted(case_ids):
+        review = reviews[case_id]
         judgment = review["human_judgment"]
         if review["status"] != "human_review_complete" or judgment["verdict"] not in {"pass", "fail"}:
             raise ValueError(f"Incomplete binary human review: {case_id}")
-        image = dataset / "inputs" / f"{case_id}.png"
+        image = dataset / previews[case_id]
+        if not image.resolve().is_relative_to(dataset.resolve()):
+            raise ValueError(f"Input path outside dataset: {case_id}")
         if not image.is_file():
             raise ValueError(f"Missing input image: {case_id}")
         records.append({"case_id": case_id, "image": image, "label": judgment["verdict"]})

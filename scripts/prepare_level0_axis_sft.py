@@ -19,6 +19,11 @@ def main(args: argparse.Namespace) -> None:
     if args.out.exists():
         raise ValueError("Output must be fresh")
     manifest = json.loads((args.dataset / "manifest.json").read_text())
+    if manifest.get("version") == 2:
+        from turnitover.oracle.level0_axis_v2 import prepare_v2
+
+        prepare_v2(args.dataset, args.out, args.seed)
+        return
     reviews = {r["case_id"]: r for r in read_jsonl(args.dataset / "human_review.jsonl")}
     gold = read_jsonl(args.dataset / "private" / "gold.jsonl")
     if len(reviews) != 10 or len(gold) != 10:
@@ -73,4 +78,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--seed", type=int, default=20261017)
     main(parser.parse_args())

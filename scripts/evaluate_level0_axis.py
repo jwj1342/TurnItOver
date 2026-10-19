@@ -23,6 +23,7 @@ def main(args: argparse.Namespace) -> None:
     if args.out.exists() or not torch.cuda.is_available(): raise ValueError("Fresh output and CUDA required")
     records = records_by_split(args.dataset, args.split, args.cohort)
     args.out.mkdir(parents=True)
+    start_run = time.perf_counter()
     source = args.adapter if args.adapter else args.model
     processor = AutoProcessor.from_pretrained(source, local_files_only=True)
     model = Qwen3VLForConditionalGeneration.from_pretrained(args.model, local_files_only=True,
@@ -46,6 +47,9 @@ def main(args: argparse.Namespace) -> None:
     metrics = {"status": "complete", "cohort": args.cohort, "n": counts["n"], "correct": counts["correct"],
                "accuracy": counts["correct"] / counts["n"], "invalid": counts["invalid"], "prompt": PROMPT,
                "adapter": str(args.adapter) if args.adapter else None, "dataset_split_sha256": sha256(args.split),
+               "base_model": str(args.model), "base_model_config_sha256": sha256(args.model / "config.json"),
+               "adapter_sha256": sha256(args.adapter / "adapter_model.safetensors") if args.adapter else None,
+               "generation": {"max_new_tokens": 4, "do_sample": False}, "seconds": time.perf_counter() - start_run,
                "cases": [{k: row[k] for k in ("case_id", "expected", "predicted", "correct")} for row in rows]}
     (args.out / "metrics.json").write_text(json.dumps(metrics, indent=2) + "\n")
 
