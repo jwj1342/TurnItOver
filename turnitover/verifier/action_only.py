@@ -1,7 +1,7 @@
 """Action-only acquisition followed by an independent frozen verifier readout."""
 from __future__ import annotations
 
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import json
 from pathlib import Path
 
@@ -11,6 +11,46 @@ from turnitover.models.client import ModelError, is_normal_finish_reason
 from turnitover.oracle.supervision import action_examples, action_json
 from turnitover.verifier.contracts import DecisionError, parse_json, parse_decision
 from turnitover.verifier.policies import VisionPolicy
+
+
+ACTION_STAGE_INSTRUCTION = (
+    "This is the acquisition-only stage. Choose the next legal observation action. "
+    "Return exactly one JSON object with only the action key and its action object. "
+    "Do not return a verdict or stop early; a separate frozen diagnoser runs after acquisition."
+)
+
+
+def complete_final_readout(policy, context, episode):
+    """Diagnose the acquired prefix after acquisition failure without more actions.
+
+    Preserve acquisition termination, errors, trajectory and spent budget. A final
+    readout already attempted by the ordinary Loop is never called a second time.
+    """
+    from turnitover.verifier.loop import MAX_DECISION_ATTEMPTS, _validation_feedback
+
+    if policy.final.calls:
+        failed = episode.termination in ("invalid_decision", "model_error")
+        return episode, dict(supplemental=False, calls=len(policy.final.calls),
+                             status="failed" if failed else "complete",
+                             error_type=episode.error_type if failed else None,
+                             error=episode.error_message if failed else None)
+    feedback = None
+    for attempt in range(MAX_DECISION_ATTEMPTS):
+        raw = None
+        try:
+            raw = policy.final.decide(context, episode.trajectory, 0, feedback)
+            verdict = parse_decision(raw, context, {o.step for o in episode.trajectory}, final_only=True)
+            return replace(episode, verdict=verdict), dict(supplemental=True, calls=attempt+1, status="complete")
+        except DecisionError as exc:
+            if attempt + 1 < MAX_DECISION_ATTEMPTS:
+                feedback = _validation_feedback(exc, raw, context, episode.trajectory, 0)
+                continue
+            error = exc
+        except ModelError as exc:
+            error = exc
+        return episode, dict(supplemental=True, calls=attempt+1, status="failed",
+                             error_type=type(error).__name__, error=str(error))
+    raise AssertionError("Final readout did not terminate")
 
 
 class ActionOnlyPolicy:
@@ -46,7 +86,8 @@ class ActionOnlyPolicy:
         dummy = {"step": len(public), "action": {"type": "request_view", "view_id": context.views[0]}}
         row = list(action_examples("online", asdict(context), self.reference, public + [dummy],
                                    remaining + len(public)))[-1]
-        prompt = row["messages"][0]["content"]
+        protocol, payload_text = row["messages"][0]["content"].rsplit("\n", 1)
+        prompt = protocol + "\n" + ACTION_STAGE_INSTRUCTION + "\n" + payload_text
         if any(image is None for image in row["images"]):
             # Runtime observations retain their payload and step but have no PNG.
             protocol, payload_text = prompt.rsplit("\n", 1)
@@ -61,7 +102,13 @@ class ActionOnlyPolicy:
         (folder / "prompt.txt").write_text(prompt)
         (folder / "images.json").write_text(json.dumps(row["images"]))
         self.action_attempts += 1
-        result = self.call(prompt, [self.output / image for image in row["images"]])
+        try:
+            result = self.call(prompt, [self.output / image for image in row["images"]])
+        except ModelError as exc:
+            meta = dict(error_type=type(exc).__name__, error=str(exc), legal_action=False)
+            self.calls.append(meta)
+            (folder / "metadata.json").write_text(json.dumps(meta, indent=2))
+            raise
         (folder / "response.txt").write_text(result.text)
         meta = {k: v for k, v in asdict(result).items() if k != "text"}
         self.calls.append(meta)

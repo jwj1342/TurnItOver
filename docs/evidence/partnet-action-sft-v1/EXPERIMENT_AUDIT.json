@@ -1,0 +1,346 @@
+{
+  "audit_skill": "experiment-audit",
+  "verdict": "WARN",
+  "overall_verdict": "warn",
+  "integrity_status": "warn",
+  "reason_code": "qualified_small_scope_proxy_results_and_incomplete_base_runtime_attestation",
+  "summary": "No material integrity blocker found in the audited formal runs. Real artifacts and independent recomputation support empirical action imitation and a single-object tight-budget exposure gain, not robust visual active decision making or defect diagnosis.",
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "generated_at": "2026-10-19T07:18:32.656666+00:00",
+  "date": "2026-10-19",
+  "auditor": "Fresh Codex same-family adversarial reviewer",
+  "agent_id": "/root/final_integrity",
+  "verdict_id": "partnet-action-sft-v1-final-integrity-2026-10-19",
+  "reviewer_family": "openai",
+  "reviewer_model": "Codex GPT-6 family; exact provider revision not available to reviewer",
+  "trace_path": null,
+  "trace_note": "Reviewer performed direct read-only tool calls and independent inline deterministic checks in this agent session. Task authorization restricts writes to these two audit reports; parent session retains tool trace.",
+  "audited_input_hashes": {
+    "scripts/train_qwen_action_sft.py": "sha256:cddeb2070172420063bfacad873377f6e4b2afb753366d4fba4fc1c8e007a4b7",
+    "scripts/evaluate_action_sft_closed_loop.py": "sha256:fbe8d86106d93486441fb75283cc0565a32040af3a0a157413f49a9fc1954b59",
+    "scripts/evaluate_action_sft_learning.py": "sha256:dbae65a8e62aa94f04aaf1bc58852049b6cfcdc96e32232e372a776f2a6a6d51",
+    "scripts/action_sft_metrics.py": "sha256:44899276e99dae926d5c538dc6c9fec45a5198062b772878eb75bd0aea4af67b",
+    "scripts/action_sft_model_server.py": "sha256:a79c4d3290fb4c5967489698d418a0ee608367af1ab3b07a3eb93dfb4335c48c",
+    "scripts/export_action_distributions.py": "sha256:08fc0c119c7a968fa5d9d56d2291fbe8c0135453edbf3ca4db617ff92ed8eb92",
+    "turnitover/models/action_qwen.py": "sha256:d2294cce3eecda85184b7000f59901388d4bba03ea82f5ef9c40176297eaf23d",
+    "turnitover/models/local_qwen.py": "sha256:c4e5895dc3ddb77a068edaafeca9a80b4daa2df66f1d2260cb1c151d8d61cf26",
+    "turnitover/verifier/action_only.py": "sha256:6b3b8e3c6866eae8fd91b1a238cdc8ad40f21c88c5e7a6276c3a92b9ec326455",
+    "turnitover/verifier/loop.py": "sha256:331a050cafb38b0b1b2c5fba3894dfa478ddd3d9a6eda0436b9e2791dfa70ade",
+    "turnitover/verifier/policies.py": "sha256:273051c5fee1f596cc59a0bc5e1be93ce9aeff667b9631ad275a9e5cbe746c91",
+    "turnitover/verifier/contracts.py": "sha256:7342f9c9dcd2646a463c9a776427d62688c646b0cd4cd5bf93f494796fea7481",
+    "turnitover/verifier/prompt.txt": "sha256:1c6813f8fe3fb4b249b2d416e02fb4fef349cd117a6b9f076da8f30b0af96dce",
+    "turnitover/verifier/final_prompt.txt": "sha256:6f0204e99e3899d42f95a48422b4cb94713ac76de79b5ec84b92c7c52fc038a5",
+    "turnitover/oracle/training.py": "sha256:77496f63a27a459e2ed2974c01b907242fa2ac075fd788abb0230a3dd1f8bab3",
+    "turnitover/oracle/ambiguity.py": "sha256:6a8fc46114934f07d06a6c8526854bf423351818cf5a87cdf100afcc25608b1d",
+    "turnitover/oracle/supervision.py": "sha256:5b6767e265c5327df1465f70818c0a9b797f15205bd41c489279332ab872fc5f",
+    "turnitover/oracle/evidence.py": "sha256:9bb64b13bf132f98e99df2ca9a9d5998f4a19e119903b5cc83c511012dbc5b5b",
+    "turnitover/oracle/witnesses.py": "sha256:7b34a26e69f29fd10eaa96441e2a3f05ffd1e15eef23ee102cb84b677677f954",
+    "docs/evidence/partnet-action-sft-v1/REPORT.md": "sha256:40ddcf155faeb0896f5754f2cf51e49dc54b84fec7b1f34295c66b5d452415c6",
+    "docs/evidence/partnet-action-sft-v1/PROTOCOL.md": "sha256:9edfaa0e6b4d0e05bafbc7b5c0e19d6b49f5356c9b8e4ee9253fbfea158a816c",
+    "docs/evidence/partnet-action-sft-v1/data-audit.json": "sha256:385333d200e5eda2ec1e5568694c545f67a148211e84cca677b2cddfbcc06e07",
+    "docs/evidence/partnet-action-sft-v1/train-run.json": "sha256:247665daa9375a6b15aefbdd15171c617e8d5e468cf631e670247c1bfc8293c1",
+    "docs/evidence/partnet-action-sft-v1/train-loss.jsonl": "sha256:177d810d50efae3eeadd7a9183443797a2b25dacf4a48e01c326c291ff65808a",
+    "docs/evidence/partnet-action-sft-v1/learning/stages.json": "sha256:59fd1d27c91f7502ca7aae0b645e4fdbcf5638536def7ab9190815a2b053d8d0",
+    "output/partnet-action-sft-v1/comparison.json": "sha256:3dcf44ec1fddaa3ef4a45e181617ca1cd4d8b31fd5b75f4110f1b18aec2d5317",
+    "output/partnet-action-sft-v1/baselines-run3/metrics.json": "sha256:669168da5fc280858fc59659f57aad50f326ba3497044a75c02c620659e570b2",
+    "output/partnet-action-sft-v1/baselines-run3/run_config.json": "sha256:609a3a7bc20da48a05964c1861219b41efce1155b01ee0b0848015f05437b05f",
+    "output/partnet-action-sft-v1/baselines-run3/images.sha256.json": "sha256:8cbcc3a6b6b2f50bc16be992f1365568f50945b69990312ef29177270fb2fb1b",
+    "output/partnet-action-sft-v1/action-sft/metrics.json": "sha256:e6f602938ace79e2fb4aebd0875a38b48240fd7a52f4014f20f0538b9b214a6b",
+    "output/partnet-action-sft-v1/action-sft/run_config.json": "sha256:dd9bd324286f8d304e7e12bd7ece86a4c17fccf1399af29a63d67f4bb56ce07b",
+    "output/partnet-action-sft-v1/action-sft/images.sha256.json": "sha256:c1231b32101981336153488acc7682f8bdb7513f394cd2ec6b3b8c3a6dc310bc",
+    "output/partnet-action-sft-v1/learning/groups.jsonl": "sha256:799023a81559b18a4a41023f55f11ed4bb6371e516e47e59fb43df8b05e1997f",
+    "output/partnet-action-sft-v1/learning/metrics.json": "sha256:55a927375cb3d4ebf0adcf41468f2ad61ff798a7e93172216d95868083fb506d",
+    "output/partnet-action-sft-v1/train/checkpoint/adapter_model.safetensors": "sha256:0fc95434c665b4ee587c5d8cf930408d28e3c6cb909057c08e7eeae21745d346",
+    "output/partnet-action-sft-v1/sft-server.log": "sha256:d50099d7b14dde223ee69f20061bb55602ccd0beb997aa6f582a5b67381d1858",
+    "output/partnet-action-sft-v1/base-server-v2.log": "sha256:e999df37e0df38d8314db49f048c6c3afe76fcc31ce30903388cb880068e33de",
+    "data/partnet-action-distributions-v1/train.actions.jsonl": "sha256:bb940374a14c69e8ba1ae4ef777b03b5fed09b87c2ab7fdb61c539be99fb8d80",
+    "data/partnet-action-distributions-v1/validation.actions.jsonl": "sha256:2fe2c2549d31ff9bfa6bdc235e4301e982bd18111dc807ebf1874fb5464641df",
+    "data/partnet-action-distributions-v1/manifest.json": "sha256:780e2e28c6ab67987d18ef0a5646ee144cac21e8a65e874ae4ebaef81616d1b2"
+  },
+  "frozen_test_opened_by_auditor": false,
+  "material_blockers": [],
+  "checks": {
+    "gt_provenance": {
+      "status": "PASS",
+      "details": "Existing Train/Validation PartNet data and injected corruption labels, not model-generated answers. Reconstructed 496/121 exact-prefix groups and all empirical frequencies. All 672 Active requests contain only the exact acquired prefix; all 849 final requests contain the completed observed history. Dataset-private candidate construction and post-hoc scoring remain outside model transport. Frozen Test was not opened by this audit.",
+      "evidence": [
+        "turnitover/oracle/ambiguity.py:13-29",
+        "turnitover/oracle/ambiguity.py:59-76",
+        "turnitover/oracle/supervision.py:22-35",
+        "scripts/evaluate_action_sft_closed_loop.py:63-79",
+        "scripts/evaluate_action_sft_closed_loop.py:102-125",
+        "scripts/evaluate_action_sft_closed_loop.py:146-195",
+        "turnitover/models/action_qwen.py:49-59",
+        "scripts/action_sft_model_server.py:22-35"
+      ]
+    },
+    "score_normalization": {
+      "status": "PASS",
+      "details": "Assistant-token mean CE is probability-weighted within each complete group; groups have equal weight. No prediction-based denominator. Exposure uses 29 injected defects, case evidence uses 19 nonclean cases, diagnosis uses all 28 cases including invalid outputs. Whole-action empirical entropy is not the token-normalized CE lower bound.",
+      "evidence": [
+        "scripts/train_qwen_action_sft.py:77-95",
+        "turnitover/oracle/training.py:19-57",
+        "scripts/evaluate_action_sft_learning.py:43-74",
+        "scripts/action_sft_metrics.py:17-28",
+        "docs/evidence/partnet-action-sft-v1/PROTOCOL.md:17-21"
+      ]
+    },
+    "result_existence": {
+      "status": "WARN",
+      "details": "All 336 formal episodes, 672 Active replies, 849 final replies, 1680 PNGs, 1488 updates, 1234 learning rows and adapter exist. Independent recount matches all report cells and per-object deltas. Adapter hash matches training and actual SFT-server ready record. Remaining limitation: old base-server ready logs only host/port and cannot independently attest exact historical base-weight/environment/code bytes.",
+      "evidence": [
+        "docs/evidence/partnet-action-sft-v1/train-run.json:2-18",
+        "docs/evidence/partnet-action-sft-v1/train-run.json:616-625",
+        "output/partnet-action-sft-v1/sft-server.log:2",
+        "output/partnet-action-sft-v1/base-server-v2.log:2",
+        "docs/evidence/partnet-action-sft-v1/learning/metrics.json:4-35",
+        "docs/evidence/partnet-action-sft-v1/REPORT.md:35-71"
+      ]
+    },
+    "dead_code": {
+      "status": "PASS",
+      "details": "Scoring, grouping, teacher loss, model generation, post-hoc exposure and aggregation are reached by the recorded pipeline. Reconstructed all 168 Fixed/Random trajectories with unchanged original witness planner. EngineeringModel is selected only by engineering_smoke; formal configs set false and all formal model calls identify Qwen3-VL-2B-Instruct.",
+      "evidence": [
+        "scripts/evaluate_action_sft_closed_loop.py:95-98",
+        "scripts/evaluate_action_sft_closed_loop.py:122-145",
+        "scripts/evaluate_action_sft_closed_loop.py:159-174",
+        "scripts/evaluate_action_sft_closed_loop.py:196-206",
+        "scripts/action_sft_metrics.py:46-74",
+        "turnitover/models/local_qwen.py:29-45"
+      ]
+    },
+    "scope": {
+      "status": "WARN",
+      "details": "One training seed, seven independent Validation objects and 28 reused cases, three correlated budgets. K2/K4 gains over Fixed arise entirely from PM_1280; K6 loses three exposed defects relative to Fixed. Every method/budget has 0/19 exact diagnoses on defective cases. No image ablation or causal evidence of semantic image-dependent policy learning. Existing repaired protocol and original-prompt learning evaluation must remain distinct.",
+      "evidence": [
+        "docs/evidence/partnet-action-sft-v1/REPORT.md:55-77",
+        "scripts/evaluate_action_sft_closed_loop.py:163-168",
+        "turnitover/verifier/action_only.py:16-20",
+        "turnitover/verifier/action_only.py:87-90",
+        "turnitover/oracle/witnesses.py:21-35",
+        "turnitover/oracle/witnesses.py:43-51"
+      ]
+    },
+    "eval_type": {
+      "status": "WARN",
+      "primary": "simulation_only",
+      "secondary": [
+        "real_gt"
+      ],
+      "details": "Actual Qwen inference and real Chromium executions on dataset-provided PartNet assets with dataset-injected corruption labels. Closed-loop exposure is a counterfactual pixel proxy; action-learning agreement is empirical privileged-teacher imitation. Neither is human evaluation or demonstrated real-world semantic diagnosis.",
+      "evidence": [
+        "turnitover/oracle/evidence.py:14-26",
+        "turnitover/oracle/evidence.py:33-45",
+        "turnitover/oracle/evidence.py:63-71",
+        "scripts/evaluate_action_sft_closed_loop.py:100-159",
+        "scripts/evaluate_action_sft_learning.py:19-28"
+      ]
+    }
+  },
+  "independent_recomputed_counts": {
+    "source_and_input_image_sha_checks": 868,
+    "source_action_rows": {
+      "train": 660,
+      "validation": 168
+    },
+    "independent_objects": {
+      "train": 28,
+      "validation": 7
+    },
+    "groups": {
+      "train": 496,
+      "validation": 121
+    },
+    "weighted_variants": {
+      "train": 500,
+      "validation": 122
+    },
+    "conflicting_groups": {
+      "train": 3,
+      "validation": 1
+    },
+    "train_updates": 1488,
+    "train_epoch_mean_online_loss": [
+      0.06274565251801752,
+      0.0159638166775149,
+      0.014309741092469982
+    ],
+    "adapter_tensor_count": 224,
+    "adapter_elements": 1605632,
+    "adapter_all_tensors_finite_and_nonzero": true,
+    "formal_episodes": 336,
+    "charged_observations": 1344,
+    "active_model_actions": 672,
+    "final_model_attempts": 849,
+    "final_successful_episodes": 172,
+    "final_schema_or_reference_failures": 670,
+    "final_truncated_attempts": 7,
+    "observed_and_reference_pngs": 1680,
+    "unique_active_protocols": 1,
+    "unique_final_protocols": 1,
+    "learning_rows": 1234,
+    "original_fixed_random_trajectories_reproduced": 168,
+    "legacy_episode_counts_excluded": {
+      "baselines": 18,
+      "baselines-run2": 15
+    },
+    "counterfactual_pixels_rerendered_by_auditor": false,
+    "nll_recomputed_on_gpu_by_auditor": false
+  },
+  "closed_loop_count_columns": [
+    "exposed_defects_of_29",
+    "any_evidence_cases_of_19",
+    "all_evidence_cases_of_19",
+    "exact_diagnoses_of_28",
+    "valid_final_outputs_of_28"
+  ],
+  "closed_loop_counts": {
+    "k2/zero_shot": [
+      10,
+      10,
+      2,
+      0,
+      10
+    ],
+    "k2/action_sft": [
+      17,
+      14,
+      9,
+      1,
+      15
+    ],
+    "k2/fixed": [
+      15,
+      13,
+      6,
+      2,
+      8
+    ],
+    "k2/random": [
+      13,
+      12,
+      4,
+      1,
+      10
+    ],
+    "k4/zero_shot": [
+      10,
+      10,
+      2,
+      1,
+      13
+    ],
+    "k4/action_sft": [
+      19,
+      15,
+      10,
+      4,
+      16
+    ],
+    "k4/fixed": [
+      16,
+      14,
+      7,
+      5,
+      21
+    ],
+    "k4/random": [
+      17,
+      14,
+      8,
+      3,
+      11
+    ],
+    "k6/zero_shot": [
+      10,
+      10,
+      2,
+      4,
+      17
+    ],
+    "k6/action_sft": [
+      22,
+      16,
+      13,
+      9,
+      25
+    ],
+    "k6/fixed": [
+      25,
+      17,
+      15,
+      2,
+      9
+    ],
+    "k6/random": [
+      19,
+      16,
+      9,
+      6,
+      17
+    ]
+  },
+  "defective_case_exact_diagnoses": {
+    "k2/zero_shot": 0,
+    "k2/action_sft": 0,
+    "k2/fixed": 0,
+    "k2/random": 0,
+    "k4/zero_shot": 0,
+    "k4/action_sft": 0,
+    "k4/fixed": 0,
+    "k4/random": 0,
+    "k6/zero_shot": 0,
+    "k6/action_sft": 0,
+    "k6/fixed": 0,
+    "k6/random": 0
+  },
+  "offline_oracle_exposed_defects": {
+    "2": 27,
+    "4": 29,
+    "6": 29
+  },
+  "claims": [
+    {
+      "id": "C1",
+      "claim": "The single requested Action-only LoRA training ran and fitted the empirical action supervision.",
+      "impact": "supported_with_qualifiers",
+      "qualification": "Actual updates, saved nonzero adapter, reload hash, lower teacher-forced NLL and generated action matching exist. This establishes empirical imitation only."
+    },
+    {
+      "id": "C2",
+      "claim": "Action SFT obtains more pixel-exposed defects than Fixed at K2 and K4.",
+      "impact": "supported_with_qualifiers",
+      "qualification": "17 vs 15 and 19 vs 16 of 29; all positive object-level deltas are PM_1280. Effective independent n=7."
+    },
+    {
+      "id": "C3",
+      "claim": "Action SFT is reliably better than Fixed or learned a robust visual active policy.",
+      "impact": "unsupported",
+      "qualification": "K6 exposure is 22 vs 25; one seed, no image ablation, budget shift and privileged-teacher frequency targets."
+    },
+    {
+      "id": "C4",
+      "claim": "Higher aggregate final accuracy demonstrates restored defect diagnosis.",
+      "impact": "unsupported",
+      "qualification": "Every policy/budget has 0/19 defective-case exact diagnoses; all correct diagnoses are clean cases."
+    },
+    {
+      "id": "C5",
+      "claim": "Final diagnosis consistently disables the Action adapter and uses the same public protocol.",
+      "impact": "supported_with_provenance_limit",
+      "qualification": "Call graph and all recorded prompts support this; SFT reload has its SHA, while old base-service ready lacks runtime weight/environment/code attestation."
+    }
+  ],
+  "limitations": [
+    "Read-only audit did not rerun GPU training/inference or Chromium counterfactual rendering. NLL arithmetic and call path were checked, not re-executed on GPU; exposure thresholds were recomputed from saved raw numeric signals, while counterfactual PNGs were not archived for an independent pixel calculation.",
+    "Old base-server ready record lacks runtime base weight/environment/code SHA. Current reproduction scripts cannot retroactively establish those historical bytes.",
+    "Source-code hashes in run_config do not cover every transitive dependency; audit hashes pin the inspected current versions, not prove historical versions of all dependencies.",
+    "No human semantic review, image ablation, repeated training seeds, new datasets or frozen Test were used."
+  ],
+  "action_items": [
+    "Retain the REPORT qualifiers: n=7, PM_1280-only tight-budget gain, K6 below Fixed, pixel proxy and defective-case 0/19.",
+    "Keep original-prompt prefix learning and acquisition-only closed-loop results distinct; preserve and exclude both stopped legacy runs.",
+    "For a future separately authorized run, record runtime weight/config/code/environment hashes on every server and preserve counterfactual scoring PNGs. Do not rerun or alter this completed experiment solely to improve its ranking."
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "status": "complete",
+  "frozen_test_used": false,
+  "summary": {
+    "train/zero_shot": {
+      "weighted_assistant_nll": 1.4738981775458782,
+      "legal": 0.038306451612903226,
+      "empirical_target_mass": 0.02620967741935484,
+      "supported_action": 0.02620967741935484,
+      "majority_mass": 0.9974798387096774,
+      "groups": 496
+    },
+    "train/action_sft": {
+      "weighted_assistant_nll": 0.009021014273790331,
+      "legal": 1.0,
+      "empirical_target_mass": 0.9329637096774194,
+      "supported_action": 0.9354838709677419,
+      "majority_mass": 0.9974798387096774,
+      "groups": 496
+    },
+    "validation/zero_shot": {
+      "weighted_assistant_nll": 1.4603286548094316,
+      "legal": 0.01652892561983471,
+      "empirical_target_mass": 0.01652892561983471,
+      "supported_action": 0.01652892561983471,
+      "majority_mass": 0.9958677685950413,
+      "groups": 121
+    },
+    "validation/action_sft": {
+      "weighted_assistant_nll": 0.04532519005831292,
+      "legal": 1.0,
+      "empirical_target_mass": 0.8388429752066116,
+      "supported_action": 0.8429752066115702,
+      "majority_mass": 0.9958677685950413,
+      "groups": 121
+    }
+  },
+  "config": {
+    "dataset": "../data/partnet-action-distributions-v1",
+    "model": "/home/laq/experiments/kimi-v4-increment-v1/models/Qwen3-VL-2B-Instruct",
+    "adapter": "../output/train/checkpoint",
+    "out": "../output/learning",
+    "action_tokens": 128
+  },
+  "sha256": {
+    "../data/partnet-action-distributions-v1/manifest.json": "780e2e28c6ab67987d18ef0a5646ee144cac21e8a65e874ae4ebaef81616d1b2",
+    "../data/partnet-action-distributions-v1/train.actions.jsonl": "bb940374a14c69e8ba1ae4ef777b03b5fed09b87c2ab7fdb61c539be99fb8d80",
+    "../data/partnet-action-distributions-v1/validation.actions.jsonl": "2fe2c2549d31ff9bfa6bdc235e4301e982bd18111dc807ebf1874fb5464641df",
+    "../output/train/checkpoint/adapter_model.safetensors": "0fc95434c665b4ee587c5d8cf930408d28e3c6cb909057c08e7eeae21745d346",
+    "/home/laq/experiments/partnet-action-sft-v1/code/scripts/evaluate_action_sft_learning.py": "dbae65a8e62aa94f04aaf1bc58852049b6cfcdc96e32232e372a776f2a6a6d51"
+  },
+  "semantics": "Equal group mean; full probability distribution retained. Teacher empirical mass is not optimal-policy accuracy."
+}

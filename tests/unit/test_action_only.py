@@ -6,7 +6,7 @@ import pytest
 from turnitover.core.actions import Observation, RequestView
 from turnitover.models.client import ModelResult
 from turnitover.oracle.supervision import action_examples
-from turnitover.verifier.action_only import ActionOnlyPolicy
+from turnitover.verifier.action_only import ACTION_STAGE_INSTRUCTION, ActionOnlyPolicy, complete_final_readout
 from turnitover.verifier.contracts import Context, DecisionError
 
 
@@ -30,7 +30,12 @@ def test_online_prefix_matches_original_export_and_excludes_future(tmp_path):
         {"step": 0, "action": {"type": "request_view", "view_id": "front"},
          "image_ref": "first.png", "payload": {"camera": {}}},
         {"step": 1, "action": {"type": "request_view", "view_id": "top"}}], 4))[-1]
-    assert calls[0][0] == exported["messages"][0]["content"]
+    assert calls[0][0].replace("\n" + ACTION_STAGE_INSTRUCTION, "", 1) == exported["messages"][0]["content"]
+    assert calls[0][0].count(ACTION_STAGE_INSTRUCTION) == 1
+    protocol, payload = calls[0][0].rsplit("\n", 1)
+    assert protocol.endswith(ACTION_STAGE_INSTRUCTION)
+    assert "Do not return a verdict or stop early" in protocol
+    assert json.loads(payload)["remaining"] == 3
     assert calls[0][1] == [tmp_path / "reference.png", tmp_path / "first.png"]
     assert "render_ms" not in calls[0][0]
 
@@ -74,6 +79,55 @@ def test_truncated_response_is_saved_and_rejected(tmp_path):
         policy.decide(CONTEXT, (), 2)
     assert (tmp_path / "action_calls/000/response.txt").exists()
     assert policy.action_attempts == 1 and policy.legal_actions == 0
+
+
+def test_inference_failure_is_preserved_without_retry(tmp_path):
+    from turnitover.models.client import ModelError
+    def failed(prompt, images):
+        raise ModelError("SSH bridge unavailable")
+    policy = ActionOnlyPolicy(failed, None, tmp_path, "reference.png")
+    with pytest.raises(ModelError, match="SSH bridge unavailable"):
+        policy.decide(CONTEXT, (), 2)
+    saved = json.loads((tmp_path / "action_calls/000/metadata.json").read_text())
+    assert saved["error_type"] == "ModelError"
+    assert policy.action_attempts == 1 and policy.legal_actions == 0
+
+
+def test_action_failure_still_gets_frozen_readout_on_actual_prefix(tmp_path):
+    from turnitover.verifier.loop import Episode
+    from turnitover.verifier.contracts import uncertain
+    calls = []
+    verdict = {"verdict": {"status": "pass", "confidence": .7, "findings": [],
+                          "summary": "No defect observed", "limitations": ["Limited prefix"]}}
+    def final(prompt, images):
+        calls.append(prompt)
+        return result(verdict)
+    policy = ActionOnlyPolicy(None, final, tmp_path, "reference.png")
+    history = (Observation(0, RequestView("front"), "first.png", {}, 20),)
+    failed = Episode(uncertain("Action invalid"), "invalid_decision", history, 1,
+                     "DecisionError", error_message="Unknown view")
+    readout, meta = complete_final_readout(policy, CONTEXT, failed)
+    assert readout.verdict.status == "pass"
+    assert readout.termination == "invalid_decision" and readout.spent == 1
+    assert readout.trajectory == history and readout.error_message == "Unknown view"
+    assert '"remaining": 0' in calls[0] and '"step": 0' in calls[0]
+    assert meta == dict(supplemental=True, calls=1, status="complete")
+    again, meta = complete_final_readout(policy, CONTEXT, readout)
+    assert again == readout and len(calls) == 1 and not meta["supplemental"]
+
+
+def test_supplemental_final_failure_is_separate_from_action_failure(tmp_path):
+    from turnitover.models.client import ModelError
+    from turnitover.verifier.loop import Episode
+    from turnitover.verifier.contracts import uncertain
+    def final(prompt, images):
+        raise ModelError("Final transport failure")
+    policy = ActionOnlyPolicy(None, final, tmp_path, "reference.png")
+    failed = Episode(uncertain("Action invalid"), "invalid_decision", (), 0, "DecisionError")
+    readout, meta = complete_final_readout(policy, CONTEXT, failed)
+    assert readout == failed
+    assert meta["error_type"] == "ModelError" and meta["calls"] == 1
+    assert meta["error"] == "Final transport failure"
 
 
 def test_runtime_history_keeps_payload_without_inventing_image(tmp_path):

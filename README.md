@@ -125,7 +125,7 @@ python -m turnitover verify --program candidate.ts --reference-image reference.j
 使用方法见 [数据流水线](docs/dataset-pipeline.md)。已调研关节资产库，并提供 ReplicaCAD 公开关节子集
 的固定版本下载脚本，见 [资产调研](docs/asset-sources.md)。已完成六类 ReplicaCAD 网格转换和 102 状态
 运动学审计，命令与验收记录见 [真实网格 benchmark](docs/mesh-benchmark.md)。
-已导出预算内 oracle 动作监督与成对参考诊断，见 [Oracle 与训练导出](docs/oracle-supervision.md)。VLM 训练尚未实现。
+已导出预算内 oracle 动作监督与成对参考诊断，见 [Oracle 与训练导出](docs/oracle-supervision.md)。PartNet 已实际完成 Action-only SFT 与 K=2/4/6 四策略闭环：紧预算取证有局部收益，K=6 不如 Fixed；见 [实验报告](docs/evidence/partnet-action-sft-v1/REPORT.md)。
 
 ```bash
 python scripts/run_examples.py --out output/my-examples

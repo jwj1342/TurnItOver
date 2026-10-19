@@ -29,14 +29,18 @@ def observable_key(record, root, image_hashes):
     return hashlib.sha256((protocol+'\n'+json.dumps(payload, sort_keys=True)).encode()).hexdigest()
 
 
-def export_distributions(source, output):
+def export_distributions(source, output, *, splits=SPLITS):
     source, output = Path(source), Path(output)
+    splits = tuple(splits)
+    if not splits or len(set(splits)) != len(splits) or not set(splits) <= set(SPLITS):
+        raise ValueError('Select unique known splits')
     manifest = json.loads((source / 'manifest.json').read_text())
     if manifest.get('status') != 'complete':
         raise ValueError('Complete source required')
     output.mkdir(parents=True, exist_ok=False)
     report = dict(version=1, status='incomplete', source=str(source.resolve()),
                   source_manifest_sha256=hashlib.sha256((source / 'manifest.json').read_bytes()).hexdigest(),
+                  splits=list(splits),
                   target_semantics='empirical privileged-teacher action distribution conditional on exact public prefix',
                   limitations=['Only exact pixel/context matches are grouped, separately within each split.',
                                'Action frequencies are empirical, not optimal-action probabilities.',
@@ -45,7 +49,7 @@ def export_distributions(source, output):
     counts, conflicts, image_hashes = {}, [], {}
     try:
         with (output / 'groups.private.jsonl').open('w') as private:
-            for split in SPLITS:
+            for split in splits:
                 groups = defaultdict(list)
                 for line in (source / f'{split}.actions.jsonl').read_text().splitlines():
                     record = json.loads(line)

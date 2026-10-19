@@ -1,0 +1,105 @@
+{
+  "status": "pass",
+  "episodes": 336,
+  "active_actions": 672,
+  "image_files": 1680,
+  "adapter_sha256": "0fc95434c665b4ee587c5d8cf930408d28e3c6cb909057c08e7eeae21745d346",
+  "counts": {
+    "k2/zero_shot": {
+      "exposed": 10,
+      "labels": 29,
+      "correct": 0,
+      "cases": 28,
+      "valid_final": 10,
+      "observations": 56
+    },
+    "k2/fixed": {
+      "exposed": 15,
+      "labels": 29,
+      "correct": 2,
+      "cases": 28,
+      "valid_final": 8,
+      "observations": 56
+    },
+    "k2/random": {
+      "exposed": 13,
+      "labels": 29,
+      "correct": 1,
+      "cases": 28,
+      "valid_final": 10,
+      "observations": 56
+    },
+    "k4/zero_shot": {
+      "exposed": 10,
+      "labels": 29,
+      "correct": 1,
+      "cases": 28,
+      "valid_final": 13,
+      "observations": 112
+    },
+    "k4/fixed": {
+      "exposed": 16,
+      "labels": 29,
+      "correct": 5,
+      "cases": 28,
+      "valid_final": 21,
+      "observations": 112
+    },
+    "k4/random": {
+      "exposed": 17,
+      "labels": 29,
+      "correct": 3,
+      "cases": 28,
+      "valid_final": 11,
+      "observations": 112
+    },
+    "k6/zero_shot": {
+      "exposed": 10,
+      "labels": 29,
+      "correct": 4,
+      "cases": 28,
+      "valid_final": 17,
+      "observations": 168
+    },
+    "k6/fixed": {
+      "exposed": 25,
+      "labels": 29,
+      "correct": 2,
+      "cases": 28,
+      "valid_final": 9,
+      "observations": 168
+    },
+    "k6/random": {
+      "exposed": 19,
+      "labels": 29,
+      "correct": 6,
+      "cases": 28,
+      "valid_final": 17,
+      "observations": 168
+    },
+    "k2/action_sft": {
+      "exposed": 17,
+      "labels": 29,
+      "correct": 1,
+      "cases": 28,
+      "valid_final": 15,
+      "observations": 56
+    },
+    "k4/action_sft": {
+      "exposed": 19,
+      "labels": 29,
+      "correct": 4,
+      "cases": 28,
+      "valid_final": 16,
+      "observations": 112
+    },
+    "k6/action_sft": {
+      "exposed": 22,
+      "labels": 29,
+      "correct": 9,
+      "cases": 28,
+      "valid_final": 25,
+      "observations": 168
+    }
+  }
+}

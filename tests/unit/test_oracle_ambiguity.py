@@ -36,3 +36,23 @@ def test_exact_public_prefix_groups_paths_and_keeps_splits_separate(tmp_path):
         assert 'future.png' not in json.dumps(r)
         for relative in r['images']:
             assert (output/relative).read_bytes()==b'identical image bytes'
+
+
+def test_selected_splits_do_not_open_frozen_test(tmp_path):
+    source = tmp_path / 'source'
+    source.mkdir()
+    (source / 'manifest.json').write_text('{"status":"complete"}')
+    (source / 'train.actions.jsonl').write_text('')
+    (source / 'validation.actions.jsonl').write_text('')
+    # An inaccessible or absent Test is irrelevant to a Train/Validation export.
+    output = tmp_path / 'out'
+    report = export_distributions(source, output, splits=('train', 'validation'))
+    assert set(report['counts']) == {'train', 'validation'}
+    assert not (output / 'test.actions.jsonl').exists()
+
+
+@pytest.mark.parametrize('splits', [(), ('train', 'train'), ('unknown',)])
+def test_invalid_split_selection_is_rejected_before_output(tmp_path, splits):
+    with pytest.raises(ValueError, match='unique known splits'):
+        export_distributions(tmp_path / 'source', tmp_path / 'out', splits=splits)
+    assert not (tmp_path / 'out').exists()

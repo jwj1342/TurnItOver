@@ -9,5 +9,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
+    parser.add_argument('--splits', nargs='+', choices=['train', 'validation', 'test'],
+                        default=['train', 'validation', 'test'])
     args = parser.parse_args()
-    print(json.dumps(export_distributions(args.source, args.out), indent=2))
+    print(json.dumps(export_distributions(args.source, args.out, splits=args.splits), indent=2))

@@ -2,6 +2,10 @@
 
 本文持续记录正式 Train/Validation 数据上的训练与受控对照；冻结 Part 2 Test 不用于训练、模型选择或本轮评测。
 
+## 2026-10-19：Action-only SFT 与真实闭环
+
+复用现有 PartNet 动作监督，完成独立 rank=4/alpha=8、3 epochs GPU 训练和 7 个 Validation 物体/28 案例的 K=2/4/6 四策略 Chromium 闭环。经验动作监督能够拟合；相对 Fixed 的紧预算证据增益集中于一个物体，K=6 更差。所有策略的冻结最终诊断器在缺陷案例上仍为 0/19，不将 clean 判定或像素曝光当作缺陷识别。数据、完整结果与复现见 [Action-only 报告](evidence/partnet-action-sft-v1/REPORT.md)。本轮不重训下述诊断/停止模型，不处理 ReplicaCAD。
+
 ## 第一轮：PartNet-Mobility terminal diagnosis SFT
 
 ### 数据边界与预检
