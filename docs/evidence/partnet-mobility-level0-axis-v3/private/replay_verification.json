@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "cases": 76,
+  "independent_objects": 38,
+  "native_image_files_reproduced": 456,
+  "native_image_size": [
+    256,
+    256
+  ],
+  "source_manifest_sha256": "7ddf974791f8448306343a03c955095f06eec0bb8d35596efcab9959db60199d",
+  "checker_replayed": true,
+  "all_image_sha256_matched": true,
+  "source_files_changed": 0
+}

@@ -1,0 +1,681 @@
+{
+  "status": "incompatible_reference_loader; resolved without changing source or checker",
+  "initial_environment": {
+    "numpy": "2.4.2",
+    "trimesh": "4.7.1"
+  },
+  "canonical_source_environment": {
+    "numpy": "1.26.4",
+    "trimesh": "5.1.0",
+    "playwright_module": "/tmp/level0-native-render-env/playwright/__init__.py",
+    "chromium": "143.0.7499.4",
+    "gl": {
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "vendor": "Google Inc. (Google)"
+    }
+  },
+  "explanation": "Saved source conversion matches exactly in numpy1.26.4/trimesh5.1.0; older parser selected equivalent coincident vertex indices. Initial topology mismatches do not establish geometry corruption.",
+  "initial_results": {
+    "protocol": "existing native URDF FK/topology vs real Chromium exported geometry; tolerance 1e-5 m unchanged",
+    "results": [
+      {
+        "asset_id": "PM_101868",
+        "passed": false,
+        "error_type": "ValueError",
+        "error": "Triangle topology changed for link_0"
+      },
+      {
+        "asset_id": "PM_102572",
+        "passed": false,
+        "error_type": "ValueError",
+        "error": "Triangle topology changed for link_0"
+      },
+      {
+        "asset_id": "PM_10558",
+        "program_sha": "e60c1ede0db05af2",
+        "source_files": [
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/10558/mobility.urdf",
+            "sha256": "52fa6c64cb6b7da6eeccb22ed9cd71e90ec2429a0f9f58f589c73c7e584f15d3"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/10558/textured_objs/original-31.obj",
+            "sha256": "95ce7c6fb228daa206d976b1cccb622330f1759d787ec68b3b0b4b605f7aaec4"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/10558/textured_objs/original-32.obj",
+            "sha256": "d6c02cce163cb3b58af73e6564c366cce8c9bcc73d1c332210902b409bb387a3"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/10558/textured_objs/original-34.obj",
+            "sha256": "3f5134ed156017dc242c0ffdad15cc3a115982da85939b7f4aa794fcdbffeb5a"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/10558/textured_objs/original-35.obj",
+            "sha256": "bf82a539d2a3eb6ded07edd6e47fc5e322613df1356c646b186970664e69df97"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/10558/textured_objs/original-36.obj",
+            "sha256": "e4080a1b1022f4a872c1d607abfc34fd6790ca77491d0bc95e75ff25066c7561"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/10558/textured_objs/original-37.obj",
+            "sha256": "3eb9112835fbc0b63a17f28a7c820efd498831931a6f042ee9877d299434335d"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/10558/textured_objs/original-39.obj",
+            "sha256": "fc5fb8b0beb5062c19662fbea035afa5cb979c2d8f22d6a78d2234d8c2b7c4f4"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/10558/textured_objs/original-40.obj",
+            "sha256": "e4ba3a4fa309f796beea16d48d249f57215a5eb181c841aba84846f654f47ecb"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/10558/textured_objs/original-41.obj",
+            "sha256": "ce55c71842c12f87b426fd0b402b8d2b6e69034fab232aab2327535ab973e0c2"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/10558/textured_objs/original-42.obj",
+            "sha256": "22fcfc9a7baf1b5f3062adfb79bb28f3f00b8789f63f0b60aa5532dd6beccc12"
+          }
+        ],
+        "tolerance_m": 1e-05,
+        "passed": true,
+        "max_vertex_error_m": 6.016470895324769e-08,
+        "states": [
+          {
+            "state": "rest",
+            "joint_values": {},
+            "max_vertex_error_m": 6.016470895324769e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_0:lower",
+            "joint_values": {
+              "joint_0": -0.7791149780902688
+            },
+            "max_vertex_error_m": 5.507786525660458e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_0:mid",
+            "joint_values": {
+              "joint_0": -0.3895574890451344
+            },
+            "max_vertex_error_m": 5.650471398532801e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_0:upper",
+            "joint_values": {
+              "joint_0": -0.0
+            },
+            "max_vertex_error_m": 6.016470895324769e-08,
+            "passed": true
+          },
+          {
+            "state": "combined:0",
+            "joint_values": {
+              "joint_0": -0.48989877155250966
+            },
+            "max_vertex_error_m": 5.735956868300409e-08,
+            "passed": true
+          },
+          {
+            "state": "combined:1",
+            "joint_values": {
+              "joint_0": -0.6758423984183752
+            },
+            "max_vertex_error_m": 5.425273621777648e-08,
+            "passed": true
+          },
+          {
+            "state": "combined:2",
+            "joint_values": {
+              "joint_0": -0.5498567047451433
+            },
+            "max_vertex_error_m": 5.832098260408012e-08,
+            "passed": true
+          }
+        ]
+      },
+      {
+        "asset_id": "PM_46741",
+        "passed": false,
+        "error_type": "ValueError",
+        "error": "Triangle topology changed for link_0"
+      },
+      {
+        "asset_id": "PM_47088",
+        "program_sha": "df01e746f8425cd5",
+        "source_files": [
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/mobility.urdf",
+            "sha256": "1e599125f6d5f83dc243612afd21ba299f8903959d6b21936b6c303155e2ed00"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-11.obj",
+            "sha256": "a692cf036bfb784b8233588ba575b711ee0edd5bd36ddaed018f8344192878bc"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-12.obj",
+            "sha256": "e4c8ae9ba8f1aeed90a97e69bae31fef5bbdf9f391f29edb1446c9fdb2f17026"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-13.obj",
+            "sha256": "f9962db0da41aaef6048b67a40dddc169402454d0a13d3095ac516f3417aface"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-14.obj",
+            "sha256": "c5383ca0b5233a6fb9748dd050ed720b515c3277b024d9d565996ff33dbf9ff3"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-15.obj",
+            "sha256": "6bc41a600b426d1de3f03bcc8d92523117b9de713f5b513ff0458e863226ac3b"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-16.obj",
+            "sha256": "e2f6628f4af83f38c38e6d034235cc9edab19d8bbe9086454e23a9139c3d9d0d"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-17.obj",
+            "sha256": "41f72bf64fe46fd3f1d8536b53f7ecfb412f8601015bdf975748641f8912746f"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-19.obj",
+            "sha256": "08c26fa6e91c57e089f8a6b0b5d52b8bfbcd8d1d1e9ce18791dfa3b3525b2c9e"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-2.obj",
+            "sha256": "f09d14f620c862694a42479abc797815f58f76d966e371eda84582435fda792e"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-20.obj",
+            "sha256": "b3558860c66e3172a976a53ce438a5e213c7356ee57663ef7120260d651fda7f"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-21.obj",
+            "sha256": "8f1f4a01c2100d8ffe91e56c2a54387350b1c39a02de32e4742c847976cda335"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-22.obj",
+            "sha256": "0ae15c9abb4f1f9a1cb35c4782c979c4aff61d784045fa1be45623578f94c922"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-23.obj",
+            "sha256": "6cf33f4814a179e1c99143d1002203d0b680bc7d68471f6195abcf386e8e25ac"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-24.obj",
+            "sha256": "7264a71d644e456fbdeeb66b5da6c92889f8099e29f425f8d6a5eed20165ee6d"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-25.obj",
+            "sha256": "c514e91bc22df1d3e3f8a3aeb066b6a132a935328bd201cf5d81a28efc930e64"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-26.obj",
+            "sha256": "cd7d7281a9e4a8c48acd95c086363a7940e184b455329f3f853215d2109be893"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-27.obj",
+            "sha256": "ab23a2c30bff446f08a0cd80138b671dbd80c307d1080abe530ec0124d4dfb3f"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-28.obj",
+            "sha256": "a5f87634d306d0d0f19f7ddcd29e7e7aa2662287247472d55dc66d703f4a4f83"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-29.obj",
+            "sha256": "bfc777e046e8caa49ca36c541d65c540bddefa4e62af7be4170ffec7286ab393"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-3.obj",
+            "sha256": "924b868d740986bda1b847894f96cab6b6aa3f678f01c56a955d2aaafcff7708"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-30.obj",
+            "sha256": "616245789c64392eeacfd1240ad3d43476b691cb69dea6ca3210cb872dd21d32"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-31.obj",
+            "sha256": "52c6e9419d5e84a9348a2ce4b0a2f4c8c41d180e360ec61aabca21e00c746c7e"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-32.obj",
+            "sha256": "250fef84d97f07795870b63c5baefb732dec72b739b7ffd6853cdc5e31610845"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-33.obj",
+            "sha256": "62503729e019ea785077237fceb3af04ea38abde975e5238c61f326262cd786a"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-34.obj",
+            "sha256": "69af298d41eb59b0c527570560e1f6dc9e7c1e3887a32ba284920a4238ef270b"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-35.obj",
+            "sha256": "44f1781bd99408afd4fedabd8e9a55f4a6a29ee82bb539e50475169d7586975e"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-36.obj",
+            "sha256": "930d7b8af294c7e83d483127e57266245efcbc29b855a4576be375f788db7791"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-37.obj",
+            "sha256": "eac64adc5f438946910068514a4199545eac29bb10f838cad8fd5b0ba9d31f67"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-38.obj",
+            "sha256": "0b646be6dcf0f4952dec401d3b8abe7fc4f6ee25e2747ad1c50d0a0d79974b40"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-4.obj",
+            "sha256": "44ddc37f4e2b9ad1aeeb5c586689d524c7460b279242e4231af7aac53bd4306e"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-5.obj",
+            "sha256": "090278088fc91f32c7962036bc379e20e21f7c8de087e5902065381000fac27e"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-6.obj",
+            "sha256": "1122bccd4337dc0f9dbc19e2691d6be63b878b0789d4e8d645a7c516e3799d86"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-7.obj",
+            "sha256": "4c0cef875ee5fa1ecb87ac68d16f444c1d41a7a82dd7af7bc186b42f72862243"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-8.obj",
+            "sha256": "bcd04efaf44f8559c7feb884cd4bc278b42785e31d7aad35ddfef1a212a6d1c3"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/47088/textured_objs/original-9.obj",
+            "sha256": "415e01fc4693c281b18b06f17ddbdbe14d2d1ebb893b084b478754fa520a6f28"
+          }
+        ],
+        "tolerance_m": 1e-05,
+        "passed": true,
+        "max_vertex_error_m": 6.805150050099624e-08,
+        "states": [
+          {
+            "state": "rest",
+            "joint_values": {},
+            "max_vertex_error_m": 3.8865688620987414e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_0:lower",
+            "joint_values": {
+              "joint_0": 0.0
+            },
+            "max_vertex_error_m": 3.8865688620987414e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_0:mid",
+            "joint_values": {
+              "joint_0": 0.7853981633974483
+            },
+            "max_vertex_error_m": 5.014310282222935e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_0:upper",
+            "joint_values": {
+              "joint_0": 1.5707963267948966
+            },
+            "max_vertex_error_m": 3.8865688620987414e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_1:lower",
+            "joint_values": {
+              "joint_1": -0.0
+            },
+            "max_vertex_error_m": 3.8865688620987414e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_1:mid",
+            "joint_values": {
+              "joint_1": 0.7853981633974483
+            },
+            "max_vertex_error_m": 4.223616995865174e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_1:upper",
+            "joint_values": {
+              "joint_1": 1.5707963267948966
+            },
+            "max_vertex_error_m": 6.805150050099624e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_2:lower",
+            "joint_values": {
+              "joint_2": 0.0
+            },
+            "max_vertex_error_m": 3.8865688620987414e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_2:mid",
+            "joint_values": {
+              "joint_2": 0.3680000000000001
+            },
+            "max_vertex_error_m": 3.8865688620987414e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_2:upper",
+            "joint_values": {
+              "joint_2": 0.7360000000000002
+            },
+            "max_vertex_error_m": 5.9513216501944426e-08,
+            "passed": true
+          },
+          {
+            "state": "combined:0",
+            "joint_values": {
+              "joint_0": 0.5830971906003207,
+              "joint_1": 0.20821084611268856,
+              "joint_2": 0.21657148678569335
+            },
+            "max_vertex_error_m": 4.5838543354573664e-08,
+            "passed": true
+          },
+          {
+            "state": "combined:1",
+            "joint_values": {
+              "joint_0": 1.0417027507604275,
+              "joint_1": 0.9808617406047646,
+              "joint_2": 0.14137093760731323
+            },
+            "max_vertex_error_m": 4.956577681042401e-08,
+            "passed": true
+          },
+          {
+            "state": "combined:2",
+            "joint_values": {
+              "joint_0": 0.259471671321567,
+              "joint_1": 0.8216951966188825,
+              "joint_2": 0.20010153947232961
+            },
+            "max_vertex_error_m": 3.9512878705400924e-08,
+            "passed": true
+          }
+        ]
+      },
+      {
+        "asset_id": "PM_47315",
+        "passed": false,
+        "error_type": "ValueError",
+        "error": "Triangle topology changed for link_0"
+      },
+      {
+        "asset_id": "PM_48253",
+        "passed": false,
+        "error_type": "ValueError",
+        "error": "Triangle topology changed for link_0"
+      },
+      {
+        "asset_id": "PM_48513",
+        "program_sha": "1ebcf136eeaef111",
+        "source_files": [
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/mobility.urdf",
+            "sha256": "4c81a1ef86560f52c7183314f233415de2da2485b2c9dd6fad2edccc2b05cad1"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-11.obj",
+            "sha256": "318d396cb2c257765cbe429d73c38547186418f1e1f822cfb3c32f1d49810159"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-12.obj",
+            "sha256": "fcf3c694eb0371cae5d5a417b2a93d1f22eb0837a8a2d82147d356dcf59b549a"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-13.obj",
+            "sha256": "6ab0d6d62d1747a9471e8ae3518d995a8b8d8681c7c122781294304b55f0a84d"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-15.obj",
+            "sha256": "7a9d1a814220f548caf6a0781bfa8a9d0b663af6ae0cf43d60c8039d3cae0a29"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-16.obj",
+            "sha256": "1eae6bdb1a5534060ba29fed6ea3c7188a68ade9833ce3938d92fed7bd8be951"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-17.obj",
+            "sha256": "92120a37967889f213c18c21269a0508b7a1fc76e935b621ef653cae8d043ff8"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-18.obj",
+            "sha256": "56f7471d278dc2c712d16677565eb02c72ba2b7b31c23a287cfb6a1912cd7c97"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-19.obj",
+            "sha256": "2a5a4a97b434345ff4cb73daf5ca7cadfc2a2d8749033df79764bdae7183b093"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-2.obj",
+            "sha256": "1a960243ffc83a26e816666b69c314330391a3bdf9d9cb57b218f25e3a81af93"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-20.obj",
+            "sha256": "750c8a50d2ea2ed8e5f6e8f1876d42515aebec0f8d769603d3aa07841aa628f2"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-21.obj",
+            "sha256": "d04ca50a01d5de11f11c0f8c9715f74fb3196dec1a24df884fa7bf50a449b878"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-22.obj",
+            "sha256": "3c006df6d8fb917533bf66223691bc92a41317743c1d5a309c332c64e7e6a563"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-23.obj",
+            "sha256": "6f1dcbd00f040d2230af9879e3a4fe8b51f09963ffcaf1685fcb375d1f262d8b"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-24.obj",
+            "sha256": "0da8c7185cfb372b688ee40a92538be377c2ff666dea7bcaf923aee1ba5686fc"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-27.obj",
+            "sha256": "fe8938300a057b5d4b82cfb2bd53f3d040c18bced5364bbdce189aeae7146ddb"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-28.obj",
+            "sha256": "3a83f17dabef5ba24a6b4f23f2ec130f6ae03d00dcc0a88f8484ce78c6657179"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-3.obj",
+            "sha256": "ef07175b9f0087d5fb0d55374b369a0e135bbefa397e5da2023bd77b2bfd19cd"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-30.obj",
+            "sha256": "53ffe3175cefcc85c72f5fb17622985a53e636763818b80a3c6b1737f3d2824f"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-31.obj",
+            "sha256": "88108be79b1f22f3a294ab52f0069439d41cb1c5e2db0cdd78d051132a4a7e28"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-32.obj",
+            "sha256": "e52c29b70a78352fd0f6c50fc34b03ea460cd7c9db56bc50f889b9d6c3f5a2a4"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-33.obj",
+            "sha256": "8267be700eeedf163d46a07414ebfb0d3866c75234f13d72a342c1d2ff7d672d"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-34.obj",
+            "sha256": "37992dc0abb50e63a4e22c72d59f16033a95863ebffc16d25d2e5e3ff626f6e4"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-36.obj",
+            "sha256": "f9a5ee4b804e50b4431a186bc757855dbd6972df565058c99784ec62ba5ad796"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-38.obj",
+            "sha256": "e90c3257c4a451e3311e9b8eefe4f263a8aa4a115008a206e8d6066bdcbcc28c"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-39.obj",
+            "sha256": "9e5704d18aa96446a7824a6ac83e84bd1035cf51a2d4a314bb42d43f9abfec29"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-4.obj",
+            "sha256": "d1c51bbcfd456b22cee6ccfc0cb6a22f38839c6b13ca3ba867d21cfebf8d97ea"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-40.obj",
+            "sha256": "d498bda90f6fde9af9a57f08ce46bf3a66d4e267948c8ab1bb9f253ed34340b3"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-42.obj",
+            "sha256": "e62539e28166c6785ea7f9bb1f31f7152ff5dd5ba4505f144fb5e8b518805365"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-44.obj",
+            "sha256": "5a766acea4c36e36846f083805bc898c15bb51fb3b8cc1d4096e1ba2e5196548"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-45.obj",
+            "sha256": "1c9e6e55558b85096fe23d1e27c6fb2fd18543ef214795af23a002b68788b271"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-46.obj",
+            "sha256": "e6de0068477e1c835a7ce9cad7ad4ef370ccdeb7431047bbbde8346c24eb688c"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-47.obj",
+            "sha256": "7a25e564a9f6ff635914617ce3b7356c4b5415393b75978766fb42071189f798"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-5.obj",
+            "sha256": "5b2407380c52369386dc7d4f711f13cf3971e49c95fe3b2eeb9df0860169c43c"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-6.obj",
+            "sha256": "70d36af3b7e482c6723f3c3c93bb70b4a993cca6ed3a47099a67b7b7ca29b52e"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-7.obj",
+            "sha256": "0b734eabf02e5246c2c500939fc45ea35f1ffc8192599981894b84aa89085090"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-8.obj",
+            "sha256": "16fbb4706ac45cb71127f085fbec6f924937eea7806370c1463263d57bb9a928"
+          },
+          {
+            "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/48513/textured_objs/original-9.obj",
+            "sha256": "38805821196e11fa8d35d632b360c729f4519e4aa078f04d371c17db6bda1106"
+          }
+        ],
+        "tolerance_m": 1e-05,
+        "passed": true,
+        "max_vertex_error_m": 6.645709187593264e-08,
+        "states": [
+          {
+            "state": "rest",
+            "joint_values": {},
+            "max_vertex_error_m": 4.188213940465011e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_0:lower",
+            "joint_values": {
+              "joint_0": 0.0
+            },
+            "max_vertex_error_m": 4.188213940465011e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_0:mid",
+            "joint_values": {
+              "joint_0": 0.7853981633974483
+            },
+            "max_vertex_error_m": 4.188213940465011e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_0:upper",
+            "joint_values": {
+              "joint_0": 1.5707963267948966
+            },
+            "max_vertex_error_m": 4.188213940465011e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_1:lower",
+            "joint_values": {
+              "joint_1": 0.0
+            },
+            "max_vertex_error_m": 4.188213940465011e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_1:mid",
+            "joint_values": {
+              "joint_1": 0.31800000000000006
+            },
+            "max_vertex_error_m": 4.188213940465011e-08,
+            "passed": true
+          },
+          {
+            "state": "joint_1:upper",
+            "joint_values": {
+              "joint_1": 0.6360000000000001
+            },
+            "max_vertex_error_m": 6.645709187593264e-08,
+            "passed": true
+          },
+          {
+            "state": "combined:0",
+            "joint_values": {
+              "joint_0": 0.5830971906003207,
+              "joint_1": 0.08430252596647476
+            },
+            "max_vertex_error_m": 5.436770130622232e-08,
+            "passed": true
+          },
+          {
+            "state": "combined:1",
+            "joint_values": {
+              "joint_0": 0.4622142607764626,
+              "joint_1": 0.4217752092885685
+            },
+            "max_vertex_error_m": 4.384308956576483e-08,
+            "passed": true
+          },
+          {
+            "state": "combined:2",
+            "joint_values": {
+              "joint_0": 0.9808617406047646,
+              "joint_1": 0.12216292978023262
+            },
+            "max_vertex_error_m": 4.188213940465011e-08,
+            "passed": true
+          }
+        ]
+      },
+      {
+        "asset_id": "PM_48517",
+        "passed": false,
+        "error_type": "ValueError",
+        "error": "Triangle topology changed for link_0"
+      },
+      {
+        "asset_id": "PM_48740",
+        "passed": false,
+        "error_type": "ValueError",
+        "error": "Triangle topology changed for link_0"
+      }
+    ]
+  }
+}

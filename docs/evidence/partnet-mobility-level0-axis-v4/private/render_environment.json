@@ -1,0 +1,21 @@
+{
+  "native_size": [
+    256,
+    256
+  ],
+  "numpy": "1.26.4",
+  "trimesh": "5.1.0",
+  "python": "/home/laq/anaconda3/bin/python",
+  "playwright_module": "/tmp/level0-native-render-env/playwright/__init__.py",
+  "chromium": "143.0.7499.4",
+  "renderer": "ANGLE Vulkan SwiftShader Device Subzero C0DE (CPU)",
+  "physical_gpu_rendering": false,
+  "CUDA_VISIBLE_DEVICES": "",
+  "OPENBLAS_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "nice": 10,
+  "baseline_compatible_replay": "/tmp/level0-v3-canonical-replay/verification.json",
+  "model_calls": 0,
+  "paid_api_calls": 0,
+  "training_runs": 0
+}

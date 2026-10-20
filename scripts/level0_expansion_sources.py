@@ -9,14 +9,17 @@ from turnitover.assets.catalog import decode_spec
 from turnitover.config import load_generate_config
 
 
-def load_pool():
-    cfg = load_generate_config(DEFAULT_CONFIG)
-    catalog_path = Path(cfg.asset_source['manifest'])
+def load_pool(catalog_path=None, download_path=None):
+    if catalog_path is None:
+        cfg = load_generate_config(DEFAULT_CONFIG)
+        catalog_path = cfg.asset_source['manifest']
+    catalog_path = Path(catalog_path).resolve()
     catalog = json.loads(catalog_path.read_text())
     splits = json.loads(DEFAULT_SPLITS.read_text())
     conversion_path = catalog_path.parent / 'conversion.json'
     conversion = json.loads(conversion_path.read_text())
-    download_path = ROOT / 'data/partnet-mobility-pilot/download-manifest.json'
+    download_path = Path(download_path).resolve() if download_path is not None else (
+        ROOT / 'data/partnet-mobility-pilot/download-manifest.json')
     download = json.loads(download_path.read_text())
     assert download['dataset_revision'] == conversion['dataset_revision']
     archives = {a['asset_id']: a for a in download['archives']}
@@ -41,6 +44,7 @@ def load_pool():
             origin=f"{download['dataset']}@{download['dataset_revision']} {row['asset_id']}.zip",
             license=download['license'], dataset=download['dataset'], dataset_revision=download['dataset_revision'],
             source_dataset=download['dataset'], source_asset_id=row['asset_id'],
+            source_urdf=str((download_path.parent / 'extracted' / str(row['asset_id']) / 'mobility.urdf').resolve()),
             source_identity=group, archive_sha256=row['archive_sha256'],
             original_spec_sha256=row['spec_sha256'], formal_training=False,
             original_geometry_fingerprint=row['scale_audit']['geometry_fingerprint'],

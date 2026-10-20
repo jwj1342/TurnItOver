@@ -63,6 +63,13 @@ def validate_specs(gold, catalog, out):
 def finalize(out: Path):
     from scripts.prepare_level0_axis_v2 import seal
     manifest = json.loads((out / 'manifest.json').read_text())
+    if 'base_directory' in manifest:
+        # Continuations keep their own operational paths, including when copied
+        # elsewhere for verification. Never direct a reviewer back to frozen v2.
+        manifest.setdefault('dataset_directory', str(out.relative_to(ROOT)) if out.is_relative_to(ROOT) else str(out))
+        manifest.setdefault('dataset_name', out.name)
+    dataset_directory = manifest.get('dataset_directory', 'docs/evidence/partnet-mobility-level0-axis-v2')
+    dataset_name = manifest.get('dataset_name', 'PartNet-Mobility Level 0 v2')
     # Human review is the only editable input between generation and acceptance.
     for name, digest in manifest['files'].items():
         if name != 'human_review.jsonl' and sha256_path(out / name) != digest:
@@ -184,7 +191,7 @@ def finalize(out: Path):
         'validation_test_rows_touched': 0, 'model_calls': 0, 'sft_training_runs': 0}
     (out / 'validation.json').write_text(json.dumps(validation, indent=2) + '\n')
     (out / 'README.md').write_text(
-        '# PartNet-Mobility Level 0 v2\n\n'
+        f'# {dataset_name}\n\n'
         f'筛选 {len(audit)} 个同源 Train 候选物体；自动通过 {len(groups)} 个物体、{len(gold)} 个样本'
         f'（clean/axis 各 {len(groups)}）。训练合格 {len(eligible)} 个物体、{len(exported)} 个样本；'
         f'待人工审核 {validation["pending_human_review"]} 个样本。目标为至少 {target} 个物体、{2*target} 个样本，'
@@ -204,7 +211,7 @@ def finalize(out: Path):
         'status=human_review_rejected，并记录 notes；默认批准和自动筛选均不能替代逐图审核。'
         '只有同物体 clean/axis 两行均满足审核门禁才可导出。\n\n'
         '复现（仓库根目录、全新输出路径）：\n\n```bash\n'
-        + ('python -m scripts.replay_level0_axis_v2 --dataset docs/evidence/partnet-mobility-level0-axis-v2 --out /tmp/level0-axis-v2-repro\n'
+        + (f'python -m scripts.replay_level0_axis_v2 --dataset {dataset_directory} --out /tmp/level0-axis-repro\n'
            '# 命令逐例重跑 checker 和门禁，自动核对所有重建图像 SHA。\n'
            if 'source_catalog' in manifest else
         'python -m scripts.prepare_level0_axis_v2 --out /tmp/level0-axis-v2-repro\n'
@@ -213,7 +220,7 @@ def finalize(out: Path):
         'python -m scripts.finalize_level0_axis_v2 --out /tmp/level0-axis-v2-repro\n'
         'diff -rq docs/evidence/partnet-mobility-level0-axis-v2 /tmp/level0-axis-v2-repro\n') +
         '```\n\n人工填写审核文件后执行：\n\n```bash\n'
-        'python -m scripts.finalize_level0_axis_v2 --out docs/evidence/partnet-mobility-level0-axis-v2\n'
+        f'python -m scripts.finalize_level0_axis_v2 --out {dataset_directory}\n'
         '```\n\n仅 human_review.jsonl 允许审核时编辑，验收先校验其余文件及源输入 SHA，'
         '再校验程序只改变一个关节的 90° 轴、checker、Train 划分、成对审核状态，最后更新 SHA。'
         '包含人工修改后，复现渲染应比较图像和程序；人工审核记录须单独保留，不能由生成器重建。\n',

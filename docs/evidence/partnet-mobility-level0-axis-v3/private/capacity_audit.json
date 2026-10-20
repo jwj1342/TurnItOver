@@ -1,0 +1,1391 @@
+{
+  "version": 1,
+  "scope": "local CPU-only source capacity audit; no rendering, training or model/API calls",
+  "base": "docs/evidence/partnet-mobility-level0-axis-v2",
+  "source_dataset": "sapien-sim/PartNetMobility",
+  "source_dataset_revision": "ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f",
+  "license": "PartNet-Mobility terms: non-commercial research/education; ShapeNet terms also apply",
+  "license_urls": [
+    "https://huggingface.co/datasets/sapien-sim/PartNetMobility",
+    "https://huggingface.co/datasets/ShapeNet/ShapeNetCore"
+  ],
+  "counts": {
+    "downloaded": 160,
+    "structural_candidates": 94,
+    "structural_rejected": 66,
+    "fixed_validation": 7,
+    "v2_objects": 28,
+    "previously_screened_unique": 57,
+    "fresh_verified_queue": 24,
+    "new_automatic_pass": 0,
+    "new_human_pass": 0,
+    "quality_unverified_object_upper_bound": 52,
+    "currently_certified_objects": 28,
+    "currently_certified_pairs_samples": 56
+  },
+  "historical_screening": {
+    "screening.json": {
+      "rejected": 21,
+      "inherited_v1": 5,
+      "automatic_pass": 2
+    },
+    "inherited_screening.json": {
+      "inherited": 5
+    },
+    "expansion_screening.json": {
+      "rejected": 13,
+      "automatic_pass": 21
+    }
+  },
+  "structural_rejection_reasons": {
+    "Unsupported joint type or mimic: joint_0": 34,
+    "Unsupported joint type or mimic: joint_1": 9,
+    "Unsupported joint type or mimic: joint_2": 5,
+    "Finite nonzero joint travel including rest=0 is required": 5,
+    "active joint count outside 1..8": 9,
+    "Missing mesh: /91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/extracted/11887/textured_objs/new-15.obj": 1,
+    "Unsupported joint type or mimic: joint_6": 1,
+    "Unsupported joint type or mimic: joint_13": 1,
+    "could not convert string to float: 'None'": 1
+  },
+  "exclusion_reasons": {
+    "already_in_v2": 28,
+    "historically_screened_not_fresh_capacity": 29,
+    "previous_normal_motion_review_failed": 13,
+    "protected_train_validation_duplicate_source_identity": 20,
+    "protected_train_validation_duplicate_model_id": 20,
+    "protected_train_validation_duplicate_archive_sha256": 20,
+    "protected_train_validation_duplicate_spec_sha256": 20,
+    "protected_train_validation_duplicate_geometry": 20
+  },
+  "audit": {
+    "all_v2_file_hashes_verified": true,
+    "pool_archive_spec_sha_verified": true,
+    "train_validation_source_model_content_geometry_checked": true,
+    "frozen_test_objects": 20,
+    "frozen_test_source_and_geometry_recomputed": true,
+    "frozen_test_content_hash_comparison": "available plan digests and raw full_model OBJ SHA; source ZIP and converted spec are different representations",
+    "license_scope": "existing recorded non-commercial research/education terms reused; no new legal or redistribution grant inferred"
+  },
+  "limitations": [
+    "Queue capacity is an upper bound before normal-motion, checker, image-quality and real human review.",
+    "Frozen Test metadata provides upstream original IDs but no PartNet source ZIPs; cross-format content equivalence additionally relies on recomputed existing geometry fingerprint.",
+    "Geometry fingerprints use the existing exact six-decimal vertex-set definition, not a near-duplicate similarity guarantee."
+  ],
+  "queue": [
+    {
+      "asset_id": "46741",
+      "source_identity": "PartNet-Mobility:46741",
+      "model_id": "6b7123a3631583c612de5317fe5b354f",
+      "category": "StorageFurniture",
+      "archive_sha256": "6e2fb28d1728205217c0280e792c98d8839f833686d2a34a95b92fbd192740d2",
+      "spec_sha256": "ab1476f5765e4449fe80a03ba928cd7abd64ae6a11dc6b32631f717e4affcc42",
+      "geometry_fingerprint": "8aa86bf92646b744d209ae3a671117a4e5f130096d77415bc941839a69d54979",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "46896",
+      "source_identity": "PartNet-Mobility:46896",
+      "model_id": "75b534f907b9d89491c352d02061b3f7",
+      "category": "StorageFurniture",
+      "archive_sha256": "a3d233a2b28a24d943606fd1117da94fd32e7eb5b429d2c31241900c23892ab8",
+      "spec_sha256": "0a28c1f4324fec2e641647e4567aa4f22116831195dbfe58ad7056234553ce25",
+      "geometry_fingerprint": "d94664b5cb05e9096ad42db44dbc1e81c22290d44afe502821ae58adacec68c6",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "47088",
+      "source_identity": "PartNet-Mobility:47088",
+      "model_id": "7d95374a9110157c7d8c689e1315827b",
+      "category": "StorageFurniture",
+      "archive_sha256": "625a389d1defec3436f970f35bfafcd5616434901c2735c244dd254a7fbec378",
+      "spec_sha256": "2ce7d9484c211d85cac6c70b0aaba24b60d84e47f4bf6b98448159c31a9e8e5b",
+      "geometry_fingerprint": "33297c917ab00608946cc19445a7cc1128b828a6570740e53e93082992bb1635",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "47315",
+      "source_identity": "PartNet-Mobility:47315",
+      "model_id": "8ddd7f1e19ff809abe81a9109a782712",
+      "category": "StorageFurniture",
+      "archive_sha256": "5253c48b773a1b8ad45009dd370ad07322bf47eaa4d52b0a5d4ab839dd931194",
+      "spec_sha256": "448ee5a417d7dd8c4685d75c6f0518f7914fdb9dc80ac7b9070b1eef8de72293",
+      "geometry_fingerprint": "e218409c7e088f3ea6313a98ce9d57fea51a49f29005d2ddec4d266fe601ddd6",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "47419",
+      "source_identity": "PartNet-Mobility:47419",
+      "model_id": "8f453f19fa9396a7824662341ce2b233",
+      "category": "StorageFurniture",
+      "archive_sha256": "708d54c9dab1cb3d624294445a08a50dd8bab8a331345a5de85d5289090dea30",
+      "spec_sha256": "6eb75385ce3ec60b5010b10d3b8b0077bb4e7af6bc828a38e42de5da5720571d",
+      "geometry_fingerprint": "3657c240d288772950bdfa9a849a4a17037b26d2209f3eb82eaa115379b46aab",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "47954",
+      "source_identity": "PartNet-Mobility:47954",
+      "model_id": "a9c2bcc286b68ee217a3b9ca1765e2a4",
+      "category": "StorageFurniture",
+      "archive_sha256": "ba861f87b1e24091371f088e0a4a3d1f3a3d3faec84561a42cfc5f524ddd9ba0",
+      "spec_sha256": "629798b05895c161c11984d7a79dce37e85ca0ce8f9a25435c081007947b6f04",
+      "geometry_fingerprint": "4599ea497a639e3f04205fab458fb25fb211c9e9199b4bee19f8b9bf562d8b7d",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "48253",
+      "source_identity": "PartNet-Mobility:48253",
+      "model_id": "bb741a003e5ff46c59350d819542ec7",
+      "category": "StorageFurniture",
+      "archive_sha256": "7d412c7e315ac8babf53a9a9550d2a0970987d8a59b6a8ed4c37046fa3caeb43",
+      "spec_sha256": "853382f01ed7ae26b788298f4f4e6712dd78eadf743979df6892599856ac5091",
+      "geometry_fingerprint": "194d688609164cc0cefc71126a4684970c61e13140b2479b616e235703fb4c8b",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "48513",
+      "source_identity": "PartNet-Mobility:48513",
+      "model_id": "c817934380830ccb4da5feafe6f1c8fc",
+      "category": "StorageFurniture",
+      "archive_sha256": "8cedfc32ce2f52b20a4b6e2908e793f473a30c28ffaf0d0d9dfc332c55b8c662",
+      "spec_sha256": "fb5ab23ad6dc068c9813c6db08cfb817ea09566039f4626e1aae6644aa1fc8bf",
+      "geometry_fingerprint": "9ef979d03d85b6823d9075eb73bda4974b2952ad0a03892aa4de1a429d0e2957",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "48517",
+      "source_identity": "PartNet-Mobility:48517",
+      "model_id": "c89a5482bb756c041d86c17c15247b0",
+      "category": "StorageFurniture",
+      "archive_sha256": "07b293005be66a0ee05b92ab84d68f55b8ea737e7e920e9d1a36eac17a9fade2",
+      "spec_sha256": "657144c846232fca7107e4386aec6256858a3898e9f36b3faa2d64da11365839",
+      "geometry_fingerprint": "7bc53de4a0ff68d552884cbc585816505d21bd231a8a1b15c5d09f9ca7a5e08e",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "48740",
+      "source_identity": "PartNet-Mobility:48740",
+      "model_id": "d6242003931d0a27824662341ce2b233",
+      "category": "StorageFurniture",
+      "archive_sha256": "d65b0aa925f915385926d30116531cd087143cb197d3d926208738d5e9c2e1b0",
+      "spec_sha256": "cb710964bca0ae91b34f61756992dc766339001c3f6b37f9395ec161b4a7d780",
+      "geometry_fingerprint": "fc2e24189362bc881b1b430ae7f4b5a44461c24afc9c5688434a1b8b8fbe3345",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "101332",
+      "source_identity": "PartNet-Mobility:101332",
+      "model_id": "610663d6f3d0dba73d2dd82a57bb3bd7",
+      "category": "Eyeglasses",
+      "archive_sha256": "15463feef09268717d4185758804a80b88666f4c9cca1c61ae103c86c9d2f133",
+      "spec_sha256": "240a6df3a8611d435f9fbeafb8dcec2a3ac0786599c1507e009eebe559a3b236",
+      "geometry_fingerprint": "7dd809c985eea400da2be6848f31dd0848e2bbe87ae61471d721cdef29d7cda8",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "101839",
+      "source_identity": "PartNet-Mobility:101839",
+      "model_id": "750dbd625aaeeb9d4688cb762283db8",
+      "category": "Eyeglasses",
+      "archive_sha256": "2d4486853ba29128599f56ca513677fa68cad2d26605e76fa1308cb6daa12aa9",
+      "spec_sha256": "533fcafabd5296ba8b368b0c1440ea61bb04ae808c1b0f3f250c8e57c2e39927",
+      "geometry_fingerprint": "c05abe4f07ec3deaf8e0c2d621cd4c528d1c630c144a9a843667f9d9d7803585",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "101845",
+      "source_identity": "PartNet-Mobility:101845",
+      "model_id": "9197731b76f4a5311c4715249ed9b23b",
+      "category": "Eyeglasses",
+      "archive_sha256": "5a99db1bdb65ad29179d972333ff9158d880bd02cbd8cb07ba26e86bb679861e",
+      "spec_sha256": "f721388a3cad842842b6bd0032870dff9186a7974ff21b3e1947fb1e41d44395",
+      "geometry_fingerprint": "3ee3b57e9a7ef38bc890c1095aa6b8c302497426d501c1b52144814af5910c1d",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "101860",
+      "source_identity": "PartNet-Mobility:101860",
+      "model_id": "bfbdd4fc83c7b97b8dd50bf223f87d25",
+      "category": "Eyeglasses",
+      "archive_sha256": "e734fdbd2e02012d82506f035e3aede13d2342b142231568b43b818c6654ea4a",
+      "spec_sha256": "e3e4c96ca468357ebfbe610fd7f002f53d8d63aa1654d8e06598ca5cc41e404a",
+      "geometry_fingerprint": "9226a24466ee7555d480172b53a23478bae086b01d0caaa1163f27030723deba",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "101868",
+      "source_identity": "PartNet-Mobility:101868",
+      "model_id": "ef1f3261f6ba8efea5628682d14a6725",
+      "category": "Eyeglasses",
+      "archive_sha256": "e8eb2ed0e851a56aff1774170f9fdbe732c2fd0d8b46d776d5d6d03fa0c5ee1f",
+      "spec_sha256": "687bd4f59bf8d8bab9c8c711f4ab687a0add8d38a0c9f2aa003de2fd92667405",
+      "geometry_fingerprint": "7d24c410f270ef3ef7d31be357239499c0806cfd09e6831e3cd31027d400857c",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "102570",
+      "source_identity": "PartNet-Mobility:102570",
+      "model_id": "1ac5432b617808f0eb4d90d878fc8d02-3",
+      "category": "Eyeglasses",
+      "archive_sha256": "15f69bd8b8d3f1c456ef5adb003aca6aab7715ae7c296f6df84568d88a171fd8",
+      "spec_sha256": "6426ebb02dda1c23c47f4b25b900703d5ae2758131c082a1d967e594915beae9",
+      "geometry_fingerprint": "0bc0b3e99efb7e236caff9434682ae26f0365d163e9c6506225693b76b6e2f37",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "102571",
+      "source_identity": "PartNet-Mobility:102571",
+      "model_id": "20b2cc19a5dd5face4773d7a183337d9-0",
+      "category": "Eyeglasses",
+      "archive_sha256": "6394de2cff87c309afe230812830d8ac473f6f7b9c36481e7922bd0c4903c4a6",
+      "spec_sha256": "6609c8d1144c7a500d8636d4691933565bc5213d09a4313969bece9063371522",
+      "geometry_fingerprint": "911bbba7450944d31e9ff76e577d16f1f995af9eb98e4928fd86ab30159a26cb",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "102572",
+      "source_identity": "PartNet-Mobility:102572",
+      "model_id": "20b2cc19a5dd5face4773d7a183337d9-1",
+      "category": "Eyeglasses",
+      "archive_sha256": "765254eec1e4c27b4cdf8950a5a01e04584a113c5ba55810ead41ea8437958a1",
+      "spec_sha256": "22144db8c5e092141bb40e025f20fee63670aa35092b18fbf08469e0a2210ea8",
+      "geometry_fingerprint": "d06fee6daf3d212450c8785031d26e24da2120b6a32d3f97b1bed114df8bf7eb",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "102588",
+      "source_identity": "PartNet-Mobility:102588",
+      "model_id": "73898bee950e21dc3ff80c5f32f8e471-0",
+      "category": "Eyeglasses",
+      "archive_sha256": "8c97cc173d8e7cbb55bf850713467f56ca9324d32a12788604b146110e425204",
+      "spec_sha256": "0671116f1db39a81c48b290f6a7329a9742f6e6f225c1f2546c97e7447f24995",
+      "geometry_fingerprint": "50ab3417e425d425b1aaab2286d78a3008d033ab8b9e5982493be9881ebcc452",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "102591",
+      "source_identity": "PartNet-Mobility:102591",
+      "model_id": "86731ab8270db137de058ee2c1f0f0dd-0",
+      "category": "Eyeglasses",
+      "archive_sha256": "330dad4496664fe5bb536a0226d1673ca9836a07d211a331b44843954c952058",
+      "spec_sha256": "d9768a7f0e589b3b9c6a207c896bb956361b51fb5ba11bafe60c2d6353186f72",
+      "geometry_fingerprint": "2749f71dde2da2997e9679dbd5cb8b7da5cd58eeb08e6cb882374dcaf6436db0",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "102596",
+      "source_identity": "PartNet-Mobility:102596",
+      "model_id": "a422399eef34132dd213964302a82835-0",
+      "category": "Eyeglasses",
+      "archive_sha256": "2b87943d199576875beefe76f1264a83c5b462d112aafadf39f4b0d1be8baef8",
+      "spec_sha256": "2a7f7de6dffb65e4c0b7715b7066b448fd5f79c81e4b8860fda3d67e0451c4fa",
+      "geometry_fingerprint": "7387ab61996b56e1ce2a38b84868fa47b658febed6b5021e92d574f812b372c9",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "10449",
+      "source_identity": "PartNet-Mobility:10449",
+      "model_id": "1c2f450311ebe37a95f577622f465c85",
+      "category": "Scissors",
+      "archive_sha256": "334b9484dfb85db3e90e73ff73707b0418281a1159aa9ba9bdbb93df72959c1a",
+      "spec_sha256": "09b053f19aa69d25bc5097c0f4805d0305d12719001ff0991bbce6a423c16d49",
+      "geometry_fingerprint": "ad92a7e586ffcb14bcd612260821f2bc91674bb2bc3f6398be0c7387b02c64f0",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "10558",
+      "source_identity": "PartNet-Mobility:10558",
+      "model_id": "1a59fa97-4545-432f-8dc5-9c9b4b10a6ba",
+      "category": "Scissors",
+      "archive_sha256": "08292ecbf95f4636f3290608727ede73c061948d78113d8ce1e6be2e7477ca3b",
+      "spec_sha256": "f7a3dd4f42fa4396594e404c7e09bed0462035f15ff663cab4d66029e2f6289b",
+      "geometry_fingerprint": "652b22e076dbf909c1efab81050413d591b9ca6306fde587a602700fa5f813ad",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    },
+    {
+      "asset_id": "10686",
+      "source_identity": "PartNet-Mobility:10686",
+      "model_id": "37ad646b-3a42-45fb-ac03-6e2250908f76",
+      "category": "Scissors",
+      "archive_sha256": "a415b7721531f28ad2c1e174d327a6a454780b55aa0a5e20b7d5da133701656f",
+      "spec_sha256": "a16fadd86ec43279530c8ff935514d14face57ec3c2cb63069e2d55d6c8decb4",
+      "geometry_fingerprint": "403c22e43cd2f505ef8a5f55c27f3ff34051096281dcb9a77dfd055e03889001",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "status": "pending_normal_motion_and_level0_screening",
+      "candidate_split": "train"
+    }
+  ],
+  "excluded": [
+    {
+      "asset_id": "100174",
+      "source_identity": "PartNet-Mobility:100174",
+      "model_id": "51c09c1d065b2f3ff2792e4b1535c6c3",
+      "category": "Box",
+      "archive_sha256": "554e05dde30307c079bd4f5b957177ac8a9b465d50058b7c76d998481db68353",
+      "spec_sha256": "60b4fd9d4dc0fa70a38e5e74f09b267cd87cfc5be8d812a2cd45a448e1153514",
+      "geometry_fingerprint": "809093f22b04c34563dbb53f16b9d554bf43ec8b5b227aa26124020eca8e6a2f",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "102632",
+      "source_identity": "PartNet-Mobility:102632",
+      "model_id": "4ac26dac8b8f4c153321831d2245cf06",
+      "category": "Toilet",
+      "archive_sha256": "9a7985e79a2ab26c36234be68e20aac6af797487d07b2efc43fafa8e2f2fe76a",
+      "spec_sha256": "68df29738ae45a204406ac0ec7c6f24afc8393dcab8ce64f3ceb96cc28b570f7",
+      "geometry_fingerprint": "4423173dc7c2608a17d0e3fe44abef2e6b4fd6916ae9d26c255c454a9ebf86db",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "102639",
+      "source_identity": "PartNet-Mobility:102639",
+      "model_id": "5bc712351546ccde3321831d2245cf06",
+      "category": "Toilet",
+      "archive_sha256": "2b330cec5bbb3268d1485f5a0da8a700094ad7d1600afffb85441b9fc9a8bed5",
+      "spec_sha256": "ce12ac56e97c9d7554109030d5636cdcb4cc907d2f469dd6af0b8de10b77221a",
+      "geometry_fingerprint": "ddd4cdceafe4ef53ff79aa2ac744ec3652205b65fe960a9c78b3851de23e05cd",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "102688",
+      "source_identity": "PartNet-Mobility:102688",
+      "model_id": "c2523b5380d0c0c654d7082b34825ef0",
+      "category": "Toilet",
+      "archive_sha256": "89a829de1063dc2c40a9f72a89104146079612f76b2935fa8889e59a03e17350",
+      "spec_sha256": "9bc09ed0c4666a6b1896c9775d07d523acae43d71abd138bf4933e3dcb53a90a",
+      "geometry_fingerprint": "8a0a9d964bfc3c78f8457bb440b1181be91aa27886a465b1aa8ca4d0bd178202",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "historically_screened_not_fresh_capacity"
+      ]
+    },
+    {
+      "asset_id": "102703",
+      "source_identity": "PartNet-Mobility:102703",
+      "model_id": "ed38aee3026bee7a3321831d2245cf06",
+      "category": "Toilet",
+      "archive_sha256": "17f2a435a72d70d08cc7f9874a9cda44e56386296eb7a94c3a80bf11df4aee5e",
+      "spec_sha256": "aa6eaf1defa3382ac47a51a46d504fffc273954f18a0b717e018b57b672cd9f0",
+      "geometry_fingerprint": "8778a6c08267843e22efc68fc3baafa7f6dd3f46a7d0d4da8113bfd88a2304f6",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "103008",
+      "source_identity": "PartNet-Mobility:103008",
+      "model_id": "ud48f2372-1c54-4957-8b56-9b822b7aa740",
+      "category": "TrashCan",
+      "archive_sha256": "521f4863e8cf71c599d9ee20424df04faf772bef3e52ddc28bee3c182d7b8f7e",
+      "spec_sha256": "d79541148ce1167f64b284aced39b5f6a680ff30ab4fbea8e5b3fc7296b28b96",
+      "geometry_fingerprint": "0c183b9a9cf88eb324dd6d662c2989262efaa7f91a4de548c316c66dab8fb376",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "103129",
+      "source_identity": "PartNet-Mobility:103129",
+      "model_id": "uf475f66d-bc94-44df-a035-22bd48538663",
+      "category": "CoffeeMachine",
+      "archive_sha256": "d1687f548607b97762be6e9ba50f3141d9fcf231e00ae356058de82843c3dc24",
+      "spec_sha256": "ec75abc818859ebbed996592d21be96f7c5a5194d9c50f59499dfa555e95f487",
+      "geometry_fingerprint": "91eea33bbbdab817e7cb55c0f06e3d17d917ea22a4208be9464ae1022bfcacbe",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "103234",
+      "source_identity": "PartNet-Mobility:103234",
+      "model_id": "fd877b1865ae46fea50b88953d263a42",
+      "category": "Toilet",
+      "archive_sha256": "c22ccf0fe9b75384ffc9e61454866a439cc447fe01aebecd80f85c2ccfc472bf",
+      "spec_sha256": "eeb409b728721118dc8f1f964e47f114a037586f3c0beae1f492ac5cb178e43b",
+      "geometry_fingerprint": "ca2d0b819132621fabe4b0a5e027e5e4afb3af7aa94767002196dfa035625267",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2",
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "103319",
+      "source_identity": "PartNet-Mobility:103319",
+      "model_id": "bf189fc7-ff9e-48d4-bbd7-723b203eeb69",
+      "category": "Window",
+      "archive_sha256": "0c46e1f4660b5a2ca0a3146b7ff46ac6ad58638d65b952cba79960b02f6c08b0",
+      "spec_sha256": "1894ad3b7bb362ebc9132b0956fe97e565defb784f5e7e1a1e6983bb7f67aee9",
+      "geometry_fingerprint": "f1c3fadf22ce86827a59e23a3496427346486dbb83cb8134a0541cc7a33f2278",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2",
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "103419",
+      "source_identity": "PartNet-Mobility:103419",
+      "model_id": "u8a6f5be1-7316-4b8a-bf82-d5ec89868710",
+      "category": "Dispenser",
+      "archive_sha256": "9efaa2f615d53c888e144921d93711e075d4e4dcf9b2f239ae884f14963a9013",
+      "spec_sha256": "b4f3e5570d27da24417f1906c2695fc1dfc156f57c90cc2e9961ee276356d72a",
+      "geometry_fingerprint": "1cf45e6da508bf302e7037dca7171c387a39ca5725dfa2a559100cb34b7c3a09",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "103549",
+      "source_identity": "PartNet-Mobility:103549",
+      "model_id": "fdbfc755-2c76-42ae-ad74-83ef27362bf1",
+      "category": "Toaster",
+      "archive_sha256": "cb1f5dd40ab6fd2d580897d4ea6fc5d06d68a1f07ce90950c55347e128a681e8",
+      "spec_sha256": "9c26d01bc3777c528e97d8278ce80800d89d2c3ac032bf5ec0c0f592b1f25c05",
+      "geometry_fingerprint": "7774c337b879049d623261847fb85873d97b246dbf7d085b06dfe29027109372",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "22433",
+      "source_identity": "PartNet-Mobility:22433",
+      "model_id": "4cd743a60cfa17d6b0a3f25f5d8cb0f8",
+      "category": "Table",
+      "archive_sha256": "00969b0305e8306dc7b10b8ec0f6a289a14ce195fd5d8ed99aca0878518e94f3",
+      "spec_sha256": "096e4fa2f06ee0cab3ff4b2732a1eed1c6b9ee0911053b170fe4adf1d82948d4",
+      "geometry_fingerprint": "52afe2fc0b5b60a739baf5abe99ac494bbcca8a8ba88e4cdf9a543f2bf60ba77",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "30341",
+      "source_identity": "PartNet-Mobility:30341",
+      "model_id": "e64f3681d7c76bb743638dabe1eb5336",
+      "category": "Table",
+      "archive_sha256": "099b3d3e32b28add84ba250557c4366c543e27074adcdddadaa57e97e684c218",
+      "spec_sha256": "35ab7c07e8d42c73aee10e69abfa71a5b12088625a30543cbdd5bb7307f20265",
+      "geometry_fingerprint": "313cdd19088982fb6d3ddb4e24ac874134e6f81479a289bf1da839acf0dd2f9f",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "historically_screened_not_fresh_capacity"
+      ]
+    },
+    {
+      "asset_id": "41003",
+      "source_identity": "PartNet-Mobility:41003",
+      "model_id": "109a19840a8fbc774c3aee8e9d3a6ffa",
+      "category": "StorageFurniture",
+      "archive_sha256": "1f4e2d686989fd6630258d6b45075448e323cc6a110ed0d353b54faab0efa031",
+      "spec_sha256": "079078c01a8aad85ead676135a36d8ab97ab11a4f0dd8ccb80c05f95453b1892",
+      "geometry_fingerprint": "48acd93748cd1026396329f7261ad4f2e842cb82ef0433d8669f0d846718cd77",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "44826",
+      "source_identity": "PartNet-Mobility:44826",
+      "model_id": "139aeafbfbdd6bb64da5feafe6f1c8fc",
+      "category": "StorageFurniture",
+      "archive_sha256": "1d6dc7e763bd102f0c03870a2d330f7d3e17ef936c0d68bfb1f6e30386c77b9d",
+      "spec_sha256": "377b28cdc02ccf6de7af5aff1ddc2b06224394704e254d0044adc416a5e21c95",
+      "geometry_fingerprint": "d6574aa062a40e2a311ff9b3ccc14ee7fc4d3ead44660377dbc5694009b4f25b",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "45213",
+      "source_identity": "PartNet-Mobility:45213",
+      "model_id": "19dd35ef180808c38f1735145fdf5c5c",
+      "category": "StorageFurniture",
+      "archive_sha256": "95fb5baf1e08a1fd9cd763fd39b43f345fa263417a2e7820d7bb297801164860",
+      "spec_sha256": "5bb54e6675dbb4e5b9426611c6a15eaf3c8af14827748fe1cf6cb02fb22aa29c",
+      "geometry_fingerprint": "10f4143d9ea294a7a0e80b012d0e46369043c6aedbe4b6ae414cd387a191beb8",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "45305",
+      "source_identity": "PartNet-Mobility:45305",
+      "model_id": "1e25501b8930873129a50a2b3c5e5b6",
+      "category": "StorageFurniture",
+      "archive_sha256": "50e4bc682f00c0a78f23dd4cc864cba08166c4628ec5d4271099b7c8b5df1125",
+      "spec_sha256": "e1f956b95d1ca46bcf29ea0f3d0035dceebce9c8ce492a64db5e63d0492ea95f",
+      "geometry_fingerprint": "b45d542017ccf0089d326514ee807ede48f0ec5aa735331bc97a45f169ad739e",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "45523",
+      "source_identity": "PartNet-Mobility:45523",
+      "model_id": "24c781a3aa6310a44da5feafe6f1c8fc",
+      "category": "StorageFurniture",
+      "archive_sha256": "9bb97fae8ff2fbd82b7e0b98745dc82bfbc8ba3e089771025f87e57d43feb7fa",
+      "spec_sha256": "96d96bdd4990bcf07f8daab3ad529093070a98f0bdf3955e31571584e759fca5",
+      "geometry_fingerprint": "0d2a2e796579907c2033fdc62a6cc0c571b749703e85460579f1b0c21da8375e",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "45524",
+      "source_identity": "PartNet-Mobility:45524",
+      "model_id": "24da7fd5e33513814da5feafe6f1c8fc",
+      "category": "StorageFurniture",
+      "archive_sha256": "da64c231ffeebcf696f22783b5877328f08e12c2101d774d2667559b24734cd6",
+      "spec_sha256": "907d0d0eef4f34ffb979b7579bf93e47481d1f45887a66e625c2e4217e688c0e",
+      "geometry_fingerprint": "5caf1f995d8cbbe7af3e2287caf714a3d83d12f8a8d504a554af7689d93fa9a7",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "45573",
+      "source_identity": "PartNet-Mobility:45573",
+      "model_id": "26a2132b719d226a86d53ab0fe94e911",
+      "category": "StorageFurniture",
+      "archive_sha256": "6c834bb983441c469fc82489430a16c4b8e1e86c957f68b6d88c7ecfe5df924f",
+      "spec_sha256": "08f2b99f6fc6b03d681fcae847f3461886198c8781e8f4212c59c0f8b2bbae7b",
+      "geometry_fingerprint": "be6886a3ed72c5cfe0a8683a6aba7f2c742d5c85295ad482182264e552d71b0c",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "45621",
+      "source_identity": "PartNet-Mobility:45621",
+      "model_id": "295502bcb6d0c0f5c59350d819542ec7",
+      "category": "StorageFurniture",
+      "archive_sha256": "159661a3ae4c06071081f002b76d345f632be5df3e2673a4bbc3ea1b335c9717",
+      "spec_sha256": "0c7ac8263e24aa92d53e234bd81ee53c06428c709688f37f3d064eaca32aab4f",
+      "geometry_fingerprint": "d9957ad76ad31598ac72879c294a1fa2439b78faa018df2592c3055ff3a87e9b",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "45699",
+      "source_identity": "PartNet-Mobility:45699",
+      "model_id": "2d7bad601f84c83686d53ab0fe94e911",
+      "category": "StorageFurniture",
+      "archive_sha256": "6a4addfe0e63473b82c303628050f2bacef95ec8c74b045caa64f749f9127adc",
+      "spec_sha256": "65e58989e49ab3dabf91f4f9eeb1708ca28478fc01ae8e992dab42cc3664d556",
+      "geometry_fingerprint": "8676fd3efe44fff9a5ca037276ab98a9d2086fb34f61ffb080533b3605e80cec",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "45749",
+      "source_identity": "PartNet-Mobility:45749",
+      "model_id": "30224544f65279f24c3aee8e9d3a6ffa",
+      "category": "StorageFurniture",
+      "archive_sha256": "316ebe13f70c38054442820d9e459e7dfa36bad865c9c40999f698e72b49f36a",
+      "spec_sha256": "b26a2322360ff9856f73b87bf45ddf916472a7e5d8bdefc32e88416aa50e7f02",
+      "geometry_fingerprint": "c658ef1a604706e1604120e380a9db0d685b4e66c190aa9816543ca7760885e5",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "45908",
+      "source_identity": "PartNet-Mobility:45908",
+      "model_id": "38c9f4bc9c5583d7824662341ce2b233",
+      "category": "StorageFurniture",
+      "archive_sha256": "fa854f6b843cc698a600d6e4d9097b919d944cde6b67a4e78243c86a847f0f5b",
+      "spec_sha256": "642e20a645e2fb3bdf71a113faad9685424b8ce674ff883cf6d90114a5a5d4c8",
+      "geometry_fingerprint": "5462c86787e2ba7c5f6850a9e4e0b1f354f66bbb35e9cbbea1a107460b1d271a",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "45910",
+      "source_identity": "PartNet-Mobility:45910",
+      "model_id": "391d1f98ffc6f8cf4da5feafe6f1c8fc",
+      "category": "StorageFurniture",
+      "archive_sha256": "54f1d8de21ad3315b792d2d5289fc9666b1d706c274fc953ce5b84e16468be89",
+      "spec_sha256": "3318c8268a9dc75a8a69bfef2897a91381a863d848852aab33c0e72e34ddfbef",
+      "geometry_fingerprint": "ed468ed04e5df1fbc3292bb03a3504714006a55637b9b9725dcdb308fa5bb291",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "historically_screened_not_fresh_capacity"
+      ]
+    },
+    {
+      "asset_id": "46130",
+      "source_identity": "PartNet-Mobility:46130",
+      "model_id": "48b9fbf28fd33df5c59350d819542ec7",
+      "category": "StorageFurniture",
+      "archive_sha256": "0c300465e0046f6cbf4fdb33eeb9dd55b31b0cd602bdde19297b23359cf62cda",
+      "spec_sha256": "e8c93e7f2226dc956f59fa6bb37e0831018dc448c6d19e95b026c32e6bcd5950",
+      "geometry_fingerprint": "7accefadea2af55e38d2ba1f2e4659bfa47b06646a76f813c7c6c3c3148dae0a",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "46230",
+      "source_identity": "PartNet-Mobility:46230",
+      "model_id": "4fd61ff0aa949a4486d53ab0fe94e911",
+      "category": "StorageFurniture",
+      "archive_sha256": "bb4c27811e495a40fa71acea44015534db73936ce3b5ec2f3bded6f98d0bb53b",
+      "spec_sha256": "738b411296ad2e97c92a04dbb734b708f7ba740974b34e4c294048e44d8e8481",
+      "geometry_fingerprint": "c6cc8117960f09f93c6267489b9049aa5f076ee064caddc823a423174260d8e1",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "46439",
+      "source_identity": "PartNet-Mobility:46439",
+      "model_id": "5799c06f71bf6b88c59350d819542ec7",
+      "category": "StorageFurniture",
+      "archive_sha256": "85132262b277a93d11ddec284e46b4bb8fedc81d9d95e7a62e672ed0aac95f4d",
+      "spec_sha256": "8bc49b5db2d4034614433251f8b186ee995096739b14adde25084f38cc184547",
+      "geometry_fingerprint": "f4b25efa7bf4506cb08c631410ec5ec62b1c70de1a692f69983293bd465bee97",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "historically_screened_not_fresh_capacity"
+      ]
+    },
+    {
+      "asset_id": "46563",
+      "source_identity": "PartNet-Mobility:46563",
+      "model_id": "60d7e8aba1f692a8c2185cc0ca1b306b",
+      "category": "StorageFurniture",
+      "archive_sha256": "d146eda9b72758e09023ab5ce764e985d761533a6c71af751c445f6d70b0bff7",
+      "spec_sha256": "b1df8ef76b0bec84ae4230640d083b943fcc94550d7d71779232f6335a9a2300",
+      "geometry_fingerprint": "25f5c38efeff6f210e86abed6db5f8da7b545ad5f655304db924a78b7bb6f5e8",
+      "previous_motion_decision": null,
+      "source_split": "unassigned",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "47254",
+      "source_identity": "PartNet-Mobility:47254",
+      "model_id": "88a1a68c64ef85394da5feafe6f1c8fc",
+      "category": "StorageFurniture",
+      "archive_sha256": "22efb49ca1312790c82db2b16abfbc006084688a3f0f6bed6c57fe5d55d90936",
+      "spec_sha256": "28b0356d42df16ffa7a35c35d0b9ce5471cb24abb07f72d8c235c3886908666a",
+      "geometry_fingerprint": "2f7f5a1ba6b138a82e9f3921f8101e564466c1bd963b25eec0e215e48155f725",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "8893",
+      "source_identity": "PartNet-Mobility:8893",
+      "model_id": "24ef5084512256551bffd4bc88cc8d80",
+      "category": "Door",
+      "archive_sha256": "f6c1a570a263e93f25c35c2d364df0d75fba2fb1095faa50ab82a3cf58dbd0ed",
+      "spec_sha256": "59693392021b61aa58876c36da1c6e2b690eed0c977cb1a34f6ff1a90854bae6",
+      "geometry_fingerprint": "e975b4805b7bf41973fce2e243d70404e46870255def91c8955d1c92b3c37d6c",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "102257",
+      "source_identity": "PartNet-Mobility:102257",
+      "model_id": "u92d69967-b23e-4220-bc94-f19adf033806",
+      "category": "TrashCan",
+      "archive_sha256": "21862eb52614b5dc6fe588eb1dd6b04109ee8daf4019c7a02f1ad6064643a17e",
+      "spec_sha256": "b67163d26e31ee062c6cd1a8fc7aad188b103de548f1e1187ec59cdc5e9980e0",
+      "geometry_fingerprint": "205ccbf1265c654022b552f4ea75408c5c3ac845cf7a81a6739674d91b4ad236",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "102379",
+      "source_identity": "PartNet-Mobility:102379",
+      "model_id": "3ac64751-e075-488d-9938-9123dc88b2b6-0",
+      "category": "Box",
+      "archive_sha256": "c99ebb2f6173d3fd89c666c9245b6663ca6c245ca835135306df0dd2d3123f3f",
+      "spec_sha256": "ff544bd4c64fa303b8a7a0751a9f7878c35e51bdef899d654f79abdda9a4a217",
+      "geometry_fingerprint": "e113519164edb9da3171982fac1845d04b583a5a0c6a5ea26905ccd6980d6d12",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "19836",
+      "source_identity": "PartNet-Mobility:19836",
+      "model_id": "20ab56e8a819c7f06a9633583f89b17f",
+      "category": "Table",
+      "archive_sha256": "63beffe567d676f13a1218e599c67366d511a30b156946d21753fdc4a64ae1e3",
+      "spec_sha256": "732c2d776653b07c1f376ba9f7ad0f2d6b775d2a4e253de0a719d9eb898f6177",
+      "geometry_fingerprint": "4df866a57f1c4c69d7f4da7ac491516eee40cd6d81a92939a0072970047f4da9",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "25308",
+      "source_identity": "PartNet-Mobility:25308",
+      "model_id": "83a2a5dfe03a2be1b2b755acb296d925",
+      "category": "Table",
+      "archive_sha256": "be2dbb856b07e55cb36c6f1754e72c07daeae4f2cbec16c123e81199119a4bb2",
+      "spec_sha256": "e586d27453b53aa22f48c73ac1d0f24dc96b88a3eb913c08fa323a271ce38361",
+      "geometry_fingerprint": "99608c6206ede556ef4875754b2373086314507d67624a6abebaae2764076f81",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "48686",
+      "source_identity": "PartNet-Mobility:48686",
+      "model_id": "c4802a2901dcd6e84da5feafe6f1c8fc",
+      "category": "StorageFurniture",
+      "archive_sha256": "001d860a3a6eb91eb260e635c0d82e64a74821cb04262e867e8279623f741e98",
+      "spec_sha256": "f0aec652e9bc1e72eea128ed39efb03adb8e192a47ddedc7565914c267f4c23e",
+      "geometry_fingerprint": "a4a92fa8ea4967fe92966e6e0db8aa98c426a6a7fe3b14c3b1283469ed5db25e",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "8867",
+      "source_identity": "PartNet-Mobility:8867",
+      "model_id": "26616b8217bd2ef12619db0a5cf36754",
+      "category": "Door",
+      "archive_sha256": "da3bd393464fe523ba73d7e95ca52a3d72b7f9708cd3bfbc252abd5155cdcb04",
+      "spec_sha256": "7158674a4292f044893336c4738af9ff75efdfbec0bf6ba9c6df1e122c64bfb0",
+      "geometry_fingerprint": "338398413cab2df7e3f75b6daa094df2195cf8f107cab47a02ff503c25d2d65f",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "100846",
+      "source_identity": "PartNet-Mobility:100846",
+      "model_id": "0babf424-c85b-4d21-8123-72f3aed070c9",
+      "category": "Switch",
+      "archive_sha256": "7bade9293fd134621537e818f470a1ba69adf70fa8a5d27c4d391cc090963018",
+      "spec_sha256": "29abae053b49b3e1f6f8adb805802a8f2d352f256305ba7f049ea7058c4b9304",
+      "geometry_fingerprint": "3952703766f9e7e8905cd85762ccab0a74b2a9c4b33aff17cd558fc8df164306",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "100907",
+      "source_identity": "PartNet-Mobility:100907",
+      "model_id": "5a8c4b01d7cdc687243fd6c0bc6255e8",
+      "category": "Switch",
+      "archive_sha256": "bad4afb7ee503879a55de754487234f7a59ad0820d84e509ad36131ede5bfc4c",
+      "spec_sha256": "86d70abdc7ec5b185f9301e247866885cfcdc0191d534bc17ffad601b4d8aca8",
+      "geometry_fingerprint": "35f88c46e73e2464b6668cdf436b008279040e64d1d2dc744f2c2cf31497fb9f",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "101054",
+      "source_identity": "PartNet-Mobility:101054",
+      "model_id": "19dff8164764e2a259f37b6e82c5e93",
+      "category": "Knife",
+      "archive_sha256": "a49c04b87d5e22bbe059cc2317f14e50ff2b3c90d32cd88e524cf4bfe945db1a",
+      "spec_sha256": "f566c853cf6eb9e1aa13d7742907a8660f2ea0b55267c495b6fe2a63b5f09b59",
+      "geometry_fingerprint": "c023e979dbadbccb28b7596c1d7211fd90057b1858d2f37a2639ee2b10bc6526",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "103735",
+      "source_identity": "PartNet-Mobility:103735",
+      "model_id": "u51509034-d4f7-4ef7-b014-6660f4df034d-0",
+      "category": "Knife",
+      "archive_sha256": "c9a1a51c438d1830c7045fc5584cc114ebfb62c984d08bad90db6dfee32c404e",
+      "spec_sha256": "e4db246f2e3e142b444ad12f4d3a79dc8f0b76c1ceca3806fbf101efc625ae8a",
+      "geometry_fingerprint": "277aaf8a46302ec2c72be07dc93915043f30c4b2419d1ff9b3ff52ddbf880b85",
+      "previous_motion_decision": "failed",
+      "source_split": "unassigned",
+      "reasons": [
+        "previous_normal_motion_review_failed"
+      ]
+    },
+    {
+      "asset_id": "100054",
+      "source_identity": "PartNet-Mobility:100054",
+      "model_id": "u7db748c0-5e99-4ca2-8a00-ed8362c6e84a",
+      "category": "KitchenPot",
+      "archive_sha256": "6f60da8add947ea19d3c0aa154b2e2fa1c94bc347b326c6de208fbdee5cb33bf",
+      "spec_sha256": "9ffcba3cc4c5b6fafcdbbcc3943c18601c39a3286410be0313f66bb0168285f4",
+      "geometry_fingerprint": "886bc07a35e542d69a036f6f75e0fcd32a0b845569f95bef6a20297ab3a5d9fc",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "100934",
+      "source_identity": "PartNet-Mobility:100934",
+      "model_id": "b7c53d18b38d83df1d50bce1f6cd0d9c",
+      "category": "Switch",
+      "archive_sha256": "2f4cc56116e9bdcc19b40143e641f4a4dd21e10b4eab23522becfd416a71c49c",
+      "spec_sha256": "8e2958742a8b977f280bd81e725fe9ae2cfe9f5ea9b9df2856e2b4dc0b668a14",
+      "geometry_fingerprint": "1734640f5e729234afdda2d80caf9d80cccbceba5bd1b68fcf1da6678a00fc48",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "101714",
+      "source_identity": "PartNet-Mobility:101714",
+      "model_id": "5580924f960463d5aa26b0b13ca3661",
+      "category": "Pen",
+      "archive_sha256": "f84cf9a76b5a7219f58d1b094581279dc5d9e6ad476d6e6825eea04b3360c8b7",
+      "spec_sha256": "9d120767c693e8e5799ca6629dbc1b553ebb09b0dd247c4467447aaed89bf5b4",
+      "geometry_fingerprint": "e9cbfba74954815fda565604309b3305c1f4e1526c981fc9a36d42cff1f20345",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "101870",
+      "source_identity": "PartNet-Mobility:101870",
+      "model_id": "f5cdd93402656d026436916a86a90ed7",
+      "category": "Eyeglasses",
+      "archive_sha256": "8b3669ace1394d71833b6e87ba843e26d9d48374cfbe66ffb0ec904bbda1d0f5",
+      "spec_sha256": "008aceb28fa24db774f2b040c1e40d2ba64c30ed4e4138acad8883e9859790fd",
+      "geometry_fingerprint": "a50d79781eb9549e23a363dc98ad4228936e3f9b255c966fc22139754a259a2e",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "102016",
+      "source_identity": "PartNet-Mobility:102016",
+      "model_id": "940e94491f086317527a7cbd6d9c5851-13",
+      "category": "USB",
+      "archive_sha256": "a04f5ea840e2fe7aae82c5eb28fceed92653c68c1d2517754db0a1588495dd6a",
+      "spec_sha256": "b809cf4d51d170de48f46c8592913197c1952a98a56280cdb6de18ce3a79bc4c",
+      "geometry_fingerprint": "8b7c11faa93334c53c9f88c53de0277bb210b0087d87db96a66dc88210fa60ab",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "102080",
+      "source_identity": "PartNet-Mobility:102080",
+      "model_id": "a5b87eca5bbd0342b80b68728684f2ff-0",
+      "category": "KitchenPot",
+      "archive_sha256": "622da21e0749d9288fb9ff6f25e58e6fd9bf6b51d8ff241ff0926afeeb65ea42",
+      "spec_sha256": "afb7702452dedd64f54716c9d0aa4fdea2cd42c9ce06ca8e444b8af1ff3d738d",
+      "geometry_fingerprint": "44c2355ccf4db26206f2991300be07468185bb3ec8fd5056f2262860fa07d9c7",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "102288",
+      "source_identity": "PartNet-Mobility:102288",
+      "model_id": "u3e4a044f-d374-4e14-bde8-844c3e53a66b-0",
+      "category": "Pliers",
+      "archive_sha256": "91dc98bd83d54628ec9da7bc5276657a3cd98daffce0ca9e5a91798cc9115d56",
+      "spec_sha256": "d7af27a545e29b65f0caf9fc41d6007a8b9b17e0aed2fa3584426521681ce202",
+      "geometry_fingerprint": "2fff2f8008b41bd9b0a862a5803807acce0617d9d88dbdb15f1cb25613e309f7",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "102292",
+      "source_identity": "PartNet-Mobility:102292",
+      "model_id": "udba9d58d-9eb6-4b4e-8826-f7b43df48a1d-0",
+      "category": "Pliers",
+      "archive_sha256": "739433f0ff701a26f49c7647bc3d5eff87ba6c361385add775e6f3a150f3d4ec",
+      "spec_sha256": "acaa009de9d7ad2efd00ed6d5b8299835bfcf6b4089bd20fad0aff25d29c41e2",
+      "geometry_fingerprint": "0dcdd8138353f8b40e2a87c58bd0037f223215e0057c0b96339ac9a072f2410e",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "102314",
+      "source_identity": "PartNet-Mobility:102314",
+      "model_id": "db8cdd3f8018db05bb40b038e5e0b7f0",
+      "category": "FoldingChair",
+      "archive_sha256": "682e4ffb4a202a5be0df38361370d6439f788da68e3210412365bb4b105cd7c7",
+      "spec_sha256": "8b53cf5089c59b969c4cbd470664b40edbad8a0bdb55068d0ed7a4377c388cca",
+      "geometry_fingerprint": "fcf68ccff01c85534d5493ae65b2941cf252b71b8cf45e9ea789e19747567d48",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "102569",
+      "source_identity": "PartNet-Mobility:102569",
+      "model_id": "1ac5432b617808f0eb4d90d878fc8d02-2",
+      "category": "Eyeglasses",
+      "archive_sha256": "2429b5efefae4bb32bdd90c3af52e3798aadb8ede3353920d5d054c03c486e54",
+      "spec_sha256": "f94a6605b7c20e73d1d326030349aa5d04d88aed28d2dd0cfacaed1797ab1c05",
+      "geometry_fingerprint": "660373bf6f6700a094b24971529f4285decec8a7e49a74d41eea147958ed089b",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "102961",
+      "source_identity": "PartNet-Mobility:102961",
+      "model_id": "ac80fe8f1d0634909d2da79391704-1",
+      "category": "Pen",
+      "archive_sha256": "59b67bf9946d1bdf83b4685e2667874e62555b43ef7e695220aa85f38018ce59",
+      "spec_sha256": "b97c54ca2c559d8f3f31060c810443c7c7eed82bb4c2f447e74a47096a41f12a",
+      "geometry_fingerprint": "b128c1ed962eda4f1f330d879c76b2614f7d1d3658d63e62b2ee474b5c412a35",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "103275",
+      "source_identity": "PartNet-Mobility:103275",
+      "model_id": "8f54f0bec8eb5d35d25169d37940fb64",
+      "category": "Stapler",
+      "archive_sha256": "d33388c6c0180e8c833585300c48d0e53a3725bdf0315eeaeed5d827f4981c87",
+      "spec_sha256": "a73d69ce49293a228eccdbed64df40f362e7e6e758523b9b282e31bcc581404d",
+      "geometry_fingerprint": "33bc6cbaea03b3cdd501e684e0939b52dd139265c872877562511490634337b0",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "10697",
+      "source_identity": "PartNet-Mobility:10697",
+      "model_id": "850673bcbce8f73ec8a6d87a62ac0341",
+      "category": "Laptop",
+      "archive_sha256": "41c0738dfee4c6de34be921c2895120874ccd64ed1e69c6b58a01fad65c28ae0",
+      "spec_sha256": "f1df4adc4881b928f74b56c011fee717146f3c78225bf4ba7b71054c3d9f5760",
+      "geometry_fingerprint": "b2f52096604e85faf7c7d950dc11c1681345fc8cd766f9877aa7b3639e47a48b",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "10902",
+      "source_identity": "PartNet-Mobility:10902",
+      "model_id": "4be28f77-d601-46bf-998d-4092a2f2f3c7",
+      "category": "Scissors",
+      "archive_sha256": "e0a8f943a04fab89c139bdf91218c67045917f3fafd1f1a1f238684f019b8add",
+      "spec_sha256": "89742a4456ec1f0bf24061c8371345f4f7be98e9a9a3db2e316bdfcfd67b4706",
+      "geometry_fingerprint": "d649d75208ea279676cd8e8c0db6a2b00eb4164522a173d7a488a73c5b0b5ea5",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "11103",
+      "source_identity": "PartNet-Mobility:11103",
+      "model_id": "u331a64ca-8ba0-4314-806b-2b35f2fded9c",
+      "category": "Scissors",
+      "archive_sha256": "96e41669f00002590b5a038cd7f7f924a84f8723d0a6339dadff0ea29b0e710e",
+      "spec_sha256": "1784b9cd1b4e40f3196665ceae046bd256f5d7e24808becb4a4d93ec2b3bde29",
+      "geometry_fingerprint": "d3dc3abe21a29dfc4d25151ad2fd55f7277538713673c33aff4b7bb985e7bc07",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "12036",
+      "source_identity": "PartNet-Mobility:12036",
+      "model_id": "68a74c8e77db3668605f8bb5e3f9a647",
+      "category": "Refrigerator",
+      "archive_sha256": "d10cd7c112886bdea0e93727cb5bd7036447626f6edbcef9729a6b794a4310d8",
+      "spec_sha256": "2e98f288a0277a5e5aa6996818158c1166bf964586fddc4add45493e7cb77e72",
+      "geometry_fingerprint": "0fbf4327329f7293deb5ef45df8cb1bbe7a7ca94163062afef1fcf8d18274c69",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "12594",
+      "source_identity": "PartNet-Mobility:12594",
+      "model_id": "af913c310f1b978ae6488a574e8954a5",
+      "category": "Dishwasher",
+      "archive_sha256": "ec9a31e452306e07075435419ea41b484e3e43ec32774b413c21f2b7844286ec",
+      "spec_sha256": "5f0ec679bd36e6ee08dbb6a767d01c5af56d89ccb71f85f898678724e5211eb0",
+      "geometry_fingerprint": "723ba91cd5e9d4ebfc6ae1909af60950bcfe46a08eddd8224b5981218c82984f",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "already_in_v2"
+      ]
+    },
+    {
+      "asset_id": "1288",
+      "source_identity": "PartNet-Mobility:1288",
+      "model_id": "1db4071178f5818250da8b99982a3057",
+      "category": "Faucet",
+      "archive_sha256": "d91a2bb103f8769bcf6e3a41d0291e9b93e661c7506c1c4e670469a24b684719",
+      "spec_sha256": "61a2ced3ce47e3cf51b8ca27085a3f0c7cdb59eb74b77ed5e100b5abc58e017a",
+      "geometry_fingerprint": "923b9a910d1cda5a156c5ad6548f6be9c6edb4cbc01e8ea5a2b9d3532c9d4018",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "14306",
+      "source_identity": "PartNet-Mobility:14306",
+      "model_id": "15238270f4f59a011b17743c18fb63dc",
+      "category": "Lamp",
+      "archive_sha256": "93e9acd997780ea9ca37065492ec818fe2a2584001aa2a1191300b7e2e23a6e5",
+      "spec_sha256": "1ac80e20eae954d05508c94b6bfdf4c3e3b15764ab8c67364860830e4b9c50c6",
+      "geometry_fingerprint": "6520797b5e40a5a03a240577850725f5ed9ac0f20fb35810d2b4b38611096ae3",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "15084",
+      "source_identity": "PartNet-Mobility:15084",
+      "model_id": "3a5a0f4c78e17b284f0c4075db76b7c",
+      "category": "Lamp",
+      "archive_sha256": "fc683da331b234048e27804b6a9ccab0576bcd001a4131fbcaecdf45f595eeb0",
+      "spec_sha256": "f57f0ca458999ad1ac387404ea25917fb12714865ae024af06bcdd5ff43f4cd2",
+      "geometry_fingerprint": "3176b2466ddfb9a089b7b119372482a91fbeedd65588b6b31dc76aeb5d41b127",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "3971",
+      "source_identity": "PartNet-Mobility:3971",
+      "model_id": "c82bbd1b1a929c7ce8ed8cf0a077ddf7",
+      "category": "Kettle",
+      "archive_sha256": "12fe5fa5d2edd8e3049c1cc8ec205c77db2df0971de3f93f4dd311badc8c6a16",
+      "spec_sha256": "cfaec68d185ba411b6867b3459bf9ad25140f1bd07193b250965bfbb72e48a72",
+      "geometry_fingerprint": "23aa4149a0a2698503f889541f0201f0f844fc2249fe673b115d0d9774b8a704",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "historically_screened_not_fresh_capacity",
+        "protected_train_validation_duplicate_source_identity",
+        "protected_train_validation_duplicate_model_id",
+        "protected_train_validation_duplicate_archive_sha256",
+        "protected_train_validation_duplicate_spec_sha256",
+        "protected_train_validation_duplicate_geometry"
+      ]
+    },
+    {
+      "asset_id": "5088",
+      "source_identity": "PartNet-Mobility:5088",
+      "model_id": "87b093f1fa5495968cb623bbd4140197",
+      "category": "Display",
+      "archive_sha256": "293a5cdafb749f1735f45a6ea82ead5142009913a44b3e58fab48ea41786529f",
+      "spec_sha256": "b1859077d6163f6e299f0138d36e34b7065bcdf95e7b9a8fe62069647b6c1bb1",
+      "geometry_fingerprint": "2038e5725bf7c12f02a42fc1e464f5665f67901c5df37dc12e2d925ef8703f67",
+      "previous_motion_decision": "passed",
+      "source_split": "train",
+      "reasons": [
+        "already_in_v2"
+      ]
+    }
+  ],
+  "inputs": {
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/assets/partnet-mobility-trainval-v1/catalog.json": "c0a2f2516ac1c166dfa524d7007119cb586aaffd155aa28e3fed96824c8d6423",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/assets/partnet-mobility-trainval-v1/conversion.json": "f02bc079f532b52b604d765f0a727581a2ad65cb81f1cf2adb16232dccee9761",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-pilot/download-manifest.json": "43b0eb6d6086829a9ac024f54190d45cc1b155c55d4f7f922fe62caa22d5153c",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/assets/partnet-mobility-trainval-v1/splits.json": "812af706d9e8ff3cfd79d8edefd1118e6f7b897b205d249bb9172efcea994576",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/docs/evidence/partnet-mobility-level0-axis-v2/private/screening.json": "8dbfdc279972778218413e02a2519d6b1566a9f8966c9e2ac37fce942966b3cc",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/docs/evidence/partnet-mobility-level0-axis-v2/private/inherited_screening.json": "00d36ffd53c2129b840be1fc1a467daed9083ca01fb51803d29112ef7c9ecefc",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/docs/evidence/partnet-mobility-level0-axis-v2/private/expansion_screening.json": "d7f2fb7a0c575a078f0c9e8e5d8a161280f8c0c8ba252375d5bca6e8f3012f63",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/configs/uniphys-test.json": "3623a753cdcf5063090e91e414f335b08cce9d38e57ca63e1a7eb04e0a44eb99",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/docs/evidence/partnet-mobility-level0-axis-v2/manifest.json": "1c1908394d8a40d29cb2458d80da73f8215acd2f35510c4df9819bc6eb1c5999"
+  }
+}

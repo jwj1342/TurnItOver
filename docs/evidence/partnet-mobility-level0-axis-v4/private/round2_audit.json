@@ -1,0 +1,77 @@
+{
+  "status": "qualified_target_complete_real_user_review_recorded",
+  "target_qualified_cases": [
+    100,
+    120
+  ],
+  "source_archives_cumulative": 400,
+  "new_archives": 240,
+  "old_archives_excluded": 160,
+  "new_structural_candidates": 142,
+  "new_structural_rejected": 98,
+  "queue_after_provenance_and_dedup": 142,
+  "new_screened_objects": 58,
+  "new_automatic_pass_objects": 22,
+  "new_automatic_pass_cases": 44,
+  "new_rejected_objects": 36,
+  "unrendered_verified_candidates": 84,
+  "automatic_objects": 60,
+  "automatic_cases": 120,
+  "qualified_objects": 60,
+  "qualified_cases": 120,
+  "new_pending_human_cases": 0,
+  "native_source_audit_objects": 22,
+  "native_source_audit_passed": true,
+  "new_rejected_object_reason_counts": {
+    "geometry_outside_frozen_camera": 7,
+    "axis_limit_region_too_small": 5,
+    "candidate_limit_clipped": 7,
+    "axis_limit_trajectory_difference_too_small": 8,
+    "candidate_mid_clipped": 2,
+    "normal_motion_or_framing_gate_failed": 23,
+    "axis_mid_trajectory_difference_too_small": 11,
+    "candidate_mid_motion_too_small": 21,
+    "candidate_limit_motion_too_small": 20,
+    "axis_mid_region_too_small": 4
+  },
+  "baseline_consistency": {
+    "v3_all_files_verified": 580,
+    "v3_changed_files": [],
+    "inherited_native_images_and_specs_verified": 532,
+    "inherited_gold_review_checker_rows_byte_identical": 76,
+    "inherited_training_and_targets_byte_identical": true,
+    "v2_manifest_files_unchanged": true,
+    "inherited_training_and_targets_scope": "Original76 rows retained byte-identically;44 new rows added."
+  },
+  "scope": {
+    "training_runs": 0,
+    "model_inference_calls": 0,
+    "paid_api_calls": 0,
+    "validation_test_reassignments": 0,
+    "new_split": "train"
+  },
+  "human_review_fabricated": false,
+  "replay": {
+    "status": "passed",
+    "cases": 120,
+    "independent_objects": 60,
+    "native_image_files_reproduced": 720,
+    "native_image_size": [
+      256,
+      256
+    ],
+    "source_manifest_sha256": "968a897c4de0ab9cb5492fb0962182520247146be696d157bc5fd509f423d782",
+    "checker_replayed": true,
+    "all_image_sha256_matched": true,
+    "source_files_changed": 0
+  },
+  "test_summary": {
+    "cpu": 16,
+    "browser": 1,
+    "source_objects": 22,
+    "image_file_shas": 720
+  },
+  "new_human_pass_objects": 22,
+  "new_human_pass_cases": 44,
+  "human_review_confirmation": "private/user_review_confirmation_round2.json"
+}

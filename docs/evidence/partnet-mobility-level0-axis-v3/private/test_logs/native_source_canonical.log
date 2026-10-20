@@ -1,0 +1,10 @@
+{"asset_id": "PM_101868", "program_sha": "5952d0c7c0ba5e3a", "tolerance_m": 1e-05, "passed": true, "max_vertex_error_m": 8.479058665595052e-08}
+{"asset_id": "PM_102572", "program_sha": "8d37c06991488e57", "tolerance_m": 1e-05, "passed": true, "max_vertex_error_m": 5.978149955009239e-08}
+{"asset_id": "PM_10558", "program_sha": "e60c1ede0db05af2", "tolerance_m": 1e-05, "passed": true, "max_vertex_error_m": 6.016470895324769e-08}
+{"asset_id": "PM_46741", "program_sha": "49ee9d52c65101d0", "tolerance_m": 1e-05, "passed": true, "max_vertex_error_m": 8.211214961261038e-08}
+{"asset_id": "PM_47088", "program_sha": "df01e746f8425cd5", "tolerance_m": 1e-05, "passed": true, "max_vertex_error_m": 6.805150050099624e-08}
+{"asset_id": "PM_47315", "program_sha": "61dfef9bec974ffd", "tolerance_m": 1e-05, "passed": true, "max_vertex_error_m": 1.3277077149354093e-07}
+{"asset_id": "PM_48253", "program_sha": "250a031380afe150", "tolerance_m": 1e-05, "passed": true, "max_vertex_error_m": 5.3351498585830544e-08}
+{"asset_id": "PM_48513", "program_sha": "1ebcf136eeaef111", "tolerance_m": 1e-05, "passed": true, "max_vertex_error_m": 6.645709187593264e-08}
+{"asset_id": "PM_48517", "program_sha": "59e33cc39500fc80", "tolerance_m": 1e-05, "passed": true, "max_vertex_error_m": 5.411773879242811e-08}
+{"asset_id": "PM_48740", "program_sha": "2fedadd313eb4d39", "tolerance_m": 1e-05, "passed": true, "max_vertex_error_m": 6.7030318657727e-08}

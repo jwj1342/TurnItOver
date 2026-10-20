@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import replace
 import numpy as np
 
-from scripts.prepare_level0_axis_review import full_normal_framing, normal_view, screen, score
+from scripts.prepare_level0_axis_review import full_normal_framing, normal_view, screen
 from scripts.prepare_obvious_defect_review import STATES, checker_result
 from turnitover.core.actions import RuntimeProperty
 from turnitover.corruptions import get_corruption
@@ -71,7 +71,7 @@ def find_pair(session, reference, views, seed_base):
     for index, joint in enumerate(reference.spec.joints):
         # Values are legal original-source joint values, chosen before corruption.
         endpoints = sorted(set(joint.limits) - {0.}, key=lambda x: (-abs(x), -x))
-        candidates = None
+        normal = None
         for endpoint in endpoints:
             values = {'rest': 0., 'mid': endpoint / 2., 'limit': endpoint}
             initial = render_states(session, reference, None, joint.id, values, [view_ids[0]])
@@ -81,11 +81,11 @@ def find_pair(session, reference, views, seed_base):
                 ref = render_states(session, reference, framing, joint.id, values, view_ids)
                 _, scores = normal_view(ref)
                 eligible = [v for v in sorted(scores, key=lambda v: (-scores[v], v))
-                            if scores[v] >= .020 and inside_camera(ref, framing, view_by_id[v])[0]][:4]
+                            if scores[v] >= .020 and inside_camera(ref, framing, view_by_id[v])[0]]
                 record = {'joint_id': joint.id, 'state_values': values,
                     'state_policy': 'rest_to_native_endpoint_half_then_endpoint',
                     'normal_padding': padding, 'normal_framing': {'center': list(framing.center), 'radius': framing.radius},
-                    'normal_view_scores': scores, 'evaluated_views': eligible, 'attempts': []}
+                    'normal_view_scores': scores, 'evaluated_views': eligible[:1], 'attempts': []}
                 diagnostics.append(record)
                 if not eligible:
                     record['rejection_reasons'] = ['normal_motion_or_framing_gate_failed']
@@ -94,27 +94,29 @@ def find_pair(session, reference, views, seed_base):
                 if not clean_check['code_correct']:
                     record['rejection_reasons'] = ['clean_checker_failed']
                     continue
-                if candidates is None:
-                    candidates = attempts(reference, joint.id, seed_base + index * 5000)
-                best = None
-                for attempt in candidates:
-                    rendered = render_states(session, attempt['program'], framing, joint.id, values, eligible)
-                    check = checker_result(attempt['program'], rendered, reference, ref)
-                    for view in eligible:
-                        metrics, reasons = screen(ref, rendered, view, check)
-                        in_frame, extent = inside_camera(rendered, framing, view_by_id[view])
-                        if not in_frame:
-                            reasons.append('geometry_outside_frozen_camera')
-                        record['attempts'].append({'seed': attempt['seed'], 'view': view,
-                            'automatic_pass': not reasons, 'rejection_reasons': reasons,
-                            'projected_extent_ndc': extent, 'metrics': metrics})
-                        if not reasons and (best is None or score(metrics) > score(best['metrics'])):
-                            best = {**attempt, 'render': rendered, 'check': check, 'view': view, 'metrics': metrics}
-                    if best:
-                        record['selection_policy'] = 'first_passing_seed; best_eligible_view_within_seed'
-                        record['selected'] = {'seed': best['seed'], 'view': best['view']}
-                        return (ref, best, joint.id, values), diagnostics
-                if best:
-                    record['selected'] = {'seed': best['seed'], 'view': best['view']}
-                    return (ref, best, joint.id, values), diagnostics
+                # Freeze the first valid normal-only camera and endpoint before any
+                # corruption is rendered. Failed corruptions never trigger a retry
+                # with another view, padding or endpoint for this target joint.
+                normal = ref, framing, values, eligible[0], record
+                break
+            if normal is not None:
+                break
+        if normal is None:
+            continue
+        ref, framing, values, view, record = normal
+        record['selection_policy'] = 'first_valid_normal_configuration; first_passing_seed; frozen_single_view'
+        for attempt in attempts(reference, joint.id, seed_base + index * 5000):
+            rendered = render_states(session, attempt['program'], framing, joint.id, values, [view])
+            check = checker_result(attempt['program'], rendered, reference, ref)
+            metrics, reasons = screen(ref, rendered, view, check)
+            in_frame, extent = inside_camera(rendered, framing, view_by_id[view])
+            if not in_frame:
+                reasons.append('geometry_outside_frozen_camera')
+            record['attempts'].append({'seed': attempt['seed'], 'view': view,
+                'automatic_pass': not reasons, 'rejection_reasons': reasons,
+                'projected_extent_ndc': extent, 'metrics': metrics})
+            if not reasons:
+                chosen = {**attempt, 'render': rendered, 'check': check, 'view': view, 'metrics': metrics}
+                record['selected'] = {'seed': chosen['seed'], 'view': view}
+                return (ref, chosen, joint.id, values), diagnostics
     return None, diagnostics

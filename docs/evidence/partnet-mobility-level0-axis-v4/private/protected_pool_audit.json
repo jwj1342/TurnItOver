@@ -1,0 +1,221 @@
+{
+  "version": 1,
+  "scope": "read-only CPU supplemental audit; no asset mutations or rendering",
+  "counts": {
+    "catalog_records": 14,
+    "independent_upstream_objects": 5,
+    "queue_objects": 24,
+    "overlaps": 0,
+    "split_records": {
+      "train": 9,
+      "validation": 5
+    }
+  },
+  "partnet_alias_ids": [
+    "6635",
+    "6659"
+  ],
+  "overlaps": [],
+  "protected": [
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v1/catalog.json",
+      "asset_id": "UP_00015016",
+      "split": "train",
+      "source_identity": "HSSD:e7f247969ee88cc3aba4d0534849ff00749701a0",
+      "source_original_id": "e7f247969ee88cc3aba4d0534849ff00749701a0",
+      "model_id": null,
+      "source_archive_sha256": "639b960bfc2d12321e2ec2ef4b8984250655a1858f2e234eefa5ff4ff28cb891",
+      "spec_sha256": "b29b30377d754486a31d27b7f56477bf31b56afc4c2c1b409fea6d36f7e696a5",
+      "full_model_sha256": "af852724d27015ff11d424326bea201468f71a484cbc89cc2ce5bc159be7f70f",
+      "geometry_fingerprint": "3e07586783f1a60d69303fc4d90c03e5207ae0dec7ec1969ff7585609da9f912"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v1/catalog.json",
+      "asset_id": "UP_00015020",
+      "split": "validation",
+      "source_identity": "HSSD:e81684f7e86116a81839f19a68c4b7e7b50d18ac",
+      "source_original_id": "e81684f7e86116a81839f19a68c4b7e7b50d18ac",
+      "model_id": null,
+      "source_archive_sha256": "1132cc2dd89fd4e5a7c2c557d69824938b7d1834dab0f9ff9ee3cf43928b260d",
+      "spec_sha256": "706d9a86554f72103d60ffc5aac55fd326075c1cc0162dcc2192fe4429d82e84",
+      "full_model_sha256": "97dd695d70dc21b09615101ed88ebd5f4cd4994c1d28fdceb2b94dc4c228ac8a",
+      "geometry_fingerprint": "d974436e7aefc5bcee60e0bda331eb0f8deaba02a8be2eb5839bae79150d579a"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v1/catalog.json",
+      "asset_id": "UP_00039007",
+      "split": "train",
+      "source_identity": "PartNet:6635",
+      "source_original_id": "6635",
+      "model_id": null,
+      "source_archive_sha256": "d9e6aeee8fd749d404923d78a5285b6d63f21ead50dffb42001dda27550123b7",
+      "spec_sha256": "c14ff62baaba0f254a6e928632839b9d1ef9894b2c4b0ad80f4524aaec4d835e",
+      "full_model_sha256": "c0bff0cc89e814e3d846eacfd06c29e140e56f014a84639126f35067367a6b49",
+      "geometry_fingerprint": "c16a817056a070cbc8365545d3182ffc1989cf353c142b48217d9b280e2fa9d1"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v1/catalog.json",
+      "asset_id": "UP_00039025",
+      "split": "train",
+      "source_identity": "PartNet:6659",
+      "source_original_id": "6659",
+      "model_id": null,
+      "source_archive_sha256": "c03851e296c88f93a559d9b430859604624e220988928018fc97602859f767ce",
+      "spec_sha256": "8709a31a67183c990b4d894264a697e75ac48cbfee571f06216002338768edc6",
+      "full_model_sha256": "162fb7af17b87a0589207c7d0c39a93f52723a06e0b75e5a52546d84c6c9ce55",
+      "geometry_fingerprint": "ac4ae074f8fdc892d72bb2a74f56da488da243fba44e1b7f546c5fd40097f590"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v2/catalog.json",
+      "asset_id": "UP_00011006",
+      "split": "validation",
+      "source_identity": "3D-FUTURE:fa0b699f-7e3d-4692-9ea4-abbb42fe8d74",
+      "source_original_id": "fa0b699f-7e3d-4692-9ea4-abbb42fe8d74",
+      "model_id": null,
+      "source_archive_sha256": "cce2aa100d486c582e3238dc10344253e2d9ea89fc181ae1619256bbf5f9538b",
+      "spec_sha256": "c63d72ea5cef387f908deded3e2759ac39f194d60b527ab64011337eb7de1442",
+      "full_model_sha256": "b52b40739deb8b3dd8ca8d850cf9b14f02410402a3ca61e3d86f952d2d48fa9f",
+      "geometry_fingerprint": "c41050a298fa8d45a01006f6481ad96c6256c0b86fcbba589012d51d2305e3e7"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v2/catalog.json",
+      "asset_id": "UP_00015016",
+      "split": "train",
+      "source_identity": "HSSD:e7f247969ee88cc3aba4d0534849ff00749701a0",
+      "source_original_id": "e7f247969ee88cc3aba4d0534849ff00749701a0",
+      "model_id": null,
+      "source_archive_sha256": "639b960bfc2d12321e2ec2ef4b8984250655a1858f2e234eefa5ff4ff28cb891",
+      "spec_sha256": "b29b30377d754486a31d27b7f56477bf31b56afc4c2c1b409fea6d36f7e696a5",
+      "full_model_sha256": "af852724d27015ff11d424326bea201468f71a484cbc89cc2ce5bc159be7f70f",
+      "geometry_fingerprint": "3e07586783f1a60d69303fc4d90c03e5207ae0dec7ec1969ff7585609da9f912"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v2/catalog.json",
+      "asset_id": "UP_00015020",
+      "split": "validation",
+      "source_identity": "HSSD:e81684f7e86116a81839f19a68c4b7e7b50d18ac",
+      "source_original_id": "e81684f7e86116a81839f19a68c4b7e7b50d18ac",
+      "model_id": null,
+      "source_archive_sha256": "1132cc2dd89fd4e5a7c2c557d69824938b7d1834dab0f9ff9ee3cf43928b260d",
+      "spec_sha256": "706d9a86554f72103d60ffc5aac55fd326075c1cc0162dcc2192fe4429d82e84",
+      "full_model_sha256": "97dd695d70dc21b09615101ed88ebd5f4cd4994c1d28fdceb2b94dc4c228ac8a",
+      "geometry_fingerprint": "d974436e7aefc5bcee60e0bda331eb0f8deaba02a8be2eb5839bae79150d579a"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v2/catalog.json",
+      "asset_id": "UP_00039007",
+      "split": "train",
+      "source_identity": "PartNet:6635",
+      "source_original_id": "6635",
+      "model_id": null,
+      "source_archive_sha256": "d9e6aeee8fd749d404923d78a5285b6d63f21ead50dffb42001dda27550123b7",
+      "spec_sha256": "c14ff62baaba0f254a6e928632839b9d1ef9894b2c4b0ad80f4524aaec4d835e",
+      "full_model_sha256": "c0bff0cc89e814e3d846eacfd06c29e140e56f014a84639126f35067367a6b49",
+      "geometry_fingerprint": "c16a817056a070cbc8365545d3182ffc1989cf353c142b48217d9b280e2fa9d1"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v2/catalog.json",
+      "asset_id": "UP_00039025",
+      "split": "train",
+      "source_identity": "PartNet:6659",
+      "source_original_id": "6659",
+      "model_id": null,
+      "source_archive_sha256": "c03851e296c88f93a559d9b430859604624e220988928018fc97602859f767ce",
+      "spec_sha256": "8709a31a67183c990b4d894264a697e75ac48cbfee571f06216002338768edc6",
+      "full_model_sha256": "162fb7af17b87a0589207c7d0c39a93f52723a06e0b75e5a52546d84c6c9ce55",
+      "geometry_fingerprint": "ac4ae074f8fdc892d72bb2a74f56da488da243fba44e1b7f546c5fd40097f590"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v3/catalog.json",
+      "asset_id": "UP_00011006",
+      "split": "validation",
+      "source_identity": "3D-FUTURE:fa0b699f-7e3d-4692-9ea4-abbb42fe8d74",
+      "source_original_id": "fa0b699f-7e3d-4692-9ea4-abbb42fe8d74",
+      "model_id": null,
+      "source_archive_sha256": "cce2aa100d486c582e3238dc10344253e2d9ea89fc181ae1619256bbf5f9538b",
+      "spec_sha256": "505b3ab5602980861f3110c26c71bfc0c0a6aea555b97502d2740b294e0b4253",
+      "full_model_sha256": "b52b40739deb8b3dd8ca8d850cf9b14f02410402a3ca61e3d86f952d2d48fa9f",
+      "geometry_fingerprint": "c41050a298fa8d45a01006f6481ad96c6256c0b86fcbba589012d51d2305e3e7"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v3/catalog.json",
+      "asset_id": "UP_00015016",
+      "split": "train",
+      "source_identity": "HSSD:e7f247969ee88cc3aba4d0534849ff00749701a0",
+      "source_original_id": "e7f247969ee88cc3aba4d0534849ff00749701a0",
+      "model_id": null,
+      "source_archive_sha256": "639b960bfc2d12321e2ec2ef4b8984250655a1858f2e234eefa5ff4ff28cb891",
+      "spec_sha256": "9c6f6ce3e48a0ca23ca9685fc7136650251f94b9f5f9e2c0ba2d5be13d51f2a6",
+      "full_model_sha256": "af852724d27015ff11d424326bea201468f71a484cbc89cc2ce5bc159be7f70f",
+      "geometry_fingerprint": "3e07586783f1a60d69303fc4d90c03e5207ae0dec7ec1969ff7585609da9f912"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v3/catalog.json",
+      "asset_id": "UP_00015020",
+      "split": "validation",
+      "source_identity": "HSSD:e81684f7e86116a81839f19a68c4b7e7b50d18ac",
+      "source_original_id": "e81684f7e86116a81839f19a68c4b7e7b50d18ac",
+      "model_id": null,
+      "source_archive_sha256": "1132cc2dd89fd4e5a7c2c557d69824938b7d1834dab0f9ff9ee3cf43928b260d",
+      "spec_sha256": "afce17e41e62241875d999159e9909091ef8da1cdb53cf8b87aac51d051ee42a",
+      "full_model_sha256": "97dd695d70dc21b09615101ed88ebd5f4cd4994c1d28fdceb2b94dc4c228ac8a",
+      "geometry_fingerprint": "d974436e7aefc5bcee60e0bda331eb0f8deaba02a8be2eb5839bae79150d579a"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v3/catalog.json",
+      "asset_id": "UP_00039007",
+      "split": "train",
+      "source_identity": "PartNet:6635",
+      "source_original_id": "6635",
+      "model_id": null,
+      "source_archive_sha256": "d9e6aeee8fd749d404923d78a5285b6d63f21ead50dffb42001dda27550123b7",
+      "spec_sha256": "c14ff62baaba0f254a6e928632839b9d1ef9894b2c4b0ad80f4524aaec4d835e",
+      "full_model_sha256": "c0bff0cc89e814e3d846eacfd06c29e140e56f014a84639126f35067367a6b49",
+      "geometry_fingerprint": "c16a817056a070cbc8365545d3182ffc1989cf353c142b48217d9b280e2fa9d1"
+    },
+    {
+      "catalog": "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v3/catalog.json",
+      "asset_id": "UP_00039025",
+      "split": "train",
+      "source_identity": "PartNet:6659",
+      "source_original_id": "6659",
+      "model_id": null,
+      "source_archive_sha256": "c03851e296c88f93a559d9b430859604624e220988928018fc97602859f767ce",
+      "spec_sha256": "19e7f82c1b30fdb872558de99084fcc1cb8c20933359a333267d9c36dca996a7",
+      "full_model_sha256": "162fb7af17b87a0589207c7d0c39a93f52723a06e0b75e5a52546d84c6c9ce55",
+      "geometry_fingerprint": "ac4ae074f8fdc892d72bb2a74f56da488da243fba44e1b7f546c5fd40097f590"
+    }
+  ],
+  "limitations": [
+    "UniPhys upstream records lack independent ShapeNet model_id fields; original_id and available explicit model_id are compared.",
+    "ZIP/spec/content and six-decimal raw vertex fingerprints check exact representations; normalization, rotation or different tessellation may evade an exact geometry fingerprint."
+  ],
+  "inputs": {
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/docs/evidence/partnet-mobility-level0-axis-v3/private/capacity_audit.json": "4a2d4a5bcc53807ea2c7c47221a0bcecd81f3bf2f9fd4c327b9fa1cfd8d4c5d2",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v1/catalog.json": "1c45f28b4692acddb312daebda504ede33ec36e02be90c9740f99e237f185528",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v1/splits.json": "75fce0e3d21907b07766cfa2c9b9edeb77e19be79c571cd9cdafb11c1d549278",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v1/UP_00015016.json": "b29b30377d754486a31d27b7f56477bf31b56afc4c2c1b409fea6d36f7e696a5",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/uniphys40k-pilot/part_16_00015000_00015999/UP_00015016.zip": "639b960bfc2d12321e2ec2ef4b8984250655a1858f2e234eefa5ff4ff28cb891",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v1/UP_00015020.json": "706d9a86554f72103d60ffc5aac55fd326075c1cc0162dcc2192fe4429d82e84",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/uniphys40k-pilot/part_16_00015000_00015999/UP_00015020.zip": "1132cc2dd89fd4e5a7c2c557d69824938b7d1834dab0f9ff9ee3cf43928b260d",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v1/UP_00039007.json": "c14ff62baaba0f254a6e928632839b9d1ef9894b2c4b0ad80f4524aaec4d835e",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/uniphys40k-pilot/part_40_00039000_00039999/UP_00039007.zip": "d9e6aeee8fd749d404923d78a5285b6d63f21ead50dffb42001dda27550123b7",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v1/UP_00039025.json": "8709a31a67183c990b4d894264a697e75ac48cbfee571f06216002338768edc6",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/uniphys40k-pilot/part_40_00039000_00039999/UP_00039025.zip": "c03851e296c88f93a559d9b430859604624e220988928018fc97602859f767ce",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v2/catalog.json": "d303885771bab3ef801102e46f532c38f8426e06ec5c1274437df71940432fdb",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v2/splits.json": "000be5efb651625c551b19530fedeb216c2a8c0101013fa8eb7869f784e99abf",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v2/UP_00011006.json": "c63d72ea5cef387f908deded3e2759ac39f194d60b527ab64011337eb7de1442",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/uniphys40k-pilot/part_12_00011000_00011999/UP_00011006.zip": "cce2aa100d486c582e3238dc10344253e2d9ea89fc181ae1619256bbf5f9538b",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v2/UP_00015016.json": "b29b30377d754486a31d27b7f56477bf31b56afc4c2c1b409fea6d36f7e696a5",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v2/UP_00015020.json": "706d9a86554f72103d60ffc5aac55fd326075c1cc0162dcc2192fe4429d82e84",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v2/UP_00039007.json": "c14ff62baaba0f254a6e928632839b9d1ef9894b2c4b0ad80f4524aaec4d835e",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v2/UP_00039025.json": "8709a31a67183c990b4d894264a697e75ac48cbfee571f06216002338768edc6",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v3/catalog.json": "4d0fd0c43a42817358cb28e9df0af81fcc19eca9298cbb2c953f40ce860fdea1",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v3/splits.json": "000be5efb651625c551b19530fedeb216c2a8c0101013fa8eb7869f784e99abf",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v3/UP_00011006.json": "505b3ab5602980861f3110c26c71bfc0c0a6aea555b97502d2740b294e0b4253",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v3/UP_00015016.json": "9c6f6ce3e48a0ca23ca9685fc7136650251f94b9f5f9e2c0ba2d5be13d51f2a6",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v3/UP_00015020.json": "afce17e41e62241875d999159e9909091ef8da1cdb53cf8b87aac51d051ee42a",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v3/UP_00039007.json": "c14ff62baaba0f254a6e928632839b9d1ef9894b2c4b0ad80f4524aaec4d835e",
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver/data/assets/uniphys40k-trainval-v3/UP_00039025.json": "19e7f82c1b30fdb872558de99084fcc1cb8c20933359a333267d9c36dca996a7"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "dataset": "v4",
+  "status": "automatic and real-user qualification gates passed",
+  "cpu_unit_tests_passed": 16,
+  "cpu_unit_tests_deselected_historical_v3": 4,
+  "browser_native_tests_passed": 1,
+  "browser_native_source_objects_checked": 22,
+  "native_source_max_vertex_error_m": 1.1881678757630971e-07,
+  "full_replay": {
+    "status": "passed",
+    "cases": 120,
+    "independent_objects": 60,
+    "native_image_files_reproduced": 720,
+    "native_image_size": [
+      256,
+      256
+    ],
+    "source_manifest_sha256": "968a897c4de0ab9cb5492fb0962182520247146be696d157bc5fd509f423d782",
+    "checker_replayed": true,
+    "all_image_sha256_matched": true,
+    "source_files_changed": 0
+  },
+  "qualification": {
+    "automatic_cases": 120,
+    "real_human_qualified_cases": 120,
+    "pending_cases": 0,
+    "training_objects": 60
+  },
+  "commands": {
+    "unit": "PYTHONPATH=. ../TurnItOver/.venv-local/bin/python -m pytest tests/unit/test_level0_axis_round2.py tests/unit/test_level0_axis_continuation.py tests/unit/test_level0_axis_review.py -k 'not v3_'",
+    "browser": "PYTHONPATH=/tmp/level0-native-render-env:. python -m pytest -o addopts='' tests/browser/test_level0_axis_round2.py -q",
+    "replay": "PYTHONPATH=/tmp/level0-native-render-env:. python -m scripts.replay_level0_axis_v2 --dataset docs/evidence/partnet-mobility-level0-axis-v4 --out /tmp/level0-v4-replay",
+    "finalize": "PYTHONPATH=. ../TurnItOver/.venv-local/bin/python -m scripts.finalize_level0_axis_v2 --out docs/evidence/partnet-mobility-level0-axis-v4"
+  },
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PLAYWRIGHT_BROWSERS_PATH": "/91004t2/laq/code/ThreejsJudge/TurnItOver/.cache/ms-playwright",
+    "source_numpy": "1.26.4",
+    "source_trimesh": "5.1.0",
+    "chromium": "143.0.7499.4",
+    "renderer": "CPU SwiftShader"
+  },
+  "historical_v3_tests": "v3 original source-input pins intentionally frozen; v4 checks preserve every baseline file and archive changed code source pins. Previous v3 test run results retained under private/provenance/v3_test_results.json.",
+  "source_pool_tests_initial_passed": 4,
+  "core_tests_initial_passed": 11,
+  "new_human_review_decisions_generated_by_codex": 0,
+  "model_inference_calls": 0,
+  "paid_api_calls": 0,
+  "training_runs": 0,
+  "human_review_recording": "44 user decisions transcribed from actual aggregate confirmation; AI motion summaries identified separately.",
+  "user_review_acceptance_unit_tests": {
+    "passed": 15,
+    "deselected_historical_v3": 4,
+    "log": "private/test_logs/round2_user_review_unit.log"
+  },
+  "audit_copy_regression": {
+    "passed": 1,
+    "log": "private/test_logs/round2_audit_copy_regression.log"
+  },
+  "final_runtime_unit_tests": {
+    "passed": 15,
+    "deselected_historical_v3": 4,
+    "log": "private/test_logs/round2_final_runtime_unit.log"
+  },
+  "final_runtime_finalize": "private/test_logs/round2_final_runtime_finalize.log"
+}

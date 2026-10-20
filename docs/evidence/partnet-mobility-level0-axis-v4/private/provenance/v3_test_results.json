@@ -1,0 +1,78 @@
+{
+  "status": "passed in compatible environments; initial loader incompatibility preserved separately",
+  "tests_passed": 24,
+  "checks": [
+    {
+      "name": "current continuation and existing Level0 review CPU tests",
+      "passed": 14,
+      "command": "PYTHONPATH=. ../TurnItOver/.venv-local/bin/python -m pytest tests/unit/test_level0_axis_continuation.py tests/unit/test_level0_axis_review.py"
+    },
+    {
+      "name": "immutable v2 CPU tests with its exact three historical pinned scripts temporarily restored and finally replaced by current edits",
+      "passed": 7,
+      "command": "PYTHONPATH=. ../TurnItOver/.venv-local/bin/python -m pytest tests/unit/test_level0_axis_v2.py"
+    },
+    {
+      "name": "new native source browser audit",
+      "passed": 1,
+      "objects": 10,
+      "command": "PYTHONPATH=/tmp/level0-native-render-env:. python -m pytest -o addopts= tests/browser/test_level0_axis_continuation.py -q"
+    },
+    {
+      "name": "existing v2 browser source and image tests",
+      "passed": 2,
+      "command": "PYTHONPATH=/tmp/level0-native-render-env:. python -m pytest -o addopts= tests/browser/test_level0_axis_v2.py -q"
+    },
+    {
+      "name": "full exact image replay",
+      "passed": true,
+      "cases": 76,
+      "image_files": 456,
+      "command": "PYTHONPATH=. ../TurnItOver/.venv-local/bin/python -m scripts.replay_level0_axis_v2 --dataset docs/evidence/partnet-mobility-level0-axis-v3 --out /tmp/level0-v3-replay"
+    },
+    {
+      "name": "final checker manifest and paired eligibility gates",
+      "passed": true,
+      "command": "PYTHONPATH=. ../TurnItOver/.venv-local/bin/python -m scripts.finalize_level0_axis_v2 --out docs/evidence/partnet-mobility-level0-axis-v3"
+    }
+  ],
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "PLAYWRIGHT_BROWSERS_PATH": "/91004t2/laq/code/ThreejsJudge/TurnItOver/.cache/ms-playwright",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "chromium": "143.0.7499.4",
+    "renderer": "CPU SwiftShader",
+    "canonical_source_loader": {
+      "python": "/home/laq/anaconda3/bin/python",
+      "numpy": "1.26.4",
+      "trimesh": "5.1.0",
+      "playwright_module": "/91004t2/laq/code/ThreejsJudge/TurnItOver/.venv-local/lib/python3.12/site-packages/playwright"
+    },
+    "overlay_setup": "mkdir -p /tmp/level0-native-render-env; ln -s /91004t2/laq/code/ThreejsJudge/TurnItOver/.venv-local/lib/python3.12/site-packages/playwright /tmp/level0-native-render-env/playwright"
+  },
+  "initial_failure": {
+    "test": "new native source audit",
+    "failed": 1,
+    "cause": "incompatible numpy2.4.2/trimesh4.7.1 reference loader produced different equivalent vertex indices",
+    "resolution": "unchanged checker and tolerance with exact original source conversion loader and same Chromium143; all10 native sources passed",
+    "raw_log": "private/test_logs/browser_initial_incompatible_environment.log"
+  },
+  "human_decisions_created_by_codex": 0,
+  "user_approval_update": {
+    "date": "2026-10-20",
+    "user_review_cases": 20,
+    "training_eligible_objects": 38,
+    "training_eligible_cases": 76,
+    "human_decision_author": "user",
+    "recorded_by": "Codex",
+    "source": "private/user_review_confirmation.json",
+    "image_replay_reused": "All 456 image file SHA values and program files remain identical; no rendering change.",
+    "acceptance_tests": {
+      "passed": 14,
+      "log": "private/test_logs/user_review_acceptance.log",
+      "command": "PYTHONPATH=. OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 ../TurnItOver/.venv-local/bin/python -m pytest tests/unit/test_level0_axis_continuation.py tests/unit/test_level0_axis_review.py"
+    },
+    "finalize_log": "private/test_logs/user_review_finalize.log"
+  }
+}

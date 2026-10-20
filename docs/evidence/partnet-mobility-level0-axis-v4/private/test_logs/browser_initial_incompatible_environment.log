@@ -1,0 +1,56 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________ test_new_v3_sources_match_independent_native_urdf_fk _____________
+
+session_factory = <turnitover.render.session.ObservationSession object at 0x7e343fc0f3e0>
+
+    def test_new_v3_sources_match_independent_native_urdf_fk(session_factory):
+        baseline_ids = {g['asset_id'] for g in read_rows(DEFAULT_OUT / 'private/gold.jsonl')}
+        new_ids = {g['asset_id'] for g in read_rows(V3 / 'private/gold.jsonl')} - baseline_ids
+        screened = json.loads((V3 / 'private/expansion_screening.json').read_text())['assets']
+        selected = {a['asset_id'] for a in screened if a['status'] == 'automatic_pass'} - baseline_ids
+        assert selected == new_ids
+        manifest = json.loads((V3 / 'manifest.json').read_text())
+        catalog = CatalogSource(str(V3 / manifest['source_catalog']))
+        for aid in sorted(selected):
+            model = UrdfModel(ROOT / 'data/partnet-mobility-pilot/extracted' / aid[3:] / 'mobility.urdf')
+>           result = audit_model(session_factory, model, catalog.get(aid))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/browser/test_level0_axis_continuation.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = <turnitover.render.session.ObservationSession object at 0x7e343fc0f3e0>
+model = <turnitover.assets.urdf.UrdfModel object at 0x7e343e46ae70>
+spec = AssetSpec(asset_id='PM_101868', category='Eyeglasses', parts=(PartSpec(id='base', parent=None, origin=(0.0, 0.0, 0.0),...me_rotation=(-0.0, 0.0, 0.0))), materials=(MaterialSpec(id='default', color='#c8c8c8', metalness=0.0, roughness=0.8),))
+output = None, tolerance = 1e-05
+
+    def audit_model(session, model, spec, output=None, tolerance=1e-5):
+        session.load(ObjectProgram.from_spec(spec), framing=None)
+        records = []
+        try:
+            for name, values in configurations(model):
+                session.reset_joints()
+                session.set_joints(values)
+                expected = model.world_vertices(values)
+                actual = session.export_geometry()
+                if set(expected) != set(actual):
+                    raise ValueError("Imported part set does not match source visual links")
+                worst = 0.
+                for part, vertices in expected.items():
+                    observed = actual[part]
+                    if observed.vertices.shape != vertices.shape:
+                        raise ValueError(f"Vertex shape mismatch for {part}")
+                    source_faces, offset = [], 0
+                    for mesh in model.meshes[part]:
+                        source_faces.append(mesh.faces + offset)
+                        offset += len(mesh.vertices)
+                    faces = np.concatenate(source_faces)
+                    if not np.array_equal(observed.faces, faces):
+>                       raise ValueError(f"Triangle topology changed for {part}")
+E                       ValueError: Triangle topology changed for link_0
+
+turnitover/assets/audit_urdf.py:46: ValueError
+=========================== short test summary info ============================
+FAILED tests/browser/test_level0_axis_continuation.py::test_new_v3_sources_match_independent_native_urdf_fk
+1 failed in 5.45s

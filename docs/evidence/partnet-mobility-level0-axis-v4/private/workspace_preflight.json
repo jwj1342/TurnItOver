@@ -1,0 +1,10 @@
+{
+  "branch": "laq/sft-dataset",
+  "head": "d5cbc085a4dbb7b573aa17f42ec67b322d0003b3",
+  "initial_worktree_clean": true,
+  "existing_v2_independent_objects": 28,
+  "existing_v2_reviewed_cases": 56,
+  "existing_unmerged_expansion_found": false,
+  "searched": "current worktree status, local branch history and Level0 data/evidence paths; /tmp Level0 manifest copies are earlier 7-object reproductions",
+  "immutable_baseline_files_verified": 413
+}
