@@ -1,0 +1,30 @@
+{
+  "api_requests": 0,
+  "checks": [
+    {
+      "case": "c02",
+      "mode": "active",
+      "verdict_exact": true,
+      "only_cited_observations": true,
+      "images_byte_equal": true,
+      "private_checker_fields_present": false,
+      "repair_budget": 1,
+      "evidence_steps": [
+        3
+      ]
+    },
+    {
+      "case": "c00",
+      "mode": "fixed",
+      "verdict_exact": true,
+      "only_cited_observations": true,
+      "images_byte_equal": true,
+      "private_checker_fields_present": false,
+      "repair_budget": 1,
+      "evidence_steps": [
+        2,
+        3
+      ]
+    }
+  ]
+}

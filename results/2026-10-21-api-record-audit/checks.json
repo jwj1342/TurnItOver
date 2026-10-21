@@ -1,0 +1,1194 @@
+{
+  "status": "PASS",
+  "api_requests": 0,
+  "checks": [
+    {
+      "check": "reference_png_exact_chromium_render",
+      "passed": true
+    },
+    {
+      "check": "reference_authored_separately",
+      "passed": true
+    },
+    {
+      "check": "generated_base_exact_extraction",
+      "passed": true
+    },
+    {
+      "check": "output/api-prepared-v2-api/api_calls/001:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-prepared-v2-api/api_calls/001:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-prepared-v2-api/api_calls/001:response",
+      "passed": true
+    },
+    {
+      "check": "c02:controlled_source",
+      "passed": true
+    },
+    {
+      "check": "c02:initial_render_equal",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier:budget",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier:trajectory",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier:frame:0",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier:runtime:1",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier:frame:2",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier:frame:3",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier:quality",
+      "passed": true
+    },
+    {
+      "check": "c02/active:witnesses",
+      "passed": true
+    },
+    {
+      "check": "c02/active:diagnosis",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/000:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/000:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/001:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/001:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/001:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/001:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/001:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/001:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/002:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/002:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/002:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/002:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/002:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/002:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/003:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/003:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/003:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/003:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/003:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/003:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/004:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/004:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/004:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/004:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/004:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/004:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/005:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/005:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/005:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/005:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier:budget",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier:trajectory",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier:frame:0",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier:frame:1",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier:frame:2",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier:frame:3",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier:quality",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/000:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/000:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/007:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/007:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/007:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/007:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/001:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/001:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/008:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/008:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/008:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/008:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/002:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/002:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/009:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/009:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/009:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/009:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/003:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/003:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/010:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/010:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/010:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/010:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/004:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/004:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/011:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/011:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/011:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/005:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/005:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6-api/api_calls/001:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6-api/api_calls/001:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6-api/api_calls/001:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6-api/api_calls/001:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6-api/api_calls/001:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "c02/active:all_judge_calls_bound",
+      "passed": true
+    },
+    {
+      "check": "c02/active:final_quality",
+      "passed": true
+    },
+    {
+      "check": "c02/active:single_repair",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/006:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/006:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v5-api/api_calls/006:response",
+      "passed": true
+    },
+    {
+      "check": "c02/active:repair_current_source",
+      "passed": true
+    },
+    {
+      "check": "c02/active:exact_patch_final",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier:budget",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier:trajectory",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier:runtime:0",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier:frame:1",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier:frame:2",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier:frame:3",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier:quality",
+      "passed": true
+    },
+    {
+      "check": "c02/fixed:witnesses",
+      "passed": true
+    },
+    {
+      "check": "c02/fixed:diagnosis",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier/model_calls/000:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier/model_calls/000:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6-api/api_calls/002:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6-api/api_calls/002:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6-api/api_calls/002:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6-api/api_calls/002:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-minimal-v6-api/api_calls/002:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "c02/fixed:all_judge_calls_bound",
+      "passed": true
+    },
+    {
+      "check": "c02/fixed:final_quality",
+      "passed": true
+    },
+    {
+      "check": "c00:controlled_source",
+      "passed": true
+    },
+    {
+      "check": "c00:initial_render_equal",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier:budget",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier:trajectory",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier:frame:0",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier:frame:1",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier:frame:2",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier:runtime:3",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier:quality",
+      "passed": true
+    },
+    {
+      "check": "c00/active:witnesses",
+      "passed": true
+    },
+    {
+      "check": "c00/active:diagnosis",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/000:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/000:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/001:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/001:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/001:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/001:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/001:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/001:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/001:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/002:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/002:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/002:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/002:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/002:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/002:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/002:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/003:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/003:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/003:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/003:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/003:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/003:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/003:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/004:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/004:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/004:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/004:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/004:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/004:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/004:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/005:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/005:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/005:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/005:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/005:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "c00/active:all_judge_calls_bound",
+      "passed": true
+    },
+    {
+      "check": "c00/active:final_quality",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier:budget",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier:trajectory",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier:runtime:0",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier:frame:1",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier:frame:2",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier:frame:3",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier:quality",
+      "passed": true
+    },
+    {
+      "check": "c00/fixed:witnesses",
+      "passed": true
+    },
+    {
+      "check": "c00/fixed:diagnosis",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier/model_calls/000:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier/model_calls/000:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/006:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/006:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/006:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/006:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/006:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "c00/fixed:all_judge_calls_bound",
+      "passed": true
+    },
+    {
+      "check": "c00/fixed:final_quality",
+      "passed": true
+    },
+    {
+      "check": "c00/fixed:single_repair",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/007:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/007:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/007:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/007:SSE",
+      "passed": true
+    },
+    {
+      "check": "c00/fixed:repair_current_source",
+      "passed": true
+    },
+    {
+      "check": "c00/fixed:exact_patch_final",
+      "passed": true
+    },
+    {
+      "check": "c01:controlled_source",
+      "passed": true
+    },
+    {
+      "check": "c01:initial_render_equal",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier:budget",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier:trajectory",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier:runtime:0",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier:frame:1",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier:frame:2",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier:frame:3",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier:quality",
+      "passed": true
+    },
+    {
+      "check": "c01/active:witnesses",
+      "passed": true
+    },
+    {
+      "check": "c01/active:diagnosis",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/000:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/000:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/009:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/009:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/009:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/009:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/009:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/001:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/001:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/010:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/010:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/010:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/010:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/010:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/002:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/002:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/011:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/011:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/011:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/011:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/011:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/003:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/003:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/012:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/012:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/012:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/012:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/012:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/004:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/004:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/013:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/013:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/013:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/013:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/013:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "c01/active:all_judge_calls_bound",
+      "passed": true
+    },
+    {
+      "check": "c01/active:final_quality",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier:budget",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier:trajectory",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier:runtime:0",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier:frame:1",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier:frame:2",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier:frame:3",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier:quality",
+      "passed": true
+    },
+    {
+      "check": "c01/fixed:witnesses",
+      "passed": true
+    },
+    {
+      "check": "c01/fixed:diagnosis",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier/model_calls/000:causal_history",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier/model_calls/000:image_order",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/008:prompt",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/008:images",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/008:response",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/008:SSE",
+      "passed": true
+    },
+    {
+      "check": "output/api-paired-v6-api/api_calls/008:frozen_request",
+      "passed": true
+    },
+    {
+      "check": "c01/fixed:all_judge_calls_bound",
+      "passed": true
+    },
+    {
+      "check": "c01/fixed:final_quality",
+      "passed": true
+    },
+    {
+      "check": "continuation_source_hashes",
+      "passed": true
+    },
+    {
+      "check": "continuation_observations_unchanged",
+      "passed": true
+    },
+    {
+      "check": "continuation_request_equal_except_stream",
+      "passed": true
+    }
+  ],
+  "frames": [
+    {
+      "path": "output/api-minimal-v6/c02/active/round-000/verifier/observations/000.png",
+      "sha256": "3fe227151ff216a3471376b41f3a930a367c5689c619dc02363964065851467a",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-minimal-v6/c02/active/round-000/verifier/observations/002.png",
+      "sha256": "3fe227151ff216a3471376b41f3a930a367c5689c619dc02363964065851467a",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-minimal-v6/c02/active/round-000/verifier/observations/003.png",
+      "sha256": "99e3f35348e8608e18c49f74008251ecbe7a2ab4e78f26e43a4cf23df974fdd4",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-minimal-v6/c02/active/round-001/verifier/observations/000.png",
+      "sha256": "3fe227151ff216a3471376b41f3a930a367c5689c619dc02363964065851467a",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-minimal-v6/c02/active/round-001/verifier/observations/001.png",
+      "sha256": "7d3317c80a9fa0e1078c31c6d030152689556097b6675871f2327c74efecbd4c",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-minimal-v6/c02/active/round-001/verifier/observations/002.png",
+      "sha256": "08d350816d00ebdbfa5f439a55749bbbb5ba5609aca51b65a1fa0e06e92f75c5",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-minimal-v6/c02/active/round-001/verifier/observations/003.png",
+      "sha256": "5ac38db7f8a3ad4ff3cfb390c03fad4d7ef65e920420654b326cea5c1b63ad90",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-minimal-v6/c02/fixed/round-000/verifier/observations/001.png",
+      "sha256": "3fe227151ff216a3471376b41f3a930a367c5689c619dc02363964065851467a",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-minimal-v6/c02/fixed/round-000/verifier/observations/002.png",
+      "sha256": "65fc74310f5669e6cc152f2d3e347b0efc9bc7d8c6dd0884d2f280e5ef347743",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-minimal-v6/c02/fixed/round-000/verifier/observations/003.png",
+      "sha256": "8b60b9c4e6df24717326084c080b49530762ffba2fca4a4ee33bdcc39af530b4",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-paired-v6/c00/active/round-000/verifier/observations/000.png",
+      "sha256": "65fc74310f5669e6cc152f2d3e347b0efc9bc7d8c6dd0884d2f280e5ef347743",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-paired-v6/c00/active/round-000/verifier/observations/001.png",
+      "sha256": "8b60b9c4e6df24717326084c080b49530762ffba2fca4a4ee33bdcc39af530b4",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-paired-v6/c00/active/round-000/verifier/observations/002.png",
+      "sha256": "905759cfece85ace4d03ed5e764729f3e352d4cfe76fed08f0b4e22209e7973e",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-paired-v6/c00/fixed/round-000/verifier/observations/001.png",
+      "sha256": "3fe227151ff216a3471376b41f3a930a367c5689c619dc02363964065851467a",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-paired-v6/c00/fixed/round-000/verifier/observations/002.png",
+      "sha256": "65fc74310f5669e6cc152f2d3e347b0efc9bc7d8c6dd0884d2f280e5ef347743",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-paired-v6/c00/fixed/round-000/verifier/observations/003.png",
+      "sha256": "8b60b9c4e6df24717326084c080b49530762ffba2fca4a4ee33bdcc39af530b4",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-paired-v6/c01/active/round-000/verifier/observations/001.png",
+      "sha256": "9728d81ac72162493b0e11c1f969d5bc544ef36434836045bef3f6ecff52993d",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-paired-v6/c01/active/round-000/verifier/observations/002.png",
+      "sha256": "c03cb3a3d39b601c82aab980934f42c708af35a6d97028fd4dcb84557d42684e",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-paired-v6/c01/active/round-000/verifier/observations/003.png",
+      "sha256": "94584724c4570ab52ff4f45a476adb2308f978b7434cc40aec9c86160827fb5b",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-paired-v6/c01/fixed/round-000/verifier/observations/001.png",
+      "sha256": "83b3178e227f3e93caffc708dabf51b1cfaca088545abaa1d1aca3e44773c020",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-paired-v6/c01/fixed/round-000/verifier/observations/002.png",
+      "sha256": "7730a0f35ba59ed479ae117310a987ee5596b34cb0159d4ee9f598d99ebe9ece",
+      "replay_byte_equal": true
+    },
+    {
+      "path": "output/api-paired-v6/c01/fixed/round-000/verifier/observations/003.png",
+      "sha256": "a6a853fea779cc308c6aa8c487b9561423d73465beb3cce1508a0a3605a77914",
+      "replay_byte_equal": true
+    }
+  ],
+  "arms": [
+    {
+      "case": "c02",
+      "mode": "active",
+      "final_correct": true,
+      "pass_count": 32,
+      "count": 32
+    },
+    {
+      "case": "c02",
+      "mode": "fixed",
+      "final_correct": false,
+      "pass_count": 28,
+      "count": 32
+    },
+    {
+      "case": "c00",
+      "mode": "active",
+      "final_correct": true,
+      "pass_count": 32,
+      "count": 32
+    },
+    {
+      "case": "c00",
+      "mode": "fixed",
+      "final_correct": true,
+      "pass_count": 32,
+      "count": 32
+    },
+    {
+      "case": "c01",
+      "mode": "active",
+      "final_correct": false,
+      "pass_count": 22,
+      "count": 32
+    },
+    {
+      "case": "c01",
+      "mode": "fixed",
+      "final_correct": false,
+      "pass_count": 22,
+      "count": 32
+    }
+  ]
+}

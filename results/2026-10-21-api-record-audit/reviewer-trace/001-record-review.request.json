@@ -1,0 +1,53 @@
+{
+  "call_number": 1,
+  "purpose": "record-integrity-review",
+  "tool": "spawn_agent",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "ultra",
+  "fork_turns": "none",
+  "files_referenced": [
+    "turnitover/api_pipeline/api.py",
+    "turnitover/api_pipeline/__init__.py",
+    "turnitover/api_pipeline/fixture.py",
+    "turnitover/api_pipeline/scoring.py",
+    "turnitover/api_pipeline/recovery.py",
+    "turnitover/api_pipeline/paired.py",
+    "scripts/run_api_pipeline.py",
+    "turnitover/repair/iterative.py",
+    "turnitover/repair/__init__.py",
+    "turnitover/repair/loop.py",
+    "turnitover/repair/patches.py",
+    "turnitover/repair/environment.py",
+    "turnitover/verifier/policies.py",
+    "turnitover/verifier/runner.py",
+    "turnitover/verifier/loop.py",
+    "turnitover/verifier/contracts.py",
+    "turnitover/verifier/gt_validator.py",
+    "turnitover/verifier/prompt.txt",
+    "turnitover/verifier/final_prompt.txt",
+    "turnitover/models/client.py",
+    "turnitover/models/streaming.py",
+    "turnitover/models/config.py",
+    "turnitover/models/generation.py",
+    "turnitover/checkers/geometry.py",
+    "turnitover/checkers/evidence.py",
+    "turnitover/checkers/runtime_budget.py",
+    "turnitover/policy/loop.py",
+    "docs/api-pipeline-report.md",
+    "docs/api-pipeline-audit.md",
+    "results/2026-10-21-api-record-audit/check_records.py",
+    "results/2026-10-21-api-record-audit/checks.json",
+    "results/2026-10-21-api-record-audit/cited-motion-check.json"
+  ],
+  "prompt": "Fresh read-only forensic review requested. Cwd /91004t2/laq/code/ThreejsJudge/TurnItOver-dataset. Apply /home/laq/.codex/skills/experiment-audit/SKILL.md; no paid/external API, no edits to existing code/raw records. Audit original files, not trust prior claims. Paths: turnitover/api_pipeline/{fixture,paired,recovery,scoring,api}.py; scripts/run_api_pipeline.py; turnitover/repair/{iterative,proposal}.py (find actual repair module names); turnitover/verifier/{policies,runner,loop,contracts}.py; turnitover/models/{client,streaming}.py; turnitover/verifier/gt_validator.py; turnitover/checkers/geometry.py. Claims docs/api-pipeline-report.md and docs/api-pipeline-audit.md. Raw output/api-prepared-v2/{manifest.json,task.txt,private/reference.ts,shared/final.ts}; output/api-minimal-v5/result.json; output/api-minimal-v6/{result.json,scores.private.json}; output/api-paired-v6/{result.json,scores.private.json}; all subdirectories per case/active|fixed, verifier trajectories/results/model_calls and generator repair. Raw API request/response/metadata/SSE in output/api-prepared-v2-api, api-minimal-v5-api, api-minimal-v6-api, api-paired-v6-api. All ledgers via results/2026-10-21-api-pipeline/summary.json. Need independent judgment: genuine generated base vs reference; c00/c01/c02 injection provenance and GT isolation; API payload exact binding to actual observation images; actual patch->final program; fresh verification; observation budget fairness including free evidence/context, per-step decision vs final protocols, counters; timeout continuation config/prompt/history/images/state equality and duplicated costs; finite Checker accuracy/metric denominator; cited observations actually support explanations visually (inspect PNGs), false positives; attribution and scope. Classify A-F per skill with file:line evidence. Save NEW docs/api-pipeline-record-review.md/.json (do not overwrite old audit) plus trace under .aris/traces/experiment-audit/2026-10-21_record_review. Report actual concerns promptly, distinguish deterministic reproduction from trusted provider attestation and semantic judgment. Do not spawn subagents. If quota failure occurs save what you can and signal; never invent PASS. Bounded thorough review; root independently reproduces screenshots/checker.",
+  "followup_paths": [
+    "results/2026-10-21-api-record-audit/check_records.py",
+    "results/2026-10-21-api-record-audit/checks.json",
+    "results/2026-10-21-api-record-audit/cited-motion-check.json"
+  ],
+  "followup_constraints": [
+    "Keep old audit historical.",
+    "Distinguish one generated base from two injections.",
+    "Do not treat local config and returned model ID as endpoint/backend attestation."
+  ]
+}

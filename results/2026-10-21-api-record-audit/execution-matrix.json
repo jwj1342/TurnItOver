@@ -1,0 +1,146 @@
+[
+  {
+    "case": "c02",
+    "mode": "active",
+    "initial_sha256": "6995c9b0ddc7f2318adc0e6930cfd541b621393f3e52986b640bec9e6d97fb01",
+    "final_sha256": "7c2967b209d9338495ca5ab713822f77e7d243999e3c17af230ab855ee12fbd8",
+    "model_verifier_status": "accepted",
+    "verifier_accepted": true,
+    "checker_correct": true,
+    "invariants": [
+      32,
+      32
+    ],
+    "observations": 8,
+    "repair_api_calls": 1,
+    "api_cost": {
+      "requests": 12,
+      "tokens": 42939,
+      "usage_reported_requests": 11,
+      "requests_without_usage": 1,
+      "elapsed_ms": 729753.5537709482,
+      "reported_cost_count": 0,
+      "provider_cost_total": null
+    }
+  },
+  {
+    "case": "c02",
+    "mode": "fixed",
+    "initial_sha256": "6995c9b0ddc7f2318adc0e6930cfd541b621393f3e52986b640bec9e6d97fb01",
+    "final_sha256": "6995c9b0ddc7f2318adc0e6930cfd541b621393f3e52986b640bec9e6d97fb01",
+    "model_verifier_status": "accepted",
+    "verifier_accepted": true,
+    "checker_correct": false,
+    "invariants": [
+      28,
+      32
+    ],
+    "observations": 4,
+    "repair_api_calls": 0,
+    "api_cost": {
+      "requests": 1,
+      "tokens": 3449,
+      "usage_reported_requests": 1,
+      "requests_without_usage": 0,
+      "elapsed_ms": 42244.010963942856,
+      "reported_cost_count": 0,
+      "provider_cost_total": null
+    }
+  },
+  {
+    "case": "c00",
+    "mode": "active",
+    "initial_sha256": "acde36209a8c6b03f41bc309551b267589be3dca9ca9152a84fbbc3748a5ae0c",
+    "final_sha256": "acde36209a8c6b03f41bc309551b267589be3dca9ca9152a84fbbc3748a5ae0c",
+    "model_verifier_status": "accepted",
+    "verifier_accepted": true,
+    "checker_correct": true,
+    "invariants": [
+      32,
+      32
+    ],
+    "observations": 4,
+    "repair_api_calls": 0,
+    "api_cost": {
+      "requests": 5,
+      "tokens": 16983,
+      "usage_reported_requests": 5,
+      "requests_without_usage": 0,
+      "elapsed_ms": 208592.13999542408,
+      "reported_cost_count": 0,
+      "provider_cost_total": null
+    }
+  },
+  {
+    "case": "c00",
+    "mode": "fixed",
+    "initial_sha256": "acde36209a8c6b03f41bc309551b267589be3dca9ca9152a84fbbc3748a5ae0c",
+    "final_sha256": "acde36209a8c6b03f41bc309551b267589be3dca9ca9152a84fbbc3748a5ae0c",
+    "model_verifier_status": "max_visual_revisions",
+    "verifier_accepted": false,
+    "checker_correct": true,
+    "invariants": [
+      32,
+      32
+    ],
+    "observations": 4,
+    "repair_api_calls": 1,
+    "api_cost": {
+      "requests": 2,
+      "tokens": 11326,
+      "usage_reported_requests": 2,
+      "requests_without_usage": 0,
+      "elapsed_ms": 162177.1885161288,
+      "reported_cost_count": 0,
+      "provider_cost_total": null
+    }
+  },
+  {
+    "case": "c01",
+    "mode": "active",
+    "initial_sha256": "a25a0dba15b1c73edaf18f2645e6167e8a1d5a61ff04cebdd3c111414623cc4c",
+    "final_sha256": "a25a0dba15b1c73edaf18f2645e6167e8a1d5a61ff04cebdd3c111414623cc4c",
+    "model_verifier_status": "accepted",
+    "verifier_accepted": true,
+    "checker_correct": false,
+    "invariants": [
+      22,
+      32
+    ],
+    "observations": 4,
+    "repair_api_calls": 0,
+    "api_cost": {
+      "requests": 5,
+      "tokens": 15697,
+      "usage_reported_requests": 5,
+      "requests_without_usage": 0,
+      "elapsed_ms": 169160.29616771266,
+      "reported_cost_count": 0,
+      "provider_cost_total": null
+    }
+  },
+  {
+    "case": "c01",
+    "mode": "fixed",
+    "initial_sha256": "a25a0dba15b1c73edaf18f2645e6167e8a1d5a61ff04cebdd3c111414623cc4c",
+    "final_sha256": "a25a0dba15b1c73edaf18f2645e6167e8a1d5a61ff04cebdd3c111414623cc4c",
+    "model_verifier_status": "accepted",
+    "verifier_accepted": true,
+    "checker_correct": false,
+    "invariants": [
+      22,
+      32
+    ],
+    "observations": 4,
+    "repair_api_calls": 0,
+    "api_cost": {
+      "requests": 1,
+      "tokens": 4302,
+      "usage_reported_requests": 1,
+      "requests_without_usage": 0,
+      "elapsed_ms": 42932.635822100565,
+      "reported_cost_count": 0,
+      "provider_cost_total": null
+    }
+  }
+]

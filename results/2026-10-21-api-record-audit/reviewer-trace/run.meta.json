@@ -1,0 +1,16 @@
+{
+  "skill": "experiment-audit",
+  "run_id": "2026-10-21_record_review",
+  "generated_at": "2026-10-21T08:56:30.908749+00:00",
+  "executor": "codex",
+  "executor_family": "openai",
+  "project_dir": "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset",
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "requested_reviewer_model": "gpt-6-astra",
+  "requested_reasoning": "ultra",
+  "model_identity_attestation": "spawn request only",
+  "agent_id": "/root/record_integrity_review",
+  "status": "complete_within_stated_scope",
+  "verdict": "WARN"
+}

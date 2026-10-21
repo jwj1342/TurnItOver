@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/results/2026-10-21-api-record-audit/check_records.py", line 91, in <module>
+    check(str(folder.relative_to(ROOT)) + ':runtime:' + str(o['step']), fresh.payload == o['payload'])
+  File "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/results/2026-10-21-api-record-audit/check_records.py", line 30, in check
+    assert value, name
+           ^^^^^
+AssertionError: output/api-minimal-v6/c02/active/round-000/verifier:runtime:1

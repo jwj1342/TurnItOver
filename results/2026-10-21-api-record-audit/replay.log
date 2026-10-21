@@ -1,0 +1,50 @@
+{
+  "checks": 258,
+  "checks_passed": true,
+  "replayed_images": 22,
+  "image_byte_matches": 22,
+  "arms": [
+    {
+      "case": "c02",
+      "mode": "active",
+      "final_correct": true,
+      "pass_count": 32,
+      "count": 32
+    },
+    {
+      "case": "c02",
+      "mode": "fixed",
+      "final_correct": false,
+      "pass_count": 28,
+      "count": 32
+    },
+    {
+      "case": "c00",
+      "mode": "active",
+      "final_correct": true,
+      "pass_count": 32,
+      "count": 32
+    },
+    {
+      "case": "c00",
+      "mode": "fixed",
+      "final_correct": true,
+      "pass_count": 32,
+      "count": 32
+    },
+    {
+      "case": "c01",
+      "mode": "active",
+      "final_correct": false,
+      "pass_count": 22,
+      "count": 32
+    },
+    {
+      "case": "c01",
+      "mode": "fixed",
+      "final_correct": false,
+      "pass_count": 22,
+      "count": 32
+    }
+  ]
+}

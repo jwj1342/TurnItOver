@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/results/2026-10-21-api-record-audit/check_records.py", line 119, in <module>
+    data = json.JSONDecoder().raw_decode(prompt.split('\n', 1)[1])[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/laq/anaconda3/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
