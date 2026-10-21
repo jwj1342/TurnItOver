@@ -1,0 +1,73 @@
+{
+  "kind": "fresh_extraction_real_chromium_rescore",
+  "api_requests": 0,
+  "all_six_arms_match": true,
+  "arms": [
+    {
+      "case": "c02",
+      "mode": "active",
+      "final_correct": true,
+      "invariants": [
+        32,
+        32
+      ],
+      "diagnosis_and_witnesses_match": true,
+      "api_cost_match": true
+    },
+    {
+      "case": "c02",
+      "mode": "fixed",
+      "final_correct": false,
+      "invariants": [
+        28,
+        32
+      ],
+      "diagnosis_and_witnesses_match": true,
+      "api_cost_match": true
+    },
+    {
+      "case": "c00",
+      "mode": "active",
+      "final_correct": true,
+      "invariants": [
+        32,
+        32
+      ],
+      "diagnosis_and_witnesses_match": true,
+      "api_cost_match": true
+    },
+    {
+      "case": "c00",
+      "mode": "fixed",
+      "final_correct": true,
+      "invariants": [
+        32,
+        32
+      ],
+      "diagnosis_and_witnesses_match": true,
+      "api_cost_match": true
+    },
+    {
+      "case": "c01",
+      "mode": "active",
+      "final_correct": false,
+      "invariants": [
+        22,
+        32
+      ],
+      "diagnosis_and_witnesses_match": true,
+      "api_cost_match": true
+    },
+    {
+      "case": "c01",
+      "mode": "fixed",
+      "final_correct": false,
+      "invariants": [
+        22,
+        32
+      ],
+      "diagnosis_and_witnesses_match": true,
+      "api_cost_match": true
+    }
+  ]
+}

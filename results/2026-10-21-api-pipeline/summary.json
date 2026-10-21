@@ -1,0 +1,1424 @@
+{
+  "api_accounting": {
+    "request_attempts": 44,
+    "request_status": {
+      "failed": 5,
+      "complete": 39
+    },
+    "reported_tokens": 145467,
+    "attempts_without_usage": 4,
+    "reported_cost_count": 0,
+    "provider_cost_total": null,
+    "elapsed_ms": 2150386.5688070655
+  },
+  "calls": [
+    {
+      "ledger": "output/api-prepared-v1-api/ledger.json",
+      "index": 1,
+      "scope": "shared/generator",
+      "directory": "api_calls/001",
+      "started_at": "2026-10-20T07:52:02.593399+00:00",
+      "status": "failed",
+      "usage": {},
+      "provider_cost": null,
+      "error_type": "ModelError",
+      "elapsed_ms": 9337.655746145174
+    },
+    {
+      "ledger": "output/api-diagnostic-v1-api/ledger.json",
+      "index": 1,
+      "scope": "diagnostic/original-request",
+      "directory": "api_calls/001",
+      "started_at": "2026-10-20T07:55:25.685875+00:00",
+      "status": "failed",
+      "usage": {},
+      "provider_cost": null,
+      "error_type": "ModelError",
+      "elapsed_ms": 1971.2490169331431
+    },
+    {
+      "ledger": "output/api-prepared-v2-api/ledger.json",
+      "index": 1,
+      "scope": "shared/generator",
+      "directory": "api_calls/001",
+      "started_at": "2026-10-20T07:56:23.866097+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 795,
+        "completion_tokens": 2878,
+        "total_tokens": 3673,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2066
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 84140.28876903467
+    },
+    {
+      "ledger": "output/api-minimal-v2-api/ledger.json",
+      "index": 1,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/001",
+      "started_at": "2026-10-20T07:58:07.427799+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1462,
+        "completion_tokens": 511,
+        "total_tokens": 1973,
+        "cached_tokens": 182,
+        "completion_tokens_details": {
+          "reasoning_tokens": 484
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 182
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 23063.30665689893
+    },
+    {
+      "ledger": "output/api-minimal-v2-api/ledger.json",
+      "index": 2,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/002",
+      "started_at": "2026-10-20T07:58:30.560727+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1583,
+        "completion_tokens": 1106,
+        "total_tokens": 2689,
+        "cached_tokens": 1024,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1078
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1024
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 39425.13989796862
+    },
+    {
+      "ledger": "output/api-minimal-v2-api/ledger.json",
+      "index": 3,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/003",
+      "started_at": "2026-10-20T07:59:09.999108+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1836,
+        "completion_tokens": 1793,
+        "total_tokens": 3629,
+        "cached_tokens": 182,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1757
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 182
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 66124.45545103401
+    },
+    {
+      "ledger": "output/api-minimal-v2-api/ledger.json",
+      "index": 4,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/004",
+      "started_at": "2026-10-20T08:00:16.133060+00:00",
+      "status": "failed",
+      "usage": {},
+      "provider_cost": null,
+      "error_type": "ModelError",
+      "elapsed_ms": 120727.63865510933
+    },
+    {
+      "ledger": "output/api-minimal-v3-api/ledger.json",
+      "index": 1,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/001",
+      "started_at": "2026-10-20T11:59:11.560044+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1462,
+        "completion_tokens": 1158,
+        "total_tokens": 2620,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1130
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 45635.99357102066
+    },
+    {
+      "ledger": "output/api-minimal-v3-api/ledger.json",
+      "index": 2,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/002",
+      "started_at": "2026-10-20T11:59:57.286285+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1718,
+        "completion_tokens": 797,
+        "total_tokens": 2515,
+        "cached_tokens": 182,
+        "completion_tokens_details": {
+          "reasoning_tokens": 763
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 182
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 17227.789839031175
+    },
+    {
+      "ledger": "output/api-minimal-v3-api/ledger.json",
+      "index": 3,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/003",
+      "started_at": "2026-10-20T12:00:14.539594+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1935,
+        "completion_tokens": 1347,
+        "total_tokens": 3282,
+        "cached_tokens": 290,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1313
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 290
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 38515.85564692505
+    },
+    {
+      "ledger": "output/api-minimal-v3-api/ledger.json",
+      "index": 4,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/004",
+      "started_at": "2026-10-20T12:00:53.063361+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2157,
+        "completion_tokens": 1132,
+        "total_tokens": 3289,
+        "cached_tokens": 398,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1107
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 398
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 33414.406925905496
+    },
+    {
+      "ledger": "output/api-minimal-v3-api/ledger.json",
+      "index": 5,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/005",
+      "started_at": "2026-10-20T12:01:26.483799+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2175,
+        "completion_tokens": 3027,
+        "total_tokens": 5202,
+        "cached_tokens": 506,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2848
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 506
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 60669.860200956464
+    },
+    {
+      "ledger": "output/api-minimal-v3-api/ledger.json",
+      "index": 6,
+      "scope": "c01/fixed/judge",
+      "directory": "api_calls/006",
+      "started_at": "2026-10-20T12:02:28.340458+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2205,
+        "completion_tokens": 2623,
+        "total_tokens": 4828,
+        "cached_tokens": 190,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2367
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 190
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 49140.14268689789
+    },
+    {
+      "ledger": "output/api-minimal-v4-api/ledger.json",
+      "index": 1,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/001",
+      "started_at": "2026-10-20T12:04:26.611763+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1449,
+        "completion_tokens": 903,
+        "total_tokens": 2352,
+        "cached_tokens": 1024,
+        "completion_tokens_details": {
+          "reasoning_tokens": 877
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1024
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 23735.059842001647
+    },
+    {
+      "ledger": "output/api-minimal-v4-api/ledger.json",
+      "index": 2,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/002",
+      "started_at": "2026-10-20T12:04:50.443927+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1700,
+        "completion_tokens": 743,
+        "total_tokens": 2443,
+        "cached_tokens": 190,
+        "completion_tokens_details": {
+          "reasoning_tokens": 717
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 190
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 25817.41249305196
+    },
+    {
+      "ledger": "output/api-minimal-v4-api/ledger.json",
+      "index": 3,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/003",
+      "started_at": "2026-10-20T12:05:16.273284+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1963,
+        "completion_tokens": 711,
+        "total_tokens": 2674,
+        "cached_tokens": 290,
+        "completion_tokens_details": {
+          "reasoning_tokens": 677
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 290
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 22014.186187880114
+    },
+    {
+      "ledger": "output/api-minimal-v4-api/ledger.json",
+      "index": 4,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/004",
+      "started_at": "2026-10-20T12:05:38.294871+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2180,
+        "completion_tokens": 1029,
+        "total_tokens": 3209,
+        "cached_tokens": 398,
+        "completion_tokens_details": {
+          "reasoning_tokens": 995
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 398
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 30516.68045297265
+    },
+    {
+      "ledger": "output/api-minimal-v4-api/ledger.json",
+      "index": 5,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/005",
+      "started_at": "2026-10-20T12:06:08.835964+00:00",
+      "status": "failed",
+      "usage": {
+        "prompt_tokens": 2297,
+        "completion_tokens": 4096,
+        "total_tokens": 6393,
+        "cached_tokens": 506,
+        "completion_tokens_details": {
+          "reasoning_tokens": 4096
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 506
+        }
+      },
+      "provider_cost": null,
+      "error_type": "ModelError",
+      "elapsed_ms": 104049.62153104134
+    },
+    {
+      "ledger": "output/api-minimal-v5-api/ledger.json",
+      "index": 1,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/001",
+      "started_at": "2026-10-20T12:09:38.390952+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1449,
+        "completion_tokens": 1410,
+        "total_tokens": 2859,
+        "cached_tokens": 1449,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1384
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1449
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 39352.34100208618
+    },
+    {
+      "ledger": "output/api-minimal-v5-api/ledger.json",
+      "index": 2,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/002",
+      "started_at": "2026-10-20T12:10:17.861510+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1700,
+        "completion_tokens": 1249,
+        "total_tokens": 2949,
+        "cached_tokens": 1536,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1224
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1536
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 30578.98359396495
+    },
+    {
+      "ledger": "output/api-minimal-v5-api/ledger.json",
+      "index": 3,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/003",
+      "started_at": "2026-10-20T12:10:48.445210+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1823,
+        "completion_tokens": 2193,
+        "total_tokens": 4016,
+        "cached_tokens": 1280,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2157
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1280
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 48640.35986782983
+    },
+    {
+      "ledger": "output/api-minimal-v5-api/ledger.json",
+      "index": 4,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/004",
+      "started_at": "2026-10-20T12:11:37.104812+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2040,
+        "completion_tokens": 915,
+        "total_tokens": 2955,
+        "cached_tokens": 298,
+        "completion_tokens_details": {
+          "reasoning_tokens": 881
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 298
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 32505.024027079344
+    },
+    {
+      "ledger": "output/api-minimal-v5-api/ledger.json",
+      "index": 5,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/005",
+      "started_at": "2026-10-20T12:12:09.619279+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2157,
+        "completion_tokens": 3896,
+        "total_tokens": 6053,
+        "cached_tokens": 398,
+        "completion_tokens_details": {
+          "reasoning_tokens": 3523
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 398
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 107115.60063785873
+    },
+    {
+      "ledger": "output/api-minimal-v5-api/ledger.json",
+      "index": 6,
+      "scope": "c02/active/generator",
+      "directory": "api_calls/006",
+      "started_at": "2026-10-20T12:13:56.772669+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2364,
+        "completion_tokens": 149,
+        "total_tokens": 2513,
+        "cached_tokens": 190,
+        "completion_tokens_details": {
+          "reasoning_tokens": 73
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 190
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 14708.048108965158
+    },
+    {
+      "ledger": "output/api-minimal-v5-api/ledger.json",
+      "index": 7,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/007",
+      "started_at": "2026-10-20T12:14:12.422992+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1449,
+        "completion_tokens": 644,
+        "total_tokens": 2093,
+        "cached_tokens": 1449,
+        "completion_tokens_details": {
+          "reasoning_tokens": 618
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1449
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 17595.205770106986
+    },
+    {
+      "ledger": "output/api-minimal-v5-api/ledger.json",
+      "index": 8,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/008",
+      "started_at": "2026-10-20T12:14:30.107557+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1700,
+        "completion_tokens": 2081,
+        "total_tokens": 3781,
+        "cached_tokens": 1536,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2055
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1536
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 62730.5903530214
+    },
+    {
+      "ledger": "output/api-minimal-v5-api/ledger.json",
+      "index": 9,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/009",
+      "started_at": "2026-10-20T12:15:32.853486+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1963,
+        "completion_tokens": 1871,
+        "total_tokens": 3834,
+        "cached_tokens": 1536,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1837
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1536
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 36319.53015201725
+    },
+    {
+      "ledger": "output/api-minimal-v5-api/ledger.json",
+      "index": 10,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/010",
+      "started_at": "2026-10-20T12:16:09.183742+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2180,
+        "completion_tokens": 1900,
+        "total_tokens": 4080,
+        "cached_tokens": 1792,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1866
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1792
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 55523.65978714079
+    },
+    {
+      "ledger": "output/api-minimal-v5-api/ledger.json",
+      "index": 11,
+      "scope": "c02/active/judge",
+      "directory": "api_calls/011",
+      "started_at": "2026-10-20T12:17:04.720287+00:00",
+      "status": "failed",
+      "usage": {},
+      "provider_cost": null,
+      "error_type": "ModelError",
+      "elapsed_ms": 126643.07006984018
+    },
+    {
+      "ledger": "output/api-minimal-v6-api/ledger.json",
+      "index": 1,
+      "scope": "c02/active/judge/recovery",
+      "directory": "api_calls/001",
+      "started_at": "2026-10-21T03:32:08.623210+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2297,
+        "completion_tokens": 5509,
+        "total_tokens": 7806,
+        "completion_tokens_details": {
+          "reasoning_tokens": 5310
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 158041.1404010374
+    },
+    {
+      "ledger": "output/api-minimal-v6-api/ledger.json",
+      "index": 2,
+      "scope": "c02/fixed/judge",
+      "directory": "api_calls/002",
+      "started_at": "2026-10-21T03:34:47.532031+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2197,
+        "completion_tokens": 1252,
+        "total_tokens": 3449,
+        "cached_tokens": 298,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1015
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 298
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 42244.010963942856
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 1,
+      "scope": "c00/active/judge",
+      "directory": "api_calls/001",
+      "started_at": "2026-10-21T03:36:52.398603+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1449,
+        "completion_tokens": 1018,
+        "total_tokens": 2467,
+        "cached_tokens": 182,
+        "completion_tokens_details": {
+          "reasoning_tokens": 988
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 182
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 38603.028261102736
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 2,
+      "scope": "c00/active/judge",
+      "directory": "api_calls/002",
+      "started_at": "2026-10-21T03:37:31.066526+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1709,
+        "completion_tokens": 780,
+        "total_tokens": 2489,
+        "cached_tokens": 190,
+        "completion_tokens_details": {
+          "reasoning_tokens": 746
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 190
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 20004.44132904522
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 3,
+      "scope": "c00/active/judge",
+      "directory": "api_calls/003",
+      "started_at": "2026-10-21T03:37:51.080071+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1926,
+        "completion_tokens": 1043,
+        "total_tokens": 2969,
+        "cached_tokens": 290,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1007
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 290
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 37470.25493020192
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 4,
+      "scope": "c00/active/judge",
+      "directory": "api_calls/004",
+      "started_at": "2026-10-21T03:38:28.557111+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2148,
+        "completion_tokens": 225,
+        "total_tokens": 2373,
+        "cached_tokens": 398,
+        "completion_tokens_details": {
+          "reasoning_tokens": 200
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 398
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 14165.701802121475
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 5,
+      "scope": "c00/active/judge",
+      "directory": "api_calls/005",
+      "started_at": "2026-10-21T03:38:42.729355+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2167,
+        "completion_tokens": 4518,
+        "total_tokens": 6685,
+        "cached_tokens": 506,
+        "completion_tokens_details": {
+          "reasoning_tokens": 4372
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 506
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 98348.71367295273
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 6,
+      "scope": "c00/fixed/judge",
+      "directory": "api_calls/006",
+      "started_at": "2026-10-21T03:40:21.963681+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2192,
+        "completion_tokens": 1919,
+        "total_tokens": 4111,
+        "cached_tokens": 1792,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1578
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1792
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 50843.95516710356
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 7,
+      "scope": "c00/fixed/generator",
+      "directory": "api_calls/007",
+      "started_at": "2026-10-21T03:41:12.835853+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2471,
+        "completion_tokens": 4744,
+        "total_tokens": 7215,
+        "cached_tokens": 398,
+        "completion_tokens_details": {
+          "reasoning_tokens": 4726
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 398
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 111333.23334902525
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 8,
+      "scope": "c01/fixed/judge",
+      "directory": "api_calls/008",
+      "started_at": "2026-10-21T03:43:05.827667+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2199,
+        "completion_tokens": 2103,
+        "total_tokens": 4302,
+        "cached_tokens": 190,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1823
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 190
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 42932.635822100565
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 9,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/009",
+      "started_at": "2026-10-21T03:43:49.563250+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1449,
+        "completion_tokens": 1221,
+        "total_tokens": 2670,
+        "cached_tokens": 1449,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1194
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1449
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 38518.176942830905
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 10,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/010",
+      "started_at": "2026-10-21T03:44:28.156851+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1570,
+        "completion_tokens": 487,
+        "total_tokens": 2057,
+        "cached_tokens": 1024,
+        "completion_tokens_details": {
+          "reasoning_tokens": 453
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1024
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 24543.266920140013
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 11,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/011",
+      "started_at": "2026-10-21T03:44:52.711725+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 1787,
+        "completion_tokens": 989,
+        "total_tokens": 2776,
+        "cached_tokens": 190,
+        "completion_tokens_details": {
+          "reasoning_tokens": 955
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 190
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 20900.64726700075
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 12,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/012",
+      "started_at": "2026-10-21T03:45:13.618214+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2009,
+        "completion_tokens": 1338,
+        "total_tokens": 3347,
+        "cached_tokens": 290,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1312
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 290
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 35685.38262788206
+    },
+    {
+      "ledger": "output/api-paired-v6-api/ledger.json",
+      "index": 13,
+      "scope": "c01/active/judge",
+      "directory": "api_calls/013",
+      "started_at": "2026-10-21T03:45:49.311756+00:00",
+      "status": "complete",
+      "usage": {
+        "prompt_tokens": 2162,
+        "completion_tokens": 2685,
+        "total_tokens": 4847,
+        "cached_tokens": 398,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2455
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 398
+        }
+      },
+      "provider_cost": null,
+      "returned_model": "k3-256k",
+      "finish_reason": "stop",
+      "elapsed_ms": 49512.82240985893
+    }
+  ],
+  "runs": [
+    {
+      "path": "output/api-minimal-v6",
+      "status": "complete",
+      "error": null
+    },
+    {
+      "path": "output/api-paired-v6",
+      "status": "complete",
+      "error": null
+    }
+  ],
+  "paired_rows": [
+    {
+      "run": "output/api-minimal-v6",
+      "case": "c02",
+      "mode": "active",
+      "initial_inputs_equal": true,
+      "initial_labels_valid": true,
+      "diagnosis": {
+        "verdict": "fail",
+        "detection_correct": true,
+        "type_exact": true,
+        "out_of_scope_findings": [],
+        "part_localization": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "joint_localization_exact": true,
+        "citation_count": 1,
+        "citations_exist": true,
+        "geometric_witness_consistent_findings": 1,
+        "finding_count": 1,
+        "observations": 4,
+        "observation_time_ms": 129.56752418540418,
+        "model_calls": 5
+      },
+      "final_code_correct": true,
+      "first_correct_round": 1,
+      "verifier_status": "accepted",
+      "verifier_accepted": true,
+      "visual_repair_calls": 1,
+      "total_observations": 8,
+      "api_cost": {
+        "requests": 12,
+        "tokens": 42939,
+        "usage_reported_requests": 11,
+        "requests_without_usage": 1,
+        "elapsed_ms": 729753.5537709482,
+        "reported_cost_count": 0,
+        "provider_cost_total": null
+      },
+      "actions": [
+        [
+          {
+            "view_id": "front",
+            "__type__": "RequestView"
+          },
+          {
+            "property": "stats",
+            "__type__": "QueryRuntime"
+          },
+          {
+            "joint_id": "drawer_slide",
+            "detent": "limit",
+            "__type__": "ActuateJoint"
+          },
+          {
+            "joint_id": "door_hinge",
+            "detent": "limit",
+            "__type__": "ActuateJoint"
+          }
+        ],
+        [
+          {
+            "view_id": "front",
+            "__type__": "RequestView"
+          },
+          {
+            "view_id": "right",
+            "__type__": "RequestView"
+          },
+          {
+            "joint_id": "drawer_slide",
+            "detent": "limit",
+            "__type__": "ActuateJoint"
+          },
+          {
+            "joint_id": "door_hinge",
+            "detent": "limit",
+            "__type__": "ActuateJoint"
+          }
+        ]
+      ]
+    },
+    {
+      "run": "output/api-minimal-v6",
+      "case": "c02",
+      "mode": "fixed",
+      "initial_inputs_equal": true,
+      "initial_labels_valid": true,
+      "diagnosis": {
+        "verdict": "pass",
+        "detection_correct": false,
+        "type_exact": false,
+        "out_of_scope_findings": [],
+        "part_localization": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "joint_localization_exact": false,
+        "citation_count": 0,
+        "citations_exist": true,
+        "geometric_witness_consistent_findings": 0,
+        "finding_count": 0,
+        "observations": 4,
+        "observation_time_ms": 69.4026059936732,
+        "model_calls": 1
+      },
+      "final_code_correct": false,
+      "first_correct_round": null,
+      "verifier_status": "accepted",
+      "verifier_accepted": true,
+      "visual_repair_calls": 0,
+      "total_observations": 4,
+      "api_cost": {
+        "requests": 1,
+        "tokens": 3449,
+        "usage_reported_requests": 1,
+        "requests_without_usage": 0,
+        "elapsed_ms": 42244.010963942856,
+        "reported_cost_count": 0,
+        "provider_cost_total": null
+      },
+      "actions": [
+        [
+          {
+            "property": "stats",
+            "__type__": "QueryRuntime"
+          },
+          {
+            "view_id": "front",
+            "__type__": "RequestView"
+          },
+          {
+            "view_id": "oblique_fr",
+            "__type__": "RequestView"
+          },
+          {
+            "joint_id": "drawer_slide",
+            "detent": "limit",
+            "__type__": "ActuateJoint"
+          }
+        ]
+      ]
+    },
+    {
+      "run": "output/api-paired-v6",
+      "case": "c00",
+      "mode": "active",
+      "initial_inputs_equal": true,
+      "initial_labels_valid": true,
+      "diagnosis": {
+        "verdict": "pass",
+        "detection_correct": true,
+        "type_exact": true,
+        "out_of_scope_findings": [],
+        "part_localization": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "joint_localization_exact": true,
+        "citation_count": 0,
+        "citations_exist": true,
+        "geometric_witness_consistent_findings": 0,
+        "finding_count": 0,
+        "observations": 4,
+        "observation_time_ms": 79.2230418883264,
+        "model_calls": 5
+      },
+      "final_code_correct": true,
+      "first_correct_round": 0,
+      "verifier_status": "accepted",
+      "verifier_accepted": true,
+      "visual_repair_calls": 0,
+      "total_observations": 4,
+      "api_cost": {
+        "requests": 5,
+        "tokens": 16983,
+        "usage_reported_requests": 5,
+        "requests_without_usage": 0,
+        "elapsed_ms": 208592.13999542408,
+        "reported_cost_count": 0,
+        "provider_cost_total": null
+      },
+      "actions": [
+        [
+          {
+            "view_id": "oblique_fr",
+            "__type__": "RequestView"
+          },
+          {
+            "joint_id": "drawer_slide",
+            "detent": "limit",
+            "__type__": "ActuateJoint"
+          },
+          {
+            "joint_id": "door_hinge",
+            "detent": "limit",
+            "__type__": "ActuateJoint"
+          },
+          {
+            "property": "stats",
+            "__type__": "QueryRuntime"
+          }
+        ]
+      ]
+    },
+    {
+      "run": "output/api-paired-v6",
+      "case": "c00",
+      "mode": "fixed",
+      "initial_inputs_equal": true,
+      "initial_labels_valid": true,
+      "diagnosis": {
+        "verdict": "fail",
+        "detection_correct": false,
+        "type_exact": false,
+        "out_of_scope_findings": [],
+        "part_localization": {
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "joint_localization_exact": false,
+        "citation_count": 2,
+        "citations_exist": true,
+        "geometric_witness_consistent_findings": 0,
+        "finding_count": 1,
+        "observations": 4,
+        "observation_time_ms": 72.62926478870213,
+        "model_calls": 1
+      },
+      "final_code_correct": true,
+      "first_correct_round": 0,
+      "verifier_status": "max_visual_revisions",
+      "verifier_accepted": false,
+      "visual_repair_calls": 1,
+      "total_observations": 4,
+      "api_cost": {
+        "requests": 2,
+        "tokens": 11326,
+        "usage_reported_requests": 2,
+        "requests_without_usage": 0,
+        "elapsed_ms": 162177.1885161288,
+        "reported_cost_count": 0,
+        "provider_cost_total": null
+      },
+      "actions": [
+        [
+          {
+            "property": "stats",
+            "__type__": "QueryRuntime"
+          },
+          {
+            "view_id": "front",
+            "__type__": "RequestView"
+          },
+          {
+            "view_id": "oblique_fr",
+            "__type__": "RequestView"
+          },
+          {
+            "joint_id": "drawer_slide",
+            "detent": "limit",
+            "__type__": "ActuateJoint"
+          }
+        ]
+      ]
+    },
+    {
+      "run": "output/api-paired-v6",
+      "case": "c01",
+      "mode": "active",
+      "initial_inputs_equal": true,
+      "initial_labels_valid": true,
+      "diagnosis": {
+        "verdict": "pass",
+        "detection_correct": false,
+        "type_exact": false,
+        "out_of_scope_findings": [],
+        "part_localization": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "joint_localization_exact": true,
+        "citation_count": 0,
+        "citations_exist": true,
+        "geometric_witness_consistent_findings": 0,
+        "finding_count": 0,
+        "observations": 4,
+        "observation_time_ms": 96.33817034773529,
+        "model_calls": 5
+      },
+      "final_code_correct": false,
+      "first_correct_round": null,
+      "verifier_status": "accepted",
+      "verifier_accepted": true,
+      "visual_repair_calls": 0,
+      "total_observations": 4,
+      "api_cost": {
+        "requests": 5,
+        "tokens": 15697,
+        "usage_reported_requests": 5,
+        "requests_without_usage": 0,
+        "elapsed_ms": 169160.29616771266,
+        "reported_cost_count": 0,
+        "provider_cost_total": null
+      },
+      "actions": [
+        [
+          {
+            "property": "stats",
+            "__type__": "QueryRuntime"
+          },
+          {
+            "joint_id": "drawer_slide",
+            "detent": "limit",
+            "__type__": "ActuateJoint"
+          },
+          {
+            "joint_id": "door_hinge",
+            "detent": "limit",
+            "__type__": "ActuateJoint"
+          },
+          {
+            "view_id": "top",
+            "__type__": "RequestView"
+          }
+        ]
+      ]
+    },
+    {
+      "run": "output/api-paired-v6",
+      "case": "c01",
+      "mode": "fixed",
+      "initial_inputs_equal": true,
+      "initial_labels_valid": true,
+      "diagnosis": {
+        "verdict": "pass",
+        "detection_correct": false,
+        "type_exact": false,
+        "out_of_scope_findings": [],
+        "part_localization": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "joint_localization_exact": true,
+        "citation_count": 0,
+        "citations_exist": true,
+        "geometric_witness_consistent_findings": 0,
+        "finding_count": 0,
+        "observations": 4,
+        "observation_time_ms": 69.45357308723032,
+        "model_calls": 1
+      },
+      "final_code_correct": false,
+      "first_correct_round": null,
+      "verifier_status": "accepted",
+      "verifier_accepted": true,
+      "visual_repair_calls": 0,
+      "total_observations": 4,
+      "api_cost": {
+        "requests": 1,
+        "tokens": 4302,
+        "usage_reported_requests": 1,
+        "requests_without_usage": 0,
+        "elapsed_ms": 42932.635822100565,
+        "reported_cost_count": 0,
+        "provider_cost_total": null
+      },
+      "actions": [
+        [
+          {
+            "property": "stats",
+            "__type__": "QueryRuntime"
+          },
+          {
+            "view_id": "front",
+            "__type__": "RequestView"
+          },
+          {
+            "view_id": "oblique_fr",
+            "__type__": "RequestView"
+          },
+          {
+            "joint_id": "drawer_slide",
+            "detent": "limit",
+            "__type__": "ActuateJoint"
+          }
+        ]
+      ]
+    }
+  ],
+  "limitations": [
+    "Missing usage/cost is unknown, never zero.",
+    "Geometric witness consistency does not establish full semantic evidence correctness."
+  ]
+}

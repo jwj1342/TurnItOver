@@ -1,0 +1,1107 @@
+{
+  "source": "independent offline reconstruction from api_calls request/response/metadata and SSE; ledger scope/order/elapsed validated against summary",
+  "totals": {
+    "request_attempts": 44,
+    "request_status": {
+      "failed": 5,
+      "complete": 39
+    },
+    "reported_tokens": 145467,
+    "attempts_without_usage": 4,
+    "reported_cost_count": 0,
+    "provider_cost_total": null,
+    "elapsed_ms": 2150386.5688070655
+  },
+  "response_objects": 40,
+  "runs": [
+    {
+      "run": "api-prepared-v1-api",
+      "requests": 1,
+      "complete": 0,
+      "failed": 1,
+      "raw_reported_tokens": 0,
+      "unknown_usage": 1
+    },
+    {
+      "run": "api-diagnostic-v1-api",
+      "requests": 1,
+      "complete": 0,
+      "failed": 1,
+      "raw_reported_tokens": 0,
+      "unknown_usage": 1
+    },
+    {
+      "run": "api-prepared-v2-api",
+      "requests": 1,
+      "complete": 1,
+      "failed": 0,
+      "raw_reported_tokens": 3673,
+      "unknown_usage": 0
+    },
+    {
+      "run": "api-minimal-v2-api",
+      "requests": 4,
+      "complete": 3,
+      "failed": 1,
+      "raw_reported_tokens": 8291,
+      "unknown_usage": 1
+    },
+    {
+      "run": "api-minimal-v3-api",
+      "requests": 6,
+      "complete": 6,
+      "failed": 0,
+      "raw_reported_tokens": 21736,
+      "unknown_usage": 0
+    },
+    {
+      "run": "api-minimal-v4-api",
+      "requests": 5,
+      "complete": 4,
+      "failed": 1,
+      "raw_reported_tokens": 17071,
+      "unknown_usage": 0
+    },
+    {
+      "run": "api-minimal-v5-api",
+      "requests": 11,
+      "complete": 10,
+      "failed": 1,
+      "raw_reported_tokens": 35133,
+      "unknown_usage": 1
+    },
+    {
+      "run": "api-minimal-v6-api",
+      "requests": 2,
+      "complete": 2,
+      "failed": 0,
+      "raw_reported_tokens": 11255,
+      "unknown_usage": 0
+    },
+    {
+      "run": "api-paired-v6-api",
+      "requests": 13,
+      "complete": 13,
+      "failed": 0,
+      "raw_reported_tokens": 48308,
+      "unknown_usage": 0
+    }
+  ],
+  "paired_totals": {
+    "request_attempts": 26,
+    "request_status": {
+      "complete": 25,
+      "failed": 1
+    },
+    "reported_tokens": 94696,
+    "attempts_without_usage": 1,
+    "reported_cost_count": 0,
+    "provider_cost_total": null,
+    "elapsed_ms": 1354859.8252362572
+  },
+  "paired_mode_totals": {
+    "active": {
+      "request_attempts": 22,
+      "request_status": {
+        "complete": 21,
+        "failed": 1
+      },
+      "reported_tokens": 75619,
+      "attempts_without_usage": 1,
+      "reported_cost_count": 0,
+      "provider_cost_total": null,
+      "elapsed_ms": 1107505.989934085,
+      "role_counts": {
+        "judge": 21,
+        "generator": 1
+      }
+    },
+    "fixed": {
+      "request_attempts": 4,
+      "request_status": {
+        "complete": 4
+      },
+      "reported_tokens": 19077,
+      "attempts_without_usage": 0,
+      "reported_cost_count": 0,
+      "provider_cost_total": null,
+      "elapsed_ms": 247353.83530217223,
+      "role_counts": {
+        "judge": 3,
+        "generator": 1
+      }
+    }
+  },
+  "shared_generation": {
+    "request_attempts": 1,
+    "request_status": {
+      "complete": 1
+    },
+    "reported_tokens": 3673,
+    "attempts_without_usage": 0,
+    "reported_cost_count": 0,
+    "provider_cost_total": null,
+    "elapsed_ms": 84140.28876903467
+  },
+  "debug_and_other": {
+    "request_attempts": 17,
+    "request_status": {
+      "failed": 4,
+      "complete": 13
+    },
+    "reported_tokens": 47098,
+    "attempts_without_usage": 3,
+    "reported_cost_count": 0,
+    "provider_cost_total": null,
+    "elapsed_ms": 711386.4548017737
+  },
+  "request_models": {
+    "k3-256k": 44
+  },
+  "response_models": {
+    "k3-256k": 40
+  },
+  "request_temperatures": {
+    "0": 2,
+    "1": 42
+  },
+  "failures": [
+    {
+      "run": "api-prepared-v1-api",
+      "index": 1,
+      "scope": "shared/generator",
+      "status": "failed",
+      "raw_response_present": false,
+      "requested_model": "k3-256k",
+      "returned_model": null,
+      "temperature": 0,
+      "max_tokens": 4096,
+      "stream": false,
+      "usage": {},
+      "provider_cost": null,
+      "elapsed_ms": 9337.655746145174,
+      "error": {
+        "type": "HTTPError",
+        "http_code": 400
+      },
+      "raw_finish_reason": null,
+      "metadata_finish_reason": null,
+      "ledger": "output/api-prepared-v1-api/ledger.json",
+      "directory": "output/api-prepared-v1-api/api_calls/001"
+    },
+    {
+      "run": "api-diagnostic-v1-api",
+      "index": 1,
+      "scope": "diagnostic/original-request",
+      "status": "failed",
+      "raw_response_present": false,
+      "requested_model": "k3-256k",
+      "returned_model": null,
+      "temperature": 0,
+      "max_tokens": 4096,
+      "stream": false,
+      "usage": {},
+      "provider_cost": null,
+      "elapsed_ms": 1971.2490169331431,
+      "error": {
+        "type": "HTTPError",
+        "http_code": 400
+      },
+      "raw_finish_reason": null,
+      "metadata_finish_reason": null,
+      "ledger": "output/api-diagnostic-v1-api/ledger.json",
+      "directory": "output/api-diagnostic-v1-api/api_calls/001"
+    },
+    {
+      "run": "api-minimal-v2-api",
+      "index": 4,
+      "scope": "c01/active/judge",
+      "status": "failed",
+      "raw_response_present": false,
+      "requested_model": "k3-256k",
+      "returned_model": null,
+      "temperature": 1,
+      "max_tokens": 4096,
+      "stream": false,
+      "usage": {},
+      "provider_cost": null,
+      "elapsed_ms": 120727.63865510933,
+      "error": {
+        "type": "TimeoutError",
+        "http_code": null
+      },
+      "raw_finish_reason": null,
+      "metadata_finish_reason": null,
+      "ledger": "output/api-minimal-v2-api/ledger.json",
+      "directory": "output/api-minimal-v2-api/api_calls/004"
+    },
+    {
+      "run": "api-minimal-v4-api",
+      "index": 5,
+      "scope": "c02/active/judge",
+      "status": "failed",
+      "raw_response_present": true,
+      "requested_model": "k3-256k",
+      "returned_model": "k3-256k",
+      "temperature": 1,
+      "max_tokens": 4096,
+      "stream": false,
+      "usage": {
+        "prompt_tokens": 2297,
+        "completion_tokens": 4096,
+        "total_tokens": 6393,
+        "cached_tokens": 506,
+        "completion_tokens_details": {
+          "reasoning_tokens": 4096
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 506
+        }
+      },
+      "provider_cost": null,
+      "elapsed_ms": 104049.62153104134,
+      "error": {
+        "type": "ModelError",
+        "http_code": null
+      },
+      "raw_finish_reason": "length",
+      "metadata_finish_reason": null,
+      "ledger": "output/api-minimal-v4-api/ledger.json",
+      "directory": "output/api-minimal-v4-api/api_calls/005"
+    },
+    {
+      "run": "api-minimal-v5-api",
+      "index": 11,
+      "scope": "c02/active/judge",
+      "status": "failed",
+      "raw_response_present": false,
+      "requested_model": "k3-256k",
+      "returned_model": null,
+      "temperature": 1,
+      "max_tokens": 8192,
+      "stream": false,
+      "usage": {},
+      "provider_cost": null,
+      "elapsed_ms": 126643.07006984018,
+      "error": {
+        "type": "HTTPError",
+        "http_code": 524
+      },
+      "raw_finish_reason": null,
+      "metadata_finish_reason": null,
+      "ledger": "output/api-minimal-v5-api/ledger.json",
+      "directory": "output/api-minimal-v5-api/api_calls/011"
+    }
+  ],
+  "sse_checks": [
+    {
+      "path": "output/api-minimal-v6-api/api_calls/001/response.sse",
+      "chunk_count": 5497,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-minimal-v6-api/api_calls/002/response.sse",
+      "chunk_count": 1243,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/001/response.sse",
+      "chunk_count": 1006,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/002/response.sse",
+      "chunk_count": 771,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/003/response.sse",
+      "chunk_count": 1031,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/004/response.sse",
+      "chunk_count": 216,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/005/response.sse",
+      "chunk_count": 4508,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/006/response.sse",
+      "chunk_count": 1910,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/007/response.sse",
+      "chunk_count": 4735,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/008/response.sse",
+      "chunk_count": 2094,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/009/response.sse",
+      "chunk_count": 1209,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/010/response.sse",
+      "chunk_count": 478,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/011/response.sse",
+      "chunk_count": 980,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/012/response.sse",
+      "chunk_count": 1329,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/013/response.sse",
+      "chunk_count": 2671,
+      "checks": {
+        "done_once": true,
+        "no_unparsed_lines": true,
+        "model_matches": true,
+        "usage_matches": true,
+        "content_matches": true,
+        "reasoning_matches": true,
+        "finish_reason_matches": true
+      }
+    }
+  ],
+  "recovery": {
+    "request_equal_except_stream": true,
+    "prompt_bytes_equal": true,
+    "image_files_equal": true
+  },
+  "problems": [],
+  "notes": [
+    "Known usage in the empty-content length-limited response is included (6393 tokens).",
+    "The empty-content failure metadata omits returned_model/finish_reason despite these existing in response.json; this is a metadata fidelity issue, not an aggregate cost discrepancy.",
+    "Elapsed milliseconds use ledger wrapper timing; request metadata measures an inner duration and is intentionally not equal.",
+    "Provider cost is absent/unknown everywhere; observed request attempts do not establish billing or an enforced currency cap."
+  ],
+  "input_hashes": [
+    {
+      "path": "output/api-prepared-v1-api/api_calls/001/request.json",
+      "sha256": "d7747cf41d13d63e099eb45a707cd3a8ca483ce88c3bf1d5620a35330e87e1b7"
+    },
+    {
+      "path": "output/api-prepared-v1-api/api_calls/001/metadata.json",
+      "sha256": "05aa6662a439fad2cfe25fb29e0af7bb01301e18a5e93ad27ed09c88544c9a35"
+    },
+    {
+      "path": "output/api-prepared-v1-api/api_calls/001/error.json",
+      "sha256": "35d28daefd1bacbc0a1ffb486689cef5f8336021dff8544ae80c428c0a413ab8"
+    },
+    {
+      "path": "output/api-diagnostic-v1-api/api_calls/001/request.json",
+      "sha256": "d7747cf41d13d63e099eb45a707cd3a8ca483ce88c3bf1d5620a35330e87e1b7"
+    },
+    {
+      "path": "output/api-diagnostic-v1-api/api_calls/001/metadata.json",
+      "sha256": "0a60ef7a12a7f2e557922430f625b7599e7a926dd570c40c72807b4c7cc20ef5"
+    },
+    {
+      "path": "output/api-diagnostic-v1-api/api_calls/001/error.json",
+      "sha256": "35d28daefd1bacbc0a1ffb486689cef5f8336021dff8544ae80c428c0a413ab8"
+    },
+    {
+      "path": "output/api-diagnostic-v1-api/api_calls/001/http_error.json",
+      "sha256": "a487d46412181b39f87f4ae7734f4e93f5975cb0a2f35c6c36b98611b455fe0f"
+    },
+    {
+      "path": "output/api-prepared-v2-api/api_calls/001/request.json",
+      "sha256": "cc8800bdce19f00ca1d0f0a6c6998dde057ff551e79bd22c8333db9d6eab1c83"
+    },
+    {
+      "path": "output/api-prepared-v2-api/api_calls/001/metadata.json",
+      "sha256": "3643474cce302f3ea39073e12970267ac17c9192c80d8ad9cbf32410d66fbfcb"
+    },
+    {
+      "path": "output/api-prepared-v2-api/api_calls/001/response.json",
+      "sha256": "2f0459cf9c5801458d2a5c8069f059dabdf13cbfae244bef59713757703de356"
+    },
+    {
+      "path": "output/api-minimal-v2-api/api_calls/001/request.json",
+      "sha256": "f2097eaa178bf9600e6a5a2313c0c8bc0056d525e91bcefdccaed84fe9ad8c4c"
+    },
+    {
+      "path": "output/api-minimal-v2-api/api_calls/001/metadata.json",
+      "sha256": "7018b446e19295ef9d42fb38745804b0ba6bba0b4a89cb37559464f17a31b3a3"
+    },
+    {
+      "path": "output/api-minimal-v2-api/api_calls/001/response.json",
+      "sha256": "2ee10bc8e54abdf0f5cce77b4b7970018fd327d6806d10a57fb7e889a99532cb"
+    },
+    {
+      "path": "output/api-minimal-v2-api/api_calls/002/request.json",
+      "sha256": "223d384baade0d17edac38d37a236685333692f72b4e9adfc347d9b238a8013c"
+    },
+    {
+      "path": "output/api-minimal-v2-api/api_calls/002/metadata.json",
+      "sha256": "063bdb754e1a5186c1cfbe2aa5b5e8588a8d5cdba148cef62ff7ec547a3f04c4"
+    },
+    {
+      "path": "output/api-minimal-v2-api/api_calls/002/response.json",
+      "sha256": "da0550f9e8c40a99133dbf4dfd65f5d789476b95472d069c86c425e3a4abaa5a"
+    },
+    {
+      "path": "output/api-minimal-v2-api/api_calls/003/request.json",
+      "sha256": "306e7e81c9d9d39fa2c8b5b31ab4f7bcb5c42824368c91a459e941f7f28566cc"
+    },
+    {
+      "path": "output/api-minimal-v2-api/api_calls/003/metadata.json",
+      "sha256": "c41da30b099c07abc33075f10993f8aed33f8516ff616cf9f539ea0f23f29a6d"
+    },
+    {
+      "path": "output/api-minimal-v2-api/api_calls/003/response.json",
+      "sha256": "fa290984e0143f02f2a1b97f8a81f380de8787b45a078f7f7d42696a1c5d7f89"
+    },
+    {
+      "path": "output/api-minimal-v2-api/api_calls/004/request.json",
+      "sha256": "9ddaef3cd072c9ab478f42d89d8666ebf5b44be7e442f706e27657bc400d065e"
+    },
+    {
+      "path": "output/api-minimal-v2-api/api_calls/004/metadata.json",
+      "sha256": "fc9dbac949bf2db6ccb0214dd90cae9ad2cf8aaa14c928967b33c579d6b85151"
+    },
+    {
+      "path": "output/api-minimal-v2-api/api_calls/004/error.json",
+      "sha256": "7c381c7e928fa6ff9fcc24ffba5a81cda2cdfb2858c181ea64d9d4e63701fb73"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/001/request.json",
+      "sha256": "f2097eaa178bf9600e6a5a2313c0c8bc0056d525e91bcefdccaed84fe9ad8c4c"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/001/metadata.json",
+      "sha256": "a85bc9ee0f7a71e7c97944793a26ec9d953c330a4900a3058952a0b498cdc6d6"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/001/response.json",
+      "sha256": "a43ff9d17b161d4594a1dd8e9ba7e457ad0082d943edb6de17712a9dbdd173ba"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/002/request.json",
+      "sha256": "68f68317cf32bf726485b0c2abafd0da53d37f7023ac4bc0b19e7aeb36974019"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/002/metadata.json",
+      "sha256": "d16f93adcefe0c7e2634f839d188fb584e220a549f3d1d6cbcd662b6831780ac"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/002/response.json",
+      "sha256": "68a181efd567aa69c31f6777736a66823a73da94a4b764a1759de4f8cabc0beb"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/003/request.json",
+      "sha256": "012e594db7110cb6070c68ab2e3f9db391ff27c4be95e3123095528d735c5ae5"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/003/metadata.json",
+      "sha256": "cb422ce339a7d68135dfa401db9b76c0a33a97f4cd8192bc5a3ebacc20336ada"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/003/response.json",
+      "sha256": "6c7b18391d74346b4bd7a2eb155fbfd8185e2486fee9af95422651e4cb51bac8"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/004/request.json",
+      "sha256": "48db49038cc1eaef721a06cc82ad75f3463207a8fdbfe29940d2492d12b7cf4a"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/004/metadata.json",
+      "sha256": "bff0b3668c1ef7348cfd24dbf37e5142e88653f5e6eda27232f0482b56970dcb"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/004/response.json",
+      "sha256": "f0cc0e66ce45edc30fb49f1e7e7916d70e97a2f30ce5920e2965de1a7f5a2c78"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/005/request.json",
+      "sha256": "9355dbc04b95f4251b8c2f41660ec7b64d917453803854300cdcba7ba6c91f28"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/005/metadata.json",
+      "sha256": "39cc08901897c4e79db3844598377389ee77a95613f3d572cd2697d5c3631943"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/005/response.json",
+      "sha256": "adc8d445b33eba5485b9f28485b6d21b7b6677163e7e19f43f776a4ed4e8d596"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/006/request.json",
+      "sha256": "e0857f66d4c7726a07fc4b499c8fca1166cbf2947ddd70ca6790346a1f49cd20"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/006/metadata.json",
+      "sha256": "c66df02011f19f8966a6536103d2da3aa0e2220f3c9b14d9f981a50c2db96bc1"
+    },
+    {
+      "path": "output/api-minimal-v3-api/api_calls/006/response.json",
+      "sha256": "731c81e4c0cab9279912b06b299845f18d3643dd067f33c6c0cf908d3f492c46"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/001/request.json",
+      "sha256": "4fd05423594b73cc9ede1dec1c18d972bc0142064ae940242888572d6a3f85d0"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/001/metadata.json",
+      "sha256": "ccf0c0dc6d939a1de135fe89097ca0220ac86eb912d591affbb89c70d6377744"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/001/response.json",
+      "sha256": "3493bfa1133ef3adc2ee81a4a383d5d610f4a233c32d29d373cc5d50279b5e2f"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/002/request.json",
+      "sha256": "2cca67e107b5fb7329c05818166d191d56b132fd13df95c71e478c3d3d2745f3"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/002/metadata.json",
+      "sha256": "ea6b27ce52488b13f2501c5255431a3e24a843a2495c9e461c27bc8dbba6457c"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/002/response.json",
+      "sha256": "fff821961a9c0b7df25bccaee90fa0146981ef20c10ee9c92e25315431a744a5"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/003/request.json",
+      "sha256": "bc38a4b8800e5d269d4cf2f82eeff54e9fdc8d9b2824cd4e1d92a13b3496b357"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/003/metadata.json",
+      "sha256": "28e703fd70a6015ff12e3f026b7f9558446e54f878c39d13f0dc107165fd10d1"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/003/response.json",
+      "sha256": "83204ec3d4333b3a68ceb72b60b7fd93a2dd14224a2f12deb84fcb7961692f85"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/004/request.json",
+      "sha256": "f25ed5675d515db8141461dfdc19bf52b44c0c005dd360d918fafb112b44fbd8"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/004/metadata.json",
+      "sha256": "57c15ffba99238392e57603157136c7be83c9dab8fe57aa481ed58a9e9db58e5"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/004/response.json",
+      "sha256": "a734b6f1513e65f7aa630d3cc78f8887c21511a2e48f9905b68c3fb6c1e447d8"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/005/request.json",
+      "sha256": "69fa676d6093cd5189bfbb5ab0dd87bd042f26f7175d915f7423448daae38356"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/005/metadata.json",
+      "sha256": "0da93fb388983931c916a78812c7be1a73cf7fa81c7eaa8db4193a81e8fc982a"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/005/response.json",
+      "sha256": "3f53bb42830da0e0fef5408240c8f563f90a01b75bd9edab90770cb6272b32fa"
+    },
+    {
+      "path": "output/api-minimal-v4-api/api_calls/005/error.json",
+      "sha256": "9608936dc0e4a51c79562843acbcbd046438dda0516d6615bea63a45d7a5b66b"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/001/request.json",
+      "sha256": "1d8f819a7ff3ae208beb36e15c3efddd8307e912f7072016dc885b89a40d3238"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/001/metadata.json",
+      "sha256": "586a986538d0156ec06ee56d1c3407625d7b26bc6236c29987cae28ecb32c70a"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/001/response.json",
+      "sha256": "4ee4102140c3f9a53fbacc8650e1362ed56f037de47286649e6ef0f1f803483b"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/002/request.json",
+      "sha256": "7f7a90506728abc8e8b422e13c647598c90d81d136511c1f3c5cf94954f91fe2"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/002/metadata.json",
+      "sha256": "579c3c051ab9736e464d2b9160c1b41ccec49de45aa7aca6586ae073fd291903"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/002/response.json",
+      "sha256": "d4e2f936ec9a7e96300f826521efe6cceefccb662b0c1d1bb16b9842a4ab91af"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/003/request.json",
+      "sha256": "48b138292fab625e0aff0da02c5e9952fcffc5a0d0d4458d0ed1fe543b1859b7"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/003/metadata.json",
+      "sha256": "4b6356edd60c4f0885bc0bcaaf8dcf2544abee7bba99cf15acbf10c705df99fc"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/003/response.json",
+      "sha256": "4e62b47890e6d830d20333ffae1773d55cf256cd83457f59435c324d522d68ba"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/004/request.json",
+      "sha256": "739a00318509bb4ac43430d547ebc484f7173b88aa0214cb47eec7b0e6314669"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/004/metadata.json",
+      "sha256": "cc7e67e601b50e2629204cc00b37cec780199e8a8e095158e1f7710f5a0115ab"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/004/response.json",
+      "sha256": "e58cb9a08437a3faf2c4bed2b4955d2144eb16d87485e27892e351b723d59b71"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/005/request.json",
+      "sha256": "0fde3ac9975bc44752c5f753c573a711c341eec3d52fd2f1fd7328c9d8624a4a"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/005/metadata.json",
+      "sha256": "8eeaaf377793b589a933f6daeee389882937ad225ce87aa24a408f85e14843a6"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/005/response.json",
+      "sha256": "b788869f985bd83423267444de053c07140bbd3b3b6bd97894bd7771873d3b8f"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/006/request.json",
+      "sha256": "7b7a616ca5d8797d3adf4b92d352142daae0cd9e5ee2813d5a1a521093e27f7a"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/006/metadata.json",
+      "sha256": "7f51bd2bbbcfb3c2c0843290fa22ce34addb3fc7dd261dce8b23d634a7c129d3"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/006/response.json",
+      "sha256": "6576e70dd98e45f450c7d3f5d0cdb02240f0fa398de062502e51c388af957a6e"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/007/request.json",
+      "sha256": "1d8f819a7ff3ae208beb36e15c3efddd8307e912f7072016dc885b89a40d3238"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/007/metadata.json",
+      "sha256": "333b3d6a52ba6c4aeade3dafe44e227089a51465e9c8b206183dd98a2ad53041"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/007/response.json",
+      "sha256": "9d302e4294782600f805dd296c53fc502c50bcd1b7a9d42114b81d910a4ae43d"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/008/request.json",
+      "sha256": "1b02783872b1a2d146684742365a2ee079038b611ecb3c0cf950971d503811cc"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/008/metadata.json",
+      "sha256": "9736e30b8a5078a3133b2cedd589c9003f1fb529dcc83126fad217644e6f375c"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/008/response.json",
+      "sha256": "38efe703b57184af501afe9134a89d3962e3127c0a348c86529c97d970eefed9"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/009/request.json",
+      "sha256": "f5f3335e8196196ad8b623af83b29562fdcd6af443c1095ebdd190b012ccd119"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/009/metadata.json",
+      "sha256": "40a45e49087822c596f9558dbc60e03d126037d2235e1b278cce4dbbfc2136a9"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/009/response.json",
+      "sha256": "b581633a26f1ad0ca0f63995663cac45b14a236338c72ce9d90ed579235c3fb7"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/010/request.json",
+      "sha256": "ede4f95b303346be86a4085d80a10f8a946b42b5a068d95e45d4fc95e0517adf"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/010/metadata.json",
+      "sha256": "9d5e31dc57502a2b89446bd947b15f86cd61fb1d26d3faf203f4b67bc334780e"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/010/response.json",
+      "sha256": "938a77815283010ff6abb7033cbfaa3c76c725d94a4d597bdf75aab911aeb85a"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/011/request.json",
+      "sha256": "b7394c2f0f8929c2ec32d63ddcfa8f0ff2b8c7a6e88b9b1a16008c1f307392da"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/011/metadata.json",
+      "sha256": "9dbcf6b51416da5a234f2bd46fa892fdd0fedf077be4db319dc239dc97f24721"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/011/error.json",
+      "sha256": "5ef4b5599182c96c92593b113c4f68c8650dd2151574acae72edf47b33693fe0"
+    },
+    {
+      "path": "output/api-minimal-v5-api/api_calls/011/http_error.json",
+      "sha256": "6de18b8e8f64d51477fd5b8e75d89524e6c91b309995952891de7b491a7a66a5"
+    },
+    {
+      "path": "output/api-minimal-v6-api/api_calls/001/request.json",
+      "sha256": "5d5973fa4398df12d333c3518e12509a493ea5cba56c85e138fa4509fc91dc25"
+    },
+    {
+      "path": "output/api-minimal-v6-api/api_calls/001/metadata.json",
+      "sha256": "406770516a0670df5407a20a39694851add394ab0354dc1f4e8a1fe6f7a8bbb5"
+    },
+    {
+      "path": "output/api-minimal-v6-api/api_calls/001/response.json",
+      "sha256": "ec01616d706011a93bc57fcf1fb453d369bcc5e73dab51f9b25c247379e4d0ca"
+    },
+    {
+      "path": "output/api-minimal-v6-api/api_calls/001/response.sse",
+      "sha256": "f381dccef67e643805288b6c767120a17ab32500a0a9c89cdeff1822c173e3d7"
+    },
+    {
+      "path": "output/api-minimal-v6-api/api_calls/002/request.json",
+      "sha256": "20ad2ad0e09b4d0051d81332f6c6c54eb612af11ed33b3807a607cdedd44169a"
+    },
+    {
+      "path": "output/api-minimal-v6-api/api_calls/002/metadata.json",
+      "sha256": "89f04dd5d9054fdf669767a086b167c6e417ae26154f298b97d7a96c0f4333b0"
+    },
+    {
+      "path": "output/api-minimal-v6-api/api_calls/002/response.json",
+      "sha256": "c9ecc03cfbcd243e59aa6b9da816ff1ad3a4cbab9c1e7c162eec60bdb9d50b24"
+    },
+    {
+      "path": "output/api-minimal-v6-api/api_calls/002/response.sse",
+      "sha256": "cfd1b6eabab7aca3271efc720a618c9cb58836224de69dc760fcf2afd3a71a09"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/001/request.json",
+      "sha256": "9c4d57900c0172d2fe4ae318b63793cb459bf1c1d7c22795b190829f897b7cd2"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/001/metadata.json",
+      "sha256": "fafdd868dda1be46d8969c15a5a020e101749368b65be6cfc42766395ff045e3"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/001/response.json",
+      "sha256": "b2a2469b9a2ade7aca84648fd4f70316d409580c676b73c3b604848c3b4ff133"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/001/response.sse",
+      "sha256": "09250776b302d85ba676a27872646622afb545a7a547886198754de0af0a8a82"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/002/request.json",
+      "sha256": "927b9bae69de3ba4a7acffe231ecb5e0895667514cc5e13e0b18daca09381e63"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/002/metadata.json",
+      "sha256": "d4e121208015cca706be42042402e1177364abce0232854f10871b8a412d0832"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/002/response.json",
+      "sha256": "f4704fd579a12e04ef0b299a1c973c1e2ba7ecda552a69f841394b7c9f15a3ac"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/002/response.sse",
+      "sha256": "66e902b5491a3f91249a9ec6bc498691b7d98906cc3b3cb32381d2d676bfe928"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/003/request.json",
+      "sha256": "2e73b9fa6158a47e63fc2a97f5dff6229311ecb6e3e9cd528ff67c497164b022"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/003/metadata.json",
+      "sha256": "bfe7589a7273581bb529647ced2e2e1bbb01515cc32f4517f0db04e07418e08c"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/003/response.json",
+      "sha256": "97fb2b36d4aba1789313f43a692ffcf77b1f1cc0fc1af9b8773fbcb587970703"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/003/response.sse",
+      "sha256": "432e657e223fc636c812c7cb5808ebf15dc8ba9164e6189e5de70ff4663f5e26"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/004/request.json",
+      "sha256": "6137151e3d12629ccde163e0a9a19bada717da1fd01424fab83f9c33095481ba"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/004/metadata.json",
+      "sha256": "19086eb966197f5f3d416917df1436dd6ffcbb86fdd2b5a5a65e078104c05cbf"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/004/response.json",
+      "sha256": "2346d8203ae9ff280e3b3bf4d5602e61aedf0fd9678792fb36014c0d56539e12"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/004/response.sse",
+      "sha256": "2b1e03dcc6f5a98e4bf5f4dee98158e2acd7552f0e015ca51e956b3eb6fc055a"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/005/request.json",
+      "sha256": "2d2d5e977159bfd7488b71f18c1a4520ac5cee3164c311561959647317d61154"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/005/metadata.json",
+      "sha256": "b03da23bccbfb70f06142e43e2f537d2fb463c301698d938ce3af0649d6af36c"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/005/response.json",
+      "sha256": "8f39fdeb8cdd733f996744420546461d4eb110db7e5cf595c83212e46aab0f36"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/005/response.sse",
+      "sha256": "c4b6b14d862dbdbb43cd3383d50878caf016396523be5c791c2e79e468fc20c2"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/006/request.json",
+      "sha256": "320e186802a4c6889c24a2331864a4a5eb62c165c8dc9407e41ddd76ac968ff8"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/006/metadata.json",
+      "sha256": "9d36aba6a1a350f5297455c07e2a9fae413634625c2be40682878aec20e39fa6"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/006/response.json",
+      "sha256": "33df8c81c9b95a1d70b228236ced7a7af642fedbc47b5e43380f9fa8d7211c37"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/006/response.sse",
+      "sha256": "772c83e88a85182f1f4d014f3c6be1d68376583cc222d229777d982295d6e865"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/007/request.json",
+      "sha256": "0a987fdec4e5db49f507ff6d247718c5a2ae9361ea549a969759b5000740c8f8"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/007/metadata.json",
+      "sha256": "191e55befa96a4738cabfdffb2411e376e8e61da380c398b8822e7951ac53310"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/007/response.json",
+      "sha256": "0f5c84ade73694dc608421c1ca9633ab9eccff4c7c5a3bf3de0c72b203afb6d8"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/007/response.sse",
+      "sha256": "5478121aaa6e973a32bd92c51f66d4357a7b38c53e91110838a238d5e78778e4"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/008/request.json",
+      "sha256": "ba476192c42ec75ec03d9ffddce6a41dce378b25959c3ce8608fdebdd034c19a"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/008/metadata.json",
+      "sha256": "5c7cb6bf4beadf0f869d12590875512d5bb44f439d585655e1988f053506259c"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/008/response.json",
+      "sha256": "12b71b20059d473e1ec449cedaed8c5e73d87a51fd1336fb4d002ebdfede7aa2"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/008/response.sse",
+      "sha256": "af2caad77560cb821ec805c4b75db465b30623673dec2b40ac099926b13290fe"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/009/request.json",
+      "sha256": "9c4d57900c0172d2fe4ae318b63793cb459bf1c1d7c22795b190829f897b7cd2"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/009/metadata.json",
+      "sha256": "1b8ffa4c10913f8046ff2fdc64a1b3bd6af84b4a4a20e2119354463c1bb1bb2e"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/009/response.json",
+      "sha256": "218dfc825e751a3cdc0b1e88bb390d8fada4161321eca0d975bb849ff3a4e81a"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/009/response.sse",
+      "sha256": "e3e1e92d119bc3717100b9d36a672f1a8983e7af63cc2047ee31e39e72e594b4"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/010/request.json",
+      "sha256": "747ced9b4e9c2c4720211c12ee08b7c6953e4d5d465366c0da0dc7b2bfe10e63"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/010/metadata.json",
+      "sha256": "6748a4f1ffa693a7c36c84146b35a0a322af4203a39c5b71253d55b6f07f6ed1"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/010/response.json",
+      "sha256": "aec2a920b32cd2b1b4abaa4480a08ef43f5832e1b774c8efe49521d0ffe0c9b7"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/010/response.sse",
+      "sha256": "e64e81c3ebf8c766952347b98ed48ecea269521279f773dd7595219a7dedccdd"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/011/request.json",
+      "sha256": "e29e3845b83ecd24e74cb9a841e424f6cdfcb6a9b8d04152ff49a94e44a36280"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/011/metadata.json",
+      "sha256": "f889646226ed7cb3e068de22ff9c0f5eafb53041d03c0ba9fa6163e79fac2c96"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/011/response.json",
+      "sha256": "9a45bb74e266f4702793cfd3a1d0ba3499a24ef07b9bd31f66545fffc752ebd1"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/011/response.sse",
+      "sha256": "41c10c1e67ecc9350789a6cfde63431ddddbd3aa599dcbec01149b7cb2fe9c6b"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/012/request.json",
+      "sha256": "f2bded30b5c4f65ef0ca709f74a74d9a087b8e9d6dff8edd6e7f37883f08466d"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/012/metadata.json",
+      "sha256": "34872e9b04fe9890e951cd2e0ef98b94d47c7fed265a7f230932e80a462daee7"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/012/response.json",
+      "sha256": "0a275725f770e4dfaad7debdbc269325c10acce79b5bd132d1503815db06e2b0"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/012/response.sse",
+      "sha256": "e116ee08f92cad185de8bd93b17db2f437a600f608181372a09100a0d250f089"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/013/request.json",
+      "sha256": "695b4e193c1941da757d546d3cfd94b15fbfe826a5bfa679e21134d4cf3f42ec"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/013/metadata.json",
+      "sha256": "0ec1dad38a9069e1aa33e8f6e91056a552f2ae45245b5197339561061dc79495"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/013/response.json",
+      "sha256": "cdc664c3a5005044c7e398d872efa226a317663dd2b733e73c3c52d575d0fca1"
+    },
+    {
+      "path": "output/api-paired-v6-api/api_calls/013/response.sse",
+      "sha256": "7006ff69723c63b60b5c41961b0c38e97a95442665290e24b14ab6b4712cc788"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "checks": 268,
+  "unique_programs_revalidated": 4,
+  "arms": 6,
+  "continuation_changed_files": [
+    "result.json",
+    "c02/pair.json",
+    "c02/active/result.json",
+    "c02/active/round-001/verifier/feedback.json",
+    "c02/active/round-001/verifier/index.html",
+    "c02/active/round-001/verifier/result.json"
+  ]
+}

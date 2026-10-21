@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import dataclasses
+import hashlib
 import json
 from importlib import resources
 from pathlib import Path
@@ -10,6 +11,7 @@ from typing import Callable, Sequence
 import numpy as np
 
 from turnitover.core.actions import Observation, QueryRuntime, RuntimeProperty
+from turnitover.core.jsonio import write_json_atomic
 from turnitover.core.serde import to_dict
 from turnitover.models.client import ModelError, ModelResult, is_normal_finish_reason
 from turnitover.taxonomy import load_taxonomy
@@ -36,8 +38,10 @@ def action_plan(context: Context) -> list[dict]:
 
 class VisionPolicy:
     def __init__(self, call: Callable[[str, list[Path]], ModelResult], output: Path,
-                 references: list[Path], mode: str = "active", seed: int = 0):
+                 references: list[Path], mode: str = "active", seed: int = 0, *,
+                 exact_budget: bool = False):
         self.call, self.output, self.references, self.mode = call, output, references, mode
+        self.exact_budget = exact_budget
         self.rng = np.random.default_rng(seed)
         self.calls: list[dict] = []
         self._plan = None
@@ -48,6 +52,21 @@ class VisionPolicy:
             self._plan = action_plan(context)
             if self.mode == "random":
                 self.rng.shuffle(self._plan)
+            if self.exact_budget and self.mode == "fixed":
+                budget = len(history) + remaining
+                if budget and not self._plan:
+                    raise DecisionError("Fixed policy has no available observation actions")
+                planned = [self._plan[i % len(self._plan)] for i in range(budget)]
+                serialized = json.dumps(planned, sort_keys=True, separators=(",", ":"))
+                write_json_atomic(self.output / "observation_plan.json", {
+                    "budget": budget, "base_actions": self._plan, "planned_actions": planned,
+                    "sha256": hashlib.sha256(serialized.encode()).hexdigest(),
+                    "padding": "repeat_base_plan",
+                })
+        if self.exact_budget and self.mode == "fixed" and remaining:
+            if not self._plan:
+                raise DecisionError("Fixed policy has no available observation actions")
+            return {"action": self._plan[len(history) % len(self._plan)]}
         if self.mode in ("fixed", "random") and remaining and len(history) < len(self._plan):
             return {"action": self._plan[len(history)]}
         images = list(self.references)
@@ -62,9 +81,12 @@ class VisionPolicy:
         final_only = remaining == 0 or self.mode != "active"
         protocol = resources.files("turnitover.verifier").joinpath("final_prompt.txt" if final_only else "prompt.txt").read_text()
         prompt = protocol + "\nObserved task data:\n" + json.dumps(data, ensure_ascii=False)
+        if self.exact_budget and remaining:
+            prompt += ("\nThis run requires exactly the full observation budget. Return an action now; "
+                       "a verdict is allowed only when remaining=0.")
         if validation_feedback:
             prompt += "\n\nValidation feedback from your previous response:\n" + validation_feedback
-        if self.mode != "active":
+        if self.mode != "active" and not self.exact_budget:
             prompt += "\nFixed observation collection has finished. Return a final verdict now."
         call_dir = self.output / "model_calls" / f"{len(self.calls):03d}"
         call_dir.mkdir(parents=True)
@@ -81,6 +103,8 @@ class VisionPolicy:
             parsed = parse_json(response.text)
             if not isinstance(parsed, dict):
                 raise DecisionError("Judge decision must be a JSON object")
+            if self.exact_budget and remaining and "verdict" in parsed:
+                raise DecisionError("Exact observation budget requires an action until remaining=0")
             if self.mode != "active" and "verdict" not in parsed:
                 raise DecisionError("Fixed/random baseline must return a final verdict")
             record["status"] = "received"

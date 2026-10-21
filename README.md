@@ -12,6 +12,8 @@
 
 正式 `turnitover` 包提供复用 Program ABI、`ObservationSession` 和 verifier 的原生照片重建迭代入口（`turnitover iterate`）：单次生成候选后经确定性 render gate，再由 verifier 用证据驱动有限轮修复。实现与 artifact 契约见[原生照片重建迭代闭环](docs/iterative-synthesis.md)。这表示工程路径已接通，并已有一次受控 fixture 的真实模型 E2E 记录；正式真实照片评测与泛化效果实验仍未完成。
 
+新增冻结强模型的 Active/Fixed 配对 API 闭环入口，复用上述原生模块并保存完整请求、观察、补丁与独立评分，见[运行说明](docs/api-pipeline.md)和[本次实验报告](docs/api-pipeline-report.md)。
+
 ## 项目结构
 
 ```text

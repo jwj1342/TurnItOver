@@ -1,0 +1,37 @@
+{
+  "audit_skill": "experiment-audit",
+  "verdict": "ERROR",
+  "overall_verdict": "error",
+  "integrity_status": "incomplete",
+  "reason_code": "reviewer_usage_limit",
+  "summary": "Fresh reviewer saved deterministic checks, but final semantic audit was interrupted by usage limit. Executor compiled status without inventing reviewer judgment.",
+  "reviewer_model": "gpt-6-astra",
+  "reviewer_reasoning": "ultra",
+  "reviewer_family": "openai",
+  "review_independence": "same-family",
+  "acceptance_status": "incomplete",
+  "reviewer_result_complete": false,
+  "report_author": "executor",
+  "date": "2026-10-21",
+  "agent_id": "/root/final_integrity_audit",
+  "trace_path": "results/2026-10-21-api-pipeline/audit-trace",
+  "audited_input_hashes": {
+    "docs/api-pipeline-report.md": "sha256:5167928b4d340b9eca4731e08bd2a3834900d5789096211e4b7f29dea2bb6c06",
+    "results/2026-10-21-api-pipeline/summary.json": "sha256:e11137aec48989801e9e31065876c0161ac685e0ea7b2e62634ec6992dd10b08",
+    "turnitover/api_pipeline/fixture.py": "sha256:ec3621883002a4f2e32689f81e9c8b4b5c9e3359c20463ac7901cec106d3b7c4",
+    "turnitover/api_pipeline/scoring.py": "sha256:c570178fe2b376e0ad84deafdf2ee97cf5068bb03bf665a82a7e3da641fa2bef",
+    "turnitover/api_pipeline/paired.py": "sha256:91ac01a810a5869b9c90af13a94e9713d30a0454dc10ec243ee01ff72a3eaead",
+    "turnitover/api_pipeline/recovery.py": "sha256:12ec4e49edecf71674164514b48c384e42857a3f55c50d8c43e4fd0b700f0330",
+    "scripts/summarize_api_pipeline.py": "sha256:82a38d7e1b665222ea186aa910368b4c9d8e3726dc07d3652f041bfd4c44b508"
+  },
+  "deterministic_checks_path": "results/2026-10-21-api-pipeline/audit-trace/deterministic-checks.json",
+  "accounting_checks_path": "results/2026-10-21-api-pipeline/audit-trace/accounting-checks.json",
+  "evaluation_type": "simulation_only",
+  "unresolved": [
+    "Final fresh-agent semantic audit unavailable.",
+    "Single authored object and segmented c02 recovery do not establish general Active superiority.",
+    "Geometric witness is a necessary proxy; semantic explanation and visibility not fully evaluated.",
+    "Four requests lack usage; all provider currency costs unknown.",
+    "Length-failed raw response retains model/finish fields missing from its historical metadata."
+  ]
+}

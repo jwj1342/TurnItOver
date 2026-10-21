@@ -30,12 +30,17 @@ class VerifyConfig:
     runtime_properties: tuple[str, ...] = ("stats", "hierarchy", "joint_state", "state_delta")
     max_triangles: int = 5000
     max_draw_calls: int = 32
+    exact_budget: bool = False
 
     def validate(self):
+        if type(self.exact_budget) is not bool:
+            raise ValueError("exact_budget must be a boolean")
         if type(self.budget) is not int or not 0 <= self.budget <= 64:
             raise ValueError("Verifier budget must be an integer in [0,64]")
         if self.mode not in {"active", "fixed", "random", "runtime"}:
             raise ValueError("Unknown verifier policy")
+        if self.exact_budget and self.mode not in {"active", "fixed"}:
+            raise ValueError("Exact observation budgets require active or fixed mode")
         if not set(self.action_types) <= {"request_view", "actuate_joint", "query_runtime"}:
             raise ValueError("Invalid action allowlist")
         if not set(self.runtime_properties) <= {"stats", "hierarchy", "joint_state", "state_delta"}:
@@ -91,7 +96,7 @@ def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tu
             call = LocalQwen(local_model)
         else:
             call = model_call or (lambda prompt, images: complete(model, prompt, images))
-        policy = VisionPolicy(call, output, copied, cfg.mode, cfg.seed)
+        policy = VisionPolicy(call, output, copied, cfg.mode, cfg.seed, exact_budget=cfg.exact_budget)
     trajectory_path = output / "trajectory.jsonl"
     with trajectory_path.open("w") as trace:
         def save_observation(obs):

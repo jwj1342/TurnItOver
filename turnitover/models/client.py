@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import base64
 import json
+import re
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,6 +14,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 from PIL import Image
 
 from turnitover.models.config import ModelConfig
+from turnitover.models.streaming import StreamingError, read_chat_stream
 
 
 class ModelError(RuntimeError):
@@ -113,19 +115,117 @@ def parse_response(provider: str, data: dict, elapsed_ms: float) -> ModelResult:
         raise ModelError("Unexpected provider response schema") from None
 
 
-def complete(cfg: ModelConfig, prompt: str, images: list[Path] | None = None) -> ModelResult:
-    cfg.validate()
-    url, headers, payload = request_payload(cfg, prompt, images or [])
-    request = Request(url, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
-    start = time.perf_counter()
+def _trace_json(directory: Path | None, name: str, value: dict) -> None:
+    if directory is not None:
+        (directory / name).write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n",
+                                      encoding="utf-8")
+
+
+def _http_error_diagnostic(exc: HTTPError, cfg: ModelConfig) -> dict:
+    """Bounded, sanitized provider fields, never raw bytes or response headers."""
     try:
+        raw = exc.read(8193)
+    except Exception:
+        return {"representation": "sanitized_fields_not_raw_body", "body_unavailable": True}
+    text = raw[:8192].decode("utf-8", errors="replace")
+    try:
+        body = json.loads(text)
+    except ValueError:
+        fields = {"message": text}
+    else:
+        error = body.get("error", {}) if isinstance(body, dict) else {}
+        fields = {key: error[key] for key in ("type", "code", "param", "message")
+                  if isinstance(error, dict) and key in error
+                  and isinstance(error[key], (str, int, float, bool, type(None)))}
+
+    def redact(value):
+        if not isinstance(value, str):
+            return value
+        for secret in (cfg.api_key, cfg.base_url):
+            if secret:
+                value = value.replace(secret, "[REDACTED]")
+        value = re.sub(r"(?i)\b(?:https?|wss?)://[^\s<>\"']+", "[REDACTED_URL]", value)
+        value = re.sub(r"(?is)\b(?:request[_ ]?|response[_ ]?)?headers\s*[:=]\s*"
+                       r"(?:\{.*?\}|\[.*?\]|[^\r\n]*)", "[REDACTED_HEADERS]", value)
+        value = re.sub(
+            r"(?i)\b(?:authorization|proxy-authorization|x-[a-z0-9-]+|api[_ -]?key|"
+            r"set-cookie|cookie|password|secret|token)[\"']?\s*[:=]\s*[\"']?"
+            r"(?:bearer\s+)?[^\s,;\"']+", "[REDACTED]", value)
+        value = re.sub(r"(?i)\bbearer\s+[^\s,;\"']+", "[REDACTED]", value)
+        value = re.sub(r"\b(?:sk|rk)-[A-Za-z0-9_-]{8,}", "[REDACTED]", value)
+        return value[:2048]
+
+    return {"representation": "sanitized_fields_not_raw_body", "truncated": len(raw) > 8192,
+            "error": {key: redact(value) for key, value in fields.items()}}
+
+
+def complete(cfg: ModelConfig, prompt: str, images: list[Path] | None = None, *,
+             trace_dir: Path | None = None, temperature: float | None = None,
+             stream: bool = False) -> ModelResult:
+    """Send once; optional traces contain payloads but never endpoint or headers."""
+    if trace_dir is not None:
+        trace_dir.mkdir(parents=True, exist_ok=True)
+    start = time.perf_counter()
+    data = {}
+    result = None
+    failure = None
+    request = None
+    try:
+        cfg.validate()
+        if stream and cfg.provider not in {"openai_compatible", "openrouter"}:
+            raise ValueError("SSE transport is supported only for compatible Chat Completions providers")
+        url, headers, payload = request_payload(cfg, prompt, images or [])
+        if stream:
+            payload.update(stream=True, stream_options={"include_usage": True})
+        if temperature is not None:
+            if cfg.provider == "gemini":
+                payload["generationConfig"]["temperature"] = temperature
+            else:
+                payload["temperature"] = temperature
+        _trace_json(trace_dir, "request.json", payload)
+        request = Request(url, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
+        start = time.perf_counter()
         with build_opener(_NoRedirect()).open(request, timeout=cfg.timeout) as response:
-            data = json.load(response)
+            data = read_chat_stream(response, trace_dir / "response.sse" if trace_dir else None) if stream else json.load(response)
+        _trace_json(trace_dir, "response.json", data)
+        result = parse_response(cfg.provider, data, (time.perf_counter() - start) * 1000)
+        return result
+    except StreamingError as exc:
+        failure = {"type": type(exc).__name__, "http_code": None}
+        raise ModelError(str(exc)) from None
     except HTTPError as exc:
-        # Never echo headers, URLs or provider error bodies (they can contain credentials).
+        # No response body in exceptions; opt-in traces retain only sanitized fields.
+        failure = {"type": type(exc).__name__, "http_code": exc.code}
+        if trace_dir is not None:
+            _trace_json(trace_dir, "http_error.json", _http_error_diagnostic(exc, cfg))
         raise ModelError(f"{cfg.provider} request failed with HTTP {exc.code}; no automatic retry") from None
-    except (URLError, TimeoutError, OSError):
+    except (URLError, TimeoutError, OSError) as exc:
+        failure = {"type": type(exc).__name__, "http_code": None}
+        if request is None:
+            raise
         raise ModelError(f"{cfg.provider} connection failed or timed out; no automatic retry") from None
-    except (ValueError, UnicodeError):
+    except (ValueError, UnicodeError) as exc:
+        failure = {"type": type(exc).__name__, "http_code": None}
+        # Preserve validation errors before constructing a request.
+        if request is None:
+            raise
         raise ModelError("Provider returned invalid JSON") from None
-    return parse_response(cfg.provider, data, (time.perf_counter() - start) * 1000)
+    except Exception as exc:
+        failure = {"type": type(exc).__name__, "http_code": None}
+        raise
+    finally:
+        if failure is not None:
+            _trace_json(trace_dir, "error.json", failure)
+        usage = data.get("usage", data.get("usageMetadata", {})) if isinstance(data, dict) else {}
+        provider_cost = usage.get("cost") if isinstance(usage, dict) else None
+        if provider_cost is None and isinstance(data, dict):
+            provider_cost = data.get("cost")
+        _trace_json(trace_dir, "metadata.json", {
+            "provider": cfg.provider, "requested_model": cfg.model,
+            "transport": {"stream": stream},
+            "returned_model": result.model if result else None,
+            "usage": usage, "provider_cost": provider_cost,
+            "elapsed_ms": (time.perf_counter() - start) * 1000,
+            "finish_reason": result.finish_reason if result else None,
+            "status": "complete" if result else "failed",
+        })

@@ -1,0 +1,16 @@
+{
+  "archived_files": 929,
+  "archive_bytes": 2271051,
+  "archive_sha256": "169472c1e2689730395ccd4e2e77a4c91edb70ea8649f6eaeb6062cc2a571f9f",
+  "configured_secret_and_endpoint_matches": 0,
+  "completed_verifier_rounds": 7,
+  "observations_each_round": 4,
+  "image_dimensions": [
+    256,
+    256
+  ],
+  "notes": [
+    "Secret scan covers selected raw outputs/logs and result metadata; no .env or request headers included.",
+    "Prior audit trace in archive is partial; final audit is in committed docs and this directory audit-trace."
+  ]
+}

@@ -70,7 +70,7 @@ class Harness {
     this.object = obj;
     this.scene.add(obj.root);
     this.partNames = new Set<string>();
-    obj.root.traverse((o) => { if (o.name && !o.name.startsWith("joint:") && !o.name.endsWith("#mesh") && o !== obj.root) this.partNames.add(o.name); });
+    obj.root.traverse((o) => { if (o.name && !(o as THREE.Mesh).isMesh && !o.name.startsWith("joint:") && !o.name.endsWith("#mesh") && o !== obj.root) this.partNames.add(o.name); });
     this.jointValues = {};
     for (const id of Object.keys(obj.joints)) { obj.joints[id].set(0); this.jointValues[id] = 0; }
     obj.root.updateMatrixWorld(true);

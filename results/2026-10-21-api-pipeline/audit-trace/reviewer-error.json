@@ -1,0 +1,8 @@
+{
+  "reviewer": "gpt-6-astra",
+  "reasoning": "ultra",
+  "agent_id": "/root/final_integrity_audit",
+  "status": "ERROR",
+  "reason_code": "reviewer_usage_limit",
+  "message": "Reviewer and accounting subagent hit usage limit before final semantic verdict; deterministic artifacts were saved. No final PASS exists."
+}

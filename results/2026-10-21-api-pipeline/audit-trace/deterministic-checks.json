@@ -1,0 +1,4044 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "prepared_hash:reference.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "prepared_hash:task.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "prepared_hash:shared/final.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "prepared_hash:private/reference.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "reference_is_authored_program",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "task_is_authored_public_task",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "generated_source_from_recorded_response",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "api-minimal-v6:prepared_manifest",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "api-minimal-v6:runtime:harness.js",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "api-minimal-v6:runtime:three.esm.js",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02:controlled_injection",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02:same_initial_gate_bytes",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02/active:initial_bytes",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier:trajectory",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02/active:round0:quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02/active:witnesses",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02/active:diagnosis",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/000:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/000:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/000:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/000:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/000:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/001:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/001:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/001:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/001:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/001:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/002:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/002:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/002:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/002:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/002:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/003:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/003:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/003:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/003:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/003:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/004:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/004:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/004:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/004:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-000/verifier/model_calls/004:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier:trajectory",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02/active:round1:quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/000:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/000:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/000:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/000:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/000:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/001:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/001:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/001:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/001:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/001:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/002:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/002:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/002:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/002:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/002:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/003:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/003:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/003:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/003:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/003:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/004:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/004:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/004:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/004:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/004:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/005:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/005:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/005:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/005:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/active/round-001/verifier/model_calls/005:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02/active:final_quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02/fixed:initial_bytes",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier:trajectory",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02/fixed:round0:quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02/fixed:witnesses",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02/fixed:diagnosis",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier/model_calls/000:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier/model_calls/000:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier/model_calls/000:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier/model_calls/000:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-minimal-v6/c02/fixed/round-000/verifier/model_calls/000:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c02/fixed:final_quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "api-paired-v6:prepared_manifest",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "api-paired-v6:runtime:harness.js",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "api-paired-v6:runtime:three.esm.js",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c00:controlled_injection",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c00:same_initial_gate_bytes",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c00/active:initial_bytes",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier:trajectory",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c00/active:round0:quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c00/active:witnesses",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c00/active:diagnosis",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/000:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/000:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/000:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/000:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/000:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/001:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/001:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/001:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/001:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/001:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/002:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/002:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/002:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/002:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/002:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/003:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/003:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/003:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/003:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/003:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/004:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/004:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/004:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/004:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/active/round-000/verifier/model_calls/004:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c00/active:final_quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c00/fixed:initial_bytes",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier:trajectory",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c00/fixed:round0:quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c00/fixed:witnesses",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c00/fixed:diagnosis",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier/model_calls/000:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier/model_calls/000:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier/model_calls/000:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier/model_calls/000:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c00/fixed/round-000/verifier/model_calls/000:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c00/fixed:final_quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c01:controlled_injection",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c01:same_initial_gate_bytes",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c01/active:initial_bytes",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier:trajectory",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c01/active:round0:quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c01/active:witnesses",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c01/active:diagnosis",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/000:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/000:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/000:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/000:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/000:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/001:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/001:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/001:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/001:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/001:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/002:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/002:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/002:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/002:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/002:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/003:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/003:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/003:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/003:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/003:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/004:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/004:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/004:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/004:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/active/round-000/verifier/model_calls/004:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c01/active:final_quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c01/fixed:initial_bytes",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier:trajectory",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c01/fixed:round0:quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c01/fixed:witnesses",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c01/fixed:diagnosis",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier/model_calls/000:history_prefix",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier/model_calls/000:budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier/model_calls/000:context",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier/model_calls/000:image_order",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "output/api-paired-v6/c01/fixed/round-000/verifier/model_calls/000:private_tokens_absent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "c01/fixed:final_quality",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_source_result",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:result.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/initial.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/pair.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/initial-state-0/candidate.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/initial-state-0/result.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/initial-state-0/render.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/initial.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/final.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/reference-00.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/result.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/initial-state-1/candidate.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/initial-state-1/result.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/initial-state-1/render.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/candidate.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/candidate.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/candidate.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/feedback.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/index.html",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/trajectory.jsonl",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/reference-00.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/result.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/render-gate/attempt-000/candidate.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/render-gate/attempt-000/result.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/render-gate/attempt-000/render.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/visual-revisions/revision-000/feedback.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/visual-revisions/revision-000/prompt.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/visual-revisions/revision-000/response.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/visual-revisions/revision-000/input-001.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/visual-revisions/revision-000/proposed.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/visual-revisions/revision-000/model.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/visual-revisions/revision-000/input-000.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/visual-revisions/revision-000/result.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/observations/002.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/observations/003.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/observations/000.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/004/metadata.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/004/prompt.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/004/response.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/004/images.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/002/metadata.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/002/prompt.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/002/response.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/002/images.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/000/metadata.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/000/prompt.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/000/response.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/000/images.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/003/metadata.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/003/prompt.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/003/response.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/003/images.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/001/metadata.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/001/prompt.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/001/response.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-000/verifier/model_calls/001/images.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/candidate.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/feedback.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/index.html",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/trajectory.jsonl",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/reference-00.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/result.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/render-gate/attempt-000/candidate.ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/render-gate/attempt-000/result.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/render-gate/attempt-000/render.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/observations/001.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/observations/002.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/observations/003.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/observations/000.png",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/004/metadata.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/004/prompt.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/004/images.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/002/metadata.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/002/prompt.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/002/response.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/002/images.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/000/metadata.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/000/prompt.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/000/response.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/000/images.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/003/metadata.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/003/prompt.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/003/response.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/003/images.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/001/metadata.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/001/prompt.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/001/response.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_original:c02/active/round-001/verifier/model_calls/001/images.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_zero_new_observations",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_unchanged_sources",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "continuation_wire_identical_except_stream",
+      "passed": true,
+      "details": null
+    }
+  ],
+  "arm_replay": [
+    {
+      "case": "c02",
+      "mode": "active",
+      "rounds": [
+        {
+          "round": 0,
+          "sha": "6995c9b0ddc7f231",
+          "passed": 28,
+          "count": 32,
+          "correct": false
+        },
+        {
+          "round": 1,
+          "sha": "7c2967b209d93384",
+          "passed": 32,
+          "count": 32,
+          "correct": true
+        }
+      ],
+      "final": {
+        "schema_version": 1,
+        "candidate_sha": "7c2967b209d93384",
+        "reference_sha": "c29399d9a75de19e",
+        "privileged": true,
+        "used_by_verifier": false,
+        "used_by_judge": false,
+        "status": "complete",
+        "code_correct": true,
+        "checks": [
+          {
+            "checker_id": "program.contract",
+            "passed": true,
+            "differences": [],
+            "candidate": {
+              "parts": [
+                "base",
+                "door",
+                "drawer"
+              ],
+              "joints": {
+                "door_hinge": {
+                  "type": "revolute",
+                  "part": "door",
+                  "limits": [
+                    0.0,
+                    1.5707963267948966
+                  ]
+                },
+                "drawer_slide": {
+                  "type": "prismatic",
+                  "part": "drawer",
+                  "limits": [
+                    0.0,
+                    0.3
+                  ]
+                }
+              }
+            },
+            "reference": {
+              "parts": [
+                "base",
+                "door",
+                "drawer"
+              ],
+              "joints": {
+                "door_hinge": {
+                  "type": "revolute",
+                  "part": "door",
+                  "limits": [
+                    0.0,
+                    1.5707963267948966
+                  ]
+                },
+                "drawer_slide": {
+                  "type": "prismatic",
+                  "part": "drawer",
+                  "limits": [
+                    0.0,
+                    0.3
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "checker_id": "geometry.alignment",
+            "passed": true,
+            "invariants": [
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              }
+            ],
+            "score": 1.0,
+            "__type__": "CheckResult"
+          },
+          {
+            "checker_id": "runtime.budget",
+            "passed": true,
+            "invariants": [
+              {
+                "name": "triangles",
+                "value": 36.0,
+                "tolerance": 5000.0,
+                "passed": true,
+                "parts": [],
+                "state": null,
+                "__type__": "Invariant"
+              },
+              {
+                "name": "draw_calls",
+                "value": 3.0,
+                "tolerance": 32.0,
+                "passed": true,
+                "parts": [],
+                "state": null,
+                "__type__": "Invariant"
+              }
+            ],
+            "score": 1.0,
+            "__type__": "CheckResult"
+          }
+        ],
+        "invariant_pass_count": 32,
+        "invariant_count": 32,
+        "invariant_pass_fraction": 1.0
+      }
+    },
+    {
+      "case": "c02",
+      "mode": "fixed",
+      "rounds": [
+        {
+          "round": 0,
+          "sha": "6995c9b0ddc7f231",
+          "passed": 28,
+          "count": 32,
+          "correct": false
+        }
+      ],
+      "final": {
+        "schema_version": 1,
+        "candidate_sha": "6995c9b0ddc7f231",
+        "reference_sha": "c29399d9a75de19e",
+        "privileged": true,
+        "used_by_verifier": false,
+        "used_by_judge": false,
+        "status": "complete",
+        "code_correct": false,
+        "checks": [
+          {
+            "checker_id": "program.contract",
+            "passed": true,
+            "differences": [],
+            "candidate": {
+              "parts": [
+                "base",
+                "door",
+                "drawer"
+              ],
+              "joints": {
+                "door_hinge": {
+                  "type": "revolute",
+                  "part": "door",
+                  "limits": [
+                    0.0,
+                    1.5707963267948966
+                  ]
+                },
+                "drawer_slide": {
+                  "type": "prismatic",
+                  "part": "drawer",
+                  "limits": [
+                    0.0,
+                    0.3
+                  ]
+                }
+              }
+            },
+            "reference": {
+              "parts": [
+                "base",
+                "door",
+                "drawer"
+              ],
+              "joints": {
+                "door_hinge": {
+                  "type": "revolute",
+                  "part": "door",
+                  "limits": [
+                    0.0,
+                    1.5707963267948966
+                  ]
+                },
+                "drawer_slide": {
+                  "type": "prismatic",
+                  "part": "drawer",
+                  "limits": [
+                    0.0,
+                    0.3
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "checker_id": "geometry.alignment",
+            "passed": false,
+            "invariants": [
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 0.2786032259464264,
+                "tolerance": 0.9,
+                "passed": false,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.12711095134553405,
+                "tolerance": 0.005,
+                "passed": false,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 0.012658230029046535,
+                "tolerance": 0.9,
+                "passed": false,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.17369035735323413,
+                "tolerance": 0.005,
+                "passed": false,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              }
+            ],
+            "score": 0.8666666666666667,
+            "__type__": "CheckResult"
+          },
+          {
+            "checker_id": "runtime.budget",
+            "passed": true,
+            "invariants": [
+              {
+                "name": "triangles",
+                "value": 36.0,
+                "tolerance": 5000.0,
+                "passed": true,
+                "parts": [],
+                "state": null,
+                "__type__": "Invariant"
+              },
+              {
+                "name": "draw_calls",
+                "value": 3.0,
+                "tolerance": 32.0,
+                "passed": true,
+                "parts": [],
+                "state": null,
+                "__type__": "Invariant"
+              }
+            ],
+            "score": 1.0,
+            "__type__": "CheckResult"
+          }
+        ],
+        "invariant_pass_count": 28,
+        "invariant_count": 32,
+        "invariant_pass_fraction": 0.875
+      }
+    },
+    {
+      "case": "c00",
+      "mode": "active",
+      "rounds": [
+        {
+          "round": 0,
+          "sha": "acde36209a8c6b03",
+          "passed": 32,
+          "count": 32,
+          "correct": true
+        }
+      ],
+      "final": {
+        "schema_version": 1,
+        "candidate_sha": "acde36209a8c6b03",
+        "reference_sha": "c29399d9a75de19e",
+        "privileged": true,
+        "used_by_verifier": false,
+        "used_by_judge": false,
+        "status": "complete",
+        "code_correct": true,
+        "checks": [
+          {
+            "checker_id": "program.contract",
+            "passed": true,
+            "differences": [],
+            "candidate": {
+              "parts": [
+                "base",
+                "door",
+                "drawer"
+              ],
+              "joints": {
+                "door_hinge": {
+                  "type": "revolute",
+                  "part": "door",
+                  "limits": [
+                    0.0,
+                    1.5707963267948966
+                  ]
+                },
+                "drawer_slide": {
+                  "type": "prismatic",
+                  "part": "drawer",
+                  "limits": [
+                    0.0,
+                    0.3
+                  ]
+                }
+              }
+            },
+            "reference": {
+              "parts": [
+                "base",
+                "door",
+                "drawer"
+              ],
+              "joints": {
+                "door_hinge": {
+                  "type": "revolute",
+                  "part": "door",
+                  "limits": [
+                    0.0,
+                    1.5707963267948966
+                  ]
+                },
+                "drawer_slide": {
+                  "type": "prismatic",
+                  "part": "drawer",
+                  "limits": [
+                    0.0,
+                    0.3
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "checker_id": "geometry.alignment",
+            "passed": true,
+            "invariants": [
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              }
+            ],
+            "score": 1.0,
+            "__type__": "CheckResult"
+          },
+          {
+            "checker_id": "runtime.budget",
+            "passed": true,
+            "invariants": [
+              {
+                "name": "triangles",
+                "value": 36.0,
+                "tolerance": 5000.0,
+                "passed": true,
+                "parts": [],
+                "state": null,
+                "__type__": "Invariant"
+              },
+              {
+                "name": "draw_calls",
+                "value": 3.0,
+                "tolerance": 32.0,
+                "passed": true,
+                "parts": [],
+                "state": null,
+                "__type__": "Invariant"
+              }
+            ],
+            "score": 1.0,
+            "__type__": "CheckResult"
+          }
+        ],
+        "invariant_pass_count": 32,
+        "invariant_count": 32,
+        "invariant_pass_fraction": 1.0
+      }
+    },
+    {
+      "case": "c00",
+      "mode": "fixed",
+      "rounds": [
+        {
+          "round": 0,
+          "sha": "acde36209a8c6b03",
+          "passed": 32,
+          "count": 32,
+          "correct": true
+        }
+      ],
+      "final": {
+        "schema_version": 1,
+        "candidate_sha": "acde36209a8c6b03",
+        "reference_sha": "c29399d9a75de19e",
+        "privileged": true,
+        "used_by_verifier": false,
+        "used_by_judge": false,
+        "status": "complete",
+        "code_correct": true,
+        "checks": [
+          {
+            "checker_id": "program.contract",
+            "passed": true,
+            "differences": [],
+            "candidate": {
+              "parts": [
+                "base",
+                "door",
+                "drawer"
+              ],
+              "joints": {
+                "door_hinge": {
+                  "type": "revolute",
+                  "part": "door",
+                  "limits": [
+                    0.0,
+                    1.5707963267948966
+                  ]
+                },
+                "drawer_slide": {
+                  "type": "prismatic",
+                  "part": "drawer",
+                  "limits": [
+                    0.0,
+                    0.3
+                  ]
+                }
+              }
+            },
+            "reference": {
+              "parts": [
+                "base",
+                "door",
+                "drawer"
+              ],
+              "joints": {
+                "door_hinge": {
+                  "type": "revolute",
+                  "part": "door",
+                  "limits": [
+                    0.0,
+                    1.5707963267948966
+                  ]
+                },
+                "drawer_slide": {
+                  "type": "prismatic",
+                  "part": "drawer",
+                  "limits": [
+                    0.0,
+                    0.3
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "checker_id": "geometry.alignment",
+            "passed": true,
+            "invariants": [
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              }
+            ],
+            "score": 1.0,
+            "__type__": "CheckResult"
+          },
+          {
+            "checker_id": "runtime.budget",
+            "passed": true,
+            "invariants": [
+              {
+                "name": "triangles",
+                "value": 36.0,
+                "tolerance": 5000.0,
+                "passed": true,
+                "parts": [],
+                "state": null,
+                "__type__": "Invariant"
+              },
+              {
+                "name": "draw_calls",
+                "value": 3.0,
+                "tolerance": 32.0,
+                "passed": true,
+                "parts": [],
+                "state": null,
+                "__type__": "Invariant"
+              }
+            ],
+            "score": 1.0,
+            "__type__": "CheckResult"
+          }
+        ],
+        "invariant_pass_count": 32,
+        "invariant_count": 32,
+        "invariant_pass_fraction": 1.0
+      }
+    },
+    {
+      "case": "c01",
+      "mode": "active",
+      "rounds": [
+        {
+          "round": 0,
+          "sha": "a25a0dba15b1c73e",
+          "passed": 22,
+          "count": 32,
+          "correct": false
+        }
+      ],
+      "final": {
+        "schema_version": 1,
+        "candidate_sha": "a25a0dba15b1c73e",
+        "reference_sha": "c29399d9a75de19e",
+        "privileged": true,
+        "used_by_verifier": false,
+        "used_by_judge": false,
+        "status": "complete",
+        "code_correct": false,
+        "checks": [
+          {
+            "checker_id": "program.contract",
+            "passed": true,
+            "differences": [],
+            "candidate": {
+              "parts": [
+                "base",
+                "door",
+                "drawer"
+              ],
+              "joints": {
+                "door_hinge": {
+                  "type": "revolute",
+                  "part": "door",
+                  "limits": [
+                    0.0,
+                    1.5707963267948966
+                  ]
+                },
+                "drawer_slide": {
+                  "type": "prismatic",
+                  "part": "drawer",
+                  "limits": [
+                    0.0,
+                    0.3
+                  ]
+                }
+              }
+            },
+            "reference": {
+              "parts": [
+                "base",
+                "door",
+                "drawer"
+              ],
+              "joints": {
+                "door_hinge": {
+                  "type": "revolute",
+                  "part": "door",
+                  "limits": [
+                    0.0,
+                    1.5707963267948966
+                  ]
+                },
+                "drawer_slide": {
+                  "type": "prismatic",
+                  "part": "drawer",
+                  "limits": [
+                    0.0,
+                    0.3
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "checker_id": "geometry.alignment",
+            "passed": false,
+            "invariants": [
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 0.4545454978942871,
+                "tolerance": 0.9,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.04503350093427677,
+                "tolerance": 0.005,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 0.4545454978942871,
+                "tolerance": 0.9,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.04503350091572005,
+                "tolerance": 0.005,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 0.4545454978942871,
+                "tolerance": 0.9,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.04503350093427677,
+                "tolerance": 0.005,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 0.4545454978942871,
+                "tolerance": 0.9,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.04503350093427677,
+                "tolerance": 0.005,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 0.4545454978942871,
+                "tolerance": 0.9,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.04503350093427677,
+                "tolerance": 0.005,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              }
+            ],
+            "score": 0.6666666666666666,
+            "__type__": "CheckResult"
+          },
+          {
+            "checker_id": "runtime.budget",
+            "passed": true,
+            "invariants": [
+              {
+                "name": "triangles",
+                "value": 36.0,
+                "tolerance": 5000.0,
+                "passed": true,
+                "parts": [],
+                "state": null,
+                "__type__": "Invariant"
+              },
+              {
+                "name": "draw_calls",
+                "value": 3.0,
+                "tolerance": 32.0,
+                "passed": true,
+                "parts": [],
+                "state": null,
+                "__type__": "Invariant"
+              }
+            ],
+            "score": 1.0,
+            "__type__": "CheckResult"
+          }
+        ],
+        "invariant_pass_count": 22,
+        "invariant_count": 32,
+        "invariant_pass_fraction": 0.6875
+      }
+    },
+    {
+      "case": "c01",
+      "mode": "fixed",
+      "rounds": [
+        {
+          "round": 0,
+          "sha": "a25a0dba15b1c73e",
+          "passed": 22,
+          "count": 32,
+          "correct": false
+        }
+      ],
+      "final": {
+        "schema_version": 1,
+        "candidate_sha": "a25a0dba15b1c73e",
+        "reference_sha": "c29399d9a75de19e",
+        "privileged": true,
+        "used_by_verifier": false,
+        "used_by_judge": false,
+        "status": "complete",
+        "code_correct": false,
+        "checks": [
+          {
+            "checker_id": "program.contract",
+            "passed": true,
+            "differences": [],
+            "candidate": {
+              "parts": [
+                "base",
+                "door",
+                "drawer"
+              ],
+              "joints": {
+                "door_hinge": {
+                  "type": "revolute",
+                  "part": "door",
+                  "limits": [
+                    0.0,
+                    1.5707963267948966
+                  ]
+                },
+                "drawer_slide": {
+                  "type": "prismatic",
+                  "part": "drawer",
+                  "limits": [
+                    0.0,
+                    0.3
+                  ]
+                }
+              }
+            },
+            "reference": {
+              "parts": [
+                "base",
+                "door",
+                "drawer"
+              ],
+              "joints": {
+                "door_hinge": {
+                  "type": "revolute",
+                  "part": "door",
+                  "limits": [
+                    0.0,
+                    1.5707963267948966
+                  ]
+                },
+                "drawer_slide": {
+                  "type": "prismatic",
+                  "part": "drawer",
+                  "limits": [
+                    0.0,
+                    0.3
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "checker_id": "geometry.alignment",
+            "passed": false,
+            "invariants": [
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 0.4545454978942871,
+                "tolerance": 0.9,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.04503350093427677,
+                "tolerance": 0.005,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "rest",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 0.4545454978942871,
+                "tolerance": 0.9,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.04503350091572005,
+                "tolerance": 0.005,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 0.4545454978942871,
+                "tolerance": 0.9,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.04503350093427677,
+                "tolerance": 0.005,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:mid",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 0.4545454978942871,
+                "tolerance": 0.9,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.04503350093427677,
+                "tolerance": 0.005,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:drawer_slide:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "base"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 1.0,
+                "tolerance": 0.9,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.0,
+                "tolerance": 0.005,
+                "passed": true,
+                "parts": [
+                  "door"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "bbox_iou",
+                "value": 0.4545454978942871,
+                "tolerance": 0.9,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              },
+              {
+                "name": "chamfer_m",
+                "value": 0.04503350093427677,
+                "tolerance": 0.005,
+                "passed": false,
+                "parts": [
+                  "drawer"
+                ],
+                "state": "joint:door_hinge:limit",
+                "__type__": "Invariant"
+              }
+            ],
+            "score": 0.6666666666666666,
+            "__type__": "CheckResult"
+          },
+          {
+            "checker_id": "runtime.budget",
+            "passed": true,
+            "invariants": [
+              {
+                "name": "triangles",
+                "value": 36.0,
+                "tolerance": 5000.0,
+                "passed": true,
+                "parts": [],
+                "state": null,
+                "__type__": "Invariant"
+              },
+              {
+                "name": "draw_calls",
+                "value": 3.0,
+                "tolerance": 32.0,
+                "passed": true,
+                "parts": [],
+                "state": null,
+                "__type__": "Invariant"
+              }
+            ],
+            "score": 1.0,
+            "__type__": "CheckResult"
+          }
+        ],
+        "invariant_pass_count": 22,
+        "invariant_count": 32,
+        "invariant_pass_fraction": 0.6875
+      }
+    }
+  ],
+  "continuation_changed_files": [
+    "result.json",
+    "c02/pair.json",
+    "c02/active/result.json",
+    "c02/active/round-001/verifier/feedback.json",
+    "c02/active/round-001/verifier/index.html",
+    "c02/active/round-001/verifier/result.json"
+  ]
+}
