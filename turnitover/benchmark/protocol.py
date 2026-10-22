@@ -73,6 +73,36 @@ CONDITIONS = {
     },
 }
 
+# Protocol v2 (issue #9). In v1 ``code_read`` showed the reference and the candidate AssetSpec: identical for clean
+# samples, different for defective ones, so a diff scored perfectly without reading anything (issue #8 item 9).
+# v2 ``code_read`` shows the candidate program (TypeScript from ``turnitover.assets.emit.emit_program``) plus the
+# reference rest/limit images and no reference code. The old pair survives as ``code_diff``, diagnostic only.
+# ``evidence`` lists, in index order, the manifest field and role behind each evidence index; ``fields`` plus
+# ``evidence`` are the whole input boundary.
+PROTOCOL_SCHEMA_VERSION_2 = 2
+BENCHMARK_VERSION_2 = "benchmark-v2"
+CODE_LANGUAGE = "typescript"
+_IMAGES = [{"field": "images", "role": role} for role in IMAGE_ROLES]
+CONDITIONS_V2 = {
+    "rgb": {**CONDITIONS["rgb"], "evidence": _IMAGES},
+    "no_image": {**CONDITIONS["no_image"], "evidence": []},
+    "pixel_diff": {**CONDITIONS["pixel_diff"], "evidence": _IMAGES},
+    "code_read": {
+        "fields": ["sample_id", "prompt", "context", "images", "code"], "n_evidence": 3, "evidence_sufficient": True,
+        "evidence": [{"field": "images", "role": "reference_rest"}, {"field": "images", "role": "reference_limit"},
+                     {"field": "code", "role": "candidate_program"}],
+        "note": "Reference rest and limit images (index 0, 1), then the candidate program TypeScript (index 2). "
+                "No reference code, no candidate images, no AssetSpec JSON, no gold.",
+    },
+    "code_diff": {
+        "fields": ["sample_id", "prompt", "context", "code"], "n_evidence": 2, "evidence_sufficient": True,
+        "evidence": [{"field": "code", "role": "reference_spec"}, {"field": "code", "role": "candidate_spec"}],
+        "note": "Diagnostic only, never a headline condition: reference then candidate AssetSpec JSON (index 0, 1). "
+                "A diff separates clean from defective by construction, so near-perfect scores are expected.",
+    },
+}
+MOTION_EVIDENCE_V2 = {"rgb": (1, 3), "pixel_diff": (1, 3), "code_read": (1, 2), "code_diff": (0, 1), "no_image": ()}
+
 # Defects whose localisation target is a joint; every other defect is localised by its part set.
 JOINT_LEVEL_LAYERS = ("kinematics",)
 # Evidence a finding must cite to be consistent: indices into the condition's evidence list.
@@ -115,7 +145,8 @@ def _is_str_list(value) -> bool:
     return isinstance(value, list) and all(isinstance(x, str) for x in value)
 
 
-def parse_prediction(obj, *, condition: str, joint_ids, part_ids, taxonomy_ids=None) -> Prediction:
+def parse_prediction(obj, *, condition: str, joint_ids, part_ids, taxonomy_ids=None,
+                     conditions=CONDITIONS) -> Prediction:
     """Strictly validate one prediction object; raise InvalidOutput on any deviation.
 
     Contract: ``{"case_id", "decision", "findings": [{"defect_id", "joint_id", "parts", "evidence"}]}``.
@@ -133,7 +164,7 @@ def parse_prediction(obj, *, condition: str, joint_ids, part_ids, taxonomy_ids=N
         raise InvalidOutput("findings must be a list")
     if (decision == "fail") != bool(raw):
         raise InvalidOutput("fail requires findings; pass/uncertain/continue forbid them")
-    n_evidence = CONDITIONS[condition]["n_evidence"]
+    n_evidence = conditions[condition]["n_evidence"]
     findings = []
     for item in raw:
         if not isinstance(item, dict) or set(item) != {"defect_id", "joint_id", "parts", "evidence"}:
@@ -155,18 +186,32 @@ def parse_prediction(obj, *, condition: str, joint_ids, part_ids, taxonomy_ids=N
     return Prediction(obj["case_id"], decision, tuple(findings))
 
 
-def finding_consistent(finding: Finding, condition: str) -> bool:
+def finding_consistent(finding: Finding, condition: str, motion_evidence=MOTION_EVIDENCE) -> bool:
     """A kinematics claim must cite the motion pair; other claims only need valid, nonempty evidence."""
     if finding.defect_id.startswith("kinematics."):
-        return set(MOTION_EVIDENCE[condition]) <= set(finding.evidence)
+        return set(motion_evidence[condition]) <= set(finding.evidence)
     return bool(finding.evidence)
 
 
-def protocol_document() -> dict:
-    return {"schema_version": PROTOCOL_SCHEMA_VERSION, "benchmark": BENCHMARK_VERSION,
-            "difficulties": DIFFICULTIES, "clean_control": CLEAN_CONTROL, "conditions": CONDITIONS,
+def condition_inputs(row: dict, condition: str, conditions=CONDITIONS) -> dict:
+    """The only view of a manifest row a baseline of ``condition`` may read.
+
+    When the condition lists ``evidence`` roles, list-valued fields are cut to exactly those entries in evidence
+    order; a condition without ``evidence`` (v1) gets its fields verbatim.
+    """
+    spec = conditions[condition]
+    visible = {k: row[k] for k in spec["fields"]}
+    for field in {e["field"] for e in spec.get("evidence", ())}:
+        by_role = {entry["role"]: entry for entry in visible[field]}
+        visible[field] = [by_role[e["role"]] for e in spec["evidence"] if e["field"] == field]
+    return visible
+
+
+def _document(*, schema_version: int, benchmark: str, conditions: dict, motion_evidence: dict) -> dict:
+    return {"schema_version": schema_version, "benchmark": benchmark,
+            "difficulties": DIFFICULTIES, "clean_control": CLEAN_CONTROL, "conditions": conditions,
             "decisions": list(DECISIONS), "abstain": list(ABSTAIN), "image_roles": list(IMAGE_ROLES),
-            "motion_evidence": {k: list(v) for k, v in MOTION_EVIDENCE.items()},
+            "motion_evidence": {k: list(v) for k, v in motion_evidence.items()},
             "prediction_format": {
                 "case_id": "str", "decision": "pass|fail|uncertain|continue",
                 "findings": [{"defect_id": "taxonomy id", "joint_id": "str|null (required for kinematics.*)",
@@ -182,3 +227,19 @@ def protocol_document() -> dict:
                                         "including the motion pair for kinematics claims",
                 "false_pass": "pass predictions / gold-defect samples",
                 "invalid_output": "invalid or missing predictions / samples"}}
+
+
+def protocol_document() -> dict:
+    return _document(schema_version=PROTOCOL_SCHEMA_VERSION, benchmark=BENCHMARK_VERSION,
+                     conditions=CONDITIONS, motion_evidence=MOTION_EVIDENCE)
+
+
+def protocol_document_v2() -> dict:
+    """Draft v2 protocol: no manifest, gold or FREEZE exists for it yet."""
+    return {**_document(schema_version=PROTOCOL_SCHEMA_VERSION_2, benchmark=BENCHMARK_VERSION_2,
+                        conditions=CONDITIONS_V2, motion_evidence=MOTION_EVIDENCE_V2),
+            "status": "protocol_only_no_samples", "code_language": CODE_LANGUAGE,
+            "changes_from_v1": [
+                "code_read: candidate program TypeScript plus reference rest/limit images; no reference code.",
+                "code_diff: the v1 reference+candidate AssetSpec pair, diagnostic only, expected near-perfect.",
+                "evidence indices are defined per condition by role (conditions.*.evidence)."]}

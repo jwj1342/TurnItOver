@@ -9,7 +9,7 @@ import sys
 
 from turnitover.benchmark.audit import audit
 from turnitover.benchmark.manifest import OUT, freeze
-from turnitover.benchmark.protocol import CONDITIONS
+from turnitover.benchmark.protocol import CONDITIONS, protocol_document_v2
 from turnitover.benchmark.scoring import score
 from turnitover.core.jsonio import write_json_atomic
 
@@ -22,6 +22,7 @@ def main(argv=None) -> int:
     sub.add_parser("freeze", help="write benchmark/v1 from the Level 0 evidence package (refuses to overwrite)")
     audit_p = sub.add_parser("audit", help="verify the frozen files and write audit.json")
     audit_p.add_argument("--out", type=Path, default=ROOT / OUT / "audit.json")
+    sub.add_parser("protocol-v2", help="write benchmark/v2/protocol.json (draft protocol, no samples)")
     score_p = sub.add_parser("score", help="score a predictions JSONL against frozen gold")
     score_p.add_argument("--predictions", type=Path, required=True)
     score_p.add_argument("--condition", choices=sorted(CONDITIONS), required=True)
@@ -32,6 +33,12 @@ def main(argv=None) -> int:
     bench = ROOT / OUT
     if args.command == "freeze":
         print(json.dumps(freeze(ROOT, bench), indent=2))
+    elif args.command == "protocol-v2":
+        path = ROOT / "benchmark/v2/protocol.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(protocol_document_v2(), indent=2, ensure_ascii=False, sort_keys=True) + "\n",
+                        encoding="utf-8")
+        print(path)
     elif args.command == "audit":
         report = audit(ROOT, bench)
         write_json_atomic(args.out, report)

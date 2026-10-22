@@ -1,0 +1,238 @@
+{
+  "abstain": [
+    "uncertain",
+    "continue"
+  ],
+  "benchmark": "benchmark-v2",
+  "changes_from_v1": [
+    "code_read: candidate program TypeScript plus reference rest/limit images; no reference code.",
+    "code_diff: the v1 reference+candidate AssetSpec pair, diagnostic only, expected near-perfect.",
+    "evidence indices are defined per condition by role (conditions.*.evidence)."
+  ],
+  "clean_control": "Every tier carries clean controls: the same object, no corruption, gold decision pass.",
+  "code_language": "typescript",
+  "conditions": {
+    "code_diff": {
+      "evidence": [
+        {
+          "field": "code",
+          "role": "reference_spec"
+        },
+        {
+          "field": "code",
+          "role": "candidate_spec"
+        }
+      ],
+      "evidence_sufficient": true,
+      "fields": [
+        "sample_id",
+        "prompt",
+        "context",
+        "code"
+      ],
+      "n_evidence": 2,
+      "note": "Diagnostic only, never a headline condition: reference then candidate AssetSpec JSON (index 0, 1). A diff separates clean from defective by construction, so near-perfect scores are expected."
+    },
+    "code_read": {
+      "evidence": [
+        {
+          "field": "images",
+          "role": "reference_rest"
+        },
+        {
+          "field": "images",
+          "role": "reference_limit"
+        },
+        {
+          "field": "code",
+          "role": "candidate_program"
+        }
+      ],
+      "evidence_sufficient": true,
+      "fields": [
+        "sample_id",
+        "prompt",
+        "context",
+        "images",
+        "code"
+      ],
+      "n_evidence": 3,
+      "note": "Reference rest and limit images (index 0, 1), then the candidate program TypeScript (index 2). No reference code, no candidate images, no AssetSpec JSON, no gold."
+    },
+    "no_image": {
+      "evidence": [],
+      "evidence_sufficient": false,
+      "fields": [
+        "sample_id",
+        "prompt",
+        "context"
+      ],
+      "n_evidence": 0,
+      "note": "Text only. Evidence is insufficient by construction, so the correct output is uncertain/continue; any pass or fail is an unsupported claim."
+    },
+    "pixel_diff": {
+      "evidence": [
+        {
+          "field": "images",
+          "role": "reference_rest"
+        },
+        {
+          "field": "images",
+          "role": "reference_limit"
+        },
+        {
+          "field": "images",
+          "role": "candidate_rest"
+        },
+        {
+          "field": "images",
+          "role": "candidate_limit"
+        }
+      ],
+      "evidence_sufficient": true,
+      "fields": [
+        "sample_id",
+        "prompt",
+        "context",
+        "images"
+      ],
+      "n_evidence": 4,
+      "note": "Deterministic rule on the same four frames. Thresholds are fitted on Train only and frozen before Validation is touched. No model, no spec, no gold."
+    },
+    "rgb": {
+      "evidence": [
+        {
+          "field": "images",
+          "role": "reference_rest"
+        },
+        {
+          "field": "images",
+          "role": "reference_limit"
+        },
+        {
+          "field": "images",
+          "role": "candidate_rest"
+        },
+        {
+          "field": "images",
+          "role": "candidate_limit"
+        }
+      ],
+      "evidence_sufficient": true,
+      "fields": [
+        "sample_id",
+        "prompt",
+        "context",
+        "images"
+      ],
+      "n_evidence": 4,
+      "note": "Four frozen RGB frames. No spec/code, no pixel statistics, no gold."
+    }
+  },
+  "decisions": [
+    "pass",
+    "fail",
+    "uncertain",
+    "continue"
+  ],
+  "difficulties": {
+    "easy": {
+      "defects": [
+        "kinematics.joint_axis"
+      ],
+      "example": "A plain door swings up instead of sideways.",
+      "max_joints": 1,
+      "min_joints": 1,
+      "n_errors": 1,
+      "object": "single articulated joint",
+      "visibility": "Target joint moves visibly rest->limit in the frozen camera; reference and candidate differ at limit by the Level 0 pixel gates (human-reviewed, no occlusion or clipping)."
+    },
+    "expert": {
+      "defects": [
+        "kinematics.joint_axis",
+        "structure.part_offset"
+      ],
+      "example": "One door is offset while another door rotates about the wrong axis.",
+      "max_joints": null,
+      "min_joints": 2,
+      "n_errors": 2,
+      "object": "two or more articulated joints",
+      "visibility": "Two distinct injected errors, each independently supported by observed evidence."
+    },
+    "hard": {
+      "defects": [
+        "kinematics.joint_axis",
+        "structure.part_offset"
+      ],
+      "example": "An occluded door of a multi-door wardrobe rotates about the wrong axis.",
+      "max_joints": null,
+      "min_joints": 2,
+      "n_errors": 1,
+      "object": "two or more articulated joints",
+      "visibility": "Target part is occluded or its motion is below the default-view pixel gate, so the decision needs a view or state beyond the default four images. Overlap with medium is decided by measured observation difficulty, not by defect type."
+    },
+    "medium": {
+      "defects": [
+        "kinematics.joint_axis",
+        "structure.part_offset"
+      ],
+      "example": "One door of a multi-door wardrobe swings up instead of sideways.",
+      "max_joints": null,
+      "min_joints": 2,
+      "n_errors": 1,
+      "object": "two or more articulated joints",
+      "visibility": "Same visibility gates as easy for joint_axis. structure.part_offset on a single-joint object is also medium and is static_visible. Part-offset samples do not exist yet."
+    }
+  },
+  "image_roles": [
+    "reference_rest",
+    "reference_limit",
+    "candidate_rest",
+    "candidate_limit"
+  ],
+  "metrics": {
+    "evidence_consistency": "share of fail predictions whose findings all cite valid evidence including the motion pair for kinematics claims",
+    "exact_verdict": "decision matches expected and finding keys equal gold keys; under insufficient evidence or gold uncertain the expected decision is abstain",
+    "false_pass": "pass predictions / gold-defect samples",
+    "invalid_output": "invalid or missing predictions / samples",
+    "localization_f1": "micro F1 over localisation keys (defect+joint for kinematics, defect+parts otherwise) pooled over all samples, from valid fail predictions",
+    "macro_f1": "mean per-class F1 over {clean} U defect ids in gold or predicted; pass predicts clean, fail predicts its finding defect ids, abstain/invalid predict nothing"
+  },
+  "motion_evidence": {
+    "code_diff": [
+      0,
+      1
+    ],
+    "code_read": [
+      1,
+      2
+    ],
+    "no_image": [],
+    "pixel_diff": [
+      1,
+      3
+    ],
+    "rgb": [
+      1,
+      3
+    ]
+  },
+  "prediction_format": {
+    "case_id": "str",
+    "decision": "pass|fail|uncertain|continue",
+    "findings": [
+      {
+        "defect_id": "taxonomy id",
+        "evidence": [
+          "index into the condition's evidence list"
+        ],
+        "joint_id": "str|null (required for kinematics.*)",
+        "parts": [
+          "part id"
+        ]
+      }
+    ]
+  },
+  "schema_version": 2,
+  "status": "protocol_only_no_samples"
+}

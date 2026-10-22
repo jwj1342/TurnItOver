@@ -10,8 +10,12 @@ import hashlib
 import json
 from pathlib import Path
 
-from turnitover.benchmark.protocol import (BENCHMARK_VERSION, CONDITIONS, DIFFICULTIES, IMAGE_ROLES,
+from turnitover.assets.emit import emit_program
+from turnitover.benchmark.protocol import (BENCHMARK_VERSION, DIFFICULTIES, IMAGE_ROLES,
+                                          condition_inputs,  # noqa: F401  re-exported for existing callers
                                           protocol_document)
+from turnitover.core.serde import from_dict
+from turnitover.core.spec import AssetSpec
 
 EVIDENCE = "docs/evidence/partnet-mobility-level0-axis-v4"
 EXPOSED_SOURCE = "docs/evidence/partnet-mobility-level0-axis-v2/object_splits.json"
@@ -204,6 +208,7 @@ def load_samples(root: Path, bench_dir: Path, split: str | None = None) -> list[
     return rows
 
 
-def condition_inputs(row: dict, condition: str) -> dict:
-    """The only view of a manifest row a baseline of ``condition`` may read."""
-    return {k: row[k] for k in CONDITIONS[condition]["fields"]}
+def candidate_program_source(spec_path: Path) -> tuple[str, str]:
+    """TypeScript of the candidate program (``emit_program`` of its spec) and its SHA-256; the v2 ``code_read`` input."""
+    source = emit_program(from_dict(AssetSpec, json.loads(spec_path.read_text(encoding="utf-8"))))
+    return source, hashlib.sha256(source.encode("utf-8")).hexdigest()
