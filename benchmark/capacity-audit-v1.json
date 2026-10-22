@@ -1,0 +1,71 @@
+{
+  "scope": "read-only capacity audit; no rendering, model calls or archive downloads",
+  "revision": "ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f",
+  "upstream_archives": 2347,
+  "downloaded_archives": 400,
+  "structural_candidates": 236,
+  "structural_rate_of_downloads": 0.59,
+  "structural_by_class": {
+    "multi": 135,
+    "single": 101
+  },
+  "used_in_v4": {
+    "objects": 60,
+    "by_class": {
+      "multi": 37,
+      "single": 23
+    }
+  },
+  "protected_excluded": {
+    "original_validation_groups": 7
+  },
+  "screening_yield_by_class": {
+    "single": {
+      "screened": 57,
+      "passed": 19,
+      "rate": 0.3333
+    },
+    "multi": {
+      "screened": 82,
+      "passed": 36,
+      "rate": 0.439
+    }
+  },
+  "unscreened_local_candidates": {
+    "objects": 90,
+    "by_class": {
+      "single": 43,
+      "multi": 47
+    }
+  },
+  "screened_but_not_passed": 79,
+  "projection": {
+    "targets": {
+      "easy_single_joint_objects": 75,
+      "medium_objects": 75
+    },
+    "have": {
+      "single": 23,
+      "multi": 37
+    },
+    "expected_from_unscreened_local": {
+      "single": 14.3,
+      "multi": 20.6
+    },
+    "still_needed_after_local": {
+      "single": 37.7,
+      "multi": 17.4
+    },
+    "additional_archives_to_download_estimate": 448,
+    "estimate_by_pass_rate_factor": {
+      "1.0": 448,
+      "0.5": 895
+    },
+    "undownloaded_upstream_archives": 1947,
+    "assumptions": [
+      "screening pass rate and single-joint share are assumed to carry over to new archives",
+      "original-pool screened-and-rejected objects are not re-screened",
+      "undownloaded archives are not yet checked against the frozen Test identities"
+    ]
+  }
+}
