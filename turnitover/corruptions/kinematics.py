@@ -37,3 +37,25 @@ class JointAxis:
             label={"part": joint.part, "axis": new_axis.tolist()},
         )
         return ObjectProgram.from_spec(new_spec), cs
+
+
+@register("kinematics.direction_flip")
+class DirectionFlip:
+    """Negate one joint's motion sign: same axis, anchor and limits, opposite direction. Rest pose unchanged.
+
+    The flip is undetectable for a motion symmetric about rest; callers screen that with observed pixels.
+    """
+
+    def applicable(self, program: ObjectProgram) -> bool:
+        return program.spec is not None and len(program.spec.joints) > 0
+
+    def apply(self, program: ObjectProgram, rng: np.random.Generator):
+        spec = require_spec(program)
+        joint = spec.joints[rng.integers(len(spec.joints))]
+        new_spec = spec.replace_joint(joint.id, sign=-joint.sign)
+        cs = CorruptionSpec(
+            defect_id=self.defect_id, parts=(joint.part,), severity=1.0,
+            params={"joint": joint.id, "original_sign": joint.sign},
+            label={"part": joint.part, "flipped": True},
+        )
+        return ObjectProgram.from_spec(new_spec), cs

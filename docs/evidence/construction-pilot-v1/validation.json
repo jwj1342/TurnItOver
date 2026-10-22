@@ -1,0 +1,32 @@
+{
+  "status": "automatic_checks_passed",
+  "review_status": "pending_human_review",
+  "configs": {
+    "easy_direction_flip": {
+      "objects_tried": 24,
+      "objects_accepted": 5,
+      "target": 5
+    },
+    "medium_direction_flip": {
+      "objects_tried": 18,
+      "objects_accepted": 5,
+      "target": 5
+    },
+    "medium_part_offset": {
+      "objects_tried": 6,
+      "objects_accepted": 5,
+      "target": 5
+    }
+  },
+  "cases": 30,
+  "clean": 15,
+  "by_defect": {
+    "kinematics.direction_flip": 10,
+    "structure.part_offset": 5
+  },
+  "model_calls": 0,
+  "native_image_size": [
+    256,
+    256
+  ]
+}
