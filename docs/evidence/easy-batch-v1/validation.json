@@ -1,0 +1,42 @@
+{
+  "status": "automatic_checks_passed",
+  "review_status": "spot_check_pending",
+  "target_objects": 50,
+  "objects_tried": 143,
+  "objects_accepted": 50,
+  "samples": 126,
+  "clean": 50,
+  "by_defect": {
+    "kinematics.joint_axis": 47,
+    "kinematics.direction_flip": 29
+  },
+  "objects_by_category": {
+    "Faucet": 1,
+    "Pliers": 1,
+    "Dishwasher": 7,
+    "Box": 4,
+    "TrashCan": 5,
+    "USB": 2,
+    "StorageFurniture": 6,
+    "Refrigerator": 1,
+    "Laptop": 7,
+    "Display": 5,
+    "Table": 3,
+    "FoldingChair": 3,
+    "Switch": 1,
+    "Scissors": 1,
+    "Oven": 1,
+    "Door": 2
+  },
+  "rejection_reason_counts_upper_bound": {
+    "candidate_mid_motion_too_small": 617,
+    "normal_motion_or_framing_gate_failed": 508,
+    "candidate_limit_motion_too_small": 357,
+    "geometry_outside_frozen_camera": 169,
+    "axis_mid_trajectory_difference_too_small": 162,
+    "candidate_limit_clipped": 132,
+    "axis_limit_trajectory_difference_too_small": 104,
+    "axis_mid_region_too_small": 63
+  },
+  "model_calls": 0
+}

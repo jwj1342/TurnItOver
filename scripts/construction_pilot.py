@@ -16,7 +16,7 @@ from pathlib import Path
 
 import numpy as np
 
-from scripts.level0_expansion_search import inside_camera, render_states
+from scripts.level0_expansion_search import attempts as axis_attempt_list, inside_camera, render_states
 from scripts.level0_expansion_sources import load_pool
 from scripts.prepare_level0_axis_review import board, border_subject_fraction, full_normal_framing, normal_view, pair_preview, screen
 from scripts.prepare_obvious_defect_review import DEFAULT_CONFIG, ROOT, STATES, checker_result, image_metrics, sha256_path, write_jsonl
@@ -80,7 +80,11 @@ def _wrong_part(check, label) -> bool:
     return not set(label.parts) <= failed
 
 
-def screen_flip(ref, rendered, view, check, label):
+def axis_attempts(reference, joint, ref, seed_base):
+    return axis_attempt_list(reference, joint.id, seed_base)
+
+
+def screen_motion(ref, rendered, view, check, label):
     metrics, reasons = screen(ref, rendered, view, check)
     if _wrong_part(check, label):
         reasons.append("checker_does_not_flag_target_part")
@@ -112,8 +116,7 @@ def find_case(session, reference, views, config, seed_base):
     """First joint whose frozen normal configuration admits a passing attempt; no per-defect camera retry."""
     view_ids = [str(v.id) for v in views]
     view_by_id = {str(v.id): v for v in views}
-    make_attempts = flip_attempts if config["defect"] == "kinematics.direction_flip" else offset_attempts
-    screen_fn = screen_flip if config["defect"] == "kinematics.direction_flip" else screen_offset
+    make_attempts, screen_fn = HANDLERS[config["defect"]]
     diagnostics = []
     for index, joint in enumerate(reference.spec.joints):
         endpoints = sorted(set(joint.limits) - {0.}, key=lambda x: (-abs(x), -x))
@@ -157,8 +160,15 @@ def find_case(session, reference, views, config, seed_base):
                                        "rejection_reasons": reasons, "projected_extent_ndc": extent, "metrics": metrics})
             if not reasons:
                 record["selected"] = {"seed": attempt["seed"], "view": view}
-                return (ref, {**attempt, "render": rendered, "view": view}, joint.id, values), diagnostics
+                return (ref, {**attempt, "render": rendered, "view": view, "framing": framing}, joint.id, values), diagnostics
     return None, diagnostics
+
+
+HANDLERS = {
+    "kinematics.direction_flip": (flip_attempts, screen_motion),
+    "kinematics.joint_axis": (axis_attempts, screen_motion),
+    "structure.part_offset": (offset_attempts, screen_offset),
+}
 
 
 def candidate_order(pool, config, taken):

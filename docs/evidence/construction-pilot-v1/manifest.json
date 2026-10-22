@@ -5,7 +5,7 @@
     "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/assets/partnet-mobility-level0-round3/conversion.json": "ab890e1ab850bbea68eb6110b60cdacac3140b05eaf5a3c5bfceaf40c2eae863",
     "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/partnet-mobility-level0-round3/download-manifest.json": "59831c11c0caaca958923708947180f219d9d8a99923ec2b654a54ef55858e29",
     "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/data/assets/partnet-mobility-trainval-v1/splits.json": "812af706d9e8ff3cfd79d8edefd1118e6f7b897b205d249bb9172efcea994576",
-    "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/scripts/construction_pilot.py": "3d4b1942fa371f9690fd2f1f823fcaec86b107764aab54dbb0e2bf7b60be7bab"
+    "/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/scripts/construction_pilot.py": "2ea0eb9b425e2e3632da785f558014f6f3717951a47a3828d7b1d2a3760e5043"
   },
   "files": {
     "boards/cp-044916e7efbf.png": "456adb355b127f0cd8acd06ec9be32d4ab4ddeac8fa34eaf6dfd216257b9c7a4",
@@ -227,5 +227,5 @@
     "private/view_visibility.json": "7dcc73c0ba8f3f54e1a5aa18601d7ce9d2044b3b7f2656301e22deaf160d9f3e",
     "private/tiering.json": "5fcf61209a8725cbf96e2bacbf42b13009579565d402b9e920f9559212d83829"
   },
-  "note": "human_review.jsonl is the only file edited after generation; it holds the reviewer record and is not hash-pinned."
+  "note": "human_review.jsonl is the only file edited after generation; it holds the reviewer record and is not hash-pinned. construction_pilot.py was later refactored (defect registry, framing returned); a full replay produced identical case ids, gold and all 120 frame SHA-256."
 }

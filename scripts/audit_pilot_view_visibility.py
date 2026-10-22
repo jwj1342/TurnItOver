@@ -24,6 +24,19 @@ from turnitover.render.views import load_views
 GATE_FRACTION, GATE_REGION = 0.025, 750
 
 
+def per_view_visibility(cand, ref, state, framing, view_by_id) -> dict:
+    """Gate-based visibility of candidate vs reference at ``state`` in every rendered view."""
+    per_view = {}
+    for v in view_by_id:
+        m = image_metrics(cand["frames"][state][v], ref["frames"][state][v])
+        per_view[v] = {"core_changed_fraction": round(m["core_changed_fraction"], 4),
+                       "largest_core_region_px": m["largest_core_region_px"],
+                       "in_frame": inside_camera(cand, framing, view_by_id[v])[0],
+                       "passes_gate": m["core_changed_fraction"] >= GATE_FRACTION
+                       and m["largest_core_region_px"] >= GATE_REGION}
+    return per_view
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--bundle", type=Path, default=OUT)
@@ -51,14 +64,7 @@ def main() -> None:
             ref = render_states(session, reference, framing, joint, values, view_ids)
             cand = render_states(session, candidate, framing, joint, values, view_ids)
             state = "rest" if g["defect_id"] == "structure.part_offset" else "limit"
-            per_view = {}
-            for v in view_ids:
-                m = image_metrics(cand["frames"][state][v], ref["frames"][state][v])
-                per_view[v] = {"core_changed_fraction": round(m["core_changed_fraction"], 4),
-                               "largest_core_region_px": m["largest_core_region_px"],
-                               "in_frame": inside_camera(cand, framing, view_by_id[v])[0],
-                               "passes_gate": m["core_changed_fraction"] >= GATE_FRACTION
-                               and m["largest_core_region_px"] >= GATE_REGION}
+            per_view = per_view_visibility(cand, ref, state, framing, view_by_id)
             chosen = public[g["case_id"]]["view"]
             best = max(per_view, key=lambda v: per_view[v]["core_changed_fraction"])
             rows.append({"case_id": g["case_id"], "defect_id": g["defect_id"], "asset_id": g["asset_id"],

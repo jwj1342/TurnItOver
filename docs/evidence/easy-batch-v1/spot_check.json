@@ -1,0 +1,25 @@
+{
+  "rule": "first 10 defect samples by sha256('construction-pilot-v1:spot:' + case_id), plus their clean controls",
+  "case_ids": [
+    "eb-0e41cf6c5aac",
+    "eb-0fe6989802a8",
+    "eb-122722f2018b",
+    "eb-14c6afcdf779",
+    "eb-449cfe8aaca5",
+    "eb-4e9a8ef1706f",
+    "eb-5e4681c5cfff",
+    "eb-7381f59b198e",
+    "eb-83bfe159d125",
+    "eb-83d29b32800f",
+    "eb-8bef49f00a66",
+    "eb-8c1dc9b97078",
+    "eb-9145f90357d6",
+    "eb-ac0f07ec0202",
+    "eb-cad7bbbd813e",
+    "eb-ce72ec9b2d36",
+    "eb-dd06b83f2fbe",
+    "eb-ef0a282b1dc6",
+    "eb-f7883aa1b268",
+    "eb-ffc96b52d71e"
+  ]
+}
