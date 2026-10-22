@@ -48,3 +48,11 @@ issue #9 的构造试点。没有调用任何模型。
 - 物体类别只有 10 种，Table 占 3 个。
 - direction_flip 的通过率只有 21%–28%，主要因为运动太小或反向后差别不足。
 - 本试点不是 benchmark 数据：未划分 Train/Validation，也未进入 `benchmark/v1`。
+
+## 换视角可见性（事后审计，2026-10-22）
+
+`python -m scripts.audit_pilot_view_visibility` 在同一冻结相机和状态下，对 12 个视角逐个测量缺陷差异，结果见 `private/view_visibility.json`（门槛同 Level 0：核心变化 ≥2.5%，最大区域 ≥750 px）。
+
+- 用户“靠明暗才看出”的两个 direction_flip（`cp-161d44a249bb`、`cp-c767f9b60ae3`）：默认视角 back 只有约 0.031，换到 right 约 0.072–0.077，共 9 个视角通过门槛。
+- 默认视角只有一个视角通过门槛的 part_offset：`cp-43f9e326b678`、`cp-8c9e38d11cee`，数值紧贴门槛（0.025–0.026），换视角也没有更清楚。
+- 像素指标与人工“一眼可见”相关性很差：`cp-5bbf87afe780` 差异很大（0.17，10 个视角通过）但用户无法判断错误类型；`cp-59278cdaa038` 默认只有 0.028 却被一眼看出。因此不能用像素门槛当作可见性或可诊断性的判据。

@@ -1,0 +1,1431 @@
+{
+  "gate": {
+    "fraction": 0.025,
+    "region_px": 750
+  },
+  "rows": [
+    {
+      "case_id": "cp-044916e7efbf",
+      "defect_id": "kinematics.direction_flip",
+      "asset_id": "PM_103299",
+      "state_compared": "limit",
+      "chosen_view": "grazing_top",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.0547,
+      "best_view": "oblique_br",
+      "best_fraction": 0.058,
+      "views_passing_gate": [
+        "bottom",
+        "grazing_front",
+        "grazing_top",
+        "left",
+        "oblique_bl",
+        "oblique_br",
+        "right",
+        "top"
+      ],
+      "human_one_glance": true,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.0097,
+          "largest_core_region_px": 325,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "back": {
+          "core_changed_fraction": 0.0177,
+          "largest_core_region_px": 794,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "left": {
+          "core_changed_fraction": 0.0275,
+          "largest_core_region_px": 1132,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "right": {
+          "core_changed_fraction": 0.0266,
+          "largest_core_region_px": 1025,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "top": {
+          "core_changed_fraction": 0.0575,
+          "largest_core_region_px": 2039,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "bottom": {
+          "core_changed_fraction": 0.0575,
+          "largest_core_region_px": 2037,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.0249,
+          "largest_core_region_px": 1562,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.022,
+          "largest_core_region_px": 1312,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.058,
+          "largest_core_region_px": 2173,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.0399,
+          "largest_core_region_px": 1889,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.0282,
+          "largest_core_region_px": 1510,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0547,
+          "largest_core_region_px": 2175,
+          "in_frame": true,
+          "passes_gate": true
+        }
+      }
+    },
+    {
+      "case_id": "cp-161d44a249bb",
+      "defect_id": "kinematics.direction_flip",
+      "asset_id": "PM_100531",
+      "state_compared": "limit",
+      "chosen_view": "back",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.0308,
+      "best_view": "right",
+      "best_fraction": 0.0724,
+      "views_passing_gate": [
+        "back",
+        "front",
+        "grazing_front",
+        "left",
+        "oblique_bl",
+        "oblique_br",
+        "oblique_fl",
+        "oblique_fr",
+        "right"
+      ],
+      "human_one_glance": false,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.034,
+          "largest_core_region_px": 2226,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "back": {
+          "core_changed_fraction": 0.0308,
+          "largest_core_region_px": 2017,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "left": {
+          "core_changed_fraction": 0.0671,
+          "largest_core_region_px": 4400,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "right": {
+          "core_changed_fraction": 0.0724,
+          "largest_core_region_px": 4743,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "top": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "bottom": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.0367,
+          "largest_core_region_px": 1787,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.052,
+          "largest_core_region_px": 3411,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.0409,
+          "largest_core_region_px": 1926,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.0414,
+          "largest_core_region_px": 1635,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.0679,
+          "largest_core_region_px": 4450,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.005,
+          "largest_core_region_px": 178,
+          "in_frame": true,
+          "passes_gate": false
+        }
+      }
+    },
+    {
+      "case_id": "cp-43f9e326b678",
+      "defect_id": "structure.part_offset",
+      "asset_id": "PM_12259",
+      "state_compared": "rest",
+      "chosen_view": "oblique_bl",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.025,
+      "best_view": "oblique_bl",
+      "best_fraction": 0.025,
+      "views_passing_gate": [
+        "oblique_bl"
+      ],
+      "human_one_glance": false,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.002,
+          "largest_core_region_px": 66,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "back": {
+          "core_changed_fraction": 0.002,
+          "largest_core_region_px": 66,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "left": {
+          "core_changed_fraction": 0.0084,
+          "largest_core_region_px": 553,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "right": {
+          "core_changed_fraction": 0.0084,
+          "largest_core_region_px": 553,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "top": {
+          "core_changed_fraction": 0.0024,
+          "largest_core_region_px": 79,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "bottom": {
+          "core_changed_fraction": 0.0024,
+          "largest_core_region_px": 79,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.0095,
+          "largest_core_region_px": 625,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.0226,
+          "largest_core_region_px": 622,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.0064,
+          "largest_core_region_px": 324,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.025,
+          "largest_core_region_px": 917,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0042,
+          "largest_core_region_px": 268,
+          "in_frame": true,
+          "passes_gate": false
+        }
+      }
+    },
+    {
+      "case_id": "cp-51d2949ef1cd",
+      "defect_id": "kinematics.direction_flip",
+      "asset_id": "PM_27619",
+      "state_compared": "limit",
+      "chosen_view": "oblique_fl",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.0823,
+      "best_view": "oblique_fl",
+      "best_fraction": 0.0823,
+      "views_passing_gate": [
+        "back",
+        "front",
+        "oblique_br",
+        "oblique_fl",
+        "oblique_fr"
+      ],
+      "human_one_glance": true,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.054,
+          "largest_core_region_px": 3540,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "back": {
+          "core_changed_fraction": 0.054,
+          "largest_core_region_px": 3540,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "left": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "right": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "top": {
+          "core_changed_fraction": 0.0078,
+          "largest_core_region_px": 513,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "bottom": {
+          "core_changed_fraction": 0.0078,
+          "largest_core_region_px": 513,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.0303,
+          "largest_core_region_px": 1984,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.0823,
+          "largest_core_region_px": 5395,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.0426,
+          "largest_core_region_px": 1721,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.0819,
+          "largest_core_region_px": 5365,
+          "in_frame": false,
+          "passes_gate": true
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0261,
+          "largest_core_region_px": 1711,
+          "in_frame": false,
+          "passes_gate": true
+        }
+      }
+    },
+    {
+      "case_id": "cp-59278cdaa038",
+      "defect_id": "kinematics.direction_flip",
+      "asset_id": "PM_100141",
+      "state_compared": "limit",
+      "chosen_view": "grazing_front",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.0281,
+      "best_view": "oblique_fr",
+      "best_fraction": 0.1091,
+      "views_passing_gate": [
+        "back",
+        "front",
+        "grazing_front",
+        "oblique_br",
+        "oblique_fl",
+        "oblique_fr"
+      ],
+      "human_one_glance": true,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.1058,
+          "largest_core_region_px": 6629,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "back": {
+          "core_changed_fraction": 0.0968,
+          "largest_core_region_px": 6344,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "left": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "right": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "top": {
+          "core_changed_fraction": 0.001,
+          "largest_core_region_px": 63,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "bottom": {
+          "core_changed_fraction": 0.001,
+          "largest_core_region_px": 63,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.1091,
+          "largest_core_region_px": 6088,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.0659,
+          "largest_core_region_px": 3443,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.1042,
+          "largest_core_region_px": 6830,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.0066,
+          "largest_core_region_px": 433,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.0281,
+          "largest_core_region_px": 1511,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0211,
+          "largest_core_region_px": 1279,
+          "in_frame": true,
+          "passes_gate": false
+        }
+      }
+    },
+    {
+      "case_id": "cp-5bbf87afe780",
+      "defect_id": "kinematics.direction_flip",
+      "asset_id": "PM_4542",
+      "state_compared": "limit",
+      "chosen_view": "right",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.1743,
+      "best_view": "left",
+      "best_fraction": 0.1926,
+      "views_passing_gate": [
+        "back",
+        "front",
+        "grazing_front",
+        "grazing_top",
+        "left",
+        "oblique_bl",
+        "oblique_br",
+        "oblique_fl",
+        "oblique_fr",
+        "right"
+      ],
+      "human_one_glance": false,
+      "human_status": "human_review_rejected",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.0519,
+          "largest_core_region_px": 3402,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "back": {
+          "core_changed_fraction": 0.0339,
+          "largest_core_region_px": 2207,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "left": {
+          "core_changed_fraction": 0.1926,
+          "largest_core_region_px": 12619,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "right": {
+          "core_changed_fraction": 0.1743,
+          "largest_core_region_px": 11385,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "top": {
+          "core_changed_fraction": 0.0101,
+          "largest_core_region_px": 658,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "bottom": {
+          "core_changed_fraction": 0.0098,
+          "largest_core_region_px": 638,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.1204,
+          "largest_core_region_px": 7886,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.1507,
+          "largest_core_region_px": 9874,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.1019,
+          "largest_core_region_px": 6676,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.1223,
+          "largest_core_region_px": 7988,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.1716,
+          "largest_core_region_px": 11217,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0316,
+          "largest_core_region_px": 2072,
+          "in_frame": true,
+          "passes_gate": true
+        }
+      }
+    },
+    {
+      "case_id": "cp-6b2614bff78b",
+      "defect_id": "structure.part_offset",
+      "asset_id": "PM_11141",
+      "state_compared": "rest",
+      "chosen_view": "grazing_front",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.086,
+      "best_view": "grazing_front",
+      "best_fraction": 0.086,
+      "views_passing_gate": [
+        "grazing_front",
+        "left",
+        "oblique_bl",
+        "oblique_fr",
+        "right"
+      ],
+      "human_one_glance": false,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.0022,
+          "largest_core_region_px": 142,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "back": {
+          "core_changed_fraction": 0.0022,
+          "largest_core_region_px": 142,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "left": {
+          "core_changed_fraction": 0.057,
+          "largest_core_region_px": 2087,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "right": {
+          "core_changed_fraction": 0.0594,
+          "largest_core_region_px": 2108,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "top": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "bottom": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.0381,
+          "largest_core_region_px": 1239,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.0184,
+          "largest_core_region_px": 730,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.0053,
+          "largest_core_region_px": 122,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.036,
+          "largest_core_region_px": 2103,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.086,
+          "largest_core_region_px": 2822,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0183,
+          "largest_core_region_px": 1198,
+          "in_frame": true,
+          "passes_gate": false
+        }
+      }
+    },
+    {
+      "case_id": "cp-773f0507b556",
+      "defect_id": "kinematics.direction_flip",
+      "asset_id": "PM_26875",
+      "state_compared": "limit",
+      "chosen_view": "bottom",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.0437,
+      "best_view": "top",
+      "best_fraction": 0.0442,
+      "views_passing_gate": [
+        "bottom",
+        "grazing_front",
+        "left",
+        "oblique_bl",
+        "oblique_fl",
+        "right",
+        "top"
+      ],
+      "human_one_glance": true,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "back": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "left": {
+          "core_changed_fraction": 0.0397,
+          "largest_core_region_px": 1668,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "right": {
+          "core_changed_fraction": 0.0396,
+          "largest_core_region_px": 1666,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "top": {
+          "core_changed_fraction": 0.0442,
+          "largest_core_region_px": 2896,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "bottom": {
+          "core_changed_fraction": 0.0437,
+          "largest_core_region_px": 2863,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.0047,
+          "largest_core_region_px": 307,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.0266,
+          "largest_core_region_px": 1396,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.0041,
+          "largest_core_region_px": 267,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.0275,
+          "largest_core_region_px": 1353,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.0252,
+          "largest_core_region_px": 1376,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0244,
+          "largest_core_region_px": 1601,
+          "in_frame": true,
+          "passes_gate": false
+        }
+      }
+    },
+    {
+      "case_id": "cp-8c9e38d11cee",
+      "defect_id": "structure.part_offset",
+      "asset_id": "PM_32566",
+      "state_compared": "rest",
+      "chosen_view": "oblique_fl",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.0258,
+      "best_view": "oblique_fl",
+      "best_fraction": 0.0258,
+      "views_passing_gate": [
+        "oblique_fl"
+      ],
+      "human_one_glance": true,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "back": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "left": {
+          "core_changed_fraction": 0.0039,
+          "largest_core_region_px": 255,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "right": {
+          "core_changed_fraction": 0.0039,
+          "largest_core_region_px": 255,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "top": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "bottom": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.0258,
+          "largest_core_region_px": 938,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.0125,
+          "largest_core_region_px": 820,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.0092,
+          "largest_core_region_px": 389,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0027,
+          "largest_core_region_px": 176,
+          "in_frame": true,
+          "passes_gate": false
+        }
+      }
+    },
+    {
+      "case_id": "cp-92ff393921f6",
+      "defect_id": "structure.part_offset",
+      "asset_id": "PM_100432",
+      "state_compared": "rest",
+      "chosen_view": "grazing_top",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.0436,
+      "best_view": "oblique_fl",
+      "best_fraction": 0.0535,
+      "views_passing_gate": [
+        "bottom",
+        "front",
+        "grazing_top",
+        "oblique_bl",
+        "oblique_fl",
+        "top"
+      ],
+      "human_one_glance": false,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.033,
+          "largest_core_region_px": 1219,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "back": {
+          "core_changed_fraction": 0.0193,
+          "largest_core_region_px": 1218,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "left": {
+          "core_changed_fraction": 0.0089,
+          "largest_core_region_px": 543,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "right": {
+          "core_changed_fraction": 0.0055,
+          "largest_core_region_px": 171,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "top": {
+          "core_changed_fraction": 0.0284,
+          "largest_core_region_px": 1011,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "bottom": {
+          "core_changed_fraction": 0.0296,
+          "largest_core_region_px": 1090,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.0127,
+          "largest_core_region_px": 557,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.0535,
+          "largest_core_region_px": 1631,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.0016,
+          "largest_core_region_px": 57,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.0256,
+          "largest_core_region_px": 1044,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.0035,
+          "largest_core_region_px": 151,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0436,
+          "largest_core_region_px": 2856,
+          "in_frame": true,
+          "passes_gate": true
+        }
+      }
+    },
+    {
+      "case_id": "cp-c30891b25542",
+      "defect_id": "kinematics.direction_flip",
+      "asset_id": "PM_10098",
+      "state_compared": "limit",
+      "chosen_view": "grazing_front",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.0866,
+      "best_view": "oblique_br",
+      "best_fraction": 0.1657,
+      "views_passing_gate": [
+        "back",
+        "front",
+        "grazing_front",
+        "oblique_bl",
+        "oblique_br",
+        "oblique_fl"
+      ],
+      "human_one_glance": true,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.1336,
+          "largest_core_region_px": 8758,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "back": {
+          "core_changed_fraction": 0.1372,
+          "largest_core_region_px": 8990,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "left": {
+          "core_changed_fraction": 0.0018,
+          "largest_core_region_px": 119,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "right": {
+          "core_changed_fraction": 0.0035,
+          "largest_core_region_px": 119,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "top": {
+          "core_changed_fraction": 0.0021,
+          "largest_core_region_px": 95,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "bottom": {
+          "core_changed_fraction": 0.002,
+          "largest_core_region_px": 89,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.1214,
+          "largest_core_region_px": 7955,
+          "in_frame": false,
+          "passes_gate": true
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.0545,
+          "largest_core_region_px": 3572,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.1657,
+          "largest_core_region_px": 10855,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.0794,
+          "largest_core_region_px": 5205,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.0866,
+          "largest_core_region_px": 5674,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0325,
+          "largest_core_region_px": 2132,
+          "in_frame": false,
+          "passes_gate": true
+        }
+      }
+    },
+    {
+      "case_id": "cp-c767f9b60ae3",
+      "defect_id": "kinematics.direction_flip",
+      "asset_id": "PM_100616",
+      "state_compared": "limit",
+      "chosen_view": "back",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.0315,
+      "best_view": "right",
+      "best_fraction": 0.0767,
+      "views_passing_gate": [
+        "back",
+        "front",
+        "grazing_front",
+        "left",
+        "oblique_bl",
+        "oblique_br",
+        "oblique_fl",
+        "oblique_fr",
+        "right"
+      ],
+      "human_one_glance": false,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.0357,
+          "largest_core_region_px": 2337,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "back": {
+          "core_changed_fraction": 0.0315,
+          "largest_core_region_px": 2067,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "left": {
+          "core_changed_fraction": 0.0708,
+          "largest_core_region_px": 4642,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "right": {
+          "core_changed_fraction": 0.0767,
+          "largest_core_region_px": 5027,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "top": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "bottom": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.0405,
+          "largest_core_region_px": 1894,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.0557,
+          "largest_core_region_px": 3648,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.0417,
+          "largest_core_region_px": 2070,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.0462,
+          "largest_core_region_px": 1781,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.076,
+          "largest_core_region_px": 4980,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0042,
+          "largest_core_region_px": 187,
+          "in_frame": true,
+          "passes_gate": false
+        }
+      }
+    },
+    {
+      "case_id": "cp-d8c8480bb322",
+      "defect_id": "kinematics.direction_flip",
+      "asset_id": "PM_102377",
+      "state_compared": "limit",
+      "chosen_view": "grazing_front",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.0635,
+      "best_view": "oblique_fr",
+      "best_fraction": 0.0681,
+      "views_passing_gate": [
+        "back",
+        "front",
+        "grazing_front",
+        "oblique_br",
+        "oblique_fr",
+        "right"
+      ],
+      "human_one_glance": true,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.0659,
+          "largest_core_region_px": 4316,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "back": {
+          "core_changed_fraction": 0.0602,
+          "largest_core_region_px": 3948,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "left": {
+          "core_changed_fraction": 0.0057,
+          "largest_core_region_px": 376,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "right": {
+          "core_changed_fraction": 0.0344,
+          "largest_core_region_px": 1880,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "top": {
+          "core_changed_fraction": 0.0046,
+          "largest_core_region_px": 196,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "bottom": {
+          "core_changed_fraction": 0.0046,
+          "largest_core_region_px": 196,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.0681,
+          "largest_core_region_px": 4349,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.0209,
+          "largest_core_region_px": 1332,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.046,
+          "largest_core_region_px": 3015,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.0045,
+          "largest_core_region_px": 296,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.0635,
+          "largest_core_region_px": 3819,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0173,
+          "largest_core_region_px": 710,
+          "in_frame": true,
+          "passes_gate": false
+        }
+      }
+    },
+    {
+      "case_id": "cp-e1690495987b",
+      "defect_id": "structure.part_offset",
+      "asset_id": "PM_102074",
+      "state_compared": "rest",
+      "chosen_view": "oblique_fl",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.0284,
+      "best_view": "oblique_fr",
+      "best_fraction": 0.0303,
+      "views_passing_gate": [
+        "oblique_fl",
+        "oblique_fr"
+      ],
+      "human_one_glance": true,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.0229,
+          "largest_core_region_px": 1429,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "back": {
+          "core_changed_fraction": 0.0229,
+          "largest_core_region_px": 1267,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "left": {
+          "core_changed_fraction": 0.0105,
+          "largest_core_region_px": 407,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "right": {
+          "core_changed_fraction": 0.0112,
+          "largest_core_region_px": 395,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "top": {
+          "core_changed_fraction": 0.0153,
+          "largest_core_region_px": 948,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "bottom": {
+          "core_changed_fraction": 0.015,
+          "largest_core_region_px": 930,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.0303,
+          "largest_core_region_px": 1087,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.0284,
+          "largest_core_region_px": 1658,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.0085,
+          "largest_core_region_px": 189,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.0009,
+          "largest_core_region_px": 26,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.0135,
+          "largest_core_region_px": 491,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0145,
+          "largest_core_region_px": 828,
+          "in_frame": true,
+          "passes_gate": false
+        }
+      }
+    },
+    {
+      "case_id": "cp-ea010c1ff8fe",
+      "defect_id": "kinematics.direction_flip",
+      "asset_id": "PM_46768",
+      "state_compared": "limit",
+      "chosen_view": "oblique_bl",
+      "chosen_passes_gate": true,
+      "chosen_fraction": 0.068,
+      "best_view": "left",
+      "best_fraction": 0.1018,
+      "views_passing_gate": [
+        "grazing_front",
+        "left",
+        "oblique_bl",
+        "oblique_br",
+        "oblique_fl",
+        "oblique_fr",
+        "right"
+      ],
+      "human_one_glance": true,
+      "human_status": "human_review_complete",
+      "per_view": {
+        "front": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "back": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "left": {
+          "core_changed_fraction": 0.1018,
+          "largest_core_region_px": 6248,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "right": {
+          "core_changed_fraction": 0.0997,
+          "largest_core_region_px": 6248,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "top": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "bottom": {
+          "core_changed_fraction": 0.0,
+          "largest_core_region_px": 0,
+          "in_frame": true,
+          "passes_gate": false
+        },
+        "oblique_fr": {
+          "core_changed_fraction": 0.0677,
+          "largest_core_region_px": 4440,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_fl": {
+          "core_changed_fraction": 0.068,
+          "largest_core_region_px": 4458,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_br": {
+          "core_changed_fraction": 0.0677,
+          "largest_core_region_px": 4440,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "oblique_bl": {
+          "core_changed_fraction": 0.068,
+          "largest_core_region_px": 4458,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_front": {
+          "core_changed_fraction": 0.085,
+          "largest_core_region_px": 5572,
+          "in_frame": true,
+          "passes_gate": true
+        },
+        "grazing_top": {
+          "core_changed_fraction": 0.0247,
+          "largest_core_region_px": 1616,
+          "in_frame": true,
+          "passes_gate": false
+        }
+      }
+    }
+  ]
+}
