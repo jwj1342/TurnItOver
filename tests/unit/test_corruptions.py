@@ -32,8 +32,9 @@ def test_only_declared_parts_change(toy_program, defect_id):
         changed = [j for j in new.spec.joints if j != toy_program.spec.joint(j.id)]
         assert len(changed) == 1 and changed[0].part in spec.parts
         old = toy_program.spec.joint(changed[0].id)
-        assert changed[0].sign == -old.sign
-        assert (changed[0].axis, changed[0].anchor, changed[0].limits) == (old.axis, old.anchor, old.limits)
+        assert changed[0].sign == old.sign  # the flip is carried by the axis so the code does not show it
+        assert changed[0].axis == tuple(-x for x in old.axis)
+        assert (changed[0].anchor, changed[0].limits) == (old.anchor, old.limits)
     if defect_id == "kinematics.joint_axis":
         # rest pose unchanged: parts identical, only a joint axis differs
         assert old_parts == new_parts
