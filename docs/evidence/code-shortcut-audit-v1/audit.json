@@ -1,0 +1,372 @@
+{
+  "datasets": {
+    "benchmark-v1": {
+      "kinematics.joint_axis/axis_random_angle": {
+        "above_chance": [
+          "axis_off_coordinate",
+          "axis_signature_prior",
+          "axis_index_prior"
+        ],
+        "best_balanced_accuracy": 0.967,
+        "best_rule": "axis_off_coordinate",
+        "n_clean": 60,
+        "n_defect": 60,
+        "rules": {
+          "axis_dominant_negative": {
+            "above_chance": false,
+            "balanced_accuracy": 0.542,
+            "ci95": [
+              0.45,
+              0.625
+            ],
+            "clean_recall": 0.383,
+            "defect_recall": 0.7
+          },
+          "axis_index_prior": {
+            "above_chance": true,
+            "balanced_accuracy": 0.95,
+            "ci95": [
+              0.908,
+              0.983
+            ],
+            "clean_recall": 0.967,
+            "defect_recall": 0.933
+          },
+          "axis_off_coordinate": {
+            "above_chance": true,
+            "balanced_accuracy": 0.967,
+            "ci95": [
+              0.933,
+              0.992
+            ],
+            "clean_recall": 0.933,
+            "defect_recall": 1.0
+          },
+          "axis_signature_prior": {
+            "above_chance": true,
+            "balanced_accuracy": 0.908,
+            "ci95": [
+              0.858,
+              0.958
+            ],
+            "clean_recall": 0.967,
+            "defect_recall": 0.85
+          },
+          "origin_tidy": {
+            "above_chance": false,
+            "balanced_accuracy": 0.5,
+            "ci95": [
+              0.433,
+              0.567
+            ],
+            "clean_recall": 0.8,
+            "defect_recall": 0.2
+          },
+          "sign_negative": {
+            "above_chance": false,
+            "balanced_accuracy": 0.5,
+            "ci95": [
+              0.5,
+              0.5
+            ],
+            "clean_recall": 1.0,
+            "defect_recall": 0.0
+          }
+        }
+      }
+    },
+    "easy-batch-after-fix": {
+      "kinematics.direction_flip/axis_negation": {
+        "above_chance": [
+          "axis_signature_prior"
+        ],
+        "best_balanced_accuracy": 0.705,
+        "best_rule": "axis_signature_prior",
+        "n_clean": 50,
+        "n_defect": 29,
+        "rules": {
+          "axis_dominant_negative": {
+            "above_chance": false,
+            "balanced_accuracy": 0.553,
+            "ci95": [
+              0.437,
+              0.659
+            ],
+            "clean_recall": 0.52,
+            "defect_recall": 0.586
+          },
+          "axis_index_prior": {
+            "above_chance": false,
+            "balanced_accuracy": 0.484,
+            "ci95": [
+              0.395,
+              0.566
+            ],
+            "clean_recall": 0.14,
+            "defect_recall": 0.828
+          },
+          "axis_off_coordinate": {
+            "above_chance": false,
+            "balanced_accuracy": 0.5,
+            "ci95": [
+              0.5,
+              0.5
+            ],
+            "clean_recall": 1.0,
+            "defect_recall": 0.0
+          },
+          "axis_signature_prior": {
+            "above_chance": true,
+            "balanced_accuracy": 0.705,
+            "ci95": [
+              0.598,
+              0.801
+            ],
+            "clean_recall": 0.72,
+            "defect_recall": 0.69
+          },
+          "origin_tidy": {
+            "above_chance": false,
+            "balanced_accuracy": 0.566,
+            "ci95": [
+              0.498,
+              0.636
+            ],
+            "clean_recall": 0.2,
+            "defect_recall": 0.931
+          },
+          "sign_negative": {
+            "above_chance": false,
+            "balanced_accuracy": 0.5,
+            "ci95": [
+              0.5,
+              0.5
+            ],
+            "clean_recall": 1.0,
+            "defect_recall": 0.0
+          }
+        }
+      },
+      "kinematics.joint_axis/axis_permutation": {
+        "above_chance": [
+          "axis_signature_prior",
+          "axis_index_prior"
+        ],
+        "best_balanced_accuracy": 0.757,
+        "best_rule": "axis_signature_prior",
+        "n_clean": 50,
+        "n_defect": 42,
+        "rules": {
+          "axis_dominant_negative": {
+            "above_chance": false,
+            "balanced_accuracy": 0.55,
+            "ci95": [
+              0.45,
+              0.653
+            ],
+            "clean_recall": 0.48,
+            "defect_recall": 0.619
+          },
+          "axis_index_prior": {
+            "above_chance": true,
+            "balanced_accuracy": 0.757,
+            "ci95": [
+              0.665,
+              0.834
+            ],
+            "clean_recall": 0.68,
+            "defect_recall": 0.833
+          },
+          "axis_off_coordinate": {
+            "above_chance": false,
+            "balanced_accuracy": 0.5,
+            "ci95": [
+              0.5,
+              0.5
+            ],
+            "clean_recall": 1.0,
+            "defect_recall": 0.0
+          },
+          "axis_signature_prior": {
+            "above_chance": true,
+            "balanced_accuracy": 0.757,
+            "ci95": [
+              0.665,
+              0.834
+            ],
+            "clean_recall": 0.68,
+            "defect_recall": 0.833
+          },
+          "origin_tidy": {
+            "above_chance": false,
+            "balanced_accuracy": 0.507,
+            "ci95": [
+              0.421,
+              0.591
+            ],
+            "clean_recall": 0.8,
+            "defect_recall": 0.214
+          },
+          "sign_negative": {
+            "above_chance": false,
+            "balanced_accuracy": 0.5,
+            "ci95": [
+              0.5,
+              0.5
+            ],
+            "clean_recall": 1.0,
+            "defect_recall": 0.0
+          }
+        }
+      }
+    },
+    "easy-batch-v1-before-fix": {
+      "kinematics.direction_flip/sign_negation": {
+        "above_chance": [
+          "sign_negative"
+        ],
+        "best_balanced_accuracy": 1.0,
+        "best_rule": "sign_negative",
+        "n_clean": 50,
+        "n_defect": 29,
+        "rules": {
+          "axis_dominant_negative": {
+            "above_chance": false,
+            "balanced_accuracy": 0.533,
+            "ci95": [
+              0.423,
+              0.654
+            ],
+            "clean_recall": 0.48,
+            "defect_recall": 0.586
+          },
+          "axis_index_prior": {
+            "above_chance": false,
+            "balanced_accuracy": 0.484,
+            "ci95": [
+              0.395,
+              0.566
+            ],
+            "clean_recall": 0.14,
+            "defect_recall": 0.828
+          },
+          "axis_off_coordinate": {
+            "above_chance": false,
+            "balanced_accuracy": 0.5,
+            "ci95": [
+              0.5,
+              0.5
+            ],
+            "clean_recall": 1.0,
+            "defect_recall": 0.0
+          },
+          "axis_signature_prior": {
+            "above_chance": false,
+            "balanced_accuracy": 0.514,
+            "ci95": [
+              0.422,
+              0.601
+            ],
+            "clean_recall": 0.2,
+            "defect_recall": 0.828
+          },
+          "origin_tidy": {
+            "above_chance": false,
+            "balanced_accuracy": 0.566,
+            "ci95": [
+              0.498,
+              0.636
+            ],
+            "clean_recall": 0.2,
+            "defect_recall": 0.931
+          },
+          "sign_negative": {
+            "above_chance": true,
+            "balanced_accuracy": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "clean_recall": 1.0,
+            "defect_recall": 1.0
+          }
+        }
+      },
+      "kinematics.joint_axis/axis_random_angle": {
+        "above_chance": [
+          "axis_off_coordinate",
+          "axis_signature_prior",
+          "axis_index_prior"
+        ],
+        "best_balanced_accuracy": 1.0,
+        "best_rule": "axis_off_coordinate",
+        "n_clean": 50,
+        "n_defect": 47,
+        "rules": {
+          "axis_dominant_negative": {
+            "above_chance": false,
+            "balanced_accuracy": 0.505,
+            "ci95": [
+              0.409,
+              0.606
+            ],
+            "clean_recall": 0.52,
+            "defect_recall": 0.489
+          },
+          "axis_index_prior": {
+            "above_chance": true,
+            "balanced_accuracy": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "clean_recall": 1.0,
+            "defect_recall": 1.0
+          },
+          "axis_off_coordinate": {
+            "above_chance": true,
+            "balanced_accuracy": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "clean_recall": 1.0,
+            "defect_recall": 1.0
+          },
+          "axis_signature_prior": {
+            "above_chance": true,
+            "balanced_accuracy": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "clean_recall": 1.0,
+            "defect_recall": 1.0
+          },
+          "origin_tidy": {
+            "above_chance": false,
+            "balanced_accuracy": 0.504,
+            "ci95": [
+              0.424,
+              0.586
+            ],
+            "clean_recall": 0.2,
+            "defect_recall": 0.809
+          },
+          "sign_negative": {
+            "above_chance": false,
+            "balanced_accuracy": 0.5,
+            "ci95": [
+              0.5,
+              0.5
+            ],
+            "clean_recall": 1.0,
+            "defect_recall": 0.0
+          }
+        }
+      }
+    }
+  },
+  "flag_threshold": 0.65,
+  "metric": "balanced accuracy of rules on candidate code only (0.5 = chance)"
+}
