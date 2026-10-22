@@ -2,7 +2,7 @@
 
 取代 `easy-batch-v1` 中的 47 个随机角度 `joint_axis` 样本（原因与做法见 `docs/code-shortcut-fix.md`）。缺陷 id 仍为 `kinematics.joint_axis`，`private/gold.jsonl` 的 `parameters.mode` 与 `stratum` 均为 `axis_permutation`：把参考轴 `±e_i` 换成另一条坐标轴 `±e_j`（j≠i），正负号由显式的 `numpy.random.Generator` 抽取。没有调用任何模型。
 
-**所有行均为 `pending_human_review`。** 人工审核结论只由用户填写，本批没有任何代填。未冻结 v2，没有 `FREEZE.json`，也未划分 Train/Validation。
+**人工审核（抽查 10 个）已完成：** 10 个置换样本全部判 fail，一眼可见，结论由用户逐例给出（`eb2-ac54fe009b34` 未指出具体错误）；其余 32 个仍为 `pending_human_review`。本批没有任何代填。未冻结 v2，没有 `FREEZE.json`，也未划分 Train/Validation。
 
 | 项目 | 数量 |
 |---|---:|
@@ -19,7 +19,7 @@
 
 ## 已知问题
 
-置换后的候选轴分布与 clean 轴分布不同（clean 以 x 轴为主，没有 `-z`；置换样本偏向 y/z 且含 `-z`），只读代码的统计规则仍能高于随机，见 `docs/code-shortcut-fix.md` 的审计数字与修改方案。**在方案落实前，本批不应作为“代码层无捷径”的数据使用。**
+置换后的候选轴分布与 clean 轴分布不同（clean 以 x 轴为主，没有 `-z`；置换样本偏向 y/z 且含 `-z`），只读代码的统计规则仍能高于随机，见 `docs/code-shortcut-fix.md` 的审计数字与修改方案。这不是 #8 第 9 条的要求，残余推迟到后续层处理；本批用于 `code_read` 评测时须同时报告审计数字，不能描述为“代码层无捷径”。
 
 ## 复现与存放
 

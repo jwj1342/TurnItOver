@@ -53,3 +53,7 @@ PM_100685、PM_10305、PM_10357、PM_11581、PM_9992 在随机角度下通过过
 `spot_check.json` 中原有的 4 个 `joint_axis` 样本不用审；clean 与 `direction_flip` 照常审（第一次抽查已完成 19/20 与 gold 一致、1 个证据不足，见 `human_review.jsonl`）。`joint_axis` 的新样本见 `easy-batch-v2`。
 
 `manifest.json` 已重新生成：`private/gold.jsonl` 与 29 个 `direction_flip` 候选 spec 的哈希更新，`human_review.jsonl` 仍不在哈希之内。
+
+### 审核更新
+
+本批抽查之外，`easy-batch-v2` 抽查所需的 7 个 clean 对照已由用户审核：全部 pass（用户原话“其他pass”，统一结论，非逐例描述），见 `human_review.jsonl`。
