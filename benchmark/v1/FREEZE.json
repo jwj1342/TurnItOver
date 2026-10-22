@@ -1,0 +1,9 @@
+{
+  "benchmark": "benchmark-v1",
+  "files": {
+    "gold.jsonl": "d6ef28a57d2aaa7e4728b396095f8a9e950f51c2896ebc155e15ef125797cba5",
+    "manifest.jsonl": "4ab8e23394bf364966922a42fe671acb6e6a0f1265236e93797df19731be5cd2",
+    "protocol.json": "726a02d0841228b1f2e663027ad60418156c92ef56a5313cbf08874b19468aaa",
+    "split.json": "86504bdc7dd8e96a4bb7a1b465b4c01418a6b0741fb731ff2b01384d0c42b110"
+  }
+}

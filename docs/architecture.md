@@ -41,6 +41,7 @@ AssetSource ──AssetSpec──▶ Corruption ──ObjectProgram(spec, ts)─
 | `storage` | shard tar writer/reader | core, checkers.base |
 | `engine` | sharding, the vertical slice `run_generate` | everything above |
 | `dataset` | asset-group splits, isolated input/gold export, privileged diagnosis templates, offline runtime evaluation | core, storage, verifier |
+| `benchmark` | frozen Benchmark v1 manifest/split/gold, strict prediction contract, scoring and data audit; see [benchmark-v1](benchmark-v1.md) | taxonomy, core.jsonio, Pillow |
 | `detectability` | (defect, action) matrix on an asset | render, corruptions, checkers.meshops |
 | `models` | role config, REST vision adapters, single-call CLI workflows | stdlib, Pillow; syntax check for reconstruction |
 | `verifier` | validated decisions, budgeted episodes, active/fixed/random/runtime policies, reports and isolated audits | core, policy execution, render, models |

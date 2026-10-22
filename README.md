@@ -159,6 +159,7 @@ pytest -m browser  # 需要 web/dist 和 Playwright 浏览器
 ## 进一步阅读
 
 - [架构说明](docs/architecture.md)：模块边界与固定契约。
+- [Benchmark v1](docs/benchmark-v1.md)：难度定义、冻结划分、评分协议与数据审计（里程碑 1）。
 - [协议说明](docs/protocol.md)：浏览器运行时接口与验证记录约定。
 - [实验说明](docs/experiments.md)：示例复现与当前研究范围。
 - [仓库工作约定](CLAUDE.md)：环境、依赖与提交前检查。

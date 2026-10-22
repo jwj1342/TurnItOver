@@ -1,0 +1,226 @@
+{
+  "benchmark": "benchmark-v1",
+  "status": "passed",
+  "failures": [],
+  "gaps": [
+    "hard: no train samples (deferred: collected later)",
+    "hard: no validation samples (deferred: collected later)",
+    "expert: no train samples (deferred: collected later)",
+    "expert: no validation samples (deferred: collected later)",
+    "structure.part_offset: no samples in any tier",
+    "compound errors: no samples (expert tier is empty, deferred: collected later)",
+    "no gold-uncertain (evidence-insufficient) samples; abstention is only exercised by the no_image condition",
+    "110/120 samples have no recorded camera view id (frozen via image SHA-256)",
+    "64/120 human reviews are aggregate user confirmations, not per-case labels",
+    "validation has only 24 samples from 12 objects; metric confidence intervals will be wide",
+    "original 7 Validation groups (PartNet-Mobility 1280/10797/34610/45759/100202/102252/102590) have no Level 0 samples and are not part of Benchmark v1"
+  ],
+  "freeze_files": {
+    "gold.jsonl": "d6ef28a57d2aaa7e4728b396095f8a9e950f51c2896ebc155e15ef125797cba5",
+    "manifest.jsonl": "4ab8e23394bf364966922a42fe671acb6e6a0f1265236e93797df19731be5cd2",
+    "protocol.json": "726a02d0841228b1f2e663027ad60418156c92ef56a5313cbf08874b19468aaa",
+    "split.json": "86504bdc7dd8e96a4bb7a1b465b4c01418a6b0741fb731ff2b01384d0c42b110"
+  },
+  "loader": {
+    "samples": 120,
+    "per_split": {
+      "validation": 24,
+      "train": 96
+    },
+    "images_decoded_and_sha_verified": 480
+  },
+  "leakage": {
+    "asset_id": {
+      "values_shared_between_objects": 0,
+      "across_splits": 0
+    },
+    "split_group": {
+      "values_shared_between_objects": 0,
+      "across_splits": 0
+    },
+    "source_model_id": {
+      "values_shared_between_objects": 0,
+      "across_splits": 0
+    },
+    "source_archive_sha256": {
+      "values_shared_between_objects": 0,
+      "across_splits": 0
+    },
+    "geometry_fingerprint": {
+      "values_shared_between_objects": 0,
+      "across_splits": 0
+    },
+    "reference_program_sha": {
+      "values_shared_between_objects": 0,
+      "across_splits": 0
+    },
+    "identical_image_sha_across_splits": 0,
+    "exposed_objects_in_validation": 0
+  },
+  "table1": {
+    "all": {
+      "easy": {
+        "objects": 23,
+        "clean": 23,
+        "joint_axis": 23,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 46
+      },
+      "medium": {
+        "objects": 37,
+        "clean": 37,
+        "joint_axis": 37,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 74
+      },
+      "hard": {
+        "objects": 0,
+        "clean": 0,
+        "joint_axis": 0,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 0
+      },
+      "expert": {
+        "objects": 0,
+        "clean": 0,
+        "joint_axis": 0,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 0
+      },
+      "total": {
+        "objects": 60,
+        "clean": 60,
+        "joint_axis": 60,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 120
+      }
+    },
+    "train": {
+      "easy": {
+        "objects": 18,
+        "clean": 18,
+        "joint_axis": 18,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 36
+      },
+      "medium": {
+        "objects": 30,
+        "clean": 30,
+        "joint_axis": 30,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 60
+      },
+      "hard": {
+        "objects": 0,
+        "clean": 0,
+        "joint_axis": 0,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 0
+      },
+      "expert": {
+        "objects": 0,
+        "clean": 0,
+        "joint_axis": 0,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 0
+      },
+      "total": {
+        "objects": 48,
+        "clean": 48,
+        "joint_axis": 48,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 96
+      }
+    },
+    "validation": {
+      "easy": {
+        "objects": 5,
+        "clean": 5,
+        "joint_axis": 5,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 10
+      },
+      "medium": {
+        "objects": 7,
+        "clean": 7,
+        "joint_axis": 7,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 14
+      },
+      "hard": {
+        "objects": 0,
+        "clean": 0,
+        "joint_axis": 0,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 0
+      },
+      "expert": {
+        "objects": 0,
+        "clean": 0,
+        "joint_axis": 0,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 0
+      },
+      "total": {
+        "objects": 12,
+        "clean": 12,
+        "joint_axis": 12,
+        "part_offset": 0,
+        "compound": 0,
+        "total": 24
+      }
+    }
+  },
+  "split_objects": {
+    "('easy', 'train', True)": 12,
+    "('easy', 'validation', False)": 5,
+    "('medium', 'validation', False)": 7,
+    "('medium', 'train', False)": 14,
+    "('easy', 'train', False)": 6,
+    "('medium', 'train', True)": 16
+  },
+  "scorer_reproducibility": {
+    "oracle": {
+      "condition": "rgb",
+      "byte_identical_rerun": true,
+      "metrics": {
+        "macro_f1": 1.0,
+        "localization_f1": 1.0,
+        "exact_verdict": 1.0,
+        "evidence_consistency": 1.0,
+        "false_pass": 0.0,
+        "invalid_output": 0.0
+      }
+    },
+    "abstain": {
+      "condition": "no_image",
+      "byte_identical_rerun": true,
+      "metrics": {
+        "macro_f1": 0.0,
+        "localization_f1": 0.0,
+        "exact_verdict": 1.0,
+        "evidence_consistency": null,
+        "false_pass": 0.0,
+        "invalid_output": 0.0
+      }
+    }
+  },
+  "easy_candidate_pool": {
+    "objects": 60,
+    "samples": 120
+  }
+}
