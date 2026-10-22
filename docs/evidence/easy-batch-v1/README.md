@@ -1,8 +1,20 @@
-# easy-batch-v1：Easy 批量构造（待抽查）
+# easy-batch-v1：Easy 批量构造（已抽查 20 个，其余待审）
 
 issue #9 的 Easy 批次：单关节物体，每个物体一个 clean 对照，加上通过自动校验的 `kinematics.joint_axis` 和/或 `kinematics.direction_flip` 样本。门槛与冻结相机协议同 `construction-pilot-v1`。没有调用任何模型。
 
-**所有行均为 `pending_human_review`。** 本批只做抽查，抽查不等于全部人工审核；通过抽查前不进入任何基准版本，也未划分 Train/Validation。
+**只有抽查的 20 个样本有人工记录，其余 106 个仍是 `pending_human_review`。** 抽查不等于全部人工审核；本批不进入任何基准版本，也未划分 Train/Validation。
+
+## 抽查结果（2026-10-22，盲审后对照 gold）
+
+| 结果 | 数量 |
+|---|---:|
+| 缺陷样本判 fail 且与 gold 一致（joint_axis 3、direction_flip 6） | 9 |
+| clean 判 pass 且与 gold 一致（用户原话“其他pass”，统一结论，非逐例描述） | 10 |
+| direction_flip 察觉差异但无法确定错误类型（证据不足，`human_review_rejected`） | 1：`eb-83bfe159d125`（PM_4578） |
+
+- 9 个 fail 全部“一眼不对”，描述与注入的缺陷类型对应；`eb-ef0a282b1dc6` 是 joint_axis，用户描述为“运动方向错了”，判定正确但没有区分到轴。
+- 试点和本批各出现 1 个“看得出不对、说不出错在哪”的 direction_flip，两次都是同一种缺陷。目前样本太少，不能判定为系统性问题，需要在后续批次继续观察。
+- 另一会话对 direction_flip 的编码改动（见 `direction_flip_regeneration.json`）重渲染的 29 个样本图像逐字节一致，抽查结论按图像有效。
 
 | 项目 | 数量 |
 |---|---:|
