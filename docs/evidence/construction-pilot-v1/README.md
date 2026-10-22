@@ -1,6 +1,22 @@
-# construction-pilot-v1：待人工审核
+# construction-pilot-v1
 
-issue #9 的构造试点，**全部 30 个样本均为 `pending_human_review`，自动校验不等于人工审核**。没有调用任何模型。
+issue #9 的构造试点。没有调用任何模型。
+
+## 审核结果（2026-10-22，用户盲审后对照 gold）
+
+| 结果 | 数量 |
+|---|---:|
+| 缺陷样本判 fail 且与 gold 一致 | 14 |
+| clean 判 pass 且与 gold 一致 | 15（用户原话“其他：pass”，为统一结论，非逐例描述） |
+| 缺陷样本察觉差异但无法确定错误类型（证据不足，`human_review_rejected`） | 1：`cp-5bbf87afe780`（单关节 direction_flip，物体 PM_4542） |
+
+- 14 个 fail 的描述与实际注入的缺陷类型全部对应：方向反向 9 个、初始位置偏移 5 个。
+- **一眼可见性：** medium direction_flip 5/5 一眼可见；easy direction_flip 只有 2/5，其余 3 个（含上面证据不足的 1 个）要靠比较座位等部件的明暗；part_offset 一眼可见 2/5，其余需要多看一眼。
+- 用户对两个 direction_flip 样本（`cp-51d2949ef1cd`、`cp-c30891b25542`）指出：单看候选在物理上合理，只有与参考对比才不符。这说明该缺陷只能由“参考运动一致性”判断，见 `docs/benchmark-v1.md`。
+- 尚未填写：`no_clipping_or_occlusion`、`flagged_part_is_the_wrong_one`（用户未逐例提供，保持 null，不替用户补）。
+- 配对规则：同物体 clean 与缺陷两行都通过才可导出，因此 PM_4542 这一对暂不合格，合格对为 14 个物体。
+
+以下为审核前的原始说明。
 
 15 个来自第 3 轮下载的新物体，每个物体一个 clean 对照和一个缺陷样本（同一冻结相机、同一关节状态）。
 

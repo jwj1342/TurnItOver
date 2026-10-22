@@ -158,7 +158,6 @@
     "frames/cp-f6504b7c6278/1.png": "f43af357af3553881195725d24968b80e7e6ca35e8c898117bfc3c86f3496303",
     "frames/cp-f6504b7c6278/2.png": "0f6e9be5739ab6cde98f32979665183936480f9f515bc4fdd518fc7e891339dd",
     "frames/cp-f6504b7c6278/3.png": "f43af357af3553881195725d24968b80e7e6ca35e8c898117bfc3c86f3496303",
-    "human_review.jsonl": "e39d190eec4c40b383fa9fffcb47ed428794f8a48a73c3ecaa2197dac45c0798",
     "inputs/cp-044916e7efbf.png": "f4339fb9d7a57144589607009a32490be9e07a81ebea12050272c4693f368e92",
     "inputs/cp-09bac5eea249.png": "6b278e77b51da486b9b8c6a0fc756b0a629fb2c9de680f734001d022f8ae7aad",
     "inputs/cp-161d44a249bb.png": "81883c313370014b592056f3a5185ddd36b110c8a8e1873a144fe4da1addff36",
@@ -225,5 +224,6 @@
     "review.html": "fab5bcd07c99f4016df6291572d4d92fda199187b58309e12990198281eceb60",
     "review_manifest.jsonl": "f5d5e184b7d6e20e2163e1a1597f11b3e44276ec775efc3798718144d8abae85",
     "validation.json": "cdcc05de7cd1a8c1ad7d93ddf58ce82613276b6cba496ecfc8c095da96e52935"
-  }
+  },
+  "note": "human_review.jsonl is the only file edited after generation; it holds the reviewer record and is not hash-pinned."
 }
