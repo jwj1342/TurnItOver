@@ -1,0 +1,27 @@
+{
+  "rule": "first 10 defect samples by sha256('easy-batch-v2:spot:' + case_id), plus their clean controls (same rule as easy-batch-v1). Clean controls are the easy-batch-v1 samples: their boards live in ../easy-batch-v1/boards and their reviews belong in easy-batch-v1/human_review.jsonl",
+  "case_ids": [
+    "eb2-22a55655588f",
+    "eb2-290457fd963c",
+    "eb2-4f0f5f5adb7d",
+    "eb2-56311c2110db",
+    "eb2-8d2ec140aa77",
+    "eb2-9a7d4e04ac7b",
+    "eb2-a756983bad58",
+    "eb2-ac54fe009b34",
+    "eb2-bd498ee7ea67",
+    "eb2-cb4f4692f441"
+  ],
+  "clean_control_case_ids": [
+    "eb-14c6afcdf779",
+    "eb-1879be983090",
+    "eb-24880c53f351",
+    "eb-3cd3a32f9f9b",
+    "eb-5d50324cf3c9",
+    "eb-5e4681c5cfff",
+    "eb-66f6fc71d4f0",
+    "eb-7381f59b198e",
+    "eb-afa99eeb7e7a",
+    "eb-ba7f71ded064"
+  ]
+}

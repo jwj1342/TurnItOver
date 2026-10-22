@@ -34,3 +34,22 @@ issue #9 的 Easy 批次：单关节物体，每个物体一个 clean 对照，�
 - 候选 spec 约 263 MB，放在 `data/benchmarks/easy-batch-v1-specs/`（不进 Git），`manifest.json` 记录每个文件的 SHA-256；图像、图板和审核页在本目录。
 - `python -m scripts.construct_easy_batch --out <新路径> --specs <新路径>`，可中断后续跑。
 - `private/view_visibility.jsonl` 记录每个缺陷样本在 12 个视角下的差异，供后续按“是否需要补视角”分层（`scripts/tier_pilot.py` 的规则尚未应用到本批，因为需要人工审核的“一眼可见”结果）。
+
+## 代码层捷径修复后的状态（issue #9 / #8 第 9 条）
+
+只读候选代码就能判断有没有缺陷，见 `docs/code-shortcut-fix.md`。本批受影响如下：
+
+- **`direction_flip`（29 个）已原地修复。** 候选 spec 重新生成：`axis` 取负、`sign` 保持 1，运动与原先 `sign=-1` 完全相同。逐张重新渲染，4 张图的 SHA-256 与已提交的一致（29/29，明细见 `direction_flip_regeneration.json`），所以图像、图板和人工审核结论继续有效。`private/gold.jsonl` 新增 `stratum`：已修复的为 `axis_negation`。
+- **`joint_axis`（47 个）作废，由 `easy-batch-v2` 取代。** 它们的随机垂直轴 90° 旋转几乎都不沿坐标轴（45/47）。`private/gold.jsonl` 中这 47 行的 `training_eligibility` 改为 `superseded_code_shortcut`，`stratum` 为 `axis_random_angle`；文件与图像保留作历史记录，不再进入任何基准或训练集。其中 42 个在 v2 有置换后的对应样本。
+- **`6cd197b` 抽查中那 4 个 `joint_axis` 审核结论**（`eb-449cfe8aaca5`、`eb-cad7bbbd813e`、`eb-ce72ec9b2d36`、`eb-ef0a282b1dc6`，均为 fail）保留为历史记录，**不再作为有效样本的审核依据**；v2 的样本需要重新审核。
+- **clean（50 个）不变。** 它们的 reference 图像与 v2 逐张核对一致，clean 对照继续有效，审核记录继续有效。
+
+### 5 个在 v2 中没有对应样本的物体
+
+PM_100685、PM_10305、PM_10357、PM_11581、PM_9992 在随机角度下通过过像素门槛，改用坐标轴置换后四个候选都没有通过（`easy-batch-v2/private/screening.jsonl`）。这些物体没有 `joint_axis` 样本，**clean 对照照常保留**（`eb-518cd17f43d2`、`eb-3951626dee9f`、`eb-92c5253d586a`、`eb-8ce90fc04986`、`eb-24a1fff115b8`）：clean 样本只依赖物体与门槛，不依赖缺陷是否构造成功，而且不混入任何缺陷内容。其中 PM_100685 仍有已修复的 `direction_flip` 样本。注意：这几个 clean 没有配对的 joint_axis 缺陷，若将来要求每个 clean 都有配对缺陷，应单独筛掉；这样做是否引入类别偏差，尚未评估。
+
+### 抽查现状
+
+`spot_check.json` 中原有的 4 个 `joint_axis` 样本不用审；clean 与 `direction_flip` 照常审（第一次抽查已完成 19/20 与 gold 一致、1 个证据不足，见 `human_review.jsonl`）。`joint_axis` 的新样本见 `easy-batch-v2`。
+
+`manifest.json` 已重新生成：`private/gold.jsonl` 与 29 个 `direction_flip` 候选 spec 的哈希更新，`human_review.jsonl` 仍不在哈希之内。

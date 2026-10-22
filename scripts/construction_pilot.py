@@ -80,6 +80,19 @@ def _wrong_part(check, label) -> bool:
     return not set(label.parts) <= failed
 
 
+def permutation_attempts(reference, joint, ref, seed_base):
+    """Distinct axis_permutation candidates for the joint, in seed order (a single-joint object has four)."""
+    corruption = get_corruption("kinematics.joint_axis", mode="axis_permutation")
+    found, seen = [], set()
+    for seed in range(seed_base, seed_base + 256):
+        program, label = corruption.apply(reference, np.random.default_rng(seed))
+        axis = tuple(label.label["axis"])
+        if label.params["joint"] == joint.id and axis not in seen:
+            seen.add(axis)
+            found.append({"program": program, "label": label, "seed": seed})
+    return found
+
+
 def axis_attempts(reference, joint, ref, seed_base):
     return axis_attempt_list(reference, joint.id, seed_base)
 
@@ -116,7 +129,7 @@ def find_case(session, reference, views, config, seed_base):
     """First joint whose frozen normal configuration admits a passing attempt; no per-defect camera retry."""
     view_ids = [str(v.id) for v in views]
     view_by_id = {str(v.id): v for v in views}
-    make_attempts, screen_fn = HANDLERS[config["defect"]]
+    make_attempts, screen_fn = HANDLERS[config.get("handler", config["defect"])]
     diagnostics = []
     for index, joint in enumerate(reference.spec.joints):
         endpoints = sorted(set(joint.limits) - {0.}, key=lambda x: (-abs(x), -x))
@@ -167,6 +180,7 @@ def find_case(session, reference, views, config, seed_base):
 HANDLERS = {
     "kinematics.direction_flip": (flip_attempts, screen_motion),
     "kinematics.joint_axis": (axis_attempts, screen_motion),
+    "kinematics.joint_axis/axis_permutation": (permutation_attempts, screen_motion),
     "structure.part_offset": (offset_attempts, screen_offset),
 }
 

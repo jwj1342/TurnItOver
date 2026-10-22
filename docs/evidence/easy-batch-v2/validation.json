@@ -1,0 +1,35 @@
+{
+  "status": "automatic_checks_passed",
+  "review_status": "pending_human_review",
+  "objects_considered": 50,
+  "objects_accepted": 42,
+  "objects_skipped_axis_not_coordinate": 0,
+  "objects_rejected_by_pixel_gates": 8,
+  "samples": 42,
+  "by_stratum": {
+    "axis_permutation": 42
+  },
+  "supersedes_v1_samples": 42,
+  "objects_without_v1_sample_now_included": 0,
+  "v1_objects_without_v2_sample": [
+    "PM_100685",
+    "PM_10305",
+    "PM_10357",
+    "PM_11581",
+    "PM_9992"
+  ],
+  "permutation_targets": {
+    "0->1-": 12,
+    "0->2+": 5,
+    "1->0-": 2,
+    "2->1+": 2,
+    "2->0-": 4,
+    "1->2+": 3,
+    "0->1+": 5,
+    "1->0+": 1,
+    "0->2-": 5,
+    "2->1-": 1,
+    "1->2-": 2
+  },
+  "model_calls": 0
+}
