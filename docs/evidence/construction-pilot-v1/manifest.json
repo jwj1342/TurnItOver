@@ -223,7 +223,9 @@
     "private/screening.json": "120a742cb3b17d172acfed01602f6adbdcd94b18360f04e7e9fc950bff69ff25",
     "review.html": "fab5bcd07c99f4016df6291572d4d92fda199187b58309e12990198281eceb60",
     "review_manifest.jsonl": "f5d5e184b7d6e20e2163e1a1597f11b3e44276ec775efc3798718144d8abae85",
-    "validation.json": "cdcc05de7cd1a8c1ad7d93ddf58ce82613276b6cba496ecfc8c095da96e52935"
+    "validation.json": "cdcc05de7cd1a8c1ad7d93ddf58ce82613276b6cba496ecfc8c095da96e52935",
+    "private/view_visibility.json": "7dcc73c0ba8f3f54e1a5aa18601d7ce9d2044b3b7f2656301e22deaf160d9f3e",
+    "private/tiering.json": "5fcf61209a8725cbf96e2bacbf42b13009579565d402b9e920f9559212d83829"
   },
   "note": "human_review.jsonl is the only file edited after generation; it holds the reviewer record and is not hash-pinned."
 }

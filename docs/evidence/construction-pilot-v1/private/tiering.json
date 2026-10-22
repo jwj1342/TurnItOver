@@ -1,0 +1,213 @@
+{
+  "rule": {
+    "hard_if": "one_glance is False and another gate-passing view shows >= ratio x the default view",
+    "ratio": 2.0,
+    "post_hoc": true
+  },
+  "samples": {
+    "cp-044916e7efbf": {
+      "tier": "medium",
+      "reason": "visible_in_default_view",
+      "fixed_input_expected": "fail",
+      "with_extra_views_expected": "fail"
+    },
+    "cp-09bac5eea249": {
+      "tier": "medium",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-161d44a249bb": {
+      "tier": "hard",
+      "reason": "needs_extra_view",
+      "fixed_input_expected": "continue",
+      "with_extra_views_expected": "fail",
+      "default_view": "back",
+      "default_fraction": 0.0308,
+      "views_passing_gate": [
+        "back",
+        "front",
+        "grazing_front",
+        "left",
+        "oblique_bl",
+        "oblique_br",
+        "oblique_fl",
+        "oblique_fr",
+        "right"
+      ]
+    },
+    "cp-35dace26b2bd": {
+      "tier": "easy",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-43f9e326b678": {
+      "tier": "medium",
+      "reason": "visible_in_default_view",
+      "fixed_input_expected": "fail",
+      "with_extra_views_expected": "fail"
+    },
+    "cp-46ac4612a36e": {
+      "tier": "medium",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-4ae1fe8adfa1": {
+      "tier": "medium",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-4c7e366ebfed": {
+      "tier": "medium",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-51d2949ef1cd": {
+      "tier": "medium",
+      "reason": "visible_in_default_view",
+      "fixed_input_expected": "fail",
+      "with_extra_views_expected": "fail"
+    },
+    "cp-5474cff5f3de": {
+      "tier": "medium",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-59278cdaa038": {
+      "tier": "easy",
+      "reason": "visible_in_default_view",
+      "fixed_input_expected": "fail",
+      "with_extra_views_expected": "fail"
+    },
+    "cp-5bbf87afe780": {
+      "tier": null,
+      "reason": "unresolved_human_review"
+    },
+    "cp-604649124d4e": {
+      "tier": "medium",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-6b2614bff78b": {
+      "tier": "medium",
+      "reason": "visible_in_default_view",
+      "fixed_input_expected": "fail",
+      "with_extra_views_expected": "fail"
+    },
+    "cp-773f0507b556": {
+      "tier": "medium",
+      "reason": "visible_in_default_view",
+      "fixed_input_expected": "fail",
+      "with_extra_views_expected": "fail"
+    },
+    "cp-7aa839c9010b": {
+      "tier": "medium",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-7ed9bc6f399a": {
+      "tier": null,
+      "reason": "paired_defect_unresolved",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-8c9e38d11cee": {
+      "tier": "medium",
+      "reason": "visible_in_default_view",
+      "fixed_input_expected": "fail",
+      "with_extra_views_expected": "fail"
+    },
+    "cp-92ff393921f6": {
+      "tier": "medium",
+      "reason": "visible_in_default_view",
+      "fixed_input_expected": "fail",
+      "with_extra_views_expected": "fail"
+    },
+    "cp-bcafdec274fb": {
+      "tier": "hard",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-c30891b25542": {
+      "tier": "easy",
+      "reason": "visible_in_default_view",
+      "fixed_input_expected": "fail",
+      "with_extra_views_expected": "fail"
+    },
+    "cp-c767f9b60ae3": {
+      "tier": "hard",
+      "reason": "needs_extra_view",
+      "fixed_input_expected": "continue",
+      "with_extra_views_expected": "fail",
+      "default_view": "back",
+      "default_fraction": 0.0315,
+      "views_passing_gate": [
+        "back",
+        "front",
+        "grazing_front",
+        "left",
+        "oblique_bl",
+        "oblique_br",
+        "oblique_fl",
+        "oblique_fr",
+        "right"
+      ]
+    },
+    "cp-c8af4efd8de9": {
+      "tier": "hard",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-d1dd930a582c": {
+      "tier": "medium",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-d5ed4e1eaf28": {
+      "tier": "medium",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-d8c8480bb322": {
+      "tier": "medium",
+      "reason": "visible_in_default_view",
+      "fixed_input_expected": "fail",
+      "with_extra_views_expected": "fail"
+    },
+    "cp-e1690495987b": {
+      "tier": "medium",
+      "reason": "visible_in_default_view",
+      "fixed_input_expected": "fail",
+      "with_extra_views_expected": "fail"
+    },
+    "cp-ea010c1ff8fe": {
+      "tier": "medium",
+      "reason": "visible_in_default_view",
+      "fixed_input_expected": "fail",
+      "with_extra_views_expected": "fail"
+    },
+    "cp-f2ff1983a8bd": {
+      "tier": "easy",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    },
+    "cp-f6504b7c6278": {
+      "tier": "medium",
+      "reason": "inherits_object_tier",
+      "fixed_input_expected": "pass",
+      "with_extra_views_expected": "pass"
+    }
+  }
+}

@@ -11,7 +11,7 @@
 |---|---|---|---:|---|
 | Easy | 单关节 | `kinematics.joint_axis` | 1 | 目标关节在冻结相机下 rest→limit 明显运动；参考与候选在 limit 差异通过 Level 0 像素门槛，并经人工确认无遮挡、无出框 |
 | Medium | ≥2 个关节 | `kinematics.joint_axis`；单关节物体上的 `structure.part_offset`（`static_visible`） | 1 | joint_axis 沿用 Easy 的可见性门槛 |
-| Hard | ≥2 个关节 | `kinematics.joint_axis`、`structure.part_offset` | 1 | 目标部件被遮挡或默认视角运动低于像素门槛，需要默认四图之外的视角或状态；与 Medium 重叠的类型按实测观察难度区分 |
+| Hard | ≥2 个关节；或单关节物体上仅在非默认视角才清楚的缺陷（见下） | `kinematics.joint_axis`、`kinematics.direction_flip`、`structure.part_offset` | 1 | 目标部件被遮挡或默认视角下不易察觉，需要默认四图之外的视角或状态；与 Medium 重叠的类型按实测观察难度区分 |
 | Expert | ≥2 个关节 | `kinematics.joint_axis` + `structure.part_offset` | 2 | 两个错误各自有独立的观测证据 |
 
 当前 Level 0 样本只注入单个 90° 关节轴错误，因此能落入的只有 Easy（单关节物体）和 Medium（多关节物体上的明显轴错误）。`manifest` 对全部 60 个物体保留 Easy 候选池身份，如需把多关节物体仍并入 Easy，只需改 `difficulty_of`，不会影响划分规则。
@@ -115,3 +115,21 @@ Validation 一经冻结不得依据模型结果修改；需要变动时创建新
 按相同种子顺序跳过前 400 个，再下载 500 个归档到 `data/partnet-mobility-level0-round3`（不进 Git），固定 revision 不变，与前两轮归档无重叠。转换后 304 个结构合格（61%）：单关节 157、多关节 147；与已有物体的来源 ID、模型 ID、归档 SHA、几何指纹均无重复，冻结 Test 重叠为 0。
 
 这只是结构合格，**尚未做渲染筛选和人工审核**。已有渲染筛选通过率为单关节约 33%、多关节约 44%，按此估计 157 个单关节候选约出 50 个。
+
+## Hard 层：需要补视角（2026-10-22 决定）
+
+主动感知的叙事要求有一类缺陷在默认视角下不易发现、换视角后才清楚，这类样本归 Hard。issue 的 Hard 示例是多关节物体，这里把“单关节物体上、仅在非默认视角才清楚的缺陷”也并入 Hard，是对 issue 示例的有意扩展。
+
+**判定规则（试点阶段，事后确定，批量构造前需重新定义）：** 人工审核未判“一眼可见”，且存在另一个通过像素门槛的视角，其差异不小于默认视角的 2 倍。规则机械、可复现，见 `scripts/tier_pilot.py`；比例 2 是看过试点数据后定的，只作为起点。像素指标与人工“一眼可见”相关性很差，因此不单独用像素阈值分层。
+
+**期望输出：**
+
+| 层 | 固定四图输入 | 允许主动换视角 |
+|---|---|---|
+| 默认视角已足够（Easy/Medium） | `fail` | `fail` |
+| 需要补视角（Hard） | `continue` | `fail` |
+| 同物体 clean 对照 | `pass` | `pass` |
+
+**还没落地的部分：** 当前评分脚本只有“证据不足由条件决定”，没有“某个样本在固定输入下期望 `continue`”的字段，`benchmark/v1` 的金标准与协议已冻结，不修改。这条要在新版本（v2）冻结时加入金标准字段和评分逻辑。
+
+**试点结果：** 15 个试点缺陷样本中 2 个归 Hard（`cp-161d44a249bb`、`cp-c767f9b60ae3`，均为单关节 direction_flip，默认视角 back 约 0.031，换到 right 约 0.072–0.077），对应 2 个 clean 对照也归 Hard；另有 1 个因人工审核证据不足未分层。
