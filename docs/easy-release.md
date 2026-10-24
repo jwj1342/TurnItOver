@@ -1,6 +1,6 @@
 # Easy 候选数据发布
 
-代码与数据分别版本化：Git 保存构建/验收脚本、盲审页面模板、固定 Validation ID/物体划分与小型发布契约；完整候选数据和生成页面通过 GitHub Pre-release 附件交付。默认单测不下载数据、不读取真实图片，也不要求本地存在 `benchmark/easy/`。
+代码与数据分别版本化：公开 Git 保存构建/验收脚本、盲审页面模板、固定 Validation ID/物体划分与小型发布契约；完整 RGB 数据包存放在私有仓库 [`mmk1209/TIO-datasets`](https://github.com/mmk1209/TIO-datasets)。公开仓库不提供 Easy 图片 Release 或公开下载链接。默认单测不下载数据、不读取真实图片，也不要求本地存在 `benchmark/easy/`。
 
 ## 当前候选版本
 
@@ -15,14 +15,14 @@
 
 新增150例获准纳入集合，仍为 `pending_human_review`；全量历史 ledger 为242例待审、32例完成、1例拒绝。当前不是冻结 benchmark 或训练导出。axis/sign 表达随机化及捷径重审计、正常变化 Clean、Medium/Hard 构造与独立审核回收继续按 Issue #9 分别推进；重审计前仍须披露既有 code-reading 残余审计。
 
-## 发布附件
+## 私有数据包
 
 - `easy-candidate-v0.1.0-rc.1-data.zip`：解压后为 `easy/`，包含275例媒体、Gold、checker证据、来源、划分和历史审核记录，供协调者与研究使用。
 - `easy-candidate-v0.1.0-rc.1-validation-review.zip`：解压后为 `validation_review/`，包含24例独立盲审素材、两个离线页面与各自空白回填文件。
-- `release-manifest.json`：与本代码版本的 `benchmark/releases/easy-candidate-v0.1.0-rc.1.json` 完全一致，绑定两个ZIP的大小、SHA-256、内部文件数量、解压大小与完整验收报告。
+- `release-manifest.json`：与公开代码中的 `benchmark/releases/easy-candidate-v0.1.0-rc.1.json` 完全一致，绑定两个 ZIP 的大小、SHA-256、内部文件数量、解压大小与完整验收报告。
 - `SHA256SUMS`：两个ZIP及发布清单的校验和。
 
-完整包含构造标签和历史结论，不能作为独立盲审输入。`private/` 只是目录名；公开 Pre-release 没有单独的答案访问控制，也不保证 Test/Gold 保密。原公开PR已有的内容不会因迁移恢复秘密性。审核者只接收独立盲审ZIP，并在提交独立判断前不查看完整包、旧PR答案或对方回件。
+完整包包含构造标签和历史结论，不能作为独立盲审输入。只有获得 `mmk1209/TIO-datasets` 私有仓库权限的协作者才能访问完整包；审核者只接收独立盲审 ZIP，并在提交独立判断前不查看完整包、旧 PR 答案或对方回件。
 
 本次不包含原始 mesh/URDF、完整构造程序或封存的 `filesystem.tar.gz`。`archive/registry.json` 仍明确 `availability=local_custody`；程序重放需另行取得完整归档并检查其哈希。因此本发布不是可独立重放或直接训练的程序数据集。来源包含 PartNet-Mobility，第三方来源的使用条款仍适用，Pre-release 不改变这些条件；见 [资产来源说明](asset-sources.md)。
 
@@ -30,7 +30,11 @@
 
 候选图像由本项目基于 `sapien-sim/PartNetMobility` 渲染生成，官方 revision 为 `ee0aa3ef1df16181d76d83f7415aa8c94ed1da8f`；对象身份与源归档哈希见包内来源映射。PartNet-Mobility 建立于 ShapeNet，官方条款规定数据库用于非商业研究与教育，并要求研究同事在访问前同意相关条款：[PartNet-Mobility 数据卡](https://huggingface.co/datasets/sapien-sim/PartNetMobility)、[ShapeNet 条款](https://huggingface.co/spaces/ShapeNet/README/raw/main/TERMS.md)。已核实文本没有明确说明本项目派生 PNG 的公开分发范围；代码许可也不构成上游数据库或派生图像权利的重新授权。
 
-因此当前只完成本地打包和验收，未上传包含派生 PNG 的附件。取得明确的上游补充授权或权利方确认后，才能按本说明创建并公开 Pre-release；在此之前不得把本地包链接或候选状态表述为已公开发布。
+因此候选包已放入私有仓库，未在公开仓库创建或上传 Easy Release。公开派生 PNG 的授权范围仍待确认；私有仓库访问也不构成再分发许可。
+
+## 申请访问
+
+合作者应提供 GitHub 用户名、所属项目和用途，由 `mmk1209/TIO-datasets` 所有者按账号邀请为 private repository collaborator。获准后从 `releases/easy-candidate-v0.1.0-rc.1/` 下载并使用 `SHA256SUMS` 校验。PartNet-Mobility 与 ShapeNet 条款限制数据库用于非商业研究/教育，并要求研究同事访问前同意相关条款；不得将 RGB 文件转存到公开仓库、公开 Release、公共网盘或未经授权的第三方服务。
 
 ## 下载并完整验收
 
@@ -40,10 +44,8 @@
 git fetch origin tag easy-candidate-v0.1.0-rc.1
 git switch --detach easy-candidate-v0.1.0-rc.1
 mkdir -p data/releases/easy-candidate-v0.1.0-rc.1/assets
-gh release download easy-candidate-v0.1.0-rc.1 --repo jwj1342/TurnItOver \
-  --dir data/releases/easy-candidate-v0.1.0-rc.1/assets \
-  --pattern 'easy-candidate-v0.1.0-rc.1-*.zip' \
-  --pattern release-manifest.json --pattern SHA256SUMS
+git clone https://github.com/mmk1209/TIO-datasets.git data/TIO-datasets
+cp data/TIO-datasets/releases/easy-candidate-v0.1.0-rc.1/* data/releases/easy-candidate-v0.1.0-rc.1/assets/
 python scripts/validate_easy_release.py \
   --manifest benchmark/releases/easy-candidate-v0.1.0-rc.1.json \
   --assets data/releases/easy-candidate-v0.1.0-rc.1/assets \

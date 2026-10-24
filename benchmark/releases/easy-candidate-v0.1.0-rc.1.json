@@ -20,7 +20,7 @@
   "benchmark_frozen": false,
   "code_ref": "refs/tags/easy-candidate-v0.1.0-rc.1",
   "distribution": {
-    "access_control": "A public pre-release does not prevent access to Gold or provide benchmark holdout secrecy.",
+    "access_control": "Stored in private repository mmk1209/TIO-datasets; access requires owner invitation and does not grant redistribution rights.",
     "data": "Contains Gold, checker evidence and historical reviews; coordinator/research use, not blind-review input.",
     "programs": "Sealed construction archive is not included; this is not a standalone replay or training export.",
     "validation_review": "Distribute this separate ZIP to reviewers before either independent return is compared."
@@ -61,7 +61,7 @@
     "review_manifest.jsonl": "41243fabe37f1dc36a5ce2332fab7d0bb84b207b99da243dcfb9a222a20fc225",
     "splits.json": "3ca15a51bb0d0cca6fa3e1b2f2ae744ba2d8f88b4a8535c7989a19d700240a1c"
   },
-  "repository": "jwj1342/TurnItOver",
+  "repository": "mmk1209/TIO-datasets",
   "source_dataset_commit": "27f7e03a42a3a835fbf9e2c09e04faf9e19695be",
   "status": "candidate_pending_review",
   "tag": "easy-candidate-v0.1.0-rc.1",
