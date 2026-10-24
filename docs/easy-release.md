@@ -38,11 +38,11 @@
 
 ## 下载并完整验收
 
-使用发布tag对应的代码；不要用可变的 `latest` 替代版本。以下命令从仓库根目录执行，下载目录只能包含本版本四个附件；GitHub自动生成的Source code ZIP不是数据包。
+使用 Draft PR #12 的最新代码；在 PR 合并并创建新代码 tag 前，不要使用旧的公开 `easy-candidate-v0.1.0-rc.1` tag。以下命令从仓库根目录执行，下载目录只能包含本版本四个附件；GitHub 自动生成的 Source code ZIP 不是数据包。
 
 ```sh
-git fetch origin tag easy-candidate-v0.1.0-rc.1
-git switch --detach easy-candidate-v0.1.0-rc.1
+git fetch origin pull/12/head:easy-private-data-code
+git switch --detach easy-private-data-code
 mkdir -p data/releases/easy-candidate-v0.1.0-rc.1/assets
 git clone https://github.com/mmk1209/TIO-datasets.git data/TIO-datasets
 cp data/TIO-datasets/releases/easy-candidate-v0.1.0-rc.1/* data/releases/easy-candidate-v0.1.0-rc.1/assets/
