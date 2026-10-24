@@ -24,7 +24,7 @@
 
 完整包包含构造标签和历史结论，不能作为独立盲审输入。只有获得 `mmk1209/TIO-datasets` 私有仓库权限的协作者才能访问完整包；审核者只接收独立盲审 ZIP，并在提交独立判断前不查看完整包、旧 PR 答案或对方回件。
 
-本次不包含原始 mesh/URDF、完整构造程序或封存的 `filesystem.tar.gz`。`archive/registry.json` 仍明确 `availability=local_custody`；程序重放需另行取得完整归档并检查其哈希。因此本发布不是可独立重放或直接训练的程序数据集。来源包含 PartNet-Mobility，第三方来源的使用条款仍适用，Pre-release 不改变这些条件；见 [资产来源说明](asset-sources.md)。
+本次不包含原始 mesh/URDF、完整构造程序或封存的 `filesystem.tar.gz`。`archive/registry.json` 仍明确 `availability=local_custody`；程序重放需另行取得完整归档并检查其哈希。因此本包不是可独立重放或直接训练的程序数据集。来源包含 PartNet-Mobility，第三方来源的使用条款仍适用；见 [资产来源说明](asset-sources.md)。
 
 ## 上游条款与当前发布状态
 

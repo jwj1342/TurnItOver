@@ -32,7 +32,7 @@ def build_release(root: Path, output: Path, tag: str, source_commit: str, base_c
     preserved = ["private/gold.jsonl", "private/import_checks.jsonl", "human_review.jsonl",
                  "review_manifest.jsonl", "splits.json", "provenance.json", "collection_approval.json"]
     contract = dict(
-        version=1, repository="jwj1342/TurnItOver", tag=tag,
+        version=1, repository="mmk1209/TIO-datasets", tag=tag,
         code_ref=f"refs/tags/{tag}", base_code_commit=base_commit,
         source_dataset_commit=source_commit,
         status="candidate_pending_review", benchmark_frozen=False, training_ready=False,
@@ -42,7 +42,7 @@ def build_release(root: Path, output: Path, tag: str, source_commit: str, base_c
         distribution={
             "data": "Contains Gold, checker evidence and historical reviews; coordinator/research use, not blind-review input.",
             "validation_review": "Distribute this separate ZIP to reviewers before either independent return is compared.",
-            "access_control": "A public pre-release does not prevent access to Gold or provide benchmark holdout secrecy.",
+            "access_control": "Stored in private repository mmk1209/TIO-datasets; access requires owner invitation and does not grant redistribution rights.",
             "programs": "Sealed construction archive is not included; this is not a standalone replay or training export.",
         },
     )
