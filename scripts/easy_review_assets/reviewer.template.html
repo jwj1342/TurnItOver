@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="zh-CN" data-reviewer="{{REVIEWER}}">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Validation 独立盲审 — {{REVIEWER}}</title><link rel="stylesheet" href="review.css"></head>
+<body><header><h1>Validation 独立盲审 · {{REVIEWER}}</h1>
+<p>请独立判断全部 24 例。先各自下载并交回结果，再由协调者合并和对齐分歧；提交前不交换答案。</p>
+<p>参考与候选使用相同相机。上排 Reference，下排 Candidate；三列为 rest、mid、limit。对照完整运动部件，不要仅凭微小纹理差异判断。</p>
+<p>页面不含构造标签或历史结论。所有结果只保存在当前浏览器，可下载备份；页面不会上传结果。空白项与“无法判断”不等于通过。</p>
+<div class="toolbar"><button id="download">下载本人结果 JSONL</button><label class="button">导入本人备份<input id="import" type="file" accept=".jsonl" hidden></label><span id="progress" role="status"></span></div>
+</header><main id="cases"></main><footer>完成后将下载文件单独交回协调者。请保留本地备份，不将返回结果放进公开交付目录。</footer>
+<script type="application/json" id="case-data">{{CASES_JSON}}</script><script src="review.js"></script></body></html>
