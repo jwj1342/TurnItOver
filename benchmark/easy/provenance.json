@@ -1,0 +1,2046 @@
+{
+  "version": 1,
+  "source": {
+    "head": "f10bc965397c555b30ce21b73180cf22deededd8",
+    "dirty": true,
+    "gold_sha256": "05823728728f4922e8fa11abbc87528830c4f486e8d0ab8db26f03d6ee6a9e11",
+    "splits_sha256": "858f3b55b090366edd93867ae7b557a9d24e464ddec875efc36946ed3220f8c5",
+    "split_snapshot": "archive/source_splits.json",
+    "integration_base_gold_sha256": "54ff08998616c3cc1f9bee1a228ff7eb9c59115f0d91cbbea3bb9edda8661ac8",
+    "gold_member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/private/gold.jsonl",
+    "migration_manifest_sha256": "e635292d7427f9e28137a35357b580e1b5cfd7dce7731de3a5c235eb1213d758"
+  },
+  "archive": {
+    "id": "easy-20261023",
+    "filename": "filesystem.tar.gz",
+    "sha256": "2afef206fc161b55f5b0b64a71edafc8faaa86fe4529b9978d15b550e69f7d02",
+    "availability": "local_custody",
+    "registry": "archive/registry.json",
+    "program_index": "archive/program_members.jsonl"
+  },
+  "original_split": {
+    "path": "archive/original_splits.json",
+    "sha256": "977d89e651ec5141ffa1862e21076326cc982a9a06670b445fb71692e8789de6"
+  },
+  "integrated": {
+    "gold": "private/gold.jsonl",
+    "gold_sha256": "2028f0164d9145f0e6783fe2507eb0895fd407727f36f2c1d546265b44631c14",
+    "splits": "splits.json",
+    "splits_sha256": "3ca15a51bb0d0cca6fa3e1b2f2ae744ba2d8f88b4a8535c7989a19d700240a1c",
+    "cases": 275,
+    "objects": 127,
+    "original_cases": 125,
+    "imported_cases": 150
+  },
+  "transformations": [
+    {
+      "operation": "preserve_case_identity_order_and_labels",
+      "case_count": 275,
+      "preserved_fields": [
+        "case_id",
+        "origin",
+        "source_identity",
+        "expected_status",
+        "kind",
+        "training_eligibility"
+      ]
+    },
+    {
+      "operation": "remove_machine_local_source_paths",
+      "case_count": 150,
+      "source_keys_removed": {
+        "source.previous_motion_review.smoke_json": 2,
+        "source.source_archive": 150,
+        "source.source_catalog": 150,
+        "source.source_spec": 150,
+        "source.source_urdf": 150
+      },
+      "source_recovery": "Read the original Gold member from the sealed archive."
+    },
+    {
+      "operation": "replace_imported_program_path_with_archived_object_reference",
+      "case_count": 150,
+      "fields": [
+        "archive_id",
+        "member",
+        "sha256",
+        "size",
+        "original_path"
+      ],
+      "member_hashes_verified": true
+    },
+    {
+      "operation": "rebind_split_source_to_current_relative_gold",
+      "gold": "private/gold.jsonl",
+      "preserve_object_assignments": true,
+      "preserve_seed": 20261022,
+      "original_current_split": "archive/source_splits.json",
+      "pre_import_split": "archive/original_splits.json"
+    }
+  ],
+  "case_mappings": {
+    "original125": [
+      {
+        "case_id": "eb-dd06b83f2fbe",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:857",
+        "source_ordinal": 0
+      },
+      {
+        "case_id": "eb-4e9a8ef1706f",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:857",
+        "source_ordinal": 1
+      },
+      {
+        "case_id": "eb-24880c53f351",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100705",
+        "source_ordinal": 2
+      },
+      {
+        "case_id": "eb-6d467ed6b423",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12621",
+        "source_ordinal": 3
+      },
+      {
+        "case_id": "eb-35471f460156",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12621",
+        "source_ordinal": 4
+      },
+      {
+        "case_id": "eb-518cd17f43d2",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100685",
+        "source_ordinal": 5
+      },
+      {
+        "case_id": "eb-410d2f9c498a",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100685",
+        "source_ordinal": 6
+      },
+      {
+        "case_id": "eb-01240b7974b4",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:102193",
+        "source_ordinal": 7
+      },
+      {
+        "case_id": "eb-cac983a99dac",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12579",
+        "source_ordinal": 8
+      },
+      {
+        "case_id": "eb-c0b7182fd3f9",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12579",
+        "source_ordinal": 9
+      },
+      {
+        "case_id": "eb-ba7f71ded064",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:102062",
+        "source_ordinal": 10
+      },
+      {
+        "case_id": "eb-37002fdadd2e",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:45620",
+        "source_ordinal": 11
+      },
+      {
+        "case_id": "eb-4c601b2ea5d3",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12250",
+        "source_ordinal": 12
+      },
+      {
+        "case_id": "eb-8ce90fc04986",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:11581",
+        "source_ordinal": 13
+      },
+      {
+        "case_id": "eb-ffc96b52d71e",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12561",
+        "source_ordinal": 14
+      },
+      {
+        "case_id": "eb-ac0f07ec0202",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12561",
+        "source_ordinal": 15
+      },
+      {
+        "case_id": "eb-dc3e83de3195",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:4576",
+        "source_ordinal": 16
+      },
+      {
+        "case_id": "eb-7ac40e985f79",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:4576",
+        "source_ordinal": 17
+      },
+      {
+        "case_id": "eb-3810713e82be",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:29921",
+        "source_ordinal": 18
+      },
+      {
+        "case_id": "eb-62a9a0f2479a",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12587",
+        "source_ordinal": 19
+      },
+      {
+        "case_id": "eb-d3f2526c388a",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12587",
+        "source_ordinal": 20
+      },
+      {
+        "case_id": "eb-9cb244d9e62c",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100532",
+        "source_ordinal": 21
+      },
+      {
+        "case_id": "eb-74a5b1f64198",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100532",
+        "source_ordinal": 22
+      },
+      {
+        "case_id": "eb-1d95a593686e",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:46057",
+        "source_ordinal": 23
+      },
+      {
+        "case_id": "eb-5fee8a148666",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:46057",
+        "source_ordinal": 24
+      },
+      {
+        "case_id": "eb-7381f59b198e",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:101960",
+        "source_ordinal": 25
+      },
+      {
+        "case_id": "eb-35b07257b13c",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100221",
+        "source_ordinal": 26
+      },
+      {
+        "case_id": "eb-e57ea5f7c211",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100221",
+        "source_ordinal": 27
+      },
+      {
+        "case_id": "eb-9d6ea20bd7e0",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100599",
+        "source_ordinal": 28
+      },
+      {
+        "case_id": "eb-3fb99d69a427",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100599",
+        "source_ordinal": 29
+      },
+      {
+        "case_id": "eb-bcbe33a74a03",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100952",
+        "source_ordinal": 30
+      },
+      {
+        "case_id": "eb-a0c19bae2ffe",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100952",
+        "source_ordinal": 31
+      },
+      {
+        "case_id": "eb-66f6fc71d4f0",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:46401",
+        "source_ordinal": 32
+      },
+      {
+        "case_id": "eb-e5b3ec6e6a38",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:48452",
+        "source_ordinal": 33
+      },
+      {
+        "case_id": "eb-8ba8b302db55",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:11124",
+        "source_ordinal": 34
+      },
+      {
+        "case_id": "eb-2460d4a33281",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:11124",
+        "source_ordinal": 35
+      },
+      {
+        "case_id": "eb-3d09c59f0f99",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:4633",
+        "source_ordinal": 36
+      },
+      {
+        "case_id": "eb-afded2e964bf",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:4633",
+        "source_ordinal": 37
+      },
+      {
+        "case_id": "eb-ee4aaef2c0c8",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:10885",
+        "source_ordinal": 38
+      },
+      {
+        "case_id": "eb-20ad0c2c27eb",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:10885",
+        "source_ordinal": 39
+      },
+      {
+        "case_id": "eb-87a7a5985d19",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:4627",
+        "source_ordinal": 40
+      },
+      {
+        "case_id": "eb-ce7f651acdd4",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:4627",
+        "source_ordinal": 41
+      },
+      {
+        "case_id": "eb-0e41cf6c5aac",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:102182",
+        "source_ordinal": 42
+      },
+      {
+        "case_id": "eb-6ea6d0fd6325",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:11156",
+        "source_ordinal": 43
+      },
+      {
+        "case_id": "eb-16a437d65247",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100189",
+        "source_ordinal": 44
+      },
+      {
+        "case_id": "eb-e537f72395fb",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100189",
+        "source_ordinal": 45
+      },
+      {
+        "case_id": "eb-48fde75e565d",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100600",
+        "source_ordinal": 46
+      },
+      {
+        "case_id": "eb-0a1c45ed5c17",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100600",
+        "source_ordinal": 47
+      },
+      {
+        "case_id": "eb-3951626dee9f",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:10305",
+        "source_ordinal": 48
+      },
+      {
+        "case_id": "eb-afa99eeb7e7a",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12445",
+        "source_ordinal": 49
+      },
+      {
+        "case_id": "eb-a0569a3d7b95",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:102456",
+        "source_ordinal": 50
+      },
+      {
+        "case_id": "eb-de6531d1cf85",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:102456",
+        "source_ordinal": 51
+      },
+      {
+        "case_id": "eb-5e4681c5cfff",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:4578",
+        "source_ordinal": 52
+      },
+      {
+        "case_id": "eb-83bfe159d125",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:4578",
+        "source_ordinal": 53
+      },
+      {
+        "case_id": "eb-5d50324cf3c9",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:10537",
+        "source_ordinal": 54
+      },
+      {
+        "case_id": "eb-6f9d51ed02ee",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:10537",
+        "source_ordinal": 55
+      },
+      {
+        "case_id": "eb-3cd3a32f9f9b",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:45822",
+        "source_ordinal": 56
+      },
+      {
+        "case_id": "eb-abb2212c83e7",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:20555",
+        "source_ordinal": 57
+      },
+      {
+        "case_id": "eb-63df11efdc43",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:4529",
+        "source_ordinal": 58
+      },
+      {
+        "case_id": "eb-8f9aad5d8f8b",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:4529",
+        "source_ordinal": 59
+      },
+      {
+        "case_id": "eb-3610518674ca",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:7290",
+        "source_ordinal": 60
+      },
+      {
+        "case_id": "eb-d29499f9b0c5",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:10383",
+        "source_ordinal": 61
+      },
+      {
+        "case_id": "eb-92c5253d586a",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:10357",
+        "source_ordinal": 62
+      },
+      {
+        "case_id": "eb-122722f2018b",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:11888",
+        "source_ordinal": 63
+      },
+      {
+        "case_id": "eb-f7883aa1b268",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:11888",
+        "source_ordinal": 64
+      },
+      {
+        "case_id": "eb-24a1fff115b8",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:9992",
+        "source_ordinal": 65
+      },
+      {
+        "case_id": "eb-9145f90357d6",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12614",
+        "source_ordinal": 66
+      },
+      {
+        "case_id": "eb-4ab9cf437b53",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12614",
+        "source_ordinal": 67
+      },
+      {
+        "case_id": "eb-8bef49f00a66",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:9032",
+        "source_ordinal": 68
+      },
+      {
+        "case_id": "eb-0fe6989802a8",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:9032",
+        "source_ordinal": 69
+      },
+      {
+        "case_id": "eb-869a85b4a9ca",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:45247",
+        "source_ordinal": 70
+      },
+      {
+        "case_id": "eb-fb5cc739f2de",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:45247",
+        "source_ordinal": 71
+      },
+      {
+        "case_id": "eb-1879be983090",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:9388",
+        "source_ordinal": 72
+      },
+      {
+        "case_id": "eb-b75e2af4bc7c",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:9388",
+        "source_ordinal": 73
+      },
+      {
+        "case_id": "eb-14c6afcdf779",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12583",
+        "source_ordinal": 74
+      },
+      {
+        "case_id": "eb-8c1dc9b97078",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12583",
+        "source_ordinal": 75
+      },
+      {
+        "case_id": "eb-0b70c17b8d0b",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:20279",
+        "source_ordinal": 76
+      },
+      {
+        "case_id": "eb-83d29b32800f",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12565",
+        "source_ordinal": 77
+      },
+      {
+        "case_id": "eb-e0d78cfc4f6f",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:12565",
+        "source_ordinal": 78
+      },
+      {
+        "case_id": "eb-b7c2fc12c839",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:10269",
+        "source_ordinal": 79
+      },
+      {
+        "case_id": "eb-0d42b8505019",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100247",
+        "source_ordinal": 80
+      },
+      {
+        "case_id": "eb-0aec638bcd71",
+        "origin": "easy-batch-v1",
+        "source_identity": "PartNet-Mobility:100247",
+        "source_ordinal": 81
+      },
+      {
+        "case_id": "eb2-a380651bffb8",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:100189",
+        "source_ordinal": 82
+      },
+      {
+        "case_id": "eb2-7723e8ebb197",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:100221",
+        "source_ordinal": 83
+      },
+      {
+        "case_id": "eb2-d3ee1d68f137",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:100599",
+        "source_ordinal": 84
+      },
+      {
+        "case_id": "eb2-8d2ec140aa77",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:100705",
+        "source_ordinal": 85
+      },
+      {
+        "case_id": "eb2-81f784209d6c",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:100952",
+        "source_ordinal": 86
+      },
+      {
+        "case_id": "eb2-bd498ee7ea67",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:101960",
+        "source_ordinal": 87
+      },
+      {
+        "case_id": "eb2-290457fd963c",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:102062",
+        "source_ordinal": 88
+      },
+      {
+        "case_id": "eb2-2e7b63b1e9fc",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:102182",
+        "source_ordinal": 89
+      },
+      {
+        "case_id": "eb2-04a85ffaef9c",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:102193",
+        "source_ordinal": 90
+      },
+      {
+        "case_id": "eb2-6397ecdddb24",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:102456",
+        "source_ordinal": 91
+      },
+      {
+        "case_id": "eb2-e9624f41f197",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:10383",
+        "source_ordinal": 92
+      },
+      {
+        "case_id": "eb2-9a7d4e04ac7b",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:10537",
+        "source_ordinal": 93
+      },
+      {
+        "case_id": "eb2-e7e71c5845ce",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:10885",
+        "source_ordinal": 94
+      },
+      {
+        "case_id": "eb2-08b39ad40647",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:11124",
+        "source_ordinal": 95
+      },
+      {
+        "case_id": "eb2-d5e11900673b",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:11156",
+        "source_ordinal": 96
+      },
+      {
+        "case_id": "eb2-279947d12cdb",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:11888",
+        "source_ordinal": 97
+      },
+      {
+        "case_id": "eb2-33686a62dece",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:12250",
+        "source_ordinal": 98
+      },
+      {
+        "case_id": "eb2-a756983bad58",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:12445",
+        "source_ordinal": 99
+      },
+      {
+        "case_id": "eb2-6cef4b0edbc9",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:12561",
+        "source_ordinal": 100
+      },
+      {
+        "case_id": "eb2-cab8d5cc78ac",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:12565",
+        "source_ordinal": 101
+      },
+      {
+        "case_id": "eb2-9d35f8d897fd",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:12579",
+        "source_ordinal": 102
+      },
+      {
+        "case_id": "eb2-56311c2110db",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:12583",
+        "source_ordinal": 103
+      },
+      {
+        "case_id": "eb2-d294bfc13568",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:12587",
+        "source_ordinal": 104
+      },
+      {
+        "case_id": "eb2-c65f94aa8011",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:12614",
+        "source_ordinal": 105
+      },
+      {
+        "case_id": "eb2-279f5b76c5d8",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:12621",
+        "source_ordinal": 106
+      },
+      {
+        "case_id": "eb2-4d1e7899ac56",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:20279",
+        "source_ordinal": 107
+      },
+      {
+        "case_id": "eb2-e1c6031622bc",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:20555",
+        "source_ordinal": 108
+      },
+      {
+        "case_id": "eb2-16601bf56a52",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:29921",
+        "source_ordinal": 109
+      },
+      {
+        "case_id": "eb2-72b845557c8e",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:45247",
+        "source_ordinal": 110
+      },
+      {
+        "case_id": "eb2-a6ca84de35ce",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:4529",
+        "source_ordinal": 111
+      },
+      {
+        "case_id": "eb2-418ce4151b48",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:45620",
+        "source_ordinal": 112
+      },
+      {
+        "case_id": "eb2-7ea537ce05de",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:4576",
+        "source_ordinal": 113
+      },
+      {
+        "case_id": "eb2-ac54fe009b34",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:4578",
+        "source_ordinal": 114
+      },
+      {
+        "case_id": "eb2-22a55655588f",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:45822",
+        "source_ordinal": 115
+      },
+      {
+        "case_id": "eb2-b39b88b153a4",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:4627",
+        "source_ordinal": 116
+      },
+      {
+        "case_id": "eb2-c2eaf2acf6c4",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:4633",
+        "source_ordinal": 117
+      },
+      {
+        "case_id": "eb2-cb4f4692f441",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:46401",
+        "source_ordinal": 118
+      },
+      {
+        "case_id": "eb2-2e38427b79dd",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:48452",
+        "source_ordinal": 119
+      },
+      {
+        "case_id": "eb2-08508ddc66f1",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:7290",
+        "source_ordinal": 120
+      },
+      {
+        "case_id": "eb2-3f451ec51b99",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:857",
+        "source_ordinal": 121
+      },
+      {
+        "case_id": "eb2-4bb647861ed3",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:9032",
+        "source_ordinal": 122
+      },
+      {
+        "case_id": "eb2-4f0f5f5adb7d",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:9388",
+        "source_ordinal": 123
+      },
+      {
+        "case_id": "eb2-6ce872bad66b",
+        "origin": "easy-batch-v2",
+        "source_identity": "PartNet-Mobility:100247",
+        "source_ordinal": 124
+      }
+    ],
+    "imported150": [
+      {
+        "case_id": "mp-00ba776fc4d44d",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103490",
+        "source_ordinal": 125,
+        "original_program": "imported-obvious-v1/private/programs/mp-00ba776fc4d44d.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-00ba776fc4d44d.json"
+      },
+      {
+        "case_id": "mp-02c14e1383fa8a",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:8903",
+        "source_ordinal": 126,
+        "original_program": "imported-obvious-v1/private/programs/mp-02c14e1383fa8a.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-02c14e1383fa8a.json"
+      },
+      {
+        "case_id": "mp-032c6900b773de",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100511",
+        "source_ordinal": 127,
+        "original_program": "imported-obvious-v1/private/programs/mp-032c6900b773de.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-032c6900b773de.json"
+      },
+      {
+        "case_id": "mp-0620a8d461e254",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:47529",
+        "source_ordinal": 128,
+        "original_program": "imported-obvious-v1/private/programs/mp-0620a8d461e254.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-0620a8d461e254.json"
+      },
+      {
+        "case_id": "mp-0a0411d4cfd7ff",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:11089",
+        "source_ordinal": 129,
+        "original_program": "imported-obvious-v1/private/programs/mp-0a0411d4cfd7ff.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-0a0411d4cfd7ff.json"
+      },
+      {
+        "case_id": "mp-0a484057d3cb22",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:9288",
+        "source_ordinal": 130,
+        "original_program": "imported-obvious-v1/private/programs/mp-0a484057d3cb22.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-0a484057d3cb22.json"
+      },
+      {
+        "case_id": "mp-0cb684cdcf659b",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:102739",
+        "source_ordinal": 131,
+        "original_program": "imported-obvious-v1/private/programs/mp-0cb684cdcf659b.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-0cb684cdcf659b.json"
+      },
+      {
+        "case_id": "mp-0fe154f4fda19f",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:7187",
+        "source_ordinal": 132,
+        "original_program": "imported-obvious-v1/private/programs/mp-0fe154f4fda19f.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-0fe154f4fda19f.json"
+      },
+      {
+        "case_id": "mp-11010792c7a6b2",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:45689",
+        "source_ordinal": 133,
+        "original_program": "imported-obvious-v1/private/programs/mp-11010792c7a6b2.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-11010792c7a6b2.json"
+      },
+      {
+        "case_id": "mp-11dc216ca4d5f1",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100426",
+        "source_ordinal": 134,
+        "original_program": "imported-obvious-v1/private/programs/mp-11dc216ca4d5f1.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-11dc216ca4d5f1.json"
+      },
+      {
+        "case_id": "mp-133dd4cb1a4066",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:24931",
+        "source_ordinal": 135,
+        "original_program": "imported-obvious-v1/private/programs/mp-133dd4cb1a4066.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-133dd4cb1a4066.json"
+      },
+      {
+        "case_id": "mp-1340f43c23b9ad",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:12480",
+        "source_ordinal": 136,
+        "original_program": "imported-obvious-v1/private/programs/mp-1340f43c23b9ad.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-1340f43c23b9ad.json"
+      },
+      {
+        "case_id": "mp-136d0efe2ce7fc",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103761",
+        "source_ordinal": 137,
+        "original_program": "imported-obvious-v1/private/programs/mp-136d0efe2ce7fc.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-136d0efe2ce7fc.json"
+      },
+      {
+        "case_id": "mp-159be7e2eb4188",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:101839",
+        "source_ordinal": 138,
+        "original_program": "imported-obvious-v1/private/programs/mp-159be7e2eb4188.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-159be7e2eb4188.json"
+      },
+      {
+        "case_id": "mp-163ca02c8f6c17",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:47645",
+        "source_ordinal": 139,
+        "original_program": "imported-obvious-v1/private/programs/mp-163ca02c8f6c17.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-163ca02c8f6c17.json"
+      },
+      {
+        "case_id": "mp-16e315a6f57ca9",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100776",
+        "source_ordinal": 140,
+        "original_program": "imported-obvious-v1/private/programs/mp-16e315a6f57ca9.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-16e315a6f57ca9.json"
+      },
+      {
+        "case_id": "mp-18f00c1220dd23",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:9164",
+        "source_ordinal": 141,
+        "original_program": "imported-obvious-v1/private/programs/mp-18f00c1220dd23.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-18f00c1220dd23.json"
+      },
+      {
+        "case_id": "mp-1d2a363f5b1438",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100904",
+        "source_ordinal": 142,
+        "original_program": "imported-obvious-v1/private/programs/mp-1d2a363f5b1438.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-1d2a363f5b1438.json"
+      },
+      {
+        "case_id": "mp-1d5eb406561b7d",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100511",
+        "source_ordinal": 143,
+        "original_program": "imported-obvious-v1/private/programs/mp-1d5eb406561b7d.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-1d5eb406561b7d.json"
+      },
+      {
+        "case_id": "mp-23821d2c7ab926",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:33116",
+        "source_ordinal": 144,
+        "original_program": "imported-obvious-v1/private/programs/mp-23821d2c7ab926.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-23821d2c7ab926.json"
+      },
+      {
+        "case_id": "mp-24662c5cf6a68f",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:102021",
+        "source_ordinal": 145,
+        "original_program": "imported-obvious-v1/private/programs/mp-24662c5cf6a68f.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-24662c5cf6a68f.json"
+      },
+      {
+        "case_id": "mp-2789dc56c16508",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:12055",
+        "source_ordinal": 146,
+        "original_program": "imported-obvious-v1/private/programs/mp-2789dc56c16508.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-2789dc56c16508.json"
+      },
+      {
+        "case_id": "mp-2a5d0607a98462",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:102675",
+        "source_ordinal": 147,
+        "original_program": "imported-obvious-v1/private/programs/mp-2a5d0607a98462.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-2a5d0607a98462.json"
+      },
+      {
+        "case_id": "mp-2c64f1864baf99",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:7120",
+        "source_ordinal": 148,
+        "original_program": "imported-obvious-v1/private/programs/mp-2c64f1864baf99.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-2c64f1864baf99.json"
+      },
+      {
+        "case_id": "mp-2cf667ba1584ec",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100214",
+        "source_ordinal": 149,
+        "original_program": "imported-obvious-v1/private/programs/mp-2cf667ba1584ec.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-2cf667ba1584ec.json"
+      },
+      {
+        "case_id": "mp-2d6f8d88031fbb",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103339",
+        "source_ordinal": 150,
+        "original_program": "imported-obvious-v1/private/programs/mp-2d6f8d88031fbb.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-2d6f8d88031fbb.json"
+      },
+      {
+        "case_id": "mp-2db3226ada25c5",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:4628",
+        "source_ordinal": 151,
+        "original_program": "imported-obvious-v1/private/programs/mp-2db3226ada25c5.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-2db3226ada25c5.json"
+      },
+      {
+        "case_id": "mp-2ed073d03a8e45",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103301",
+        "source_ordinal": 152,
+        "original_program": "imported-obvious-v1/private/programs/mp-2ed073d03a8e45.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-2ed073d03a8e45.json"
+      },
+      {
+        "case_id": "mp-3095ba7dd54d71",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:102739",
+        "source_ordinal": 153,
+        "original_program": "imported-obvious-v1/private/programs/mp-3095ba7dd54d71.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-3095ba7dd54d71.json"
+      },
+      {
+        "case_id": "mp-30f20b8a121222",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:9016",
+        "source_ordinal": 154,
+        "original_program": "imported-obvious-v1/private/programs/mp-30f20b8a121222.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-30f20b8a121222.json"
+      },
+      {
+        "case_id": "mp-3483539f585e9d",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:11406",
+        "source_ordinal": 155,
+        "original_program": "imported-obvious-v1/private/programs/mp-3483539f585e9d.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-3483539f585e9d.json"
+      },
+      {
+        "case_id": "mp-351ceb0879fb02",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103100",
+        "source_ordinal": 156,
+        "original_program": "imported-obvious-v1/private/programs/mp-351ceb0879fb02.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-351ceb0879fb02.json"
+      },
+      {
+        "case_id": "mp-35b0cd6658ac48",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100154",
+        "source_ordinal": 157,
+        "original_program": "imported-obvious-v1/private/programs/mp-35b0cd6658ac48.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-35b0cd6658ac48.json"
+      },
+      {
+        "case_id": "mp-3aa3fde9741b51",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103099",
+        "source_ordinal": 158,
+        "original_program": "imported-obvious-v1/private/programs/mp-3aa3fde9741b51.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-3aa3fde9741b51.json"
+      },
+      {
+        "case_id": "mp-3e78c6d1373ab3",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103916",
+        "source_ordinal": 159,
+        "original_program": "imported-obvious-v1/private/programs/mp-3e78c6d1373ab3.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-3e78c6d1373ab3.json"
+      },
+      {
+        "case_id": "mp-3fff21019a8537",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:12055",
+        "source_ordinal": 160,
+        "original_program": "imported-obvious-v1/private/programs/mp-3fff21019a8537.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-3fff21019a8537.json"
+      },
+      {
+        "case_id": "mp-43a78413555774",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100562",
+        "source_ordinal": 161,
+        "original_program": "imported-obvious-v1/private/programs/mp-43a78413555774.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-43a78413555774.json"
+      },
+      {
+        "case_id": "mp-45048623de0dfa",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:46084",
+        "source_ordinal": 162,
+        "original_program": "imported-obvious-v1/private/programs/mp-45048623de0dfa.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-45048623de0dfa.json"
+      },
+      {
+        "case_id": "mp-465694e7d640bd",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:101217",
+        "source_ordinal": 163,
+        "original_program": "imported-obvious-v1/private/programs/mp-465694e7d640bd.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-465694e7d640bd.json"
+      },
+      {
+        "case_id": "mp-46ba476de4451b",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:10036",
+        "source_ordinal": 164,
+        "original_program": "imported-obvious-v1/private/programs/mp-46ba476de4451b.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-46ba476de4451b.json"
+      },
+      {
+        "case_id": "mp-49a1f71361d8e5",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:101844",
+        "source_ordinal": 165,
+        "original_program": "imported-obvious-v1/private/programs/mp-49a1f71361d8e5.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-49a1f71361d8e5.json"
+      },
+      {
+        "case_id": "mp-49c24c5aa49f9c",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:48721",
+        "source_ordinal": 166,
+        "original_program": "imported-obvious-v1/private/programs/mp-49c24c5aa49f9c.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-49c24c5aa49f9c.json"
+      },
+      {
+        "case_id": "mp-49dd0e3fef693c",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103789",
+        "source_ordinal": 167,
+        "original_program": "imported-obvious-v1/private/programs/mp-49dd0e3fef693c.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-49dd0e3fef693c.json"
+      },
+      {
+        "case_id": "mp-4d1f3781a2295c",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100523",
+        "source_ordinal": 168,
+        "original_program": "imported-obvious-v1/private/programs/mp-4d1f3781a2295c.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-4d1f3781a2295c.json"
+      },
+      {
+        "case_id": "mp-50477708b794be",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:3393",
+        "source_ordinal": 169,
+        "original_program": "imported-obvious-v1/private/programs/mp-50477708b794be.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-50477708b794be.json"
+      },
+      {
+        "case_id": "mp-50dac2632e4792",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:12054",
+        "source_ordinal": 170,
+        "original_program": "imported-obvious-v1/private/programs/mp-50dac2632e4792.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-50dac2632e4792.json"
+      },
+      {
+        "case_id": "mp-50f1bcf373a616",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:45092",
+        "source_ordinal": 171,
+        "original_program": "imported-obvious-v1/private/programs/mp-50f1bcf373a616.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-50f1bcf373a616.json"
+      },
+      {
+        "case_id": "mp-56073cae88f0ce",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:8903",
+        "source_ordinal": 172,
+        "original_program": "imported-obvious-v1/private/programs/mp-56073cae88f0ce.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-56073cae88f0ce.json"
+      },
+      {
+        "case_id": "mp-5779f5e1d6d64b",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:33116",
+        "source_ordinal": 173,
+        "original_program": "imported-obvious-v1/private/programs/mp-5779f5e1d6d64b.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-5779f5e1d6d64b.json"
+      },
+      {
+        "case_id": "mp-58481aad8c5c29",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100162",
+        "source_ordinal": 174,
+        "original_program": "imported-obvious-v1/private/programs/mp-58481aad8c5c29.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-58481aad8c5c29.json"
+      },
+      {
+        "case_id": "mp-5a944a33c4b2b3",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100968",
+        "source_ordinal": 175,
+        "original_program": "imported-obvious-v1/private/programs/mp-5a944a33c4b2b3.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-5a944a33c4b2b3.json"
+      },
+      {
+        "case_id": "mp-5b88947209d712",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:14422",
+        "source_ordinal": 176,
+        "original_program": "imported-obvious-v1/private/programs/mp-5b88947209d712.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-5b88947209d712.json"
+      },
+      {
+        "case_id": "mp-5c7e566dcbdd68",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103104",
+        "source_ordinal": 177,
+        "original_program": "imported-obvious-v1/private/programs/mp-5c7e566dcbdd68.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-5c7e566dcbdd68.json"
+      },
+      {
+        "case_id": "mp-5ed65e601d988a",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100214",
+        "source_ordinal": 178,
+        "original_program": "imported-obvious-v1/private/programs/mp-5ed65e601d988a.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-5ed65e601d988a.json"
+      },
+      {
+        "case_id": "mp-60e45ea10aafd4",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:12617",
+        "source_ordinal": 179,
+        "original_program": "imported-obvious-v1/private/programs/mp-60e45ea10aafd4.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-60e45ea10aafd4.json"
+      },
+      {
+        "case_id": "mp-624443afb553d7",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100234",
+        "source_ordinal": 180,
+        "original_program": "imported-obvious-v1/private/programs/mp-624443afb553d7.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-624443afb553d7.json"
+      },
+      {
+        "case_id": "mp-62dc08282fea8d",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103104",
+        "source_ordinal": 181,
+        "original_program": "imported-obvious-v1/private/programs/mp-62dc08282fea8d.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-62dc08282fea8d.json"
+      },
+      {
+        "case_id": "mp-63742e5b153c37",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:46408",
+        "source_ordinal": 182,
+        "original_program": "imported-obvious-v1/private/programs/mp-63742e5b153c37.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-63742e5b153c37.json"
+      },
+      {
+        "case_id": "mp-691b9dc3409850",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103789",
+        "source_ordinal": 183,
+        "original_program": "imported-obvious-v1/private/programs/mp-691b9dc3409850.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-691b9dc3409850.json"
+      },
+      {
+        "case_id": "mp-699f1706298baa",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:12231",
+        "source_ordinal": 184,
+        "original_program": "imported-obvious-v1/private/programs/mp-699f1706298baa.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-699f1706298baa.json"
+      },
+      {
+        "case_id": "mp-6e4e83fc688589",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100965",
+        "source_ordinal": 185,
+        "original_program": "imported-obvious-v1/private/programs/mp-6e4e83fc688589.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-6e4e83fc688589.json"
+      },
+      {
+        "case_id": "mp-6f089597272db1",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103293",
+        "source_ordinal": 186,
+        "original_program": "imported-obvious-v1/private/programs/mp-6f089597272db1.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-6f089597272db1.json"
+      },
+      {
+        "case_id": "mp-70c9eded0b71d0",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:12480",
+        "source_ordinal": 187,
+        "original_program": "imported-obvious-v1/private/programs/mp-70c9eded0b71d0.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-70c9eded0b71d0.json"
+      },
+      {
+        "case_id": "mp-75883034df3375",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103099",
+        "source_ordinal": 188,
+        "original_program": "imported-obvious-v1/private/programs/mp-75883034df3375.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-75883034df3375.json"
+      },
+      {
+        "case_id": "mp-7cb21d666e8ae1",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103293",
+        "source_ordinal": 189,
+        "original_program": "imported-obvious-v1/private/programs/mp-7cb21d666e8ae1.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-7cb21d666e8ae1.json"
+      },
+      {
+        "case_id": "mp-7e88cb343deace",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:47645",
+        "source_ordinal": 190,
+        "original_program": "imported-obvious-v1/private/programs/mp-7e88cb343deace.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-7e88cb343deace.json"
+      },
+      {
+        "case_id": "mp-7ea9a7370929d1",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:26525",
+        "source_ordinal": 191,
+        "original_program": "imported-obvious-v1/private/programs/mp-7ea9a7370929d1.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-7ea9a7370929d1.json"
+      },
+      {
+        "case_id": "mp-823918dc97a9b9",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:102675",
+        "source_ordinal": 192,
+        "original_program": "imported-obvious-v1/private/programs/mp-823918dc97a9b9.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-823918dc97a9b9.json"
+      },
+      {
+        "case_id": "mp-83165bc6338836",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:10561",
+        "source_ordinal": 193,
+        "original_program": "imported-obvious-v1/private/programs/mp-83165bc6338836.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-83165bc6338836.json"
+      },
+      {
+        "case_id": "mp-84cf47a7dc9c2c",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:45092",
+        "source_ordinal": 194,
+        "original_program": "imported-obvious-v1/private/programs/mp-84cf47a7dc9c2c.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-84cf47a7dc9c2c.json"
+      },
+      {
+        "case_id": "mp-85330b847f8a2b",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:46856",
+        "source_ordinal": 195,
+        "original_program": "imported-obvious-v1/private/programs/mp-85330b847f8a2b.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-85330b847f8a2b.json"
+      },
+      {
+        "case_id": "mp-85accd7820463f",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:102658",
+        "source_ordinal": 196,
+        "original_program": "imported-obvious-v1/private/programs/mp-85accd7820463f.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-85accd7820463f.json"
+      },
+      {
+        "case_id": "mp-87d83e21230715",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100904",
+        "source_ordinal": 197,
+        "original_program": "imported-obvious-v1/private/programs/mp-87d83e21230715.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-87d83e21230715.json"
+      },
+      {
+        "case_id": "mp-89bc879196abf6",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:1370",
+        "source_ordinal": 198,
+        "original_program": "imported-obvious-v1/private/programs/mp-89bc879196abf6.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-89bc879196abf6.json"
+      },
+      {
+        "case_id": "mp-8a502f60798b45",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:46084",
+        "source_ordinal": 199,
+        "original_program": "imported-obvious-v1/private/programs/mp-8a502f60798b45.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-8a502f60798b45.json"
+      },
+      {
+        "case_id": "mp-8bd9bfb209ac91",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:3971",
+        "source_ordinal": 200,
+        "original_program": "imported-obvious-v1/private/programs/mp-8bd9bfb209ac91.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-8bd9bfb209ac91.json"
+      },
+      {
+        "case_id": "mp-8ec4a7c5a7b4f4",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:45689",
+        "source_ordinal": 201,
+        "original_program": "imported-obvious-v1/private/programs/mp-8ec4a7c5a7b4f4.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-8ec4a7c5a7b4f4.json"
+      },
+      {
+        "case_id": "mp-90c567de085f9f",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:12428",
+        "source_ordinal": 202,
+        "original_program": "imported-obvious-v1/private/programs/mp-90c567de085f9f.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-90c567de085f9f.json"
+      },
+      {
+        "case_id": "mp-91a02fa4cd40bd",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:12617",
+        "source_ordinal": 203,
+        "original_program": "imported-obvious-v1/private/programs/mp-91a02fa4cd40bd.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-91a02fa4cd40bd.json"
+      },
+      {
+        "case_id": "mp-92517e4bd2231b",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103297",
+        "source_ordinal": 204,
+        "original_program": "imported-obvious-v1/private/programs/mp-92517e4bd2231b.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-92517e4bd2231b.json"
+      },
+      {
+        "case_id": "mp-9376e524d56df0",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:14422",
+        "source_ordinal": 205,
+        "original_program": "imported-obvious-v1/private/programs/mp-9376e524d56df0.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-9376e524d56df0.json"
+      },
+      {
+        "case_id": "mp-93c20965b3655c",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103297",
+        "source_ordinal": 206,
+        "original_program": "imported-obvious-v1/private/programs/mp-93c20965b3655c.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-93c20965b3655c.json"
+      },
+      {
+        "case_id": "mp-9716469e164d2c",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:3971",
+        "source_ordinal": 207,
+        "original_program": "imported-obvious-v1/private/programs/mp-9716469e164d2c.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-9716469e164d2c.json"
+      },
+      {
+        "case_id": "mp-97ad14f2a4f546",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:46856",
+        "source_ordinal": 208,
+        "original_program": "imported-obvious-v1/private/programs/mp-97ad14f2a4f546.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-97ad14f2a4f546.json"
+      },
+      {
+        "case_id": "mp-98f945ae5c2b83",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:49133",
+        "source_ordinal": 209,
+        "original_program": "imported-obvious-v1/private/programs/mp-98f945ae5c2b83.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-98f945ae5c2b83.json"
+      },
+      {
+        "case_id": "mp-9f628498042742",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:102658",
+        "source_ordinal": 210,
+        "original_program": "imported-obvious-v1/private/programs/mp-9f628498042742.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-9f628498042742.json"
+      },
+      {
+        "case_id": "mp-9f69551a9b79b8",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:7187",
+        "source_ordinal": 211,
+        "original_program": "imported-obvious-v1/private/programs/mp-9f69551a9b79b8.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-9f69551a9b79b8.json"
+      },
+      {
+        "case_id": "mp-a09602d79a335d",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100520",
+        "source_ordinal": 212,
+        "original_program": "imported-obvious-v1/private/programs/mp-a09602d79a335d.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-a09602d79a335d.json"
+      },
+      {
+        "case_id": "mp-a14a101a44dab3",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103311",
+        "source_ordinal": 213,
+        "original_program": "imported-obvious-v1/private/programs/mp-a14a101a44dab3.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-a14a101a44dab3.json"
+      },
+      {
+        "case_id": "mp-a1fe2d4daebe3b",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:9164",
+        "source_ordinal": 214,
+        "original_program": "imported-obvious-v1/private/programs/mp-a1fe2d4daebe3b.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-a1fe2d4daebe3b.json"
+      },
+      {
+        "case_id": "mp-a358ea66cb2106",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:4628",
+        "source_ordinal": 215,
+        "original_program": "imported-obvious-v1/private/programs/mp-a358ea66cb2106.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-a358ea66cb2106.json"
+      },
+      {
+        "case_id": "mp-a60042b8adda9f",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:12428",
+        "source_ordinal": 216,
+        "original_program": "imported-obvious-v1/private/programs/mp-a60042b8adda9f.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-a60042b8adda9f.json"
+      },
+      {
+        "case_id": "mp-a8e7cb755116ef",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103273",
+        "source_ordinal": 217,
+        "original_program": "imported-obvious-v1/private/programs/mp-a8e7cb755116ef.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-a8e7cb755116ef.json"
+      },
+      {
+        "case_id": "mp-a968884ab9815d",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103301",
+        "source_ordinal": 218,
+        "original_program": "imported-obvious-v1/private/programs/mp-a968884ab9815d.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-a968884ab9815d.json"
+      },
+      {
+        "case_id": "mp-abcfb97072d659",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:49133",
+        "source_ordinal": 219,
+        "original_program": "imported-obvious-v1/private/programs/mp-abcfb97072d659.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-abcfb97072d659.json"
+      },
+      {
+        "case_id": "mp-aca73fe74b10b1",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100234",
+        "source_ordinal": 220,
+        "original_program": "imported-obvious-v1/private/programs/mp-aca73fe74b10b1.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-aca73fe74b10b1.json"
+      },
+      {
+        "case_id": "mp-ad630eca3ff7d6",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100523",
+        "source_ordinal": 221,
+        "original_program": "imported-obvious-v1/private/programs/mp-ad630eca3ff7d6.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-ad630eca3ff7d6.json"
+      },
+      {
+        "case_id": "mp-ade95952165593",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:9016",
+        "source_ordinal": 222,
+        "original_program": "imported-obvious-v1/private/programs/mp-ade95952165593.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-ade95952165593.json"
+      },
+      {
+        "case_id": "mp-adfd113dbec2b1",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:16032",
+        "source_ordinal": 223,
+        "original_program": "imported-obvious-v1/private/programs/mp-adfd113dbec2b1.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-adfd113dbec2b1.json"
+      },
+      {
+        "case_id": "mp-af2e95a5a4dbc3",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103100",
+        "source_ordinal": 224,
+        "original_program": "imported-obvious-v1/private/programs/mp-af2e95a5a4dbc3.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-af2e95a5a4dbc3.json"
+      },
+      {
+        "case_id": "mp-aff21efb36eb33",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:14351",
+        "source_ordinal": 225,
+        "original_program": "imported-obvious-v1/private/programs/mp-aff21efb36eb33.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-aff21efb36eb33.json"
+      },
+      {
+        "case_id": "mp-b000b4a8b2327a",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100426",
+        "source_ordinal": 226,
+        "original_program": "imported-obvious-v1/private/programs/mp-b000b4a8b2327a.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-b000b4a8b2327a.json"
+      },
+      {
+        "case_id": "mp-b00c0b791fa9dd",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103273",
+        "source_ordinal": 227,
+        "original_program": "imported-obvious-v1/private/programs/mp-b00c0b791fa9dd.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-b00c0b791fa9dd.json"
+      },
+      {
+        "case_id": "mp-b0f7fe5143def6",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:24931",
+        "source_ordinal": 228,
+        "original_program": "imported-obvious-v1/private/programs/mp-b0f7fe5143def6.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-b0f7fe5143def6.json"
+      },
+      {
+        "case_id": "mp-b1c97d7a95fc99",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:10561",
+        "source_ordinal": 229,
+        "original_program": "imported-obvious-v1/private/programs/mp-b1c97d7a95fc99.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-b1c97d7a95fc99.json"
+      },
+      {
+        "case_id": "mp-b3427eeab08c3f",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:10036",
+        "source_ordinal": 230,
+        "original_program": "imported-obvious-v1/private/programs/mp-b3427eeab08c3f.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-b3427eeab08c3f.json"
+      },
+      {
+        "case_id": "mp-b37474444e14fc",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100154",
+        "source_ordinal": 231,
+        "original_program": "imported-obvious-v1/private/programs/mp-b37474444e14fc.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-b37474444e14fc.json"
+      },
+      {
+        "case_id": "mp-b45977f10fd51d",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:14351",
+        "source_ordinal": 232,
+        "original_program": "imported-obvious-v1/private/programs/mp-b45977f10fd51d.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-b45977f10fd51d.json"
+      },
+      {
+        "case_id": "mp-b802c851025619",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103095",
+        "source_ordinal": 233,
+        "original_program": "imported-obvious-v1/private/programs/mp-b802c851025619.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-b802c851025619.json"
+      },
+      {
+        "case_id": "mp-b9d52db7131ac7",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103761",
+        "source_ordinal": 234,
+        "original_program": "imported-obvious-v1/private/programs/mp-b9d52db7131ac7.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-b9d52db7131ac7.json"
+      },
+      {
+        "case_id": "mp-ba267ce98e9a0b",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:16032",
+        "source_ordinal": 235,
+        "original_program": "imported-obvious-v1/private/programs/mp-ba267ce98e9a0b.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-ba267ce98e9a0b.json"
+      },
+      {
+        "case_id": "mp-bcdc5e77119a90",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:46408",
+        "source_ordinal": 236,
+        "original_program": "imported-obvious-v1/private/programs/mp-bcdc5e77119a90.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-bcdc5e77119a90.json"
+      },
+      {
+        "case_id": "mp-c024ea7c3e8346",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:11406",
+        "source_ordinal": 237,
+        "original_program": "imported-obvious-v1/private/programs/mp-c024ea7c3e8346.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-c024ea7c3e8346.json"
+      },
+      {
+        "case_id": "mp-c039bce612d0ae",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:12231",
+        "source_ordinal": 238,
+        "original_program": "imported-obvious-v1/private/programs/mp-c039bce612d0ae.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-c039bce612d0ae.json"
+      },
+      {
+        "case_id": "mp-c1ebd9a1b62d95",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100965",
+        "source_ordinal": 239,
+        "original_program": "imported-obvious-v1/private/programs/mp-c1ebd9a1b62d95.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-c1ebd9a1b62d95.json"
+      },
+      {
+        "case_id": "mp-c34ae49e7cfc8d",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103490",
+        "source_ordinal": 240,
+        "original_program": "imported-obvious-v1/private/programs/mp-c34ae49e7cfc8d.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-c34ae49e7cfc8d.json"
+      },
+      {
+        "case_id": "mp-c36741b6dea3be",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:11691",
+        "source_ordinal": 241,
+        "original_program": "imported-obvious-v1/private/programs/mp-c36741b6dea3be.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-c36741b6dea3be.json"
+      },
+      {
+        "case_id": "mp-c6b96ee26848ad",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100520",
+        "source_ordinal": 242,
+        "original_program": "imported-obvious-v1/private/programs/mp-c6b96ee26848ad.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-c6b96ee26848ad.json"
+      },
+      {
+        "case_id": "mp-c8929a3fd63e53",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:14986",
+        "source_ordinal": 243,
+        "original_program": "imported-obvious-v1/private/programs/mp-c8929a3fd63e53.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-c8929a3fd63e53.json"
+      },
+      {
+        "case_id": "mp-c8a06c553c3443",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100562",
+        "source_ordinal": 244,
+        "original_program": "imported-obvious-v1/private/programs/mp-c8a06c553c3443.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-c8a06c553c3443.json"
+      },
+      {
+        "case_id": "mp-ca4ae59b66b57c",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:9288",
+        "source_ordinal": 245,
+        "original_program": "imported-obvious-v1/private/programs/mp-ca4ae59b66b57c.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-ca4ae59b66b57c.json"
+      },
+      {
+        "case_id": "mp-caadef6de7537a",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:48721",
+        "source_ordinal": 246,
+        "original_program": "imported-obvious-v1/private/programs/mp-caadef6de7537a.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-caadef6de7537a.json"
+      },
+      {
+        "case_id": "mp-cb10894e6c78f5",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103311",
+        "source_ordinal": 247,
+        "original_program": "imported-obvious-v1/private/programs/mp-cb10894e6c78f5.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-cb10894e6c78f5.json"
+      },
+      {
+        "case_id": "mp-cf341790279839",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:7120",
+        "source_ordinal": 248,
+        "original_program": "imported-obvious-v1/private/programs/mp-cf341790279839.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-cf341790279839.json"
+      },
+      {
+        "case_id": "mp-d0763d2a6cd4d5",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:16547",
+        "source_ordinal": 249,
+        "original_program": "imported-obvious-v1/private/programs/mp-d0763d2a6cd4d5.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-d0763d2a6cd4d5.json"
+      },
+      {
+        "case_id": "mp-d1ccdb49bc0fdc",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100162",
+        "source_ordinal": 250,
+        "original_program": "imported-obvious-v1/private/programs/mp-d1ccdb49bc0fdc.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-d1ccdb49bc0fdc.json"
+      },
+      {
+        "case_id": "mp-d2b9894d3648bd",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:102219",
+        "source_ordinal": 251,
+        "original_program": "imported-obvious-v1/private/programs/mp-d2b9894d3648bd.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-d2b9894d3648bd.json"
+      },
+      {
+        "case_id": "mp-d3312f1c9034b4",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:101839",
+        "source_ordinal": 252,
+        "original_program": "imported-obvious-v1/private/programs/mp-d3312f1c9034b4.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-d3312f1c9034b4.json"
+      },
+      {
+        "case_id": "mp-d39d3425b463d7",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100776",
+        "source_ordinal": 253,
+        "original_program": "imported-obvious-v1/private/programs/mp-d39d3425b463d7.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-d39d3425b463d7.json"
+      },
+      {
+        "case_id": "mp-d5382bec652d3a",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:102021",
+        "source_ordinal": 254,
+        "original_program": "imported-obvious-v1/private/programs/mp-d5382bec652d3a.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-d5382bec652d3a.json"
+      },
+      {
+        "case_id": "mp-d9b2e6914ea47c",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103916",
+        "source_ordinal": 255,
+        "original_program": "imported-obvious-v1/private/programs/mp-d9b2e6914ea47c.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-d9b2e6914ea47c.json"
+      },
+      {
+        "case_id": "mp-df2cb02eb36598",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:16547",
+        "source_ordinal": 256,
+        "original_program": "imported-obvious-v1/private/programs/mp-df2cb02eb36598.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-df2cb02eb36598.json"
+      },
+      {
+        "case_id": "mp-dfa5beff77908e",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103113",
+        "source_ordinal": 257,
+        "original_program": "imported-obvious-v1/private/programs/mp-dfa5beff77908e.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-dfa5beff77908e.json"
+      },
+      {
+        "case_id": "mp-e827a4ebdae0b4",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103339",
+        "source_ordinal": 258,
+        "original_program": "imported-obvious-v1/private/programs/mp-e827a4ebdae0b4.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-e827a4ebdae0b4.json"
+      },
+      {
+        "case_id": "mp-e9826fa8cb594f",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:100968",
+        "source_ordinal": 259,
+        "original_program": "imported-obvious-v1/private/programs/mp-e9826fa8cb594f.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-e9826fa8cb594f.json"
+      },
+      {
+        "case_id": "mp-ea0a2d73fe715b",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:47529",
+        "source_ordinal": 260,
+        "original_program": "imported-obvious-v1/private/programs/mp-ea0a2d73fe715b.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-ea0a2d73fe715b.json"
+      },
+      {
+        "case_id": "mp-eb42f0d6b9e2e1",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:26525",
+        "source_ordinal": 261,
+        "original_program": "imported-obvious-v1/private/programs/mp-eb42f0d6b9e2e1.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-eb42f0d6b9e2e1.json"
+      },
+      {
+        "case_id": "mp-eb7a388603a6e0",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:3393",
+        "source_ordinal": 262,
+        "original_program": "imported-obvious-v1/private/programs/mp-eb7a388603a6e0.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-eb7a388603a6e0.json"
+      },
+      {
+        "case_id": "mp-eced6849d547f7",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:1370",
+        "source_ordinal": 263,
+        "original_program": "imported-obvious-v1/private/programs/mp-eced6849d547f7.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-eced6849d547f7.json"
+      },
+      {
+        "case_id": "mp-ed190b05732367",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:14986",
+        "source_ordinal": 264,
+        "original_program": "imported-obvious-v1/private/programs/mp-ed190b05732367.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-ed190b05732367.json"
+      },
+      {
+        "case_id": "mp-f28d4f303bc3ca",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:11089",
+        "source_ordinal": 265,
+        "original_program": "imported-obvious-v1/private/programs/mp-f28d4f303bc3ca.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-f28d4f303bc3ca.json"
+      },
+      {
+        "case_id": "mp-f4530aa4cdddb3",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103113",
+        "source_ordinal": 266,
+        "original_program": "imported-obvious-v1/private/programs/mp-f4530aa4cdddb3.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-f4530aa4cdddb3.json"
+      },
+      {
+        "case_id": "mp-f7a0d71bce4188",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103095",
+        "source_ordinal": 267,
+        "original_program": "imported-obvious-v1/private/programs/mp-f7a0d71bce4188.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-f7a0d71bce4188.json"
+      },
+      {
+        "case_id": "mp-f82f2747d093d4",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:12054",
+        "source_ordinal": 268,
+        "original_program": "imported-obvious-v1/private/programs/mp-f82f2747d093d4.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-f82f2747d093d4.json"
+      },
+      {
+        "case_id": "mp-f8358e2c9ef228",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:101844",
+        "source_ordinal": 269,
+        "original_program": "imported-obvious-v1/private/programs/mp-f8358e2c9ef228.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-f8358e2c9ef228.json"
+      },
+      {
+        "case_id": "mp-fbf678c3bf320a",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103635",
+        "source_ordinal": 270,
+        "original_program": "imported-obvious-v1/private/programs/mp-fbf678c3bf320a.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-fbf678c3bf320a.json"
+      },
+      {
+        "case_id": "mp-fc39a354d99884",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:102219",
+        "source_ordinal": 271,
+        "original_program": "imported-obvious-v1/private/programs/mp-fc39a354d99884.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-fc39a354d99884.json"
+      },
+      {
+        "case_id": "mp-fc855dd0a3c3d4",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:103635",
+        "source_ordinal": 272,
+        "original_program": "imported-obvious-v1/private/programs/mp-fc855dd0a3c3d4.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-fc855dd0a3c3d4.json"
+      },
+      {
+        "case_id": "mp-fce896c03747de",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:11691",
+        "source_ordinal": 273,
+        "original_program": "imported-obvious-v1/private/programs/mp-fce896c03747de.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-fce896c03747de.json"
+      },
+      {
+        "case_id": "mp-ff022194497138",
+        "origin": "medium-v1-reclassified-obvious",
+        "source_identity": "PartNet-Mobility:101217",
+        "source_ordinal": 274,
+        "original_program": "imported-obvious-v1/private/programs/mp-ff022194497138.json",
+        "member": "filesystem/91004t2/laq/code/ThreejsJudge/TurnItOver-dataset/benchmark/easy/imported-obvious-v1/private/programs/mp-ff022194497138.json"
+      }
+    ]
+  },
+  "boundaries": {
+    "collection_inclusion_confirmation": "collection_approval.json",
+    "review_eligibility_changed": false,
+    "per_case_independent_review_added": false,
+    "new_benchmark_freeze": false,
+    "private_material": "Gold, program references and archive are private audit/scoring material; not model inputs.",
+    "restoration": "Byte and selected member checks only; legacy semantic validation was performed in the source environment.",
+    "availability": "Local custody only, no external download URL or off-machine durability guarantee."
+  }
+}

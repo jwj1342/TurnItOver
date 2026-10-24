@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "archives": [
+    {
+      "id": "easy-20261023",
+      "filename": "filesystem.tar.gz",
+      "sha256": "2afef206fc161b55f5b0b64a71edafc8faaa86fe4529b9978d15b550e69f7d02",
+      "size": 749367252,
+      "availability": "local_custody",
+      "custody_copies": [
+        {
+          "path": "/91004t2/laq/code/ThreejsJudge/TurnItOver-archives/easy-20261023",
+          "verified_sha256": "2afef206fc161b55f5b0b64a71edafc8faaa86fe4529b9978d15b550e69f7d02"
+        },
+        {
+          "path": "/home/laq/TurnItOver-archives/easy-20261023",
+          "verified_sha256": "2afef206fc161b55f5b0b64a71edafc8faaa86fe4529b9978d15b550e69f7d02"
+        }
+      ],
+      "member_index": "program_members.jsonl",
+      "source_inventory_sha256": "325c9720f890e281cc80f29f4918b77a93dd73fbe0565609c3c32f4e63ae547a",
+      "verification": {
+        "verified_at_utc": "2026-10-24T05:00:31.761129+00:00",
+        "custody_payloads_hashed": 2,
+        "selected_members_checked": 150,
+        "selected_member_bytes": 817017379,
+        "method": "Stream every selected member from filesystem.tar.gz; verify size and SHA-256 against sealed inventory.",
+        "independent_restored_semantic_validation": false
+      }
+    }
+  ]
+}

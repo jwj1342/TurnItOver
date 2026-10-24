@@ -1,0 +1,49 @@
+{
+  "source_head": "f10bc965397c555b30ce21b73180cf22deededd8",
+  "started_at_utc": "2026-10-23T14:12:10.557318+00:00",
+  "easy_directory_objects": 127,
+  "easy_directory_cases": 275,
+  "frozen_v1_easy_objects": 23,
+  "frozen_v1_easy_cases": 46,
+  "project_easy_objects": 150,
+  "project_easy_cases": 321,
+  "review_counts": {
+    "pending_human_review": 242,
+    "human_review_complete": 32,
+    "human_review_rejected": 1
+  },
+  "easy_split_counts": {
+    "train": {
+      "objects": 117,
+      "samples": 251,
+      "kinds": {
+        "clean": 117,
+        "direction_flip": 48,
+        "joint_axis": 61,
+        "part_offset": 25
+      }
+    },
+    "validation": {
+      "objects": 10,
+      "samples": 24,
+      "kinds": {
+        "direction_flip": 6,
+        "clean": 10,
+        "joint_axis": 8
+      }
+    }
+  },
+  "historical_import_inputs": 2207,
+  "files": 10482,
+  "logical_bytes": 4262739751,
+  "excluded": [
+    "benchmark/medium-v2",
+    "benchmark/medium-v3",
+    "unreferenced ignored files",
+    "credentials",
+    "model checkpoints",
+    "environments and caches"
+  ],
+  "boundary_note": "Archive current Easy state, not new human qualification or a new benchmark freeze. Tracked history and immutable dependencies may contain older non-Easy context.",
+  "reproduction_limit": "No training, browser rendering, original source selection or URDF re-audit is performed."
+}

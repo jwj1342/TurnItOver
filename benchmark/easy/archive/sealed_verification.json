@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "completed_at_utc": "2026-10-23T14:14:23.743636+00:00",
+  "restored_files_checked": 10482,
+  "all_source_bytes_unchanged": true,
+  "git_index_unchanged": true,
+  "git_head_unchanged": true,
+  "tracked_worktree_diff_unchanged": true,
+  "easy_inventory_unchanged": true,
+  "git_bundle_self_contained_and_restored": true,
+  "existing_source_import_validation_passed": true,
+  "independent_restored_semantic_validation": "not_run; historical absolute paths require a matching isolated layout",
+  "medium_process": "not stopped or modified; its output is excluded"
+}
