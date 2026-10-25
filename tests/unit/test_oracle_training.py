@@ -27,15 +27,17 @@ def test_episode_loader_checks_formal_identity_images_and_terminal_filter(tmp_pa
     Image.new('RGB', (2, 2), 'red').save(image_path)
     digest = hashlib.sha256(image_path.read_bytes()).hexdigest()
     identity = {key: 'a' * 64 for key in ('source_identity_sha256', 'source_content_sha256')}
-    identity.update(reference_sha='b' * 16, candidate_sha='c' * 16)
+    identity.update(reference_sha='b' * 16, candidate_sha='c' * 16,
+                    source_dataset='fixture', source_asset_id='example', asset_id='example', split_group='example')
+    identity['source_identity_sha256'] = hashlib.sha256(b'fixture:example').hexdigest()
     identity['formal_training'] = True
     row = {'id': 'example:verdict', 'terminal': True, 'images': ['images/example.png'],
            'image_sha256': [digest], 'data_identity': identity,
-           'messages': [{'role': 'user', 'content': 'input'},
+           'messages': [{'role': 'user', 'content': 'protocol\n' + json.dumps({
+               'history': [], 'image_order': ['images/example.png']})},
                         {'role': 'assistant', 'content': '{"verdict": {}}'}]}
     (tmp_path / 'manifest.json').write_text(json.dumps({'status': 'complete', 'formal_training': True}))
-    for split in ('train', 'validation', 'test'):
-        (tmp_path / f'{split}.episodes.jsonl').write_text(json.dumps(row) + '\n')
+    (tmp_path / 'train.episodes.jsonl').write_text(json.dumps(row) + '\n')
 
     loaded = list(load_examples(tmp_path, 'train', 'episodes',
                                 require_formal_training=True, terminal_only=True))
@@ -64,3 +66,34 @@ def test_tokenize_example_masks_real_image_prompt_tokens():
     batch = tokenize_example(Processor(), record, [Image.new('RGB', (2, 2), 'blue')])
     assert batch['pixel_values'].shape == (1, 3, 2, 2)
     assert batch['labels'].tolist() == [[-100, -100, -100, 3, 4]]
+
+
+@pytest.mark.parametrize('mode', ['padding', 'mismatch', 'empty'])
+def test_mask_history_padding_and_reject_unsafe_templates(mode):
+    torch = pytest.importorskip('torch')
+    from PIL import Image
+    from turnitover.oracle.training import tokenize_example
+
+    class Processor:
+        def apply_chat_template(self, messages, **kwargs):
+            # Each image and the complete user/history prompt belongs to the prefix.
+            assert len(messages[0]['content']) == 3
+            prefix = [10, 11, 12, 13, 14]
+            tokens = prefix if len(messages) == 1 or mode == 'empty' else prefix + [20, 21, 0]
+            if len(messages) == 2 and mode == 'mismatch':
+                tokens = [99] + tokens[1:]
+            attention = [1] * len(tokens)
+            if len(messages) == 2 and mode == 'padding':
+                attention[-1] = 0
+            return {'input_ids': torch.tensor([tokens]), 'attention_mask': torch.tensor([attention])}
+
+    row = {'images': ['reference.png', 'history.png'], 'messages': [
+        {'role': 'user', 'content': 'Instructions and previous observations'},
+        {'role': 'assistant', 'content': 'target'}]}
+    images = [Image.new('RGB', (2,2)) for _ in range(2)]
+    if mode == 'padding':
+        batch = tokenize_example(Processor(), row, images)
+        assert batch['labels'].tolist() == [[-100]*5 + [20,21,-100]]
+    else:
+        with pytest.raises(ValueError, match='prefix differs' if mode == 'mismatch' else 'Empty assistant'):
+            tokenize_example(Processor(), row, images)

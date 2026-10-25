@@ -1,0 +1,126 @@
+{
+  "status": "complete",
+  "scope": "integration smoke, not a research result",
+  "seed": 20261025,
+  "device": "cpu",
+  "random_model_parameters": 19533792,
+  "python": "3.12.12",
+  "torch": "2.6.0+cu124",
+  "transformers": "4.57.6",
+  "peft": "0.18.0",
+  "training_steps": 1,
+  "training_loss": {
+    "first": 11.905364990234375,
+    "last": 11.905364990234375,
+    "minimum": 11.905364990234375,
+    "mean": 11.905364990234375
+  },
+  "nonzero_lora_B_tensors": 4,
+  "independent_objects": {
+    "train": 1,
+    "validation": 1
+  },
+  "shared_protocol": {
+    "effective_generation_config_sha256": "e1e0afabf0c09873bdfa40f3283a314da71eac34274d9775181b8de77c3cbf10",
+    "defect_ids": [
+      "geometry.anisotropic_scale",
+      "geometry.duplicate_part",
+      "geometry.global_scale",
+      "geometry.missing_bevel",
+      "geometry.missing_part",
+      "geometry.open_volume",
+      "geometry.self_intersection",
+      "geometry.thin_sheet",
+      "kinematics.direction_flip",
+      "kinematics.joint_anchor",
+      "kinematics.joint_axis",
+      "kinematics.joint_range",
+      "kinematics.joint_type",
+      "material.basecolor_as_rough",
+      "material.emissive",
+      "material.metalness",
+      "material.normal_map",
+      "material.tiling_scale",
+      "runtime.draw_calls",
+      "runtime.missing_dispose",
+      "runtime.tick_missing_or_phase",
+      "runtime.triangle_budget",
+      "structure.floating",
+      "structure.interpenetration",
+      "structure.part_offset",
+      "structure.part_rotation",
+      "structure.pivot_offset",
+      "structure.symmetry_break",
+      "structure.wrong_parent"
+    ],
+    "processor_sha256": "e62d6962ebd4b8803d75a133e7fe8fd8c88d1da04442392774563106aa0db47c",
+    "device": "cpu",
+    "version": "fixed-observation-v1",
+    "task": "diagnosis",
+    "split": "validation",
+    "dataset_version": "sft-synthetic-smoke-v1",
+    "dataset_manifest_sha256": "220e1907ef5591562c41d60e9f16b0bacdf19aa49aea0a767d91c843d8e55fd8",
+    "annotations_sha256": "5cdd46cd0dea0f3f0604ab2a7433c2698bf3585b59160944af9077454c9163ca",
+    "split_sha256": "cd989de0213546800a1d33a2c86e83df5199f159e14aaee709c0de6c58a2f64a",
+    "public_input_sha256": "5cd38c0c0afcfdc00d82fa38d935a4f84e648e7079fc5299fc94e9c501f9f85f",
+    "max_new_tokens": 2,
+    "do_sample": false,
+    "seed": 20261025,
+    "n": 1,
+    "independent_objects": 1
+  },
+  "artifacts_sha256": {
+    "dataset/manifest.json": "220e1907ef5591562c41d60e9f16b0bacdf19aa49aea0a767d91c843d8e55fd8",
+    "dataset/annotations.private.jsonl": "5cdd46cd0dea0f3f0604ab2a7433c2698bf3585b59160944af9077454c9163ca",
+    "dataset/train.episodes.jsonl": "d0d92e06f1bb79813f3098904f9f3b4449ce7efe9ed25e9c07fccdafd9c3fada",
+    "dataset/validation.episodes.jsonl": "cd989de0213546800a1d33a2c86e83df5199f159e14aaee709c0de6c58a2f64a",
+    "model/config.json": "3536062b676136f8c273adf2a8a641a2fda2e694d8dd6ae2c13e5c8ee729af7d",
+    "model/model.safetensors": "a9a37fbbff9631bebbec21ecd9f60346b99334dfd05693c3643aadd2c38dfb81",
+    "train/checkpoint/adapter_model.safetensors": "679f8724833793fa55dcf33d2e909b2a39a319e2d6ee4e81cddae598a7066aaa",
+    "train/loss.jsonl": "6956d7985a1e21029c9b481b526898d73a00adc1016b7c31ebd07fac2327bba0"
+  },
+  "invocation_exit_code": 0,
+  "run_directory": "output/sft-pr-smoke-doccheck",
+  "verification": "Independent agent executed docs/sft-smoke.md against final code; CPU integration only",
+  "train_loss_rows": [
+    {
+      "step": 0,
+      "epoch": 0,
+      "position": 0,
+      "id": "synthetic-train:verdict",
+      "loss": 11.905364990234375,
+      "learning_rate": 0.0002
+    }
+  ],
+  "predictions": {
+    "base": {
+      "id": "synthetic-validation:verdict",
+      "raw": "\u0e0a\u0e19emme",
+      "valid": false,
+      "error": "Model must return one valid JSON decision",
+      "input_tokens": 138,
+      "output_tokens": 2
+    },
+    "sft": {
+      "id": "synthetic-validation:verdict",
+      "raw": "\u0e0a\u0e19emme",
+      "valid": false,
+      "error": "Model must return one valid JSON decision",
+      "input_tokens": 138,
+      "output_tokens": 2
+    }
+  },
+  "code_sha256": {
+    "scripts/smoke_qwen_sft.py": "1b5ab5268bafea0a5bc04cb29b0b21ec267eee02c9ccc0e72009785abcfc60f3",
+    "scripts/train_qwen_episode_sft.py": "47331778f0184e4219426fbba1d2f9de6c99683dd054f1e1efdac70d8d677cdf",
+    "scripts/evaluate_qwen_episode_sft.py": "9078ad51adb26c0bc991f83e9e4b397d3d7df0d66d02af2d32880ff3fc28c07c",
+    "scripts/compare_qwen_sft.py": "f57e2b985904e0d8638a5666ed563f9408004c12ffa05d5b90966b828c5ee67d",
+    "turnitover/oracle/training.py": "77496f63a27a459e2ed2974c01b907242fa2ac075fd788abb0230a3dd1f8bab3",
+    "turnitover/oracle/supervision.py": "8d4d825c91b46957f8d17cdb5812e4a395bee83c50f43bb843a2390116a1eb4e",
+    "turnitover/oracle/supervision_validation.py": "db8d9cdb2ea3892b811b995680f0c11a1f1050a80a57aba21d69c088ce90e978",
+    "turnitover/oracle/sft_data.py": "d49e58be59423c8b2cb3051ca2cc8671b1a2e1fe624468cd3bca90a55d09cf97",
+    "turnitover/oracle/sft_contracts.py": "59b524a227575e19190b3f9c91b5fa33652cc838d4f1d70b00e00fa517dd6b95",
+    "turnitover/oracle/sft_metrics.py": "11eca13a026589a8e789d43b8e6d4b0ba9b3fe82a7956de2dac6139f895080f0",
+    "turnitover/verifier/contracts.py": "7342f9c9dcd2646a463c9a776427d62688c646b0cd4cd5bf93f494796fea7481"
+  }
+}
