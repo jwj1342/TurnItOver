@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import shutil
 import stat
 import zipfile
@@ -46,6 +47,30 @@ def verify_asset(path: Path, expected: dict) -> None:
         raise ValueError(f"missing or symbolic release asset: {path.name}")
     if path.stat().st_size != expected["size"] or sha256(path) != expected["sha256"]:
         raise ValueError(f"release asset size or SHA-256 mismatch: {path.name}")
+
+
+def verify_asset_directory(assets: Path, manifest: Path, roots: set[str]) -> dict:
+    """Check a code-pinned two-asset candidate release before any extraction."""
+    contract = json.loads(manifest.read_text(encoding="utf-8"))
+    entries = contract.get("assets", {})
+    if contract.get("version") != 1 or len(entries) != 2:
+        raise ValueError("unsupported candidate release contract")
+    if {entry["root"] for entry in entries.values()} != roots:
+        raise ValueError("release has unexpected data/review roots")
+    for name, entry in entries.items():
+        if Path(name).name != name or "\\" in name:
+            raise ValueError("release asset name must be a filename")
+        verify_asset(assets / name, entry)
+    copied = assets / "release-manifest.json"
+    if copied.is_symlink() or copied.read_bytes() != manifest.read_bytes():
+        raise ValueError("downloaded manifest differs from the code-pinned contract")
+    names = sorted([*entries, copied.name])
+    checksums = "".join(f"{sha256(assets / name)}  {name}\n" for name in names)
+    if (assets / "SHA256SUMS").read_text(encoding="utf-8") != checksums:
+        raise ValueError("SHA256SUMS differs from the pinned assets")
+    if {path.name for path in assets.iterdir()} != {*names, "SHA256SUMS"}:
+        raise ValueError("unexpected or missing files in release asset directory")
+    return contract
 
 
 def extract_zip(path: Path, destination: Path, expected: dict) -> Path:

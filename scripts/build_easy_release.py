@@ -15,7 +15,8 @@ else:
     from validate_easy_bundle import validate_bundle
 
 
-def build_release(root: Path, output: Path, tag: str, source_commit: str, base_commit: str) -> dict:
+def build_release(root: Path, output: Path, tag: str, source_commit: str, base_commit: str,
+                  code_ref: str | None = None) -> dict:
     if not re.fullmatch(r"easy-candidate-v\d+\.\d+\.\d+-rc\.\d+", tag):
         raise ValueError("use an explicit easy-candidate-vX.Y.Z-rc.N tag")
     if any(not re.fullmatch(r"[0-9a-f]{40}", value) for value in (source_commit, base_commit)):
@@ -33,7 +34,7 @@ def build_release(root: Path, output: Path, tag: str, source_commit: str, base_c
                  "review_manifest.jsonl", "splits.json", "provenance.json", "collection_approval.json"]
     contract = dict(
         version=1, repository="mmk1209/TIO-datasets", tag=tag,
-        code_ref=f"refs/tags/{tag}", base_code_commit=base_commit,
+        code_ref=code_ref or f"refs/tags/{tag}", base_code_commit=base_commit,
         source_dataset_commit=source_commit,
         status="candidate_pending_review", benchmark_frozen=False, training_ready=False,
         archive_availability="local_custody", assets=assets,
@@ -61,9 +62,10 @@ def main() -> None:
     parser.add_argument("--tag", required=True)
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--base-code-commit", required=True)
+    parser.add_argument("--code-ref", help="available code branch or tag; defaults to refs/tags/<tag>")
     args = parser.parse_args()
     print(json.dumps(build_release(args.root, args.output, args.tag, args.source_commit,
-                                   args.base_code_commit), ensure_ascii=False, indent=2))
+                                   args.base_code_commit, args.code_ref), ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
