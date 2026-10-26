@@ -1,6 +1,7 @@
 # generated data and logs
-# Easy candidate payloads are distributed as versioned release assets.
+# Candidate payloads are distributed in the private data repository.
 /benchmark/easy/
+/benchmark/medium/
 data/*
 !data/.gitkeep
 logs/*
