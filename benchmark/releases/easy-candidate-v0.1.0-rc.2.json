@@ -1,0 +1,70 @@
+{
+  "archive_availability": "local_custody",
+  "assets": {
+    "easy-candidate-v0.1.0-rc.2-data.zip": {
+      "files": 1822,
+      "root": "easy",
+      "sha256": "816ff28c7b7a3a2da8ab3c9c82fac7abdf14986a5b8a9fd7d0825fe5a243edaa",
+      "size": 13292980,
+      "uncompressed_bytes": 16332231
+    },
+    "easy-candidate-v0.1.0-rc.2-validation-review.zip": {
+      "files": 154,
+      "root": "validation_review",
+      "sha256": "cf3277858c196c4efc64b141ad76b1f8dc057b42d7455e6a76e01dd1ec6ee666",
+      "size": 688821,
+      "uncompressed_bytes": 860076
+    }
+  },
+  "base_code_commit": "7d6928eae65ce0c745c4b6a13baf92370460d14c",
+  "benchmark_frozen": false,
+  "code_ref": "refs/heads/laq/dataset-release",
+  "distribution": {
+    "access_control": "Stored in private repository mmk1209/TIO-datasets; access requires owner invitation and does not grant redistribution rights.",
+    "data": "Contains Gold, checker evidence and historical reviews; coordinator/research use, not blind-review input.",
+    "programs": "Sealed construction archive is not included; this is not a standalone replay or training export.",
+    "validation_review": "Distribute this separate ZIP to reviewers before either independent return is compared."
+  },
+  "expected_report": {
+    "cases": 275,
+    "human_review_status": {
+      "human_review_complete": 32,
+      "human_review_rejected": 1,
+      "pending_human_review": 242
+    },
+    "imported_cases": 150,
+    "imported_objects": 75,
+    "independent_validation_review": {
+      "cases": 24,
+      "files": 154,
+      "media_files": 144,
+      "objects": 10,
+      "reviewers": [
+        "jwj1342",
+        "WinterCCC"
+      ]
+    },
+    "manifest_files": 1821,
+    "media_files": 1650,
+    "objects": 127,
+    "train_cases": 251,
+    "train_objects": 117,
+    "validation_cases": 24,
+    "validation_objects": 10
+  },
+  "preserved_files": {
+    "collection_approval.json": "4d6257af6920caaadf1dcf82971cbb7f570f339eac589b6f1becd1c75444bddd",
+    "human_review.jsonl": "d4e289a168fb6bb88438e4d86e4bfa93ee266db0afbbec4762fcfd0e19622f32",
+    "private/gold.jsonl": "2028f0164d9145f0e6783fe2507eb0895fd407727f36f2c1d546265b44631c14",
+    "private/import_checks.jsonl": "7b6a525aba5cd0346c864be475c45225f612d838067334be93dd3ab680981e45",
+    "provenance.json": "0109d6e562c06206333b412d5797bcd91fd33b5ec48c77a5635e3a7efc652181",
+    "review_manifest.jsonl": "41243fabe37f1dc36a5ce2332fab7d0bb84b207b99da243dcfb9a222a20fc225",
+    "splits.json": "3ca15a51bb0d0cca6fa3e1b2f2ae744ba2d8f88b4a8535c7989a19d700240a1c"
+  },
+  "repository": "mmk1209/TIO-datasets",
+  "source_dataset_commit": "27f7e03a42a3a835fbf9e2c09e04faf9e19695be",
+  "status": "candidate_pending_review",
+  "tag": "easy-candidate-v0.1.0-rc.2",
+  "training_ready": false,
+  "version": 1
+}

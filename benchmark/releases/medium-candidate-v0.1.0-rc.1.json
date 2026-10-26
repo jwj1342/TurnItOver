@@ -1,0 +1,81 @@
+{
+  "archive_availability": "local_custody",
+  "assets": {
+    "medium-candidate-v0.1.0-rc.1-data.zip": {
+      "files": 2732,
+      "root": "medium",
+      "sha256": "d6803ddd1697d11e70db2e413f05dc19f213fff2b1c9e1d384f9108f5a5e6f84",
+      "size": 16543897,
+      "uncompressed_bytes": 22733160
+    },
+    "medium-candidate-v0.1.0-rc.1-review.zip": {
+      "files": 907,
+      "root": "medium_review",
+      "sha256": "43e6721f93432888347239f83be6dd0847d6c46ff10d9decb2fadd61a7b922db",
+      "size": 4330380,
+      "uncompressed_bytes": 4607150
+    }
+  },
+  "base_code_commit": "7d6928eae65ce0c745c4b6a13baf92370460d14c",
+  "benchmark_frozen": false,
+  "code_ref": "refs/heads/laq/dataset-release",
+  "dataset": "medium",
+  "distribution": {
+    "access_control": "Private repository mmk1209/TIO-datasets; owner invitation, existing upstream terms apply.",
+    "data": "Coordinator/research only: includes Gold, checker evidence and historical judgments.",
+    "programs": "Construction programs, mesh/URDF and historical case media remain local_custody; no standalone geometry replay or training export.",
+    "review": "Separate answer-free native-image review asset; opaque IDs and empty returns, no private mapping."
+  },
+  "expected_report": {
+    "archive_availability": "local_custody",
+    "cases": 150,
+    "clean_cases": 75,
+    "config_objects": {
+      "multi_direction_flip": 22,
+      "multi_joint_axis": 45,
+      "single_part_offset": 8
+    },
+    "defect_cases": 75,
+    "full_diagnostic_pending": 150,
+    "human_visibility": {
+      "active_pending_visibility": 64,
+      "clean": 2,
+      "full_diagnostic_complete": 0,
+      "medium": 11,
+      "reviewed": 16,
+      "too_obvious": 3
+    },
+    "input_frames": 600,
+    "media_files": 1800,
+    "native_images": 900,
+    "objects": 75,
+    "program_replay_performed": false,
+    "review_bundle": {
+      "blank_returns": 150,
+      "cases": 150,
+      "manifest_files": 906,
+      "media_files": 900
+    },
+    "train_objects": 75,
+    "training_eligible_cases": 0,
+    "validation_objects": 0,
+    "validation_scope": "portable files, source bindings, stored evidence and review isolation; no mesh replay"
+  },
+  "preserved_files": {
+    "construction_registry.json": "5ac5f880adf67596b80bb7b3293afd8405751657b20bb9b6e7352586a5bc27ad",
+    "human_review.jsonl": "0a7226b4bdbdcc63286ee6b59db986241061f39718bf7015eb321553adaae8ba",
+    "private/checks.jsonl": "95f27487538c6f5df15bc664578586f2d7522f614d1ae53ab2a31b4fb1bb6a47",
+    "private/gold.jsonl": "16e8ddb3526b4ab2ed4e38c7e70bef4b99ea9eacb1ed89a7586f6e2c0185d415",
+    "private/human_spot_dispositions.jsonl": "cca7811dc8a82239b210a84a41728ad00047bc0a28d0d4b7796810d3771ca6ae",
+    "private/human_spot_review.jsonl": "b749a98338bf892b50d41769aa2c87f555781d9bc5dd24a787f8b5da51991bf6",
+    "review_manifest.jsonl": "4e02912311fc14d8065b58e43802ebe2843bc992df5fc5042900fedec8cca228",
+    "source/manifest.json": "e0a930f82ff1e9fb86c7b2feaf5de47ac7ede1180980c9c5185fd3b757979071",
+    "source/metadata.json": "a981897864519446aac9a897b9cddfcf21d075c67744ac873499965e3e2342a5"
+  },
+  "repository": "mmk1209/TIO-datasets",
+  "source_manifest_sha256": "e0a930f82ff1e9fb86c7b2feaf5de47ac7ede1180980c9c5185fd3b757979071",
+  "status": "candidate_pending_review",
+  "tag": "medium-candidate-v0.1.0-rc.1",
+  "training_ready": false,
+  "version": 1
+}

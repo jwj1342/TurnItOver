@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>运动与部件位置审核</title><link rel="stylesheet" href="review.css"></head>
+<body><header><h1>运动与部件位置审核</h1>
+<p>请先观察运动，再比较参考与候选。播放仅切换实际渲染的 rest、mid、limit 状态。判断真实差异是否需要仔细比较或思考才能确认；也可判断正常、过于明显、过于隐蔽或无法判断。</p>
+<p>页面不含构造答案或历史结论。填写保存在当前浏览器，结果需手动导出交回；空白项不算通过，页面不会上传结果。</p>
+<label>审核者标识 <input id="reviewer" type="text" autocomplete="off" placeholder="填写本人标识"></label>
+<button id="start">开始／载入本人审核</button>
+<button id="export">导出本页审核 JSONL</button><span id="progress" role="status"></span></header>
+<main id="cases"></main>
+<script type="application/json" id="case-data">{{CASES_JSON}}</script><script src="review.js"></script></body></html>

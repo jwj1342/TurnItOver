@@ -1,4 +1,7 @@
 # generated data and logs
+# Candidate payloads are distributed in the private data repository.
+/benchmark/easy/
+/benchmark/medium/
 data/*
 !data/.gitkeep
 logs/*
