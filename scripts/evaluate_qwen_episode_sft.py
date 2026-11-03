@@ -17,6 +17,7 @@ from turnitover.oracle.training import tokenize_prompt
 from turnitover.taxonomy import load_taxonomy
 from turnitover.oracle.sft_metrics import (
     PROTOCOL_VERSION, object_bootstrap, public_input_digest, score_prediction, summarize,
+    summarize_by_difficulty,
 )
 
 
@@ -51,7 +52,7 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
     manifest = json.loads((dataset / "manifest.json").read_text())
     processor_files = sorted(path for path in model_path.iterdir() if path.is_file() and ("token" in path.name or "processor" in path.name or path.name == "chat_template.jinja"))
     processor_sha = hashlib.sha256(json.dumps({path.name: _sha256(path) for path in processor_files}, sort_keys=True).encode()).hexdigest()
-    defect_ids = sorted(load_taxonomy().ids) if task == "diagnosis" else []
+    defect_ids = sorted(manifest.get("experiment_taxonomy", load_taxonomy().ids)) if task == "diagnosis" else []
     generation_config_path = model_path / "generation_config.json"
     if generation_config_path.exists():
         generation_config = GenerationConfig.from_pretrained(model_path, local_files_only=True)
@@ -106,6 +107,8 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
                 stream.flush()
                 print(json.dumps({"id": row["id"], "valid": row["valid"], "error": row["error"]}), flush=True)
         metrics = summarize(rows, task, defect_ids)
+        metrics["by_difficulty"] = summarize_by_difficulty(
+            rows, task, defect_ids, bootstrap_samples=bootstrap_samples, seed=seed)
         report.update(version=3, status="complete", scope=f"fixed_observation_{task}",
                       model=str(model_path), adapter=str(adapter) if adapter else None,
                       model_config_sha256=_sha256(model_path / "config.json"),

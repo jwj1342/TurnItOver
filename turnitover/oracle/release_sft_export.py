@@ -8,6 +8,7 @@ from pathlib import Path
 import zipfile
 
 from turnitover.oracle.episodes import episode_examples
+from turnitover.oracle.evidence import pixel_signal, pixels
 
 
 HARD_DEFECTS = {
@@ -16,6 +17,7 @@ HARD_DEFECTS = {
     "moving_part_initial_rotation": "structure.part_rotation",
 }
 SEVERITY = {"easy": 0.9, "medium": 0.6, "hard": 0.35}
+SPLITS = ("train", "validation", "test")
 
 
 @dataclass(frozen=True)
@@ -25,6 +27,15 @@ class ReleaseCase:
     root: str
     gold: dict
     public: dict
+
+
+@dataclass(frozen=True)
+class ImageMember:
+    role: str
+    path: str
+    view: str
+    kind: str
+    state: str
 
 
 def _jsonl(raw: bytes) -> list[dict]:
@@ -62,7 +73,8 @@ def _provenance(case: ReleaseCase) -> tuple[str, str, str, str, str]:
 
 def _split(group: str) -> str:
     value = int(hashlib.sha256(f"turnitover-sft-v1:{group}".encode()).hexdigest()[:8], 16)
-    return "validation" if value % 5 == 0 else "train"
+    bucket = value % 20
+    return "train" if bucket < 14 else "validation" if bucket < 17 else "test"
 
 
 def _labels(case: ReleaseCase) -> list[dict]:
@@ -77,42 +89,47 @@ def _labels(case: ReleaseCase) -> list[dict]:
     return [{"defect_id": defect_id, "parts": parts, "severity": SEVERITY[case.level], "params": params}]
 
 
-def _members(case: ReleaseCase) -> tuple[str, list[tuple[str, str]]]:
+def _members(case: ReleaseCase) -> list[ImageMember]:
     cid, prefix = case.gold["case_id"], f"{case.root}/"
+    view = case.public.get("view", "front")
     if case.level == "easy":
-        return case.public.get("view", "front"), [
-            (f"frame_{index}", prefix + relative) for index, relative in enumerate(case.public["images"])]
+        roles = (("reference_rest", "reference", "rest"), ("reference_limit", "reference", "limit"),
+                 ("candidate_rest", "candidate", "rest"), ("candidate_limit", "candidate", "limit"))
+        return [ImageMember(role, prefix + relative, view, kind, state)
+                for relative, (role, kind, state) in zip(case.public["images"], roles, strict=True)]
     if case.level == "medium":
         roles = ("reference_rest", "reference_mid", "reference_limit",
                  "candidate_rest", "candidate_mid", "candidate_limit")
-        return case.public.get("view", "front"), [
-            (role, f"{prefix}native/{cid}/{role}.png") for role in roles]
+        return [ImageMember(role, f"{prefix}native/{cid}/{role}.png", view, *role.split("_"))
+                for role in roles]
     views = (case.gold["initial_view"], case.gold["supplementary_view"])
     members = []
     for view in views:
         for kind in ("reference", "candidate"):
             for state in ("rest", "mid", "limit"):
                 role = f"{view}_{kind}_{state}"
-                members.append((role, f"{prefix}native/{cid}/{view}/{kind}_{state}.png"))
-    return views[0], members
+                members.append(ImageMember(role, f"{prefix}native/{cid}/{view}/{kind}_{state}.png",
+                                           view, kind, state))
+    return members
 
 
-def _copy_images(case: ReleaseCase, output: Path) -> tuple[str, list[dict], list[str], list[str]]:
-    view, members = _members(case)
-    paths, digests = [], []
+def _copy_images(case: ReleaseCase, output: Path) -> tuple[list[ImageMember], list[dict], list[str], list[str], list[bytes]]:
+    members = _members(case)
+    paths, digests, images = [], [], []
     with zipfile.ZipFile(case.archive) as source:
-        for index, (role, member) in enumerate(members):
-            data = source.read(member)
-            relative = f"images/{case.gold['case_id']}/{index:02d}-{role}.png"
+        for index, member in enumerate(members):
+            data = source.read(member.path)
+            relative = f"images/{case.gold['case_id']}/{index:02d}-{member.role}.png"
             destination = output / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_bytes(data)
             paths.append(relative)
             digests.append(hashlib.sha256(data).hexdigest())
+            images.append(data)
     history = [{"step": index, "image_ref": relative,
-                "action": {"type": "request_view", "view_id": view}}
-               for index, relative in enumerate(paths[1:])]
-    return view, history, paths, digests
+                "action": {"type": "request_view", "view_id": member.view}}
+               for index, (member, relative) in enumerate(zip(members[1:], paths[1:], strict=True))]
+    return members, history, paths, digests, images
 
 
 def _identity(case: ReleaseCase, split_group: str, content: str) -> dict:
@@ -124,17 +141,39 @@ def _identity(case: ReleaseCase, split_group: str, content: str) -> dict:
             "candidate_sha": case.gold["candidate_sha"], "formal_training": True}
 
 
-def _context(case: ReleaseCase, labels: list[dict], view: str) -> dict:
-    parts = sorted({part for label in labels for part in label["parts"]}) or ["object"]
-    joint = case.gold.get("joint_id")
-    if not joint and labels:
-        joint = labels[0].get("params", {}).get("joint")
+def _asset_index(asset_roots: list[Path]) -> dict[tuple[str, str], Path]:
+    return {(path.stem, hashlib.sha256(path.read_bytes()).hexdigest()): path
+            for root in asset_roots for path in root.rglob("PM_*.json")}
+
+
+def _roster(case: ReleaseCase, assets: dict[tuple[str, str], Path]) -> tuple[list[str], list[str]]:
+    expected = case.gold.get("source", {}).get("original_spec_sha256") or case.gold.get("original_spec_sha256")
+    spec_path = assets.get((case.gold["asset_id"], expected))
+    if spec_path:
+        spec = json.loads(spec_path.read_text(encoding="utf-8"))
+        return [row["id"] for row in spec["parts"]], [row["id"] for row in spec["joints"]]
+    raise ValueError(f"No exact part/joint roster for {case.gold['case_id']}")
+
+
+def _exposures(members: list[ImageMember], images: list[bytes], labels: list[dict]) -> list[list[int]]:
+    if not labels:
+        return [[] for _ in members[1:]]
+    references = {(member.view, member.state): image for member, image in zip(members, images, strict=True)
+                  if member.kind == "reference"}
+    return [[0] if member.kind == "candidate"
+            and pixel_signal(pixels(references[(member.view, member.state)]), pixels(image))["exposed"] else []
+            for member, image in zip(members[1:], images[1:], strict=True)]
+
+
+def _context(parts: list[str], joints: list[str], members: list[ImageMember]) -> dict:
+    views = list(dict.fromkeys(member.view for member in members))
     return {"task": "compare reference and candidate articulation", "parts": parts,
-            "joints": [joint] if joint else [], "views": [view], "runtime_properties": [],
+            "joints": joints, "views": views, "runtime_properties": [],
             "action_types": ["request_view"], "max_triangles": 1, "max_draw_calls": 1}
 
 
-def export_releases(release_paths: list[Path], output: Path, dataset_version: str) -> dict:
+def export_releases(release_paths: list[Path], output: Path, dataset_version: str,
+                    asset_roots: list[Path]) -> dict:
     """Build one complete formal-training export from release directories."""
     manifests, cases = [], []
     for path in release_paths:
@@ -144,43 +183,52 @@ def export_releases(release_paths: list[Path], output: Path, dataset_version: st
     if output.exists() and any(output.iterdir()):
         raise ValueError(f"Output directory is not empty: {output}")
     output.mkdir(parents=True, exist_ok=True)
-    episodes = {"train": [], "validation": []}
-    stopping = {"train": [], "validation": []}
+    assets = _asset_index(asset_roots)
+    episodes = {split: [] for split in SPLITS}
+    stopping = {split: [] for split in SPLITS}
     annotations, groups = [], {}
     for case in sorted(cases, key=lambda item: item.gold["case_id"]):
         _, _, _, group, content = _provenance(case)
         split = _split(group)
         groups[group] = split
         labels = _labels(case)
-        view, history, paths, digests = _copy_images(case, output)
-        covered = [0] if labels else []
+        parts, joints = _roster(case, assets)
+        members, history, paths, digests, images = _copy_images(case, output)
+        exposures = _exposures(members, images, labels)
         terminal = episode_examples(
-            case.gold["case_id"], _context(case, labels, view), paths[0], history,
-            list(range(len(history))), [covered] * len(history), labels, len(history),
+            case.gold["case_id"], _context(parts, joints, members), paths[0], history,
+            list(range(len(history))), exposures, labels, len(history),
             objective="comprehensive_within_budget")[-1]
         identity = _identity(case, group, content)
-        terminal.update(data_identity=identity, image_sha256=digests[:len(terminal["images"])])
+        terminal.update(data_identity=identity, difficulty=case.level,
+                        image_sha256=digests[:len(terminal["images"])])
         episodes[split].append(terminal)
         stop = json.loads(json.dumps(terminal))
         stop["id"] = f"{case.gold['case_id']}:stopping"
+        visible = terminal["evidence"]["covered_label_indices"]
         decision = ({"decision": "stop", "outcome": "fail", "reason": "Observed motion exposes the defect."}
-                    if labels else
+                    if visible else
                     {"decision": "continue", "outcome": None, "reason": "Current observations establish no defect."})
         stop["messages"][1]["content"] = json.dumps({"stop_decision": decision})
         stopping[split].append(stop)
         annotations.append({"id": case.gold["case_id"], "split": split,
                             "reference_sha": identity["reference_sha"],
                             "candidate_sha": identity["candidate_sha"],
-                            "data_identity": identity, "labels": labels})
+                            "data_identity": identity, "difficulty": case.level, "labels": labels})
     for split in episodes:
         for kind, rows in (("episodes", episodes[split]), ("stopping", stopping[split])):
             (output / f"{split}.{kind}.jsonl").write_text(
                 "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows), encoding="utf-8")
     (output / "annotations.private.jsonl").write_text(
         "".join(json.dumps(row, sort_keys=True) + "\n" for row in annotations), encoding="utf-8")
+    taxonomy = sorted({label["defect_id"] for row in annotations for label in row["labels"]})
     manifest = {"status": "complete", "formal_training": True, "dataset_version": dataset_version,
                 "groups": groups, "source_releases": [row["tag"] for row in manifests],
-                "counts": {split: {"episodes": len(episodes[split]), "stopping": len(stopping[split])}
-                           for split in episodes}}
+                "experiment_taxonomy": taxonomy,
+                "counts": {split: {"episodes": len(episodes[split]), "stopping": len(stopping[split]),
+                                    "difficulty": {level: sum(row["difficulty"] == level
+                                                              for row in episodes[split])
+                                                   for level in SEVERITY}}
+                           for split in SPLITS}}
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return manifest

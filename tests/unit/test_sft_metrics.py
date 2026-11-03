@@ -7,7 +7,9 @@ from pathlib import Path
 import pytest
 
 from turnitover.oracle.sft_contracts import parse_stopping
-from turnitover.oracle.sft_metrics import object_bootstrap, public_input_digest, score_prediction, summarize
+from turnitover.oracle.sft_metrics import (
+    object_bootstrap, public_input_digest, score_prediction, summarize, summarize_by_difficulty,
+)
 
 
 def fixture_record(status="fail", *, joints=("hinge",), clean=None):
@@ -94,6 +96,17 @@ def test_bootstrap_clusters_corruptions_of_original_object():
     assert report["independent_objects"] == 2
     assert report["unit"] == "original_source_object"
     assert report["ci95"] == [1, 1]
+
+
+def test_difficulty_summaries_keep_frozen_taxonomy():
+    rows = []
+    for difficulty in ("easy", "medium", "hard"):
+        record = fixture_record()
+        record["difficulty"] = difficulty
+        rows.append(score_prediction(record, record["messages"][1]["content"]))
+    report = summarize_by_difficulty(rows, defect_ids=["structure.part_offset"])
+    assert set(report) == {"easy", "medium", "hard"}
+    assert all(row["defect_labels"] == ["structure.part_offset"] for row in report.values())
 
 
 def test_stopping_is_separate_and_invalid_rows_remain():

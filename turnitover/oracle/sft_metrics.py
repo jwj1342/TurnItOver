@@ -31,7 +31,7 @@ def signature(finding):
 def score_prediction(record, raw, task="diagnosis"):
     row = {"id": record["id"], "episode_id": record["episode_id"],
            "object_id": object_id(record), "data_identity": record["data_identity"],
-           "raw": raw, "task": task, "error": None}
+           "difficulty": record.get("difficulty"), "raw": raw, "task": task, "error": None}
     target_value = json.loads(record["messages"][1]["content"])
     if task == "stopping":
         target = parse_stopping(target_value)
@@ -164,3 +164,20 @@ def object_bootstrap(rows, metric="status_accuracy", *, samples=1000, seed=0, ta
     values.sort()
     return {"samples": samples, "seed": seed, "unit": "original_source_object", "independent_objects": len(groups),
             "metric": metric, "ci95": [values[int(.025 * (len(values) - 1))], values[int(.975 * (len(values) - 1))]] if values else None}
+
+
+def summarize_by_difficulty(rows, task="diagnosis", defect_ids=None, *, bootstrap_samples=0, seed=0):
+    """Report each frozen difficulty with the same scorer and object-level sampling unit."""
+    result = {}
+    for difficulty in ("easy", "medium", "hard"):
+        selected = [row for row in rows if row.get("difficulty") == difficulty]
+        if not selected:
+            continue
+        report = summarize(selected, task, defect_ids)
+        if bootstrap_samples:
+            metric = "status_accuracy" if task == "diagnosis" else "decision_accuracy"
+            report["bootstrap"] = object_bootstrap(
+                selected, metric, samples=bootstrap_samples, seed=seed, task=task,
+                defect_ids=defect_ids)
+        result[difficulty] = report
+    return result
