@@ -2,6 +2,7 @@
 # Candidate payloads are distributed in the private data repository.
 /benchmark/easy/
 /benchmark/medium/
+/benchmark/hard/
 data/*
 !data/.gitkeep
 logs/*
