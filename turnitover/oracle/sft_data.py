@@ -15,16 +15,25 @@ SUPERVISION_MODES = ("ordinary", "evidence")
 
 def _finding(label, evidence_steps):
     defect_id = label["defect_id"]
-    if defect_id == "kinematics.joint_axis":
-        description = "The part moves along a different axis from the reference articulation."
-        fix = "Correct the joint axis to match the reference motion."
-        joint_id = label.get("params", {}).get("joint")
-    elif defect_id == "structure.part_offset":
-        description = "The part is displaced relative to the reference configuration."
-        fix = "Correct the part placement relative to its parent."
-        joint_id = None
-    else:
+    descriptions = {
+        "kinematics.joint_axis": ("The part moves along a different axis from the reference articulation.",
+                                  "Correct the joint axis to match the reference motion."),
+        "kinematics.direction_flip": ("The articulated part moves in the opposite direction from the reference.",
+                                      "Restore the reference articulation direction."),
+        "kinematics.joint_anchor": ("The part rotates around an offset joint anchor.",
+                                    "Move the joint anchor back to the reference position."),
+        "structure.part_offset": ("The part is displaced relative to the reference configuration.",
+                                  "Correct the part placement relative to its parent."),
+        "structure.part_rotation": ("The part starts with an incorrect orientation.",
+                                    "Restore the part's reference orientation."),
+    }
+    if defect_id not in descriptions:
         raise ValueError(f"Unsupported ordinary diagnosis label: {defect_id}")
+    description, fix = descriptions[defect_id]
+    if defect_id == "kinematics.joint_axis":
+        joint_id = label.get("params", {}).get("joint")
+    else:
+        joint_id = None
     return {"defect_id": defect_id, "parts": list(label["parts"]), "joint_id": joint_id,
             "severity": label["severity"], "confidence": 1.0,
             "evidence_steps": evidence_steps, "description": description, "suggested_fix": fix}
