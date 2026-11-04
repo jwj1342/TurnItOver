@@ -44,7 +44,8 @@ def prepare(builder_root, reservations, out):
         archive = manifest_path.parent / archive_row['path']
         verified = official_by_id.get(str(record['asset_id']))
         if verified:
-            if verified['sha256'] != record['archive_sha256'] or verified['path'] != str(archive.resolve()):
+            if (verified['sha256'] != record['archive_sha256']
+                    or sha(archive) != verified['sha256']):
                 raise ValueError('Official LFS verification disagrees with candidate source')
         elif archive_row['sha256'] != record['archive_sha256'] or sha(archive) != record['archive_sha256']:
             raise ValueError('Official archive provenance mismatch')
