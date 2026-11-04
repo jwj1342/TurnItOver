@@ -1,0 +1,73 @@
+{
+  "archive_availability": "local_custody",
+  "assets": {
+    "hard-candidate-v0.1.0-rc.1-data.zip": {
+      "files": 1041,
+      "root": "hard",
+      "sha256": "c291b4765881c74d941d958fcb85eb7c1532a71634ec9124c10da317df6f52ae",
+      "size": 5507756,
+      "uncompressed_bytes": 7291899
+    },
+    "hard-candidate-v0.1.0-rc.1-review.zip": {
+      "files": 125,
+      "root": "hard_review",
+      "sha256": "80ed7fc846e525e2ccb257a0fb601a826512737c056a6676453fac95a52fd542",
+      "size": 582744,
+      "uncompressed_bytes": 605782
+    }
+  },
+  "base_code_commit": "7be1c4667f8995a125c5c7c7f9a8a2db0350e5c6",
+  "benchmark_frozen": false,
+  "code_ref": "refs/heads/laq/dataset-release",
+  "dataset": "hard",
+  "distribution": {
+    "access_control": "Private repository mmk1209/TIO-datasets; owner invitation and upstream terms apply.",
+    "data": "Coordinator/research only; includes Gold, checks and the raw human spot return.",
+    "programs": "Programs, mesh/URDF, caches and rejected candidates remain local_custody.",
+    "review": "Separate answer-free random-ten review asset; no Gold or source identities."
+  },
+  "expected_report": {
+    "archive_availability": "local_custody",
+    "cases": 75,
+    "corruption_counts": {
+      "axis_direction_3deg": 25,
+      "joint_anchor_offset": 25,
+      "moving_part_initial_rotation": 25
+    },
+    "defect_cases": 75,
+    "human_spot": {
+      "clean": 3,
+      "hard": 6,
+      "pending": 1
+    },
+    "native_images": 900,
+    "objects": 75,
+    "program_replay_performed": false,
+    "review_bundle": {
+      "blank_returns": 10,
+      "cases": 10,
+      "media_files": 120
+    },
+    "strict_audit_status": "passed_with_warnings",
+    "strict_audit_warnings": 3,
+    "training_eligible_cases": 0
+  },
+  "preserved_files": {
+    "construction_registry.json": "8ef36a78da204a7b14948269059bd02a5f488e13c039b8399a86eeb95f2f35c7",
+    "human_review.jsonl": "d855cc1a01a95b7da31f3d31c9b19cb3b07282319cccf8c4feab8b5c0aec5e12",
+    "pool_manifest.jsonl": "9477104aeb56f10a1ffaa083be955522612d3c92687258e011666aaca741b24e",
+    "private/checks.jsonl": "f37c3839cdb1392567d5bb0116a6c2c0f3b2cb44e996a11b7693b46bb3dde3e7",
+    "private/gold.jsonl": "7095ee789ac66316a56d68e801fb83715bb4bdd5afe2b2ea7b8344bf2817242a",
+    "private/human_spot_review.jsonl": "6c199007c0af31aac4213fcd3f66c3db10b1313cf1f73abb7877da8cc81789b1",
+    "review_manifest.jsonl": "1f40c5f6c27bbdc28c53a5fb6c1b75d9c7cfb55479bf195067a3abc980a8ff31",
+    "source/metadata.json": "9077edd4fbe09c9808e0713c4ba71b7fa41da576e84a4435cd6edc81c16fa109",
+    "source/strict-audit.json": "f2f20eb762bc46015c71dca272e9e1deb2e8894d3b70dd5d4bad72e9a15236ec",
+    "source/validation.json": "5a3000b4aeab2bf2f9cdb70f746e7fffa03169a8a5da60fd669165b7738f23c7"
+  },
+  "repository": "mmk1209/TIO-datasets",
+  "source_manifest_sha256": "c40b260529ef396f20c114ad62b9b6523e031104d75eb7d4a646165ddcb6d96e",
+  "status": "candidate_owner_approved_pending_full_review",
+  "tag": "hard-candidate-v0.1.0-rc.1",
+  "training_ready": false,
+  "version": 1
+}

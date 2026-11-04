@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "objects": [
+    {
+      "source_identity": "PartNet-Mobility:100685",
+      "split": "validation",
+      "case_ids": [
+        "eb-410d2f9c498a",
+        "eb-518cd17f43d2"
+      ]
+    },
+    {
+      "source_identity": "PartNet-Mobility:100952",
+      "split": "validation",
+      "case_ids": [
+        "eb-a0c19bae2ffe",
+        "eb-bcbe33a74a03",
+        "eb2-81f784209d6c"
+      ]
+    },
+    {
+      "source_identity": "PartNet-Mobility:101960",
+      "split": "validation",
+      "case_ids": [
+        "eb-7381f59b198e",
+        "eb2-bd498ee7ea67"
+      ]
+    },
+    {
+      "source_identity": "PartNet-Mobility:10383",
+      "split": "validation",
+      "case_ids": [
+        "eb-d29499f9b0c5",
+        "eb2-e9624f41f197"
+      ]
+    },
+    {
+      "source_identity": "PartNet-Mobility:12565",
+      "split": "validation",
+      "case_ids": [
+        "eb-83d29b32800f",
+        "eb-e0d78cfc4f6f",
+        "eb2-cab8d5cc78ac"
+      ]
+    },
+    {
+      "source_identity": "PartNet-Mobility:12579",
+      "split": "validation",
+      "case_ids": [
+        "eb-c0b7182fd3f9",
+        "eb-cac983a99dac",
+        "eb2-9d35f8d897fd"
+      ]
+    },
+    {
+      "source_identity": "PartNet-Mobility:12614",
+      "split": "validation",
+      "case_ids": [
+        "eb-4ab9cf437b53",
+        "eb-9145f90357d6",
+        "eb2-c65f94aa8011"
+      ]
+    },
+    {
+      "source_identity": "PartNet-Mobility:48452",
+      "split": "validation",
+      "case_ids": [
+        "eb-e5b3ec6e6a38",
+        "eb2-2e38427b79dd"
+      ]
+    },
+    {
+      "source_identity": "PartNet-Mobility:9032",
+      "split": "validation",
+      "case_ids": [
+        "eb-0fe6989802a8",
+        "eb-8bef49f00a66",
+        "eb2-4bb647861ed3"
+      ]
+    },
+    {
+      "source_identity": "PartNet-Mobility:9992",
+      "split": "validation",
+      "case_ids": [
+        "eb-24a1fff115b8"
+      ]
+    }
+  ]
+}

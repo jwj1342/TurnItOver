@@ -1,0 +1,8 @@
+<!doctype html><html lang="zh-CN" data-package="{{PACKAGE}}"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hard 候选两阶段人工审核</title><style>{{STYLE}}</style>
+<header><h1>Hard 候选两阶段人工审核</h1><label>审核者标识 <input id="reviewer" autocomplete="off" placeholder="请填写本人标识"></label>
+<button id="resume">载入本人保存记录</button><button id="export">导出本页审核 JSON</button><p id="progress"></p></header>
+<p>先观察初始视角，在不知道构造标签的情况下记录判断和依据，再打开唯一的补充视角。可往返对照这两个视角；播放仅切换实际 rest/mid/limit 图像，没有插值。</p>
+<p>结构定位困难的案例可以在初始视角完成判断。视角歧义型需记录补充视角是否提供决定性证据。未发现问题、证据不足和未填写都不算通过；页面的“已填写”不等于样本合格。</p>
+<p>记录只保存在当前浏览器、按本页与审核者隔离。换审核者默认空白，需本人显式载入；标识不是身份认证。打开视角的日志也不证明已阅读。</p>
+<main id="cases"></main><script type="application/json" id="case-data">{{CASES_JSON}}</script><script>{{SCRIPT}}</script></html>

@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "status": "candidate_contract",
+  "benchmark_frozen": false,
+  "training_ready": false,
+  "tier_minima": {
+    "easy": {
+      "objects": 150,
+      "cases": 300,
+      "train": 100,
+      "validation": 20,
+      "test": 30
+    },
+    "medium": {
+      "objects": 150,
+      "cases": 300,
+      "train": 100,
+      "validation": 20,
+      "test": 30
+    },
+    "hard": {
+      "objects": 150,
+      "cases": 300,
+      "train": 100,
+      "validation": 20,
+      "test": 30
+    }
+  },
+  "global_minima": {
+    "independent_source_objects": 450
+  },
+  "frozen_evaluation_exclusion": {
+    "name": "partnet-mobility-level0-axis-v2",
+    "objects": 28,
+    "source_identity_set_sha256": "9f5e565251c670da3352f773da9d6335baaf52c7b6af6f3b3f83ba628151971c"
+  },
+  "immutable_baselines": {
+    "easy": {
+      "tag": "easy-candidate-v0.1.0-rc.2",
+      "objects": 127,
+      "cases": 275
+    },
+    "medium": {
+      "tag": "medium-candidate-v0.1.0-rc.1",
+      "objects": 75,
+      "cases": 150
+    },
+    "hard": {
+      "tag": "hard-candidate-v0.1.0-rc.1",
+      "objects": 75,
+      "cases": 75
+    }
+  },
+  "baseline_reuse_allowlist": {
+    "allowed_tier_pairs": [
+      [
+        "easy",
+        "medium"
+      ]
+    ],
+    "expected_shared_identities": 19,
+    "identity_set_sha256": "8e4ac0f721581ba530d28c535a3cbe4e315c2f59b55c95268c9a089b43e62d13"
+  },
+  "baseline_counts": {
+    "easy": {
+      "objects": 127,
+      "cases": 275,
+      "inventory_sha256": "724c614e854f109945487dde20b949905119401fd5b868aed2872e5779a3c8ca"
+    },
+    "medium": {
+      "objects": 75,
+      "cases": 150,
+      "inventory_sha256": "8cf95682926579ffdf33078706a5314bbec968d95c97d62d4465d5a1c277b993"
+    },
+    "hard": {
+      "objects": 75,
+      "cases": 75,
+      "inventory_sha256": "551098bfc38d1a92409d7b3bddde9c908a9f59dcc486fd12624c0a31cd053486"
+    }
+  },
+  "new_case_admission": {
+    "automatic_status": "passed",
+    "difficulty_review": "passed"
+  },
+  "custody_pins_sha256": "56a3c51e65f7e61d8ad7cc9b06e4d74e4a0254820f2fe10ed53942205df188bb",
+  "custody_pins_scope": "baseline ZIP member bytes; evaluated v2 full directory bytes and source geometry; trusted conversion binding to original spec/archive bytes; acquisition waves 4-6 and official LFS verification for legacy Hard archives"
+}

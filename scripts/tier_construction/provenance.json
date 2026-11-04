@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "modules": [
+    {
+      "module": "construct_easy_batch",
+      "source_worktree": "TurnItOver-hard-pilot",
+      "source_path": "scripts/construct_easy_batch.py",
+      "source_sha256": "373968675a454a98689b56209857e9e9f1be3b4d9045a146c15ebe358acb0a3d",
+      "adaptation": "namespace imports; package root corrected for nested module"
+    },
+    {
+      "module": "construction_pilot",
+      "source_worktree": "TurnItOver-hard-pilot",
+      "source_path": "scripts/construction_pilot.py",
+      "source_sha256": "eafbcb019b0a855e8fbe9ac8bf7d8c4844bbea55bda4b67f6c542a136a95115c",
+      "adaptation": "namespace imports; package root corrected for nested module"
+    },
+    {
+      "module": "level0_expansion_search",
+      "source_worktree": "TurnItOver-hard-pilot",
+      "source_path": "scripts/level0_expansion_search.py",
+      "source_sha256": "e793cb2d16da3e403192dca58e1458a7b40cf04b0fef32095aea27c49948a1b2",
+      "adaptation": "namespace imports; package root corrected for nested module"
+    },
+    {
+      "module": "level0_expansion_sources",
+      "source_worktree": "TurnItOver-hard-pilot",
+      "source_path": "scripts/level0_expansion_sources.py",
+      "source_sha256": "177b906a7d00f797baa9ae54fd50a83f20fb9e4eedbd23b5d5212fec2ba76694",
+      "adaptation": "namespace imports; package root corrected for nested module"
+    },
+    {
+      "module": "prepare_level0_axis_review",
+      "source_worktree": "TurnItOver-hard-pilot",
+      "source_path": "scripts/prepare_level0_axis_review.py",
+      "source_sha256": "f0b8b25a56607d17a1aa940e20e41842118af320d5252569be38ac1e25bc0fca",
+      "adaptation": "namespace imports; package root corrected for nested module"
+    },
+    {
+      "module": "prepare_obvious_defect_review",
+      "source_worktree": "TurnItOver-hard-pilot",
+      "source_path": "scripts/prepare_obvious_defect_review.py",
+      "source_sha256": "4f186042cf732a05256013245f0c81aeac0ea27e381d14ba64951bbf7a367614",
+      "adaptation": "namespace imports; package root corrected for nested module"
+    },
+    {
+      "module": "audit_pilot_view_visibility",
+      "source_worktree": "TurnItOver-hard-pilot",
+      "source_path": "scripts/audit_pilot_view_visibility.py",
+      "source_sha256": "118af5f45a5cf9a5b5948cc47480e54f5ef34914bff47f9f928ad05dd4d95d11",
+      "adaptation": "namespace imports; package root corrected for nested module"
+    },
+    {
+      "module": "medium_strength_search",
+      "source_worktree": "TurnItOver-dataset",
+      "source_path": "scripts/medium_strength_search.py",
+      "source_sha256": "f33c6f2fdcb5e227533346166b9e7530e0d6a24b435c28599ad79cc8def26818",
+      "adaptation": "namespace imports only; automatic and human difficulty gates unchanged"
+    },
+    {
+      "module": "medium_tightening_policy",
+      "source_worktree": "TurnItOver-dataset",
+      "source_path": "scripts/medium_tightening_policy.py",
+      "source_sha256": "16a9f0b2906848b6941558d301dbdcf822e3a756379ef6320eee8c7485410f34",
+      "adaptation": "namespace imports only; automatic and human difficulty gates unchanged"
+    },
+    {
+      "module": "medium_strength_artifacts",
+      "source_worktree": "TurnItOver-dataset",
+      "source_path": "scripts/medium_strength_artifacts.py",
+      "source_sha256": "182a04eac8bcb7490a053f21a38b4ffc62bf1c7b9a8229fd0a7a0780d63efba1",
+      "adaptation": "namespace imports only; automatic and human difficulty gates unchanged"
+    },
+    {
+      "module": "prepare_medium_pilot",
+      "source_worktree": "TurnItOver-dataset",
+      "source_path": "scripts/prepare_medium_pilot.py",
+      "source_sha256": "af845c14b5806bc5464c9f9714a9b540c4540def81b98e43f9c71a370064dfb4",
+      "adaptation": "namespace imports only; automatic and human difficulty gates unchanged"
+    },
+    {
+      "module": "medium_pilot_search",
+      "source_worktree": "TurnItOver-dataset",
+      "source_path": "scripts/medium_pilot_search.py",
+      "source_sha256": "3dc724d747d200de0294c6a2803f60c93592b43ea7703ca428c0d9907114eecf",
+      "adaptation": "namespace imports only; automatic and human difficulty gates unchanged"
+    },
+    {
+      "module": "validate_medium_pilot",
+      "source_worktree": "TurnItOver-dataset",
+      "source_path": "scripts/validate_medium_pilot.py",
+      "source_sha256": "c96ca0097d416c00541ee0e37fbf0bd9bd9d2653f50f4a757968326d3c79d30a",
+      "adaptation": "namespace imports only; automatic and human difficulty gates unchanged"
+    },
+    {
+      "module": "turnitover/core/jsonio.py",
+      "source_worktree": "TurnItOver-hard-pilot",
+      "source_path": "turnitover/core/jsonio.py",
+      "source_sha256": "b95fd641f7ff8b26c2981bfc4879da7807acdb8b18e13e306401b999e491be13",
+      "adaptation": "unchanged runtime dependency required by construction"
+    },
+    {
+      "module": "turnitover/corruptions/kinematics.py",
+      "source_worktree": "TurnItOver-hard-pilot",
+      "source_path": "turnitover/corruptions/kinematics.py",
+      "source_sha256": "8fed01fd437affd7c2bb4eeab451a2dbee632cec1b16a92cb674dc05dbbc977a",
+      "adaptation": "unchanged runtime dependency required by construction"
+    }
+  ]
+}
