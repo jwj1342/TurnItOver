@@ -1,0 +1,15 @@
+# New Medium candidate construction
+
+`python -m scripts.medium_expansion_build --help` describes the configurable entrypoint. Supply a native 256×256 generation configuration, a source split ledger, one or more `(catalog.json, download-manifest.json)` pairs, and `--exclude` for every historical tier data ZIP, evaluated v2 private Gold ledger, and concurrently reserved Hard source pool. ZIPs and JSON/JSONL exclusion ledgers stay private. They are never copied into Git.
+
+The collector accepts only new multi-joint structural candidates. It verifies official archive/spec SHA256, excludes historical identities and geometry fingerprints, records the source queue and all input SHA256, and uses the unchanged `medium-strength-v3` native-pixel/checker policy followed by `medium-selection-tightening-v1` and URDF authenticity audit. Axis and direction-flip searches retain the normal-only frozen camera. A target is a stopping condition, never a relaxed acceptance gate. The source pool may exhaust before the target; `validation.json` reports that shortfall.
+
+Use a fresh `--out` directory for a changed source queue or changed construction code. A matching frozen queue resumes after completed source records, retaining every rejection. `--prepare-only` creates the private queue reservation before rendering so other tier builders can exclude its `source_identities`.
+
+Outputs include every candidate's native rest/mid/limit reference and candidate frames, private programs/checker results/diagnostics, answer-free `review.html` with a deterministic shuffled order, `review_manifest.jsonl`, and an unfilled `human_review.jsonl`. Every case remains pending human review; `training_eligible_objects` stays zero. The browser export is a human return for subsequent admission checks. These candidate bundles are not final releases and do not assign or move any historical split.
+
+The imported helpers under `scripts/tier_construction` retain their source hashes in `provenance.json`; the collector adds new source selection/checkpoint orchestration without changing difficulty thresholds. Build the renderer first using `npm ci` and `npm run build` in `web/`.
+
+For historical Easy objects that currently have only a Clean case, `scripts/complete_easy_baseline_pairs.py` verifies the baseline Clean source spec and archive hashes and emits only new defect cases into a new output. It retains every normal-camera/strict-checker/URDF gate and records deterministic seed-batch search diagnostics. Historical Clean media, case IDs, and split ledgers remain in the baseline bundle.
+
+`python -m scripts.prepare_baseline_tier_intake --help` prepares full baseline Easy or Medium blind-review intake from a private data ZIP. Extraction rejects absolute/traversing paths and symlinks, copies only evidence and ledgers into new private custody, and pins the ZIP and media hashes. Feed its `intake.json` to `python -m scripts.prepare_tier_review build`; this step creates no human judgment. Easy baselines retain four original native input frames plus the original three-state board; Medium retains all six original native reference/candidate states.

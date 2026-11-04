@@ -12,6 +12,8 @@
 
 Easy、Medium 和 Hard 候选数据存放于私有仓库 `mmk1209/TIO-datasets`，代码仓库保留工具、审核模板和版本契约。版本、访问方式和完整验收入口见 [数据发布总览](docs/dataset-release.md)。
 
+三层扩建配额、对象配对、历史划分保留和人工审核门禁见 [扩建契约](docs/tier-expansion.md)。
+
 ## 项目结构
 
 ```text

@@ -24,7 +24,7 @@ GENERATED from `turnitover/taxonomy/defects.yaml` by `python -m turnitover rende
 | `kinematics.joint_type` | kinematics | 关节类型错误 | 旋转副与移动副互换 | animation_required | 静态不可见，需动画序列 | part_class | no |
 | `kinematics.joint_range` | kinematics | 行程范围错误 | 放大或缩小限位 | animation_required | 静态不可见，需动画末态 | part_interval | no |
 | `kinematics.joint_anchor` | kinematics | 关节锚点错误 | 平移锚点 | animation_required | 静态不可见，需动画序列 | part_position | no |
-| `kinematics.direction_flip` | kinematics | 运动方向反向 | 参数取负 | animation_required | 静态不可见，需动画序列 | part_bool | no |
+| `kinematics.direction_flip` | kinematics | 运动方向反向 | 参数取负 | animation_required | 静态不可见，需动画序列 | part_bool | yes |
 | `material.basecolor_as_rough` | material | 基础色误接为粗糙度 | 通道错接 | static_visible | 可见，高光跟随图案 | material_id | no |
 | `material.metalness` | material | 金属度错误 | metalness 翻转 | static_visible | 可见 | material_scalar | no |
 | `material.tiling_scale` | material | 贴图平铺比例错误 | 改变 repeat | static_visible | 可见 | material_id | no |

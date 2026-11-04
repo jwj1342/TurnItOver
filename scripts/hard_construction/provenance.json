@@ -1,0 +1,51 @@
+{
+  "origin": "TurnItOver-hard-pilot/scripts",
+  "changes": "Imports moved into hard_construction/tier_construction; repository root adjusted for nesting. Difficulty thresholds unchanged.",
+  "files": [
+    {
+      "path": "build_hard_diverse_calibration.py",
+      "original_sha256": "d47c6f94442b9f6e3b9b7e85eb86dcdc6837699a172f3017155c28d32c0a95dc",
+      "vendored_sha256": "354f0c868acc07ecaa35bae752f1a28de6fefacc13f9eeb99457da39fb9c0e4a"
+    },
+    {
+      "path": "build_hard_full_motion_examples.py",
+      "original_sha256": "64d01842e4ac411664b6a01b1e55fd2efe9496a9c5c41a3a274aa0d5e0aff385",
+      "vendored_sha256": "ed7c8fb2f5a7780452470e3a3052d7e12d22c318b9539d8912acb6154efbb2cc"
+    },
+    {
+      "path": "collect_hard_formal.py",
+      "original_sha256": "36a8db432c4a4e01f4603de89f6b19f90503527a809b0d868865ec8583d9c9f8",
+      "vendored_sha256": "c9abdecf749872194aa433705c33de31fdb19774d9b93c0346a4e2c33c568ac6"
+    },
+    {
+      "path": "hard_artifacts.py",
+      "original_sha256": "e33d9778bb983af4e1446dcae110194f34a464a2cdb1e23b96a2fe74d93d84f9",
+      "vendored_sha256": "a5d4ab8be14a56445ec2ddce0495c013e18d505252e9a112d2044b496309a5d3"
+    },
+    {
+      "path": "hard_candidate_policy.py",
+      "original_sha256": "c9a45f94855c350bc92f196dfb0daaf697717547a05a50579c17a9cdd50a73db",
+      "vendored_sha256": "c9a45f94855c350bc92f196dfb0daaf697717547a05a50579c17a9cdd50a73db"
+    },
+    {
+      "path": "hard_full_motion_corruptions.py",
+      "original_sha256": "0cae6d47bded30943b80ca90e78d61b76f6846fbcfdfc1679930e6ee1b0e44a5",
+      "vendored_sha256": "0cae6d47bded30943b80ca90e78d61b76f6846fbcfdfc1679930e6ee1b0e44a5"
+    },
+    {
+      "path": "hard_geometry.py",
+      "original_sha256": "f173a4f18cc6c94e577216569986454223c520d7b60838b708ef0fbb8146e2d3",
+      "vendored_sha256": "f173a4f18cc6c94e577216569986454223c520d7b60838b708ef0fbb8146e2d3"
+    },
+    {
+      "path": "hard_observability.py",
+      "original_sha256": "3afa0a800c4c90fb397dea8c091a98fe44a53a96c50ddbaa9451981778a04f8a",
+      "vendored_sha256": "8bcd857d7e89a3717983450d26a0b78a64df92d25f595fd548dfc87c68b72082"
+    },
+    {
+      "path": "hard_policy.py",
+      "original_sha256": "c0a7c7b84dbf532c8ac14a68208a80b3dc3658a369305c61ccf1d79759098a4b",
+      "vendored_sha256": "f07fab24ade2045105544defb33ec7249c4e0ceb0c69ea4bf2647ed931273269"
+    }
+  ]
+}
