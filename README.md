@@ -10,6 +10,8 @@
 [已提交测量快照](results/2026-09-12/README.md) 可直接核对指标、真实模型补丁与费用，无需 API 或 GPU。
 修复试验中固定观察成功 1/3，三种额外反馈条件各成功 3/3；仅三个损坏案例，不能作为训练收益或泛化结论。
 
+正式 `turnitover` 包提供复用 Program ABI、`ObservationSession` 和 verifier 的原生照片重建迭代入口（`turnitover iterate`）：单次生成候选后经确定性 render gate，再由 verifier 用证据驱动有限轮修复。实现与 artifact 契约见[原生照片重建迭代闭环](docs/iterative-synthesis.md)。这表示工程路径已接通，并已有一次受控 fixture 的真实模型 E2E 记录；正式真实照片评测与泛化效果实验仍未完成。
+
 ## 项目结构
 
 ```text
@@ -95,9 +97,11 @@ sbatch scripts/slurm/run_portable.sbatch python -m turnitover preview
 python -m turnitover models-check  # 仅检查本地配置，不调用 API
 python -m turnitover reconstruct --image reference.jpg --out output/photo-run
 python -m turnitover preview --program output/photo-run/program.ts --out output/photo-preview
+# 完整迭代闭环（会调用 generator 与 active judge）：
+python -m turnitover iterate --reference-image reference.jpg --out output/photo-iterative-001
 ```
 
-使用 `reconstruct ... --dry-run` 可在不提供密钥、不请求网络的情况下准备输入。支持的接口、配置覆盖方式和限制见 [模型配置](docs/models.md)；已有重建方案和接入缺口见 [流水线比较](docs/pipeline-options.md)。
+使用 `reconstruct ... --dry-run` 可在不提供密钥、不请求网络的情况下准备输入。`iterate` 的预算、状态和 artifact 契约见[原生照片重建迭代闭环](docs/iterative-synthesis.md)。支持的接口、配置覆盖方式和限制见 [模型配置](docs/models.md)；已有重建方案和接入缺口见 [流水线比较](docs/pipeline-options.md)。
 
 ## 验证器
 

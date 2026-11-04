@@ -6,7 +6,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from turnitover.models.client import ModelError
+from turnitover.models.client import ModelError, is_normal_finish_reason
 from turnitover.repair.patches import apply_response
 from turnitover.verifier.contracts import parse_json
 
@@ -17,6 +17,18 @@ class Feedback:
     images: tuple[Path, ...]
     observation_cost: int
     teacher_renders: int = 0
+
+
+@dataclass(frozen=True)
+class RepairProposal:
+    source: str | None
+    outcome: str
+    response: str
+    error: str | None
+    usage: dict
+    model: str
+    finish_reason: str
+    elapsed_ms: float
 
 
 def usage_tokens(usage):
@@ -59,6 +71,43 @@ def prepare_request(folder, source, packet, memory, remaining):
     return prompt,paths
 
 
+def propose_repair(source, generator, packet, output, *, previous_attempts=(), remaining_calls=1):
+    """Ask for and apply one public-feedback repair without consulting a private audit."""
+    if type(remaining_calls) is not int or remaining_calls < 1:
+        raise ValueError('remaining_calls must be a positive integer')
+    output=Path(output)
+    if output.exists() and any(output.iterdir()):
+        raise ValueError('Repair output directory must be new or empty')
+    output.mkdir(parents=True,exist_ok=True)
+    prompt,images=prepare_request(output,source,packet,list(previous_attempts),remaining_calls)
+    response=generator(prompt,images)
+    return _parse_repair_response(source,response,output,write_result=True)
+
+
+def _parse_repair_response(source, response, output, *, write_result):
+    (output/'response.txt').write_text(response.text)
+    metadata={k:v for k,v in asdict(response).items() if k!='text'}
+    (output/'model.json').write_text(json.dumps(metadata,indent=2))
+    if not is_normal_finish_reason(response.finish_reason):
+        raise ModelError('Incomplete generator response')
+    try:
+        proposed=apply_response(source,parse_json(response.text))
+    except ValueError as exc:
+        result=RepairProposal(None,'invalid_patch',response.text,str(exc),response.usage,
+                              response.model,response.finish_reason,response.elapsed_ms)
+    else:
+        if proposed is None:
+            result=RepairProposal(None,'stop',response.text,None,response.usage,
+                                  response.model,response.finish_reason,response.elapsed_ms)
+        else:
+            (output/'proposed.ts').write_text(proposed)
+            result=RepairProposal(proposed,'applied',response.text,None,response.usage,
+                                  response.model,response.finish_reason,response.elapsed_ms)
+    if write_result:
+        (output/'result.json').write_text(json.dumps(asdict(result),indent=2))
+    return result
+
+
 def run_repair(initial, generator, observe, audit, output, max_rounds=3, delta=0., expected_first_request=None):
     if type(max_rounds) is not int or max_rounds < 1 or delta < 0:
         raise ValueError('Positive repair budget and nonnegative improvement threshold required')
@@ -94,29 +143,22 @@ def run_repair(initial, generator, observe, audit, output, max_rounds=3, delta=0
                 if any(path.read_bytes()!=(expected/name).read_bytes() for path,name in zip(image_paths,expected_images,strict=True)):
                     raise ValueError('First request image differs from prepared inputs')
             response=generator(prompt,image_paths)
-            (folder/'response.txt').write_text(response.text)
-            metadata={k:v for k,v in asdict(response).items() if k!='text'}
-            (folder/'model.json').write_text(json.dumps(metadata,indent=2))
             tokens+=usage_tokens(response.usage)
-            if response.finish_reason not in ('completed','stop','end_turn','STOP'):
-                raise ModelError('Incomplete generator response')
             record=dict(round=index,before_sha256=sha(source),before_score=gold['score'],
                         observation_cost=packet.observation_cost,teacher_renders=packet.teacher_renders)
-            try:
-                proposed=apply_response(source,parse_json(response.text))
-            except ValueError as exc:
-                record.update(outcome='invalid_patch',error=str(exc))
+            proposal=_parse_repair_response(source,response,folder,write_result=False)
+            if proposal.outcome == 'invalid_patch':
+                record.update(outcome='invalid_patch',error=proposal.error)
+            elif proposal.outcome == 'stop':
+                report['termination']='generator_stop'
+                record.update(outcome='stop',after_sha256=sha(source),after_score=gold['score'])
+                ledger.append(record)
+                break
             else:
-                if proposed is None:
-                    report['termination']='generator_stop'
-                    record.update(outcome='stop',after_sha256=sha(source),after_score=gold['score'])
-                    ledger.append(record)
-                    break
-                (folder/'proposed.ts').write_text(proposed)
-                candidate_gold=audit(proposed)
+                candidate_gold=audit(proposal.source)
                 (folder/'audit.private.json').write_text(json.dumps(candidate_gold,indent=2))
                 if candidate_gold['usable']:
-                    source,gold=proposed,candidate_gold  # Keep valid regressions: no hidden best-state rollback.
+                    source,gold=proposal.source,candidate_gold  # Keep valid regressions: no hidden best-state rollback.
                     record['outcome']='applied'
                 else:
                     record['outcome']='unusable_proposal'

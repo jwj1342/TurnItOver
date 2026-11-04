@@ -71,6 +71,13 @@ class HarnessError(Exception):
         self.message = message
 
 
+class BrowserTransportError(HarnessError):
+    """A Playwright transport failure with no harness-provided candidate error."""
+
+    def __init__(self, message: str):
+        super().__init__("", message)
+
+
 class ObservationSession:
     def __init__(self, cfg: RenderConfig, views: tuple[ViewDef, ...]):
         self.cfg = cfg
@@ -216,7 +223,8 @@ def _to_harness_error(text: str) -> HarnessError:
             return HarnessError(d.get("stage", "runtime"), d.get("message", text))
         except json.JSONDecodeError:
             pass
-    return HarnessError("runtime", text)
+    return BrowserTransportError(text)
 
 
-__all__ = ["ObservationSession", "RenderConfig", "LoadInfo", "ViewResult", "ActuateResult", "HarnessError", "CompileError"]
+__all__ = ["ObservationSession", "RenderConfig", "LoadInfo", "ViewResult", "ActuateResult", "HarnessError",
+           "BrowserTransportError", "CompileError"]

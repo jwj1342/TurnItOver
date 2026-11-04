@@ -5,6 +5,8 @@
 建议先读本文，再看[能力诊断](capability-diagnosis.md)和[修复实验](repair-experiment.md)。
 [RP](../RP.md) 是研究设想；本文记录已验证进展与尚未成立的假设，不把规划当作结果。
 
+正式 `turnitover` 包新增原生照片重建迭代入口 `turnitover iterate`，复用 Program ABI、`ObservationSession`、verifier 与 patch protocol：单次生成候选 → 确定性 render gate → 证据驱动的有限轮 verifier 修复，render 失败与视觉修改各有独立预算，只有 evidence-linked 的 verifier pass 才算接受。该路径经单元与浏览器 fixture 验证，但尚未运行真实照片模型实验，不构成新的效果结果。参见[原生照片重建迭代闭环](iterative-synthesis.md)。
+
 ## 已打通的流程
 
 1. 获取有来源记录的 ReplicaCAD 关节资产，转换为可执行 Three.js 程序，并用原始 URDF 独立核对运动。
@@ -103,3 +105,23 @@ python scripts/summarize_repair_experiment.py output/repair-model-new
 本次提交前执行：102 项单元测试通过，1 项可选 torch 依赖测试跳过；12 项实际浏览器测试通过。
 新增回归检查核对全部快照哈希、从逐轨迹记录重算修复汇总，并拒绝汇总与轨迹不一致的结果。
 本地文档链接与 `git diff --check` 通过。此次整理没有新增付费模型调用，也没有重新选择或剔除实验案例。
+
+## PR #2 原生迭代闭环验证（2026-10-07）
+
+本轮定向执行 `tests/unit/test_iterative_synthesis.py` 和 `tests/browser/test_render_gate.py`，共 11 项通过；
+覆盖 Program ABI 生成、render gate、环境错误、fresh verification，以及视觉修改预算的四类终止路径。
+新增 browser 集成测试已真实经过 `run_iterative -> render gate -> verifier -> result.json`；完整非浏览器测试已通过（1 项跳过），完整浏览器测试 16 项通过。
+补充的单元回归通过模拟 session 覆盖 Playwright load/request-view 传输失败、Program ABI/load 失败和空白渲染：前者直接作为 environment 终止，后两者作为 candidate 进入 runtime repair；真实 Chromium 用例另行覆盖正常 render gate 与迭代闭环，不将模拟传输异常表述为真实浏览器复现。
+`eb64cf3` 统一了原子 JSON writer、模型正常结束判断、repair 响应解析和 verify/iterate 共同 CLI 参数；原有 artifact 路径、repair audit/评分边界和命令专属参数保持不变。
+数据引擎 shard 可复现性用例 `test_catalog_clean_and_mixed_are_shard_independent`（覆盖 `turnitover/engine/generate.py`）在已构建 `web/dist` 与 Chromium 就绪的环境连续运行 3 次通过；它不覆盖本 PR 的 `iterate` 路径。此前本机失败未完成可复现根因定位，故不作主分支或数据引擎逻辑失败归因。
+
+本地 `output/smoke-test/pr2-pipeline-no-thinking` 已记录一次 `accepted=true` 的真实模型 E2E：
+generation、render gate 和 active verifier 均完成，verifier 在三步主动观测后返回 `pass`。
+该记录使用受控的 toy cabinet 多视图输入，对应 `410ce57` 且 `dirty=true`，证据快照已纳入 Git；
+该次运行的 runtime repair 与 visual revision 调用均为 0，因此只证明受控 fixture 上的单轮生成—渲染—验证成功，不构成多轮修复效果、当前 clean commit、单张真实照片重建或泛化效果结果。
+
+## PR #2 复核修正（2026-10-10）
+
+本轮按 reviewer 的逐行复现修正三处边界：空白图指标只统计空间变化；generation、runtime repair 和 visual revision 在实际模型调用边界记录失败调用及已知 token；fixed/random 的非对象 JSON 统一进入非法决策反馈与最多三次尝试。新增的真实 Chromium 用例使用确定性模型 fixture，完整经过 verifier fail、`propose_repair`、补丁应用、第二轮 render gate 和 fresh verifier pass。
+
+在最新代码提交上重新构建 `web/dist` 并执行 typecheck；完整非浏览器测试为 141 项通过、1 项跳过，完整浏览器测试为 18 项通过。环境为 Python 3.12.7、Node.js 22.22.3、npm 10.9.8、Playwright 1.57.0、Chrome for Testing 143.0.7499.4。reviewer 提到的 `repair/loop.py` 本地改动尚未推送，当前保持待同步，不预先声称已吸收。

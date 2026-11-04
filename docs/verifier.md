@@ -3,7 +3,8 @@
 The verifier loads a candidate Three.js program, acquires evidence under a hard action budget, and
 produces a structured verdict with per-defect localization, severity, confidence, evidence references
 and suggested repairs. Reference photographs are optional; the task may instead specify runtime requirements.
-It is an inference/evaluation harness, not a trained model or a complete generation–repair outer loop.
+It is an inference/evaluation harness, not a trained model. The bounded generation–repair inference loop is
+provided separately by [`turnitover iterate`](iterative-synthesis.md).
 
 ## Run
 
@@ -70,16 +71,21 @@ metadata consistent when comparing baselines. Runtime hierarchy is acquired only
 
 Observations cost one; all attempted browser actions are charged, including failed attempts. Rendering
 after actuation uses the current camera and preserves other joint states. No free runtime queries or
-candidate screenshots are injected. At K observations the judge gets one final decision call with remaining=0.
-Active mode therefore makes at most K+1 model calls; fixed/random make one final model call. Every call's
-usage and latency are recorded separately, so equal observation budgets do not imply equal inference cost.
+candidate screenshots are injected. At K observations the judge gets one final decision opportunity with remaining=0.
+Each decision opportunity allows at most three model attempts when schema or action validation rejects the
+previous response. These retries do not consume observation budget because no browser action ran, but every
+attempt is retained in `model_calls/` and counts toward token usage and inference cost. Active mode therefore
+makes at most 3(K+1) model calls in the all-invalid worst case; fixed/random make at most three final-decision
+calls. With valid first responses their usual bounds remain K+1 and one call. Equal observation budgets do not
+imply equal inference cost.
 
 Verdicts: `pass`, `fail`, `uncertain`. Termination reasons are separate: `judge_finished`, `budget_exhausted`,
 `invalid_decision`, `model_error`, `observation_error`, `program_error`, or infrastructure/internal errors.
 Budget exhaustion never synthesizes a pass. Invalid JSON/actions/findings become an uncertain error result,
-without silent repair, retries, invented observations or extra budget. Findings must cite existing successful
-steps and use known taxonomy/part IDs, finite [0,1] confidence/severity values and repair text. Missing parts
-are described in text with an empty part list. Confidence is model-reported, not calibrated.
+after at most three rejected model attempts at the same decision opportunity. Validation feedback contains the
+rejected decision, error and legal values; it cannot invent observations or add observation budget. Findings
+must cite existing successful steps and use known taxonomy/part IDs, finite [0,1] confidence/severity values and
+repair text. Missing parts are described in text with an empty part list. Confidence is model-reported, not calibrated.
 
 ## Outputs
 
@@ -93,7 +99,8 @@ are described in text with an empty part list. Confidence is model-reported, not
 Output directories must be new or empty. Exit code 0 means the verification run completed, **not** that
 the candidate passed; read `verdict.status`. Execution/decision errors return nonzero. Metadata writes are atomic.
 Partial traces remain available after errors. Full input/prompt/response logs can contain user data but not API credentials.
-Invalid decisions include a schema-validation explanation in `error_message`; raw model responses are retained.
+Runs terminating with `invalid_decision` include the final schema-validation explanation in `error_message`;
+raw model responses from every attempt are retained.
 
 ## Privileged gold audit
 
@@ -108,7 +115,7 @@ It is not a calibrated oracle or complete physical/kinematic test suite.
 
 See [local smoke-test results](verifier-smoke.md) for actual Qwen trials, including rejected model decisions.
 
-Real-photo evaluation, fine-tuning, instance/state-conditioned oracle trajectories, calibrated uncertainty,
-formal coverage and metrics aggregation, and the generation–repair outer loop remain to be implemented.
+Formal real-photo evaluation, fine-tuning, instance/state-conditioned oracle trajectories, calibrated uncertainty,
+and formal coverage and metrics aggregation remain to be implemented.
 Current schema validation establishes evidence references, not that a model's interpretation of them is true.
 Generated programs still execute in the existing browser harness; this is not a general-purpose hostile-code sandbox.

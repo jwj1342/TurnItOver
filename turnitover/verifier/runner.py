@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 
 from turnitover.core.program import ObjectProgram
+from turnitover.core.jsonio import write_json_atomic
 from turnitover.core.serde import to_dict
 from turnitover.models.client import complete, image_part
 from turnitover.models.config import ModelConfig
@@ -78,7 +79,7 @@ def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tu
                                                        "name": local_model.name if local_model else None}}
     if local_model and (local_model / "download-manifest.json").exists():
         metadata["local_weights"] = json.loads((local_model / "download-manifest.json").read_text())
-    _json(output / "result.json", metadata)
+    write_json_atomic(output / "result.json", metadata)
     if cfg.mode == "runtime":
         policy = RuntimePolicy()
     else:
@@ -120,7 +121,7 @@ def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tu
             metadata.update(status="error", termination="environment_error" if stage == "environment" else "internal_error",
                             error_type=type(exc).__name__, verdict=dataclasses.asdict(uncertain("Verifier execution failed.")),
                             model_calls=list(policy.calls), finished_at=now_iso())
-            _json(output / "result.json", metadata)
+            write_json_atomic(output / "result.json", metadata)
             write_report(output, metadata, [])
             raise
     metadata.update(status="complete" if episode.termination in {"judge_finished", "budget_exhausted"} else "error",
@@ -130,21 +131,15 @@ def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tu
                     error_message=episode.error_message,
                     trajectory=[to_dict(o) for o in episode.trajectory], model_calls=list(policy.calls), finished_at=now_iso())
     # Persist the judge's result before any privileged evaluation happens.
-    _json(output / "result.json", metadata)
-    _json(output / "feedback.json", {"verdict": metadata["verdict"], "termination": episode.termination,
+    write_json_atomic(output / "result.json", metadata)
+    write_json_atomic(output / "feedback.json", {"verdict": metadata["verdict"], "termination": episode.termination,
                                      "program_sha": program.sha, "evidence_file": "trajectory.jsonl"})
     if reference_program:
         from turnitover.verifier.audit import audit
 
         (output / "reference-program.ts").write_text(reference_program.source)
         metadata["audit"] = audit(program, reference_program, render, views, cfg.max_triangles, cfg.max_draw_calls)
-        _json(output / "audit.json", metadata["audit"])
-        _json(output / "result.json", metadata)
+        write_json_atomic(output / "audit.json", metadata["audit"])
+        write_json_atomic(output / "result.json", metadata)
     write_report(output, metadata, episode.trajectory)
     return metadata
-
-
-def _json(path: Path, value):
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False))
-    temporary.replace(path)

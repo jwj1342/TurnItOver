@@ -1,0 +1,235 @@
+export default function createObject(THREE: typeof import('three')) {
+  // --- Materials ---
+  const matWood = new THREE.MeshStandardMaterial({ color: 0x8B6D47, roughness: 0.8 });
+  const matDarkBrown = new THREE.MeshStandardMaterial({ color: 0x5C4033, roughness: 0.9 });
+  const matBlue = new THREE.MeshStandardMaterial({ color: 0x4A6E8A, roughness: 0.6 });
+  const matReddish = new THREE.MeshStandardMaterial({ color: 0x7A4B4B, roughness: 0.7 });
+
+  // --- Geometries (Reused) ---
+  const geoBox = new THREE.BoxGeometry(1, 1, 1);
+
+  // Helper to create a named part group with a mesh child
+  function createPart(partId: string, geometry: THREE.BufferGeometry, material: THREE.Material, scale: [number, number, number], position: [number, number, number]) {
+    const group = new THREE.Group();
+    group.name = partId;
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.name = `${partId}#mesh`;
+    mesh.scale.set(...scale);
+    mesh.position.set(...position);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    group.add(mesh);
+    return group;
+  }
+
+  // --- Root Group ---
+  const root = new THREE.Group();
+  root.name = 'cabinet_root';
+
+  // Dimensions based on visual estimation (approx 1m wide, 1.5m high, 0.5m deep)
+  const W = 1.0;
+  const H = 1.5;
+  const D = 0.5;
+  const THICKNESS = 0.04; // Wall thickness
+
+  // 1. Main Body Shell
+  // Back panel
+  const backPanel = createPart('body_back', geoBox, matDarkBrown, [W - THICKNESS * 2, H - THICKNESS * 2, THICKNESS], [0, 0, -D / 2 + THICKNESS / 2]);
+  root.add(backPanel);
+
+  // Top panel
+  const topPanel = createPart('body_top', geoBox, matWood, [W, THICKNESS, D], [0, H / 2 - THICKNESS / 2, 0]);
+  root.add(topPanel);
+
+  // Bottom panel
+  const bottomPanel = createPart('body_bottom', geoBox, matWood, [W, THICKNESS, D], [0, -H / 2 + THICKNESS / 2, 0]);
+  root.add(bottomPanel);
+
+  // Left side
+  const leftSide = createPart('body_left', geoBox, matWood, [THICKNESS, H, D], [-W / 2 + THICKNESS / 2, 0, 0]);
+  root.add(leftSide);
+
+  // Right side
+  const rightSide = createPart('body_right', geoBox, matWood, [THICKNESS, H, D], [W / 2 - THICKNESS / 2, 0, 0]);
+  root.add(rightSide);
+
+  // Middle shelf (separating door area from drawers)
+  // Based on image, the split is roughly at 1/3 height from bottom? 
+  // Actually looking at "front" view: Top section is reddish (door), bottom has 2 blue drawers.
+  // Let's assume split is around Y = -0.2 or so.
+  const SPLIT_Y = -0.1; 
+  const midShelf = createPart('body_mid_shelf', geoBox, matWood, [W - THICKNESS * 2, THICKNESS, D - THICKNESS], [0, SPLIT_Y, 0]);
+  root.add(midShelf);
+
+
+  // 2. Drawers (Prismatic joints)
+  // There are two drawers stacked in the bottom section.
+  // Bottom section height approx: from -H/2 to SPLIT_Y. Total ~0.65m.
+  // Drawer height approx 0.3m each.
+  
+  const drawerHeight = 0.28;
+  const drawerWidth = W - THICKNESS * 2 - 0.02; // slight gap
+  const drawerDepth = D - THICKNESS - 0.02;
+
+  // Drawer 0 (Bottom)
+  const d0Group = new THREE.Group();
+  d0Group.name = 'drawer_0';
+  const d0Mesh = new THREE.Mesh(geoBox, matBlue);
+  d0Mesh.name = 'drawer_0#mesh';
+  d0Mesh.scale.set(drawerWidth, drawerHeight, drawerDepth);
+  // Initial pos: tucked in. Z should be such that front face aligns with body front (D/2)
+  // Center of drawer needs to be at D/2 - depth/2
+  d0Mesh.position.set(0, 0, (D/2) - (drawerDepth/2)); 
+  d0Group.add(d0Mesh);
+  
+  // Add a "handle" or just rely on the blocky look. The reference shows simple blocks.
+  // Let's add a small lip or just keep it simple. The reference "drawer_0: upper limit" shows it pulled out.
+  
+  // Joint for Drawer 0
+  const jointD0Pivot = new THREE.Group();
+  jointD0Pivot.name = 'joint:drawer_0_slide';
+  // Pivot at the "back" of the drawer space inside the cabinet
+  jointD0Pivot.position.set(0, -H/2 + THICKNESS + drawerHeight/2 + 0.02, -D/2 + THICKNESS); 
+  d0Group.position.set(0, 0, D/2 - THICKNESS); // Offset relative to pivot to start at 0 extension?
+  // Actually, standard prismatic: Pivot is at rest position 0.
+  // Let's put pivot at the closed position center.
+  jointD0Pivot.position.set(0, -H/2 + THICKNESS + drawerHeight/2 + 0.02, (D/2) - (drawerDepth/2));
+  jointD0Pivot.add(d0Group);
+  // Reset local pos of group to 0
+  d0Group.position.set(0,0,0);
+  root.add(jointD0Pivot);
+
+
+  // Drawer 1 (Top of the two)
+  const d1Group = new THREE.Group();
+  d1Group.name = 'drawer_1';
+  const d1Mesh = new THREE.Mesh(geoBox, matBlue);
+  d1Mesh.name = 'drawer_1#mesh';
+  d1Mesh.scale.set(drawerWidth, drawerHeight, drawerDepth);
+  d1Mesh.position.set(0, 0, (D/2) - (drawerDepth/2));
+  d1Group.add(d1Mesh);
+
+  const jointD1Pivot = new THREE.Group();
+  jointD1Pivot.name = 'joint:drawer_1_slide';
+  jointD1Pivot.position.set(0, -H/2 + THICKNESS + drawerHeight/2 + 0.02 + drawerHeight + 0.02, (D/2) - (drawerDepth/2));
+  jointD1Pivot.add(d1Group);
+  d1Group.position.set(0,0,0);
+  root.add(jointD1Pivot);
+
+
+  // 3. Door (Revolute joint)
+  // Top section. From SPLIT_Y to H/2.
+  const doorHeight = H/2 - SPLIT_Y - THICKNESS;
+  const doorWidth = W - THICKNESS * 2;
+  const doorThick = 0.03;
+
+  const doorGroup = new THREE.Group();
+  doorGroup.name = 'door';
+  
+  // Door Mesh
+  const doorMesh = new THREE.Mesh(geoBox, matReddish);
+  doorMesh.name = 'door#mesh';
+  doorMesh.scale.set(doorWidth, doorHeight, doorThick);
+  // Position relative to pivot. Pivot is usually at the hinge.
+  // Hinge is likely on the left or right? Reference doesn't explicitly show hinge side clearly in closed state, 
+  // but "door: upper limit" shows it swinging open to the left (hinge on left).
+  // So pivot is at Left edge of the opening.
+  
+  // Local pos of mesh relative to pivot (which is at left edge):
+  // x = width/2, y = 0, z = ...
+  // When closed (rotated -90deg or 0?), it should cover the hole.
+  // Let's say 0 rotation is Closed.
+  // If hinge is Left, pivot is at x = -W/2 + THICKNESS.
+  // Mesh center needs to be at x = -W/2 + THICKNESS + doorWidth/2.
+  
+  // Wait, let's look at the "door: upper limit" image. 
+  // The door is swung out to the left side. This implies hinges are on the LEFT.
+  
+  doorMesh.position.set(doorWidth / 2, 0, doorThick / 2); // Z offset so it sits flush with front when rotated?
+  // If we rotate around Y, Z changes.
+  // Let's align pivot such that at rot=0, it covers the front.
+  // Front face of cabinet is at Z = D/2.
+  // Door thickness is doorThick.
+  // If pivot is at Z = D/2 - THICKNESS (inner face of frame? no, usually surface mounted or inset).
+  // Let's assume inset. Pivot at corner (-W/2 + THICKNESS, Y_mid, D/2 - THICKNESS).
+  // Actually, simpler: Pivot at (-W/2 + THICKNESS, SPLIT_Y + doorHeight/2, D/2).
+  // Mesh offset: x = +width/2, z = -thickness/2.
+  
+  doorMesh.position.set(doorWidth/2, 0, -doorThick/2);
+  doorGroup.add(doorMesh);
+
+  const jointDoorPivot = new THREE.Group();
+  jointDoorPivot.name = 'joint:door_hinge';
+  // Position pivot at top-left corner of the opening
+  jointDoorPivot.position.set(-W/2 + THICKNESS, SPLIT_Y + doorHeight/2, D/2);
+  jointDoorPivot.add(doorGroup);
+  doorGroup.position.set(0,0,0);
+  root.add(jointDoorPivot);
+
+
+  // --- Joints Definition ---
+  const joints: Record<string, any> = {};
+
+  // Drawer 0 Joint (Prismatic)
+  // Moves along Z axis. 
+  // 0 is closed. Positive is open (pulling out towards +Z).
+  // Limit: 0 to ~0.4m
+  joints['drawer_0'] = {
+    type: 'prismatic',
+    part: 'drawer_0',
+    limits: [0, 0.4],
+    set: (val: number) => {
+      const v = Math.max(0, Math.min(0.4, val));
+      // Move the group containing the mesh along Z
+      // The pivot is at the closed position center.
+      // So we just translate the child group? 
+      // No, standard pattern: Pivot is static. Child moves.
+      // But here I put the mesh inside d0Group, and d0Group inside jointD0Pivot.
+      // So I move d0Group.position.z
+      d0Group.position.z = v;
+    }
+  };
+
+  // Drawer 1 Joint
+  joints['drawer_1'] = {
+    type: 'prismatic',
+    part: 'drawer_1',
+    limits: [0, 0.4],
+    set: (val: number) => {
+      const v = Math.max(0, Math.min(0.4, val));
+      d1Group.position.z = v;
+    }
+  };
+
+  // Door Joint (Revolute)
+  // Rotates around Y axis.
+  // 0 is closed. 
+  // Opening to the left means rotating Counter-Clockwise (positive Y rotation in Three.js usually, depending on coord system).
+  // Three.js Y-up: Rotation Y positive is CCW looking from top.
+  // If hinge is Left, and we open "out to the left", we are swinging the right side towards the viewer/left.
+  // That corresponds to positive rotation.
+  // Limit: 0 to ~90 degrees (PI/2) or maybe 110.
+  joints['door'] = {
+    type: 'revolute',
+    part: 'door',
+    limits: [0, Math.PI / 1.8], // ~100 degrees
+    set: (val: number) => {
+      const v = Math.max(0, Math.min(Math.PI / 1.8, val));
+      jointDoorPivot.rotation.y = v;
+    }
+  };
+
+  // Initialize joints
+  Object.values(joints).forEach(j => j.set(0));
+
+  // --- Dispose Function ---
+  const dispose = () => {
+    matWood.dispose();
+    matDarkBrown.dispose();
+    matBlue.dispose();
+    matReddish.dispose();
+    geoBox.dispose();
+  };
+
+  return { root, joints, dispose };
+}

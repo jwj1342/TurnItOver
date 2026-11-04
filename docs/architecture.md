@@ -79,7 +79,8 @@ single-reference final-diagnosis supervision, full texture-preserving asset conv
 physics / manifold / watertight checkers, HDF5, pydantic, Hydra, structlog, CI, Apptainer (fallback only),
 continuous views, a dev web server, partial-shard resume.
 
-`reconstruct` is a single-pass photo-to-program baseline, not a repair loop. `verify` uses an explicit
+`reconstruct` is a single-pass photo-to-program baseline. `iterate` adds the bounded generation–render–verify–repair
+inference loop; it is not a training or formal real-photo evaluation pipeline. `verify` uses an explicit
 VerificationPolicy decision contract, sharing browser action execution with the legacy dataset JudgePolicy loop.
 Preview orbit views are presentation-only; policy views remain discrete. Optional local Qwen dependencies
 are isolated in requirements-qwen.txt; baseline data generation has no torch requirement.

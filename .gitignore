@@ -6,6 +6,7 @@ logs/*
 output/*
 !output/.gitkeep
 !output/research-examples/
+!output/smoke-test/
 models/*
 !models/README.md
 # environments and caches

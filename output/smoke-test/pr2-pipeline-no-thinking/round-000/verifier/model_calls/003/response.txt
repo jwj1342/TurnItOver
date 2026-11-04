@@ -1,0 +1,9 @@
+{
+  "verdict": {
+    "status": "pass",
+    "confidence": 1.0,
+    "findings": [],
+    "summary": "The articulated object matches the reference geometry and kinematics. The front view confirms the correct layout of the door and two drawers. Actuation of 'drawer_0' and 'door' to their limits produced valid motion consistent with the reference states (drawer extending outward, door swinging open). No defects detected within the observed scope.",
+    "limitations": []
+  }
+}

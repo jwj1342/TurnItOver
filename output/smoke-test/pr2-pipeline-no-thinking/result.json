@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "kind": "iterative_synthesis",
+  "status": "accepted",
+  "accepted": true,
+  "created_at": "2026-10-07T09:28:57+00:00",
+  "task": "Verify the articulated object against the reference inputs.",
+  "config": {
+    "max_runtime_repairs": 1,
+    "max_visual_revisions": 1,
+    "blank_stddev_threshold": 1.0,
+    "verifier": {
+      "budget": 4,
+      "mode": "active",
+      "seed": 0,
+      "action_types": [
+        "request_view",
+        "actuate_joint",
+        "query_runtime"
+      ],
+      "runtime_properties": [
+        "stats",
+        "hierarchy",
+        "joint_state",
+        "state_delta"
+      ],
+      "max_triangles": 5000,
+      "max_draw_calls": 32
+    },
+    "task": "Verify the articulated object against the reference inputs."
+  },
+  "render": {
+    "width": 384,
+    "height": 384,
+    "views": [
+      {
+        "id": "front",
+        "azimuth_deg": 0.0,
+        "elevation_deg": 0.0,
+        "projection": "orthographic",
+        "distance_factor": 1.0
+      },
+      {
+        "id": "back",
+        "azimuth_deg": 180.0,
+        "elevation_deg": 0.0,
+        "projection": "orthographic",
+        "distance_factor": 1.0
+      },
+      {
+        "id": "left",
+        "azimuth_deg": -90.0,
+        "elevation_deg": 0.0,
+        "projection": "orthographic",
+        "distance_factor": 1.0
+      },
+      {
+        "id": "right",
+        "azimuth_deg": 90.0,
+        "elevation_deg": 0.0,
+        "projection": "orthographic",
+        "distance_factor": 1.0
+      },
+      {
+        "id": "top",
+        "azimuth_deg": 0.0,
+        "elevation_deg": 90.0,
+        "projection": "orthographic",
+        "distance_factor": 1.0
+      },
+      {
+        "id": "bottom",
+        "azimuth_deg": 0.0,
+        "elevation_deg": -90.0,
+        "projection": "orthographic",
+        "distance_factor": 1.0
+      },
+      {
+        "id": "oblique_fr",
+        "azimuth_deg": 35.0,
+        "elevation_deg": 25.0,
+        "projection": "perspective",
+        "distance_factor": 1.0
+      },
+      {
+        "id": "oblique_fl",
+        "azimuth_deg": -35.0,
+        "elevation_deg": 25.0,
+        "projection": "perspective",
+        "distance_factor": 1.0
+      },
+      {
+        "id": "oblique_br",
+        "azimuth_deg": 145.0,
+        "elevation_deg": 25.0,
+        "projection": "perspective",
+        "distance_factor": 1.0
+      },
+      {
+        "id": "oblique_bl",
+        "azimuth_deg": -145.0,
+        "elevation_deg": 25.0,
+        "projection": "perspective",
+        "distance_factor": 1.0
+      },
+      {
+        "id": "grazing_front",
+        "azimuth_deg": 80.0,
+        "elevation_deg": 5.0,
+        "projection": "perspective",
+        "distance_factor": 1.0
+      },
+      {
+        "id": "grazing_top",
+        "azimuth_deg": 20.0,
+        "elevation_deg": 80.0,
+        "projection": "perspective",
+        "distance_factor": 1.0
+      }
+    ]
+  },
+  "references": [
+    {
+      "path": "reference-00.png",
+      "sha256": "69792b3220d52ed6680294540fe165130db63cfc801e85a0f2a93154645967b4"
+    }
+  ],
+  "git": {
+    "sha": "410ce578d682dafbb26f2313a11b6fb7dc57c308",
+    "dirty": true
+  },
+  "rounds": [
+    {
+      "round": 0,
+      "program_sha": "a5a7b6c3d8593c20",
+      "render_attempts": [
+        {
+          "success": true,
+          "stage": "complete",
+          "error_type": null,
+          "message": null,
+          "image_ref": "render.png",
+          "image_stddev": 26.827756881713867,
+          "failure_kind": null,
+          "attempt": 0,
+          "program_sha": "a5a7b6c3d8593c20",
+          "artifact": "round-000/render-gate/attempt-000/result.json"
+        }
+      ],
+      "verifier": {
+        "status": "complete",
+        "termination": "judge_finished",
+        "verdict": {
+          "status": "pass",
+          "confidence": 1.0,
+          "findings": [],
+          "summary": "The articulated object matches the reference geometry and kinematics. The front view confirms the correct layout of the door and two drawers. Actuation of 'drawer_0' and 'door' to their limits produced valid motion consistent with the reference states (drawer extending outward, door swinging open). No defects detected within the observed scope.",
+          "limitations": []
+        },
+        "spent": 3,
+        "artifact": "round-000/verifier/result.json"
+      },
+      "visual_revisions": []
+    }
+  ],
+  "model_calls": {
+    "generation": 1,
+    "runtime_repair": 0,
+    "visual_revision": 0,
+    "judge": 4
+  },
+  "total_tokens": 14970,
+  "finished_at": "2026-10-07T09:30:11+00:00",
+  "final_program": {
+    "path": "final.ts",
+    "sha": "a5a7b6c3d8593c20"
+  }
+}

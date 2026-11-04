@@ -9,7 +9,7 @@ Recorded 2026-09-12. These runs check integration and failure handling, not mode
 - Runtime: Transformers 4.57.6, Torch 2.7.1, local offline inference on a Slurm H100 20 GB MIG allocation.
 - Candidate: `output/verifier-inputs/candidate.ts`, a synthetic articulated cabinet with 6228 triangles against a 5000-triangle limit.
 - Reference: `output/toy-preview/screenshots/06.png`, a synthetic render, not a photograph.
-- Fixed/active observation budget: 4. Greedy decoding; no automatic correction or retries.
+- Fixed/active observation budget: 4. Greedy decoding; the implementation used for these recorded runs had no automatic correction or retries.
 
 ## Results
 
@@ -26,7 +26,9 @@ The active run's apparent triangle finding is unsupported: the model had neither
 
 ## Reproduce
 
-From the repository root, choose a new output directory:
+From the repository root, choose a new output directory. Current verifier code may retry an invalid decision up
+to three times without spending observation budget, so this command exercises the current workflow rather than
+reproducing the recorded 2026-09-12 control flow byte-for-byte:
 
 ```bash
 sbatch scripts/slurm/verify_qwen.sbatch \
