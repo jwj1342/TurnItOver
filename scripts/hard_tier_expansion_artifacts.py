@@ -20,6 +20,22 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def add_official_archive_verification(path, acquisition_manifests, pins):
+    path = Path(path).resolve()
+    report = read(path)
+    if report.get('status') != 'verified' or report.get('kind') != 'current_archive_verification':
+        raise ValueError('Invalid official archive verification report')
+    pins[str(path)] = sha(path)
+    for row in report.get('archives', []):
+        if row.get('status') != 'verified_against_official_lfs':
+            raise ValueError('Archive report contains an unverified source')
+        asset_id = str(row['asset_id'])
+        previous = acquisition_manifests.get(asset_id)
+        if previous and previous[1]['sha256'] != row['sha256']:
+            raise ValueError('Conflicting official archive verification: ' + asset_id)
+        acquisition_manifests[asset_id] = ('official_verification', row)
+
+
 def pair_control(out, record, source_spec, program_type):
     """Use normal pixels already rendered and the real bound normal checker."""
     original = read(source_spec)

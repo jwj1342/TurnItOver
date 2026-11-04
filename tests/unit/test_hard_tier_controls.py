@@ -43,6 +43,24 @@ class HardControlsTest(unittest.TestCase):
             self.assertEqual(paired['review']['status'], 'pending_human_review')
             self.assertIsNone(paired['review']['human_judgment']['final_decision'])
 
+    def test_official_archive_verification_is_pinned_and_conflicts_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            report = Path(directory) / 'verification.json'
+            module.write(report, {'status': 'verified', 'kind': 'current_archive_verification',
+                'archives': [{'asset_id': '46108', 'sha256': 'a' * 64,
+                    'status': 'verified_against_official_lfs'}]})
+            acquisitions, pins = {}, {}
+
+            module.add_official_archive_verification(report, acquisitions, pins)
+
+            assert acquisitions['46108'] == ('official_verification', module.read(report)['archives'][0])
+            assert pins[str(report.resolve())] == module.sha(report)
+            module.write(report, {'status': 'verified', 'kind': 'current_archive_verification',
+                'archives': [{'asset_id': '46108', 'sha256': 'b' * 64,
+                    'status': 'verified_against_official_lfs'}]})
+            with self.assertRaises(ValueError):
+                module.add_official_archive_verification(report, acquisitions, pins)
+
     def test_mismatched_source_is_rejected_before_export(self):
         with tempfile.TemporaryDirectory() as directory:
             out = Path(directory)

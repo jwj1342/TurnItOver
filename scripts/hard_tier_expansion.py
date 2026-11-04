@@ -12,7 +12,9 @@ from pathlib import Path
 import shutil
 import sys
 
-from hard_tier_expansion_artifacts import checkpoint, pair_control, read, sha, write
+from hard_tier_expansion_artifacts import (
+    add_official_archive_verification, checkpoint, pair_control, read, sha, write,
+)
 
 
 def run(args):
@@ -39,12 +41,11 @@ def run(args):
         raise ValueError('Expected the immutable 75-object full-motion baseline')
     pins = {str(base / 'manifest.json'): sha(base / 'manifest.json'), str(pool_path): sha(pool_path)}
     acquisition_manifests = {}
-    official_verification_path = Path(__file__).resolve().parents[1] / 'output/hard-official-archive-verification-v1.json'
-    official_verification = read(official_verification_path) if official_verification_path.exists() else None
-    if official_verification:
-        pins[str(official_verification_path.resolve())] = sha(official_verification_path)
-        for verified in official_verification['archives']:
-            acquisition_manifests[str(verified['asset_id'])] = ('official_verification', verified)
+    official_verification_paths = [Path(__file__).resolve().parents[1]
+        / 'output/hard-official-archive-verification-v1.json'] + args.archive_verification
+    for verification_path in official_verification_paths:
+        if verification_path.exists():
+            add_official_archive_verification(verification_path, acquisition_manifests, pins)
     for root in (builder_root / 'output').glob('hard-new-download-*'):
         manifest_path = root / 'download-manifest.json'
         if manifest_path.exists():
@@ -176,6 +177,7 @@ if __name__ == '__main__':
     parser.add_argument('--pool', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--exclude', type=Path, action='append', default=[])
+    parser.add_argument('--archive-verification', type=Path, action='append', default=[])
     parser.add_argument('--target', type=int, default=150)
     parser.add_argument('--limit', type=int, default=1000)
     args = parser.parse_args()

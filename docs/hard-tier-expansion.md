@@ -32,8 +32,12 @@ python scripts/hard_tier_expansion.py \
   --base /path/to/hard-formal-v1 \
   --pool /path/to/hard-candidate-pool-v2/final/pool.json \
   --exclude /path/to/frozen-source-exclusions.json \
+  --archive-verification output/additional-official-archive-verification.json \
   --out output/hard-tier-expansion-v1
 ```
+
+Repeat `--archive-verification` for each separately verified source wave. Each
+report is schema-checked and SHA-pinned into the private run state.
 
 The initial run pins its builder checkout in `private/run_state.json`. A changed
 input requires a new output directory. The branch also includes the formal
