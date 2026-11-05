@@ -16,6 +16,12 @@ HARD_DEFECTS = {
     "joint_anchor_offset": "kinematics.joint_anchor",
     "moving_part_initial_rotation": "structure.part_rotation",
 }
+HARD_COMPOSITE_DEFECTS = {
+    "joint_anchor": "kinematics.joint_anchor",
+    "joint_axis": "kinematics.joint_axis",
+    "part_offset": "structure.part_offset",
+    "part_rotation": "structure.part_rotation",
+}
 SEVERITY = {"easy": 0.9, "medium": 0.6, "hard": 0.35}
 SPLITS = ("train", "validation", "test")
 
@@ -52,6 +58,24 @@ def _release(path: Path) -> tuple[dict, list[ReleaseCase]]:
     return manifest, [ReleaseCase(root, archive, root, row, public.get(row["case_id"], {})) for row in gold]
 
 
+def _candidate_bundle(path: Path) -> tuple[dict, list[ReleaseCase]]:
+    """Load the private Hard v1.1 candidate ZIP without treating it as a release."""
+    if not path.is_file():
+        raise ValueError(f"Candidate bundle is not a file: {path}")
+    with zipfile.ZipFile(path) as source:
+        roots = {name.split("/", 1)[0] for name in source.namelist() if "/" in name}
+        if len(roots) != 1:
+            raise ValueError("Candidate bundle must contain exactly one root directory")
+        root = roots.pop()
+        gold = _jsonl(source.read(f"{root}/private/gold.jsonl"))
+        pool = {row["case_id"]: row for row in _jsonl(source.read(f"{root}/pool_manifest.jsonl"))}
+        bundle_manifest = json.loads(source.read(f"{root}/manifest.json"))
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    manifest = {"tag": bundle_manifest.get("policy", root), "kind": "candidate_bundle",
+                "archive_sha256": digest, "bundle_status": bundle_manifest.get("status")}
+    return manifest, [ReleaseCase("hard", path, root, row, pool.get(row["case_id"], {})) for row in gold]
+
+
 def _provenance(case: ReleaseCase) -> tuple[str, str, str, str, str]:
     gold, source = case.gold, case.gold.get("source", {})
     source_identity = source.get("source_identity") or gold.get("source_identity") or ""
@@ -79,6 +103,18 @@ def _split(group: str) -> str:
 
 def _labels(case: ReleaseCase) -> list[dict]:
     gold = case.gold
+    if gold.get("defects"):
+        labels = []
+        for defect in gold["defects"]:
+            defect_id = HARD_COMPOSITE_DEFECTS.get(defect.get("field"))
+            if not defect_id:
+                raise ValueError(f"Unsupported composite defect: {defect.get('field')}")
+            labels.append({"defect_id": defect_id,
+                           "parts": [defect.get("part_id") or "moving_part"],
+                           "severity": SEVERITY[case.level],
+                           "params": {**dict(defect.get("parameters") or {}),
+                                      "joint": defect.get("joint_id") or "joint_0"}})
+        return labels
     defect_id = gold.get("defect_id") or HARD_DEFECTS.get(gold.get("kind"))
     if not defect_id:
         return []
@@ -102,7 +138,8 @@ def _members(case: ReleaseCase) -> list[ImageMember]:
                  "candidate_rest", "candidate_mid", "candidate_limit")
         return [ImageMember(role, f"{prefix}native/{cid}/{role}.png", view, *role.split("_"))
                 for role in roles]
-    views = (case.gold["initial_view"], case.gold["supplementary_view"])
+    views = (case.gold.get("initial_view") or case.public["initial_view"],
+             case.gold.get("supplementary_view") or case.public["supplementary_view"])
     members = []
     for view in views:
         for kind in ("reference", "candidate"):
@@ -172,24 +209,36 @@ def _context(parts: list[str], joints: list[str], members: list[ImageMember]) ->
             "action_types": ["request_view"], "max_triangles": 1, "max_draw_calls": 1}
 
 
-def export_releases(release_paths: list[Path], output: Path, dataset_version: str,
-                    asset_roots: list[Path]) -> dict:
-    """Build one complete formal-training export from release directories."""
-    manifests, cases = [], []
-    for path in release_paths:
-        manifest, release_cases = _release(path)
-        manifests.append(manifest)
-        cases.extend(release_cases)
+def _case_split(case: ReleaseCase, split_plan: dict[str, str] | None, *, allow_hash_split: bool) -> str:
+    _, _, _, group, _ = _provenance(case)
+    frozen = case.gold.get("source", {}).get("split")
+    split = frozen or (split_plan or {}).get(group)
+    if split in SPLITS:
+        return split
+    if allow_hash_split:
+        return _split(group)
+    raise ValueError(f"No frozen split for source group {group}")
+
+
+def _export_cases(manifests: list[dict], cases: list[ReleaseCase], output: Path, dataset_version: str,
+                  asset_roots: list[Path], *, split_plan: dict[str, str] | None = None,
+                  allow_hash_split: bool, expected_difficulty_counts: dict[str, int] | None = None) -> dict:
     if output.exists() and any(output.iterdir()):
         raise ValueError(f"Output directory is not empty: {output}")
     output.mkdir(parents=True, exist_ok=True)
     assets = _asset_index(asset_roots)
     episodes = {split: [] for split in SPLITS}
     stopping = {split: [] for split in SPLITS}
-    annotations, groups = [], {}
+    annotations, groups, group_splits, group_levels = [], {}, {}, {}
     for case in sorted(cases, key=lambda item: item.gold["case_id"]):
         _, _, _, group, content = _provenance(case)
-        split = _split(group)
+        split = _case_split(case, split_plan, allow_hash_split=allow_hash_split)
+        if group in group_splits and group_splits[group] != split:
+            raise ValueError(f"Source group assigned to multiple splits: {group}")
+        if group in group_levels and group_levels[group] != case.level:
+            raise ValueError(f"Source group reused across difficulty tiers: {group}")
+        group_splits[group] = split
+        group_levels[group] = case.level
         groups[group] = split
         labels = _labels(case)
         parts, joints = _roster(case, assets)
@@ -221,6 +270,9 @@ def export_releases(release_paths: list[Path], output: Path, dataset_version: st
                 "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows), encoding="utf-8")
     (output / "annotations.private.jsonl").write_text(
         "".join(json.dumps(row, sort_keys=True) + "\n" for row in annotations), encoding="utf-8")
+    difficulty_counts = {level: sum(row["difficulty"] == level for row in annotations) for level in SEVERITY}
+    if expected_difficulty_counts and difficulty_counts != expected_difficulty_counts:
+        raise ValueError(f"Unexpected per-tier case counts: {difficulty_counts}; expected {expected_difficulty_counts}")
     taxonomy = sorted({label["defect_id"] for row in annotations for label in row["labels"]})
     manifest = {"status": "complete", "formal_training": True, "dataset_version": dataset_version,
                 "groups": groups, "source_releases": [row["tag"] for row in manifests],
@@ -232,3 +284,34 @@ def export_releases(release_paths: list[Path], output: Path, dataset_version: st
                            for split in SPLITS}}
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return manifest
+
+
+def export_releases(release_paths: list[Path], output: Path, dataset_version: str,
+                    asset_roots: list[Path]) -> dict:
+    """Build one complete formal-training export from release directories."""
+    manifests, cases = [], []
+    for path in release_paths:
+        manifest, release_cases = _release(path)
+        manifests.append(manifest)
+        cases.extend(release_cases)
+    return _export_cases(manifests, cases, output, dataset_version, asset_roots, allow_hash_split=True)
+
+
+def export_three_tier_900(release_paths: list[Path], hard_candidate: Path, output: Path,
+                          dataset_version: str, asset_roots: list[Path], split_plan: dict[str, str]) -> dict:
+    """Export the frozen 300-case Easy/Medium/Hard SFT corpus.
+
+    Easy and Medium must be assigned by ``split_plan``.  Hard v1.1 retains the
+    object-level split embedded in its private Gold records.
+    """
+    manifests, cases = [], []
+    for path in release_paths:
+        manifest, release_cases = _release(path)
+        manifests.append(manifest)
+        cases.extend(release_cases)
+    manifest, hard_cases = _candidate_bundle(hard_candidate)
+    manifests.append(manifest)
+    cases.extend(hard_cases)
+    return _export_cases(manifests, cases, output, dataset_version, asset_roots,
+                         split_plan=split_plan, allow_hash_split=False,
+                         expected_difficulty_counts={"easy": 300, "medium": 300, "hard": 300})
