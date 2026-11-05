@@ -211,7 +211,9 @@ def _context(parts: list[str], joints: list[str], members: list[ImageMember]) ->
 
 def _case_split(case: ReleaseCase, split_plan: dict[str, str] | None, *, allow_hash_split: bool) -> str:
     _, _, _, group, _ = _provenance(case)
-    frozen = case.gold.get("source", {}).get("split")
+    # Easy/Medium source metadata may carry an upstream acquisition split.  Only
+    # the Hard candidate's object split is the frozen three-tier assignment.
+    frozen = case.gold.get("source", {}).get("split") if case.level == "hard" else None
     split = frozen or (split_plan or {}).get(group)
     if split in SPLITS:
         return split
@@ -229,16 +231,13 @@ def _export_cases(manifests: list[dict], cases: list[ReleaseCase], output: Path,
     assets = _asset_index(asset_roots)
     episodes = {split: [] for split in SPLITS}
     stopping = {split: [] for split in SPLITS}
-    annotations, groups, group_splits, group_levels = [], {}, {}, {}
+    annotations, groups, group_splits = [], {}, {}
     for case in sorted(cases, key=lambda item: item.gold["case_id"]):
         _, _, _, group, content = _provenance(case)
         split = _case_split(case, split_plan, allow_hash_split=allow_hash_split)
         if group in group_splits and group_splits[group] != split:
             raise ValueError(f"Source group assigned to multiple splits: {group}")
-        if group in group_levels and group_levels[group] != case.level:
-            raise ValueError(f"Source group reused across difficulty tiers: {group}")
         group_splits[group] = split
-        group_levels[group] = case.level
         groups[group] = split
         labels = _labels(case)
         parts, joints = _roster(case, assets)
