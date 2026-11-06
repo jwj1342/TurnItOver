@@ -94,7 +94,8 @@ def _convertible_isolated(folder: Path, category: str, timeout_seconds: int) -> 
 def select(root: Path, previous_test_splits: Path, trainval_splits: Path,
            trainval_plan: Path, output: Path, *, objects: int = 20,
            seed: int = 20261011, carry_forward_plan: Path | None = None,
-           isolate_conversion: bool = False, conversion_timeout_seconds: int = 120) -> dict:
+           isolate_conversion: bool = False, conversion_timeout_seconds: int = 120,
+           allow_underfilled: bool = False) -> dict:
     if output.exists():
         raise ValueError(f"Selection output already exists: {output}")
     if objects < 1:
@@ -169,8 +170,9 @@ def select(root: Path, previous_test_splits: Path, trainval_splits: Path,
             chosen_features[key].add(row[key])
         if len(chosen) == objects:
             break
-    if len(chosen) != objects:
+    if len(chosen) != objects and not allow_underfilled:
         raise ValueError(f"Need {objects} unseen, non-duplicate test objects, found {len(chosen)}")
+    actual_objects = len(chosen)
 
     record = {
         "version": 1,
@@ -179,7 +181,8 @@ def select(root: Path, previous_test_splits: Path, trainval_splits: Path,
         "dataset_revision": revision,
         "license": LICENSE,
         "seed": seed,
-        "expected_object_counts": {"test": objects},
+        "requested_object_count": objects,
+        "expected_object_counts": {"test": actual_objects},
         "previous_test_splits_sha256": _sha256(previous_test_splits),
         "trainval_splits_sha256": _sha256(trainval_splits),
         "trainval_plan_sha256": _sha256(trainval_plan),
@@ -214,6 +217,8 @@ def main() -> None:
     parser.add_argument("--isolate-conversion", action="store_true",
                         help="run each mesh conversion in a bounded child process")
     parser.add_argument("--conversion-timeout-seconds", type=int, default=120)
+    parser.add_argument("--allow-underfilled", action="store_true",
+                        help="freeze every eligible object when the requested size exceeds the pool")
     args = parser.parse_args()
     result = select(args.root.resolve(), args.previous_test_splits.resolve(),
                     args.trainval_splits.resolve(), args.trainval_plan.resolve(),
@@ -221,7 +226,8 @@ def main() -> None:
                     carry_forward_plan=(args.carry_forward_plan.resolve()
                                         if args.carry_forward_plan else None),
                     isolate_conversion=args.isolate_conversion,
-                    conversion_timeout_seconds=args.conversion_timeout_seconds)
+                    conversion_timeout_seconds=args.conversion_timeout_seconds,
+                    allow_underfilled=args.allow_underfilled)
     print(json.dumps({"status": "complete", "objects": len(result["objects"]),
                       "output": str(args.out.resolve())}))
 

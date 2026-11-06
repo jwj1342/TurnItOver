@@ -192,3 +192,33 @@ def test_expanded_formal_test_carries_forward_the_frozen_objects(tmp_path, monke
     assert [row["id"] for row in report["objects"] if row["id"] == "UPB_00000020"] == ["UPB_00000020"]
     assert {row["id"] for row in report["objects"]} == {"UPB_00000020", "UPB_00000021"}
     assert report["carried_forward_object_count"] == 1
+
+
+def test_selection_can_freeze_the_entire_eligible_pool_when_underfilled(tmp_path, monkeypatch):
+    root = tmp_path / "source"
+    revision = "g" * 40
+    root.mkdir()
+    (root / "download-manifest.json").write_text(json.dumps({
+        "dataset": "breezexian/UniPhys-Bench-Part2", "revision": revision,
+        "license": "CC-BY-NC-4.0",
+    }))
+    for index in range(20):
+        _write_asset(root, f"UPB_{index:08d}", geometry=f"dev-{index}".encode())
+    _write_asset(root, "UPB_00000020", geometry=b"new")
+    previous = tmp_path / "previous.json"
+    previous.write_text(json.dumps({"version": 1, "unit": "split_group", "groups": {
+        f"uniphys:{revision}:UPB_00000019": "test"}}))
+    trainval_splits = tmp_path / "trainval-splits.json"
+    trainval_splits.write_text(json.dumps({"version": 1, "unit": "split_group", "groups": {
+        f"uniphys:{revision}:UPB_00000018": "train"}}))
+    trainval_plan = tmp_path / "trainval.json"
+    trainval_plan.write_text(json.dumps({"dataset_revision": revision,
+                                         "objects": [{"id": "UPB_00000018"}]}))
+    monkeypatch.setattr(select_uniphys_test, "_convertible", lambda *args: (True, None))
+
+    report = select_uniphys_test.select(
+        root, previous, trainval_splits, trainval_plan, tmp_path / "test.json",
+        objects=2, seed=7, allow_underfilled=True)
+
+    assert report["requested_object_count"] == 2
+    assert report["expected_object_counts"] == {"test": 1}
