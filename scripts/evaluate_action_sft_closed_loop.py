@@ -83,7 +83,8 @@ def run(args):
                   action_stage_instruction=ACTION_STAGE_INSTRUCTION,
                   action_stage_instruction_sha256=hashlib.sha256(ACTION_STAGE_INSTRUCTION.encode()).hexdigest(),
                   raw_access="Mixed shards are decoded; only Validation IDs are retained or evaluated",
-                  final_diagnoser="base Qwen without adapter, greedy", score_access="after all policy inference",
+                  final_diagnoser=("diagnosis adapter, greedy" if args.diagnosis_adapter
+                                  else "base Qwen without adapter, greedy"),
                   source_sha256={str(path): hashlib.sha256(path.read_bytes()).hexdigest()
                                  for path in [input_path, *provenance, args.config, cfg.views_path,
                                               Path(cfg.asset_source["manifest"]), oracle_manifest,
@@ -95,7 +96,8 @@ def run(args):
     if args.engineering_smoke and any(mode not in ("fixed", "random") for mode in args.modes):
         raise ValueError("Engineering smoke only accepts fixed/random modes")
     model = (EngineeringModel() if args.engineering_smoke else RemoteModel(args.model_endpoint)
-             if args.model_endpoint else SharedModel(args.model, args.adapter, args.action_tokens, args.final_tokens))
+             if args.model_endpoint else SharedModel(args.model, args.adapter, args.action_tokens,
+                                                     args.final_tokens, args.diagnosis_adapter))
     episodes = []
     with ObservationSession(cfg.render, load_views(cfg.views_path)) as session:
         browser = session.browser_version()
@@ -213,6 +215,8 @@ def main():
         parser.add_argument(f"--{name}", type=Path, required=True)
     parser.add_argument("--oracle", type=Path, required=True,
                         help="Original supervision root: reference PNGs; privileged annotations only post-inference")
+    parser.add_argument("--diagnosis-adapter", type=Path,
+                        help="Optional LoRA enabled only for the final diagnosis readout")
     parser.add_argument("--config", type=Path, default=Path("configs/generate_replicacad.yaml"))
     parser.add_argument("--browser-site-packages", type=Path)
     parser.add_argument("--budgets", type=int, nargs="+", default=[2, 4, 6])

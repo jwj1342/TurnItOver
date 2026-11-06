@@ -50,19 +50,27 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model", type=Path, required=True)
     parser.add_argument("--adapter", type=Path, help="Omit for the frozen base-only baseline server")
+    parser.add_argument("--diagnosis-adapter", type=Path,
+                        help="Optional LoRA enabled only for final diagnosis requests")
     parser.add_argument("--port", type=int, default=8893)
     parser.add_argument("--action-tokens", type=int, default=128)
     parser.add_argument("--final-tokens", type=int, default=1024)
     args = parser.parse_args()
-    model = SharedModel(args.model, args.adapter, args.action_tokens, args.final_tokens)
+    model = SharedModel(args.model, args.adapter, args.action_tokens, args.final_tokens,
+                        args.diagnosis_adapter)
     import torch
     import transformers
     digest = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
     print(json.dumps(dict(status="ready", host="127.0.0.1", port=args.port,
         model=str(args.model.resolve()), adapter=str(args.adapter.resolve()) if args.adapter else None,
         adapter_sha256=digest(args.adapter / "adapter_model.safetensors") if args.adapter else None,
+        diagnosis_adapter=(str(args.diagnosis_adapter.resolve()) if args.diagnosis_adapter else None),
+        diagnosis_adapter_sha256=(digest(args.diagnosis_adapter / "adapter_model.safetensors")
+                                  if args.diagnosis_adapter else None),
         base_config_sha256=digest(args.model / "config.json"),
         action_tokens=args.action_tokens, final_tokens=args.final_tokens,
         gpu=torch.cuda.get_device_name(0), torch=torch.__version__, transformers=transformers.__version__,
-        adapter_loaded=model.has_adapter, final_diagnoser="frozen_base_adapter_disabled")), flush=True)
+        adapter_loaded=model.has_adapter, diagnosis_adapter_loaded=model.has_diagnosis_adapter,
+        final_diagnoser=("diagnosis_adapter" if model.has_diagnosis_adapter
+                         else "frozen_base_adapter_disabled"))), flush=True)
     serve(model, args.port)

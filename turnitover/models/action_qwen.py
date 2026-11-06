@@ -8,8 +8,8 @@ from turnitover.models.client import ModelResult, ModelError
 
 
 class SharedModel:
-    """One loaded model, with the action adapter disabled for every final diagnosis."""
-    def __init__(self, model_path, adapter, action_tokens, final_tokens):
+    """One base model with independently selectable action and diagnosis adapters."""
+    def __init__(self, model_path, adapter, action_tokens, final_tokens, diagnosis_adapter=None):
         import torch
         from peft import PeftModel
         from transformers import AutoProcessor, Qwen3VLForConditionalGeneration
@@ -19,8 +19,17 @@ class SharedModel:
         self.local = LocalQwen(model_path)
         self.local.processor = AutoProcessor.from_pretrained(model_path, local_files_only=True)
         self.has_adapter = adapter is not None
-        self.local.model = (PeftModel.from_pretrained(base, adapter, local_files_only=True)
-                            if self.has_adapter else base).eval()
+        self.has_diagnosis_adapter = diagnosis_adapter is not None
+        if adapter is not None:
+            model = PeftModel.from_pretrained(base, adapter, adapter_name="action", local_files_only=True)
+        elif diagnosis_adapter is not None:
+            model = PeftModel.from_pretrained(base, diagnosis_adapter, adapter_name="diagnosis",
+                                              local_files_only=True)
+        else:
+            model = base
+        if adapter is not None and diagnosis_adapter is not None:
+            model.load_adapter(diagnosis_adapter, adapter_name="diagnosis", local_files_only=True)
+        self.local.model = model.eval()
         self.action_tokens, self.final_tokens = action_tokens, final_tokens
 
     def call(self, enabled, final=False):
@@ -28,7 +37,17 @@ class SharedModel:
             if enabled and not self.has_adapter:
                 raise ValueError("Action SFT requested without an adapter")
             self.local.max_tokens = self.final_tokens if final else self.action_tokens
-            with nullcontext() if enabled or not self.has_adapter else self.local.model.disable_adapter():
+            if final and self.has_diagnosis_adapter:
+                self.local.model.set_adapter("diagnosis")
+                context = nullcontext()
+            elif enabled:
+                self.local.model.set_adapter("action")
+                context = nullcontext()
+            elif self.has_adapter or self.has_diagnosis_adapter:
+                context = self.local.model.disable_adapter()
+            else:
+                context = nullcontext()
+            with context:
                 return self.local(prompt, images)
         return generate
 
