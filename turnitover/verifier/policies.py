@@ -36,8 +36,11 @@ def action_plan(context: Context) -> list[dict]:
 
 class VisionPolicy:
     def __init__(self, call: Callable[[str, list[Path]], ModelResult], output: Path,
-                 references: list[Path], mode: str = "active", seed: int = 0):
+                 references: list[Path], mode: str = "active", seed: int = 0,
+                 final_call: Callable[[str, list[Path]], ModelResult] | None = None,
+                 action_only: bool = False):
         self.call, self.output, self.references, self.mode = call, output, references, mode
+        self.final_call, self.action_only = final_call, action_only
         self.rng = np.random.default_rng(seed)
         self.calls: list[dict] = []
         self._plan = None
@@ -61,6 +64,8 @@ class VisionPolicy:
                 "history": [to_dict(o) for o in history]}
         final_only = remaining == 0 or self.mode != "active"
         protocol = resources.files("turnitover.verifier").joinpath("final_prompt.txt" if final_only else "prompt.txt").read_text()
+        if self.action_only and not final_only:
+            protocol += "\nAcquisition-only stage: return exactly one JSON object with only the action key. Do not return a verdict."
         prompt = protocol + "\nObserved task data:\n" + json.dumps(data, ensure_ascii=False)
         if validation_feedback:
             prompt += "\n\nValidation feedback from your previous response:\n" + validation_feedback
@@ -73,7 +78,7 @@ class VisionPolicy:
         record = {"path": str(call_dir.relative_to(self.output)), "status": "started"}
         self.calls.append(record)
         try:
-            response = self.call(prompt, images)
+            response = (self.final_call if final_only and self.final_call else self.call)(prompt, images)
             (call_dir / "response.txt").write_text(response.text)
             record.update({k: v for k, v in dataclasses.asdict(response).items() if k != "text"})
             if not is_normal_finish_reason(response.finish_reason):
@@ -81,6 +86,8 @@ class VisionPolicy:
             parsed = parse_json(response.text)
             if not isinstance(parsed, dict):
                 raise DecisionError("Judge decision must be a JSON object")
+            if self.action_only and not final_only and set(parsed) != {"action"}:
+                raise DecisionError("Action-only acquisition requires exactly one action")
             if self.mode != "active" and "verdict" not in parsed:
                 raise DecisionError("Fixed/random baseline must return a final verdict")
             record["status"] = "received"

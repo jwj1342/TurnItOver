@@ -34,7 +34,7 @@ class VerifyConfig:
     def validate(self):
         if type(self.budget) is not int or not 0 <= self.budget <= 64:
             raise ValueError("Verifier budget must be an integer in [0,64]")
-        if self.mode not in {"active", "fixed", "random", "runtime"}:
+        if self.mode not in {"active", "action_sft", "fixed", "random", "runtime"}:
             raise ValueError("Unknown verifier policy")
         if not set(self.action_types) <= {"request_view", "actuate_joint", "query_runtime"}:
             raise ValueError("Invalid action allowlist")
@@ -47,10 +47,13 @@ class VerifyConfig:
 def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tuple[ViewDef, ...],
            cfg: VerifyConfig, *, task: str = "Verify this articulated object.", references: tuple[Path, ...] = (),
            model: ModelConfig | None = None, local_model: Path | None = None,
-           reference_program: ObjectProgram | None = None, model_call=None) -> dict:
+           reference_program: ObjectProgram | None = None, model_call=None,
+           action_adapter: Path | None = None, diagnosis_adapter: Path | None = None) -> dict:
     cfg.validate()
     if not views or render.width <= 0 or render.height <= 0:
         raise ValueError("Views and positive render dimensions are required")
+    if cfg.mode == "action_sft" and (local_model is None or action_adapter is None):
+        raise ValueError("action_sft requires --local-model and --action-adapter")
     if cfg.mode != "runtime" and not (model_call or local_model):
         if model is None:
             raise ValueError("Model configuration or local weights are required")
@@ -85,13 +88,20 @@ def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tu
     if cfg.mode == "runtime":
         policy = RuntimePolicy()
     else:
-        if local_model:
+        if cfg.mode == "action_sft":
+            from turnitover.models.staged_qwen import StagedQwen
+            staged = StagedQwen(local_model, action_adapter, diagnosis_adapter)
+            metadata["model"]["adapters"] = staged.provenance
+            policy = VisionPolicy(staged.action_call, output, copied, "active",
+                                  final_call=staged.final_call, action_only=True)
+        elif local_model:
             from turnitover.models.local_qwen import LocalQwen
 
             call = LocalQwen(local_model)
+            policy = VisionPolicy(call, output, copied, cfg.mode, cfg.seed)
         else:
             call = model_call or (lambda prompt, images: complete(model, prompt, images))
-        policy = VisionPolicy(call, output, copied, cfg.mode, cfg.seed)
+            policy = VisionPolicy(call, output, copied, cfg.mode, cfg.seed)
     trajectory_path = output / "trajectory.jsonl"
     with trajectory_path.open("w") as trace:
         def save_observation(obs):

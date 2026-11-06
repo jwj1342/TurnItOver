@@ -180,6 +180,8 @@ def run(
     max_triangles: int = 1_000_000,
     max_draw_calls: int = 1_024,
     local_model: Path | None = None,
+    action_adapter: Path | None = None,
+    diagnosis_adapter: Path | None = None,
     verify_case: Callable = verify,
     score: Callable = score_verifier,
 ) -> dict:
@@ -240,6 +242,7 @@ def run(
                     case["program"], case_output, render, views, config,
                     task=case["task"], references=case["references"], model=model,
                     local_model=local_model, reference_program=case["reference_program"],
+                    action_adapter=action_adapter, diagnosis_adapter=diagnosis_adapter,
                 )
                 if (result.get("schema_version") != VERIFIER_SCHEMA_VERSION
                         or result.get("program_sha") != case["program"].sha
@@ -280,7 +283,7 @@ def main() -> None:
     parser.add_argument("--out", type=Path, default=Path("output/uniphys-verifier-test"))
     parser.add_argument("--env-file", type=Path, default=Path(".env"))
     parser.add_argument("--split", choices=SPLITS, default="test")
-    parser.add_argument("--policy", choices=("active", "fixed", "random", "runtime"), default="active")
+    parser.add_argument("--policy", choices=("active", "action_sft", "fixed", "random", "runtime"), default="active")
     parser.add_argument("--budget", type=int, default=8)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--size", type=int, default=384)
@@ -290,6 +293,10 @@ def main() -> None:
     parser.add_argument("--max-triangles", type=int, default=1_000_000)
     parser.add_argument("--max-draw-calls", type=int, default=1_024)
     parser.add_argument("--local-model", type=Path)
+    parser.add_argument("--action-adapter", type=Path,
+                        help="Action LoRA required by --policy action_sft")
+    parser.add_argument("--diagnosis-adapter", type=Path,
+                        help="Optional final-readout LoRA; omit for Action + Base")
     args = parser.parse_args()
     report = run(
         args.benchmark.resolve(), args.out.resolve(), args.env_file.resolve(), split=args.split,
@@ -298,6 +305,8 @@ def main() -> None:
         action_types=tuple(args.actions), max_triangles=args.max_triangles,
         max_draw_calls=args.max_draw_calls,
         local_model=args.local_model.resolve() if args.local_model else None,
+        action_adapter=args.action_adapter.resolve() if args.action_adapter else None,
+        diagnosis_adapter=args.diagnosis_adapter.resolve() if args.diagnosis_adapter else None,
     )
     print(json.dumps({"status": report["status"], **report["totals"],
                       "manifest": str(args.out.resolve() / "batch-manifest.json")}))

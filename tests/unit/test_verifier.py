@@ -259,6 +259,23 @@ def test_fixed_baseline_uses_one_final_model_call(tmp_path, context):
     assert len(calls) == 1 and result.spent == 2
 
 
+def test_staged_policy_uses_action_call_before_separate_final_call(tmp_path, context):
+    action_calls, final_calls = [], []
+    def action(prompt, images):
+        action_calls.append(prompt)
+        return ModelResult(json.dumps({"action": {"type": "request_view", "view_id": "front"}}),
+                           "action", {}, "completed", 1)
+    def final_call(prompt, images):
+        final_calls.append(prompt)
+        return ModelResult(json.dumps(final("uncertain")), "diagnosis", {}, "completed", 1)
+    policy = VisionPolicy(action, tmp_path, [], "active", final_call=final_call, action_only=True)
+    result = run_verification(Session(), policy, context, 1, lambda i, p: f"{i}.png")
+    assert result.termination == "budget_exhausted"
+    assert len(action_calls) == len(final_calls) == 1
+    assert "Acquisition-only stage" in action_calls[0]
+    assert "Acquisition-only stage" not in final_calls[0]
+
+
 def test_random_plan_is_seeded(tmp_path, context):
     a = VisionPolicy(None, tmp_path, [], "random", 11)
     b = VisionPolicy(None, tmp_path, [], "random", 11)
