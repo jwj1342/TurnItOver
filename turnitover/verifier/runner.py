@@ -16,7 +16,7 @@ from turnitover.render.session import CompileError, HarnessError, ObservationSes
 from turnitover.render.views import ViewDef
 from turnitover.telemetry import git_state, now_iso
 from turnitover.verifier.contracts import Context, VERIFIER_SCHEMA_VERSION, uncertain
-from turnitover.verifier.loop import Episode, run_verification
+from turnitover.verifier.loop import Episode, complete_final_readout, run_verification
 from turnitover.verifier.policies import RuntimePolicy, VisionPolicy
 from turnitover.verifier.report import write_report
 
@@ -136,11 +136,16 @@ def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tu
             write_json_atomic(output / "result.json", metadata)
             write_report(output, metadata, [])
             raise
-    metadata.update(status="complete" if episode.termination in {"judge_finished", "budget_exhausted"} else "error",
+    final_readout = {"supplemental": False, "status": "not_applicable", "calls": 0}
+    if cfg.mode == "action_sft":
+        episode, final_readout = complete_final_readout(policy, context, episode)
+    inference_complete = (episode.termination in {"judge_finished", "budget_exhausted"}
+                          or final_readout.get("status") == "complete")
+    metadata.update(status="complete" if inference_complete else "error",
                     termination=episode.termination, verdict=dataclasses.asdict(episode.verdict),
                     spent=episode.spent, error_type=episode.error_type,
                     attempted_action=episode.attempted_action,
-                    error_message=episode.error_message,
+                    error_message=episode.error_message, final_readout=final_readout,
                     trajectory=[to_dict(o) for o in episode.trajectory], model_calls=list(policy.calls), finished_at=now_iso())
     # Persist the judge's result before any privileged evaluation happens.
     write_json_atomic(output / "result.json", metadata)

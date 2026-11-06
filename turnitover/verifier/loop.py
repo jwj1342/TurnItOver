@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import json
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Callable, Protocol, Sequence
 
 from turnitover.core.actions import Observation, action_cost
@@ -73,6 +73,33 @@ def run_verification(session: SessionLike, policy: VerificationPolicy, context: 
         history.append(obs)
         observation_sink(obs)
     raise AssertionError("Verification loop did not terminate")
+
+
+def complete_final_readout(policy: VerificationPolicy, context: Context, episode: Episode) -> tuple[Episode, dict]:
+    """Diagnose an acquired prefix after acquisition ended without a verdict."""
+    if episode.termination in {"budget_exhausted", "judge_finished"}:
+        return episode, {"supplemental": False, "status": "already_complete", "calls": 0}
+    feedback = None
+    for attempt in range(MAX_DECISION_ATTEMPTS):
+        raw = None
+        try:
+            raw = policy.decide(context, episode.trajectory, 0, feedback)
+            verdict = parse_decision(raw, context, {o.step for o in episode.trajectory}, final_only=True)
+            return replace(episode, verdict=verdict), {
+                "supplemental": True, "status": "complete", "calls": attempt + 1,
+                "acquisition_termination": episode.termination,
+            }
+        except DecisionError as exc:
+            if attempt + 1 < MAX_DECISION_ATTEMPTS:
+                feedback = _validation_feedback(exc, raw, context, episode.trajectory, 0)
+                continue
+            error = exc
+        except ModelError as exc:
+            error = exc
+        return episode, {"supplemental": True, "status": "failed", "calls": attempt + 1,
+                         "acquisition_termination": episode.termination,
+                         "error_type": type(error).__name__, "error": str(error)}
+    raise AssertionError("Final readout did not terminate")
 
 
 def _validation_feedback(error: DecisionError, raw: dict | None, context: Context,

@@ -9,7 +9,7 @@ from turnitover.core.actions import Observation, QueryRuntime, RequestView, Runt
 from turnitover.models.client import ModelError, ModelResult
 from turnitover.render.session import HarnessError
 from turnitover.verifier.contracts import Context, DecisionError, parse_decision, parse_json
-from turnitover.verifier.loop import run_verification
+from turnitover.verifier.loop import complete_final_readout, run_verification
 from turnitover.verifier.policies import RuntimePolicy, VisionPolicy
 
 
@@ -274,6 +274,24 @@ def test_staged_policy_uses_action_call_before_separate_final_call(tmp_path, con
     assert len(action_calls) == len(final_calls) == 1
     assert "Acquisition-only stage" in action_calls[0]
     assert "Acquisition-only stage" not in final_calls[0]
+
+
+def test_staged_policy_finalizes_prefix_after_invalid_action(tmp_path, context):
+    def action(prompt, images):
+        return ModelResult(json.dumps({"action": {"view_id": "back", "__type__": "RequestView"}}),
+                           "action", {}, "completed", 1)
+    def final_call(prompt, images):
+        return ModelResult(json.dumps(final("uncertain")), "diagnosis", {}, "completed", 1)
+    policy = VisionPolicy(action, tmp_path, [], "active", final_call=final_call, action_only=True)
+    episode = run_verification(Session(), policy, context, 2, lambda i, p: f"{i}.png")
+    assert episode.termination == "invalid_decision"
+
+    completed, readout = complete_final_readout(policy, context, episode)
+
+    assert completed.verdict.status == "uncertain"
+    assert completed.termination == "invalid_decision"
+    assert readout == {"supplemental": True, "status": "complete", "calls": 1,
+                       "acquisition_termination": "invalid_decision"}
 
 
 def test_random_plan_is_seeded(tmp_path, context):
