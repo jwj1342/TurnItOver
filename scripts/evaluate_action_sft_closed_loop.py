@@ -49,6 +49,18 @@ def read_jsonl(path):
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 
 
+def adapter_provenance(path):
+    """Record the exact local adapter bytes used by a direct closed-loop run."""
+    if path is None:
+        return None
+    config = path / "adapter_config.json"
+    weights = sorted(path.glob("adapter_model.*"))
+    if not config.is_file() or len(weights) != 1:
+        raise ValueError(f"Expected one adapter config and weight under {path}")
+    return {"path": str(path), "config_sha256": hashlib.sha256(config.read_bytes()).hexdigest(),
+            "weight": weights[0].name, "weight_sha256": hashlib.sha256(weights[0].read_bytes()).hexdigest()}
+
+
 def run(args):
     if args.out.exists():
         raise ValueError(f"Output must not exist: {args.out}")
@@ -85,6 +97,8 @@ def run(args):
                   raw_access="Mixed shards are decoded; only Validation IDs are retained or evaluated",
                   final_diagnoser=("diagnosis adapter, greedy" if args.diagnosis_adapter
                                   else "base Qwen without adapter, greedy"),
+                  action_adapter=adapter_provenance(args.adapter),
+                  diagnosis_adapter=adapter_provenance(args.diagnosis_adapter),
                   source_sha256={str(path): hashlib.sha256(path.read_bytes()).hexdigest()
                                  for path in [input_path, *provenance, args.config, cfg.views_path,
                                               Path(cfg.asset_source["manifest"]), oracle_manifest,

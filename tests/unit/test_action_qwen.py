@@ -1,8 +1,10 @@
 from contextlib import contextmanager
+import hashlib
 import sys
 from types import SimpleNamespace
 
 from turnitover.models import action_qwen
+from scripts.evaluate_action_sft_closed_loop import adapter_provenance
 
 
 class FakeBase:
@@ -64,3 +66,15 @@ def test_shared_model_separates_action_diagnosis_and_base(monkeypatch):
     assert model.call(False, final=True)("diagnosis", []) == ("diagnosis", False, 31)
     assert model.call(False)("base", []) == ("diagnosis", True, 17)
     assert peft_model.loaded == [("diagnosis", "diagnosis", True)]
+
+
+def test_adapter_provenance_requires_exact_config_and_weight(tmp_path):
+    config = tmp_path / "adapter_config.json"
+    weight = tmp_path / "adapter_model.safetensors"
+    config.write_text("config")
+    weight.write_bytes(b"weight")
+
+    assert adapter_provenance(tmp_path) == {
+        "path": str(tmp_path), "config_sha256": hashlib.sha256(b"config").hexdigest(),
+        "weight": "adapter_model.safetensors", "weight_sha256": hashlib.sha256(b"weight").hexdigest(),
+    }
