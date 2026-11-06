@@ -6,7 +6,7 @@ import logging
 from dataclasses import dataclass, replace
 from typing import Callable, Protocol, Sequence
 
-from turnitover.core.actions import Observation, action_cost
+from turnitover.core.actions import Observation, action_cost, action_key
 from turnitover.core.serde import to_dict
 from turnitover.models.client import ModelError
 from turnitover.policy.loop import ImageSink, SessionLike, execute_observation
@@ -30,6 +30,7 @@ class Episode:
     error_type: str | None = None
     attempted_action: dict | None = None
     error_message: str | None = None
+    action_decisions: tuple[dict, ...] = ()
 
 
 def run_verification(session: SessionLike, policy: VerificationPolicy, context: Context, budget: int,
@@ -38,6 +39,7 @@ def run_verification(session: SessionLike, policy: VerificationPolicy, context: 
         raise ValueError("Observation budget must be a nonnegative integer")
     history: list[Observation] = []
     spent = 0
+    action_decisions: list[dict] = []
     # At most K observations + one final decision. Failed actions also spend their attempted cost.
     for _ in range(budget + 1):
         remaining = budget - spent
@@ -47,17 +49,26 @@ def run_verification(session: SessionLike, policy: VerificationPolicy, context: 
             try:
                 raw = policy.decide(context, tuple(history), remaining, validation_feedback)
                 decision = parse_decision(raw, context, {o.step for o in history}, final_only=remaining == 0)
+                if not isinstance(decision, Verdict):
+                    key = action_key(decision)
+                    action_decisions.append({"legal": True, "action_key": key,
+                                             "repeated": any(item.get("action_key") == key
+                                                             for item in action_decisions)})
                 break
             except DecisionError as exc:
+                if isinstance(raw, dict) and "action" in raw:
+                    action_decisions.append({"legal": False, "error": str(exc)})
                 if attempt == MAX_DECISION_ATTEMPTS - 1:
                     return Episode(uncertain("Judge returned an invalid decision."), "invalid_decision",
-                                   tuple(history), spent, "DecisionError", error_message=str(exc))
+                                   tuple(history), spent, "DecisionError", error_message=str(exc),
+                                   action_decisions=tuple(action_decisions))
                 validation_feedback = _validation_feedback(exc, raw, context, history, remaining)
             except ModelError:
                 return Episode(uncertain("Judge API call failed or returned an incomplete response."), "model_error",
-                               tuple(history), spent, "ModelError")
+                               tuple(history), spent, "ModelError", action_decisions=tuple(action_decisions))
         if isinstance(decision, Verdict):
-            return Episode(decision, "budget_exhausted" if remaining == 0 else "judge_finished", tuple(history), spent)
+            return Episode(decision, "budget_exhausted" if remaining == 0 else "judge_finished", tuple(history), spent,
+                           action_decisions=tuple(action_decisions))
         spent += action_cost(decision)
         log.info("verify.observe step=%s action=%s spent=%s/%s", len(history), type(decision).__name__, spent, budget)
         # Browser failures are distinguished from invalid judgments by the outer runner.
@@ -69,7 +80,8 @@ def run_verification(session: SessionLike, policy: VerificationPolicy, context: 
             if not isinstance(exc, HarnessError):
                 raise
             return Episode(uncertain("Candidate failed while executing an observation."), "observation_error",
-                           tuple(history), spent, type(exc).__name__, to_dict(decision))
+                           tuple(history), spent, type(exc).__name__, to_dict(decision),
+                           action_decisions=tuple(action_decisions))
         history.append(obs)
         observation_sink(obs)
     raise AssertionError("Verification loop did not terminate")

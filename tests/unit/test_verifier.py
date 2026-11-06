@@ -85,6 +85,21 @@ def test_invalid_actions_do_not_reach_browser(context, action):
     session = Session()
     result = run_verification(session, Policy([{"action": action}] * 3), context, 1, lambda *a: "x")
     assert not session.actions and result.termination == "invalid_decision"
+    assert len(result.action_decisions) == 3
+    assert all(not item["legal"] for item in result.action_decisions)
+
+
+def test_action_decisions_record_legal_and_repeated_actions(context):
+    policy = Policy([
+        {"action": {"type": "request_view", "view_id": "front"}},
+        {"action": {"type": "request_view", "view_id": "front"}},
+        final("uncertain"),
+    ])
+    result = run_verification(Session(), policy, context, 2, lambda *args: "image.png")
+    assert result.action_decisions == (
+        {"legal": True, "action_key": "view:front", "repeated": False},
+        {"legal": True, "action_key": "view:front", "repeated": True},
+    )
 
 
 def test_action_ablation_is_enforced(context):

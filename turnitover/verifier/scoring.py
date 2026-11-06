@@ -21,6 +21,7 @@ def score_verifier(gold_path: Path, results_root: Path, output_path: Path) -> di
     classes: dict[str, Counter] = {}
     rows = []
     token_totals = Counter()
+    action_totals = Counter()
     latency_ms = 0.0
     observations = budget_spent = 0
     token_cases = latency_cases = 0
@@ -101,6 +102,19 @@ def score_verifier(gold_path: Path, results_root: Path, output_path: Path) -> di
         case_spent = result.get("spent", 0) if result else 0
         observations += case_observations if type(case_observations) is int else 0
         budget_spent += case_spent if type(case_spent) is int else 0
+        decisions = result.get("action_decisions", []) if result else []
+        if not isinstance(decisions, list):
+            decisions = []
+        legal_actions = repeated_actions = invalid_actions = 0
+        for decision in decisions:
+            if not isinstance(decision, dict) or type(decision.get("legal")) is not bool:
+                continue
+            if decision["legal"]:
+                legal_actions += 1
+                repeated_actions += decision.get("repeated") is True
+            else:
+                invalid_actions += 1
+        action_totals.update(legal=legal_actions, repeated=repeated_actions, invalid=invalid_actions)
         rows.append({"id": case_id, "outcome": outcome,
                      "expected": _json_signatures(expected), "predicted": _json_signatures(predicted),
                      "detection_correct": ((is_defect and outcome == "fail") or
@@ -108,7 +122,9 @@ def score_verifier(gold_path: Path, results_root: Path, output_path: Path) -> di
                      "exact_match": exact_match, "error": result_error,
                      "code_correct": code_correct,
                      "observations": case_observations, "budget_spent": case_spent,
-                     "tokens": usage, "inference_time_ms": case_latency})
+                     "tokens": usage, "inference_time_ms": case_latency,
+                     "legal_actions": legal_actions, "invalid_actions": invalid_actions,
+                     "repeated_actions": repeated_actions})
 
     n, n_defect, n_clean = counts["n"], counts["defect"], counts["clean"]
     per_defect = {}
@@ -134,6 +150,12 @@ def score_verifier(gold_path: Path, results_root: Path, output_path: Path) -> di
                    "reported_case_rate": token_cases / n},
         "inference_time_ms": {"total": latency_ms, "average": latency_ms / n,
                               "reported_case_rate": latency_cases / n},
+        "action_decisions": {
+            "legal": action_totals["legal"], "invalid": action_totals["invalid"],
+            "repeated": action_totals["repeated"],
+            "legal_rate": _ratio(action_totals["legal"], action_totals["legal"] + action_totals["invalid"]),
+            "repeated_legal_rate": _ratio(action_totals["repeated"], action_totals["legal"]),
+        },
         "per_defect": per_defect, "per_case": rows,
     }
     output_path.parent.mkdir(parents=True, exist_ok=True)

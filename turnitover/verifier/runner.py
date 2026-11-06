@@ -145,6 +145,7 @@ def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tu
                     termination=episode.termination, verdict=dataclasses.asdict(episode.verdict),
                     spent=episode.spent, error_type=episode.error_type,
                     attempted_action=episode.attempted_action,
+                    action_decisions=list(episode.action_decisions),
                     error_message=episode.error_message, final_readout=final_readout,
                     trajectory=[to_dict(o) for o in episode.trajectory], model_calls=list(policy.calls), finished_at=now_iso())
     # Persist the judge's result before any privileged evaluation happens.

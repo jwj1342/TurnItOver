@@ -74,6 +74,27 @@ def test_scores_detection_exact_joint_cost_and_latency(tmp_path):
     assert json.loads((tmp_path / "metrics.json").read_text())["status"] == "complete"
 
 
+def test_scores_action_legality_and_repetition(tmp_path):
+    gold = tmp_path / "gold.jsonl"
+    _gold(gold, [{"id": "case", "program_sha": "sha", "target": {"status": "pass", "findings": []}}])
+    _result(tmp_path / "results", "case", "sha", "pass", [])
+    result_path = tmp_path / "results/case/result.json"
+    result = json.loads(result_path.read_text())
+    result["action_decisions"] = [
+        {"legal": True, "action_key": "view:front", "repeated": False},
+        {"legal": True, "action_key": "view:front", "repeated": True},
+        {"legal": False, "error": "unknown view"},
+    ]
+    result_path.write_text(json.dumps(result))
+
+    report = score_verifier(gold, tmp_path / "results", tmp_path / "metrics.json")
+
+    assert report["action_decisions"] == {
+        "legal": 2, "invalid": 1, "repeated": 1,
+        "legal_rate": pytest.approx(2 / 3), "repeated_legal_rate": .5,
+    }
+
+
 def test_missing_result_is_counted_as_error_not_dropped(tmp_path):
     gold = tmp_path / "gold.jsonl"
     _gold(gold, [{"id": "missing", "program_sha": "sha",
