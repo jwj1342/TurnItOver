@@ -159,3 +159,17 @@ def test_preserves_completed_case_when_a_later_case_fails(tmp_path):
     assert manifest["status"] == "failed"
     assert manifest["tasks"][0]["status"] == "complete"
     assert manifest["tasks"][1]["status"] == "runner_error"
+
+
+def test_exact_case_smoke_is_not_scored_as_a_full_benchmark(tmp_path):
+    benchmark = _benchmark(tmp_path)
+    output = tmp_path / "smoke"
+
+    report = run_uniphys_verifier_batch.run(
+        benchmark, output, tmp_path / ".env", policy="runtime",
+        case_ids=("UPB_00000000-axis",), verify_case=_complete_verify, score=_score)
+
+    assert report["totals"] == {"planned": 1, "completed": 1, "errors": 0}
+    assert report["score_eligible"] is False
+    assert report["metric_status"] == "not_scored_partial_smoke"
+    assert not (output / "metrics.json").exists()

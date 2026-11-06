@@ -182,12 +182,20 @@ def run(
     local_model: Path | None = None,
     action_adapter: Path | None = None,
     diagnosis_adapter: Path | None = None,
+    case_ids: tuple[str, ...] | None = None,
     verify_case: Callable = verify,
     score: Callable = score_verifier,
 ) -> dict:
     if output.exists() and any(output.iterdir()):
         raise ValueError(f"Batch output directory is not empty: {output}")
     benchmark_manifest, cases, gold_path = _load_benchmark(benchmark, split)
+    if case_ids:
+        requested = set(case_ids)
+        available = {case["id"] for case in cases}
+        unknown = requested - available
+        if unknown:
+            raise ValueError(f"Unknown frozen case IDs: {sorted(unknown)}")
+        cases = [case for case in cases if case["id"] in requested]
     config = VerifyConfig(budget=budget, mode=policy, seed=seed, action_types=action_types,
                           max_triangles=max_triangles, max_draw_calls=max_draw_calls)
     config.validate()
@@ -217,6 +225,7 @@ def run(
             "views": str(views_path.resolve()), "action_types": list(action_types),
             "max_triangles": max_triangles, "max_draw_calls": max_draw_calls,
         },
+        "score_eligible": not bool(case_ids),
         "tasks": [{
             "id": case["id"], "status": "pending", "split": split,
             "split_group": case["split_group"], "program_sha": case["program"].sha,
@@ -260,10 +269,13 @@ def run(
                             error_type=type(exc).__name__, error=str(exc))
                 save()
                 raise
-        metrics_path = output / "metrics.json"
-        metrics = score(gold_path, output, metrics_path)
-        manifest.update(status="complete", metrics=str(metrics_path),
-                        metric_status=metrics.get("status"))
+        if case_ids:
+            manifest.update(status="complete", metric_status="not_scored_partial_smoke")
+        else:
+            metrics_path = output / "metrics.json"
+            metrics = score(gold_path, output, metrics_path)
+            manifest.update(status="complete", metrics=str(metrics_path),
+                            metric_status=metrics.get("status"))
     except KeyboardInterrupt:
         manifest["status"] = "interrupted"
         raise
@@ -297,6 +309,8 @@ def main() -> None:
                         help="Action LoRA required by --policy action_sft")
     parser.add_argument("--diagnosis-adapter", type=Path,
                         help="Optional final-readout LoRA; omit for Action + Base")
+    parser.add_argument("--case-id", action="append",
+                        help="Run one or more exact frozen case IDs as an unscored engineering smoke")
     args = parser.parse_args()
     report = run(
         args.benchmark.resolve(), args.out.resolve(), args.env_file.resolve(), split=args.split,
@@ -307,6 +321,7 @@ def main() -> None:
         local_model=args.local_model.resolve() if args.local_model else None,
         action_adapter=args.action_adapter.resolve() if args.action_adapter else None,
         diagnosis_adapter=args.diagnosis_adapter.resolve() if args.diagnosis_adapter else None,
+        case_ids=tuple(args.case_id) if args.case_id else None,
     )
     print(json.dumps({"status": report["status"], **report["totals"],
                       "manifest": str(args.out.resolve() / "batch-manifest.json")}))
