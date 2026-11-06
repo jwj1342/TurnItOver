@@ -1,0 +1,633 @@
+{
+  "version": 1,
+  "role": "formal_test",
+  "dataset": "breezexian/UniPhys-Bench-Part2",
+  "dataset_revision": "ea633b5c2b1cf9fefb24fb8c30c3703cc75ae7c4",
+  "license": "CC-BY-NC-4.0",
+  "seed": 20261106,
+  "requested_object_count": 100,
+  "expected_object_counts": {
+    "test": 82
+  },
+  "previous_test_splits_sha256": "4808211f3883c1cedb32d92af80450089db94ee6d66a68a02869a3bbe2fc04c7",
+  "trainval_splits_sha256": "3936536abe80c1008e9819a80291340c3c19a38dae0e499e79d005bd84246e33",
+  "trainval_plan_sha256": "2fc0294458cf2147e3c654250fc1864f2c1fc42418e6f0a488712f9f1e2f48e1",
+  "excluded_development_object_ids": [
+    "UPB_00000000",
+    "UPB_00000001",
+    "UPB_00000002",
+    "UPB_00000003",
+    "UPB_00000004",
+    "UPB_00000005",
+    "UPB_00000006",
+    "UPB_00000007",
+    "UPB_00000008",
+    "UPB_00000009",
+    "UPB_00000010",
+    "UPB_00000011",
+    "UPB_00000012",
+    "UPB_00000013",
+    "UPB_00000014",
+    "UPB_00000015",
+    "UPB_00000016",
+    "UPB_00000017",
+    "UPB_00000018",
+    "UPB_00000019",
+    "UPB_00000020",
+    "UPB_00000021",
+    "UPB_00000022",
+    "UPB_00000025",
+    "UPB_00000026",
+    "UPB_00000027"
+  ],
+  "excluded_train_validation_count": 120,
+  "carry_forward_plan_sha256": "3623a753cdcf5063090e91e414f335b08cce9d38e57ca63e1a7eb04e0a44eb99",
+  "carried_forward_object_count": 20,
+  "near_duplicate_policy": [
+    "source_identity",
+    "full_model_sha256",
+    "normalized_object_name"
+  ],
+  "candidates_checked": 202,
+  "rejected": {
+    "no_finite_joint": 86,
+    "near_duplicate_name_key": 119,
+    "conversion_TypeError": 21
+  },
+  "objects": [
+    {
+      "id": "UPB_00000044",
+      "category": "KitchenDining/KitchenStorage",
+      "split": "test",
+      "source_identity_sha256": "34719e2fe202d361197f51ee7e38f6047ff98db10c112a475af6723c0960a736",
+      "geometry_sha256": "b08cca03f0a8d016ca9873f474c109dbec506e4e53568ae00f6df8f340ef6714"
+    },
+    {
+      "id": "UPB_00000166",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "test",
+      "source_identity_sha256": "4eea0394b3698d7950ef7cd8b349633c31f4f9bff07e6aa4446a4448585d7fad",
+      "geometry_sha256": "27b40f7c8097f28867b8e286b8fc9789f5314c4d77389da214411e0a9224aefe"
+    },
+    {
+      "id": "UPB_00000221",
+      "category": "ArchitecturalBuilding/DoorWindowElement",
+      "split": "test",
+      "source_identity_sha256": "6398f5007b71a8e825201ef9cb3815c0dbc74b227806525df145fad2e1e53133",
+      "geometry_sha256": "00548f29b2eff405ba6746277b33d412f1b76330fd9b6b4ca07756c08233b851"
+    },
+    {
+      "id": "UPB_00000150",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "test",
+      "source_identity_sha256": "f0a6f73fff23c32410c402594271ce0dedd22868fe233b11189781d3c123b4ab",
+      "geometry_sha256": "bbac76e0099a96e196af525fc33d3d3dac9abd039e8798bbd68d9549d0d3159e"
+    },
+    {
+      "id": "UPB_00000139",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "f957470c78178867ba840d7ac25b7afd113f0da95fada13debcb65f095bfc175",
+      "geometry_sha256": "2275f68a9104e4bdbb60a78fba032bd0c1b9d9e547c97266d660a795b53936a5"
+    },
+    {
+      "id": "UPB_00000223",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "test",
+      "source_identity_sha256": "d9aae48a36a35c9b2ef369ef888de7002556dac99a9560d04c2b3c1828612a1d",
+      "geometry_sha256": "dce140aea37e3667a216f3ae47c5047086401e8337d72f6b9953723bd4838a3a"
+    },
+    {
+      "id": "UPB_00000141",
+      "category": "LightingElectrical/IndoorLighting",
+      "split": "test",
+      "source_identity_sha256": "f4f1159ba1c532e7666fc9e1d9bbca7cd5550df1bb337c7f7cac5b408f8744c4",
+      "geometry_sha256": "8faa77a5318ef0dcefbf5706cd54514e0fa760dd32293a539f598c9d0372722f"
+    },
+    {
+      "id": "UPB_00000125",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "3750031925dc87a7202b0e60709febeae597623b7ca61be1980a2bd2dec3981a",
+      "geometry_sha256": "bd54e0c73f8078230707acdf6d7500be614e948a79d5deaceb37c3879f4ec2f5"
+    },
+    {
+      "id": "UPB_00000196",
+      "category": "PublicInfrastructure/SafetySecurityEquipment",
+      "split": "test",
+      "source_identity_sha256": "2daf83faf2e2042146b81a227b74b1ba97dcfad14357237a2f96a124627afb05",
+      "geometry_sha256": "09d849ed73590f9f510042e1681842b3722594fdb0631e57dc0e5e7be2c6500b"
+    },
+    {
+      "id": "UPB_00000137",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "test",
+      "source_identity_sha256": "aa03781b3c124ebecf8ffe346a72b61e6612aea70bdc6a69da1383674f30f2b9",
+      "geometry_sha256": "0b2ffaddca1ce100eef4836f35aceac41c48024a96ec2938f06697c123f163f1"
+    },
+    {
+      "id": "UPB_00000135",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "test",
+      "source_identity_sha256": "f34b02db63239cb729f9ade8360be4c103bde0791033d191cca24ebb3287d91f",
+      "geometry_sha256": "57dc7d8d3e37cae0fde76d28ffaaf0d3922b2443f7a1f460e34bd34598f156e5"
+    },
+    {
+      "id": "UPB_00000144",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "ff56a9fe8e9375afd14155f17c48214a5974dc4dd29dffc2af5a1779357a38f6",
+      "geometry_sha256": "40d8b67e774fe82dd619dfda97a215c0da76a9ae3b4567a5ac13c903f4b18a88"
+    },
+    {
+      "id": "UPB_00000171",
+      "category": "VehiclesMobility/VehicleComponent",
+      "split": "test",
+      "source_identity_sha256": "ec5b2ac73e859241a3871e1a5e9649e87bb9f58e7829af4c94fb8625578669cf",
+      "geometry_sha256": "bb402843af6e9fa663ca21fd64fbf3bc59d5511c337ab9f80803ab0e0d89237a"
+    },
+    {
+      "id": "UPB_00000062",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "6855aeb54b509b53aa9323093d051bc7ac997adf041eae613bb1004a8ca8bd64",
+      "geometry_sha256": "67a0460e73624021cf8b17bab6078e350e89f2d8159c258efff856b946c6984e"
+    },
+    {
+      "id": "UPB_00000109",
+      "category": "PlumbingSanitary/BathroomAccessory",
+      "split": "test",
+      "source_identity_sha256": "0c0d9aa3c95423c359ceab4752136c8aafd80cdd5e39f37be22fcec5e5d36d0f",
+      "geometry_sha256": "0f93341fd787bf4a16385acab1bf21ee29ed33bdf2a329547daded8a2988a3db"
+    },
+    {
+      "id": "UPB_00000249",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "test",
+      "source_identity_sha256": "ec26b6763409cc476342274fc357bdb57e2a46aa67d92b8c68354ba757c98933",
+      "geometry_sha256": "c71019886723088f4d2b88ca031c8991a3569988d7fcc22cf123fa1a45b1f4c4"
+    },
+    {
+      "id": "UPB_00000097",
+      "category": "LightingElectrical/IndoorLighting",
+      "split": "test",
+      "source_identity_sha256": "473a1d5439e4f2626878f7c22ac4c95afe12593e2db1fd16a28a99195b7746e5",
+      "geometry_sha256": "e559dd72fff9f826655a4ca32edc61a11ba18ed43e59f54d3be159635280747d"
+    },
+    {
+      "id": "UPB_00000231",
+      "category": "VehiclesMobility/Vehicle",
+      "split": "test",
+      "source_identity_sha256": "ccadd95bc2c9892232ea2745ade18f1050bf5be01900743405df093dd779b787",
+      "geometry_sha256": "560784fe7f96dba8f249cc10b14055c49c4beb50e07d5dc63692183973c44369"
+    },
+    {
+      "id": "UPB_00000181",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "7e90c439eb24b84b68c9b9a6479cab082381dd52eebb5c435dfd6f00ed5857d5",
+      "geometry_sha256": "e6d62811695a3211479d27ef879ba35261c8b11840b6d99e73738e22ca83aed6"
+    },
+    {
+      "id": "UPB_00000138",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "7c4859fe7909b83df1037cf5052db638216e03b0cfa68b8132b0944ba3434746",
+      "geometry_sha256": "6268fb59e61557db22ebade2ed9c12b32680357745aae5b71ef1bbc2c5e38f4d"
+    },
+    {
+      "id": "UPB_00000149",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "a6732ff6e76389388f91bb71903d5c46d0c9a6c1f3942680e0c180e35b6ea2fd",
+      "geometry_sha256": "2cb8b14cfef3035627b9aa17618ae3ae4fc83cc5275faed75399e246445f4a4d"
+    },
+    {
+      "id": "UPB_00000246",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "test",
+      "source_identity_sha256": "9a3287b3465729e885551640c89caa17f578a3d467141dfee9cc7de4e1256db7",
+      "geometry_sha256": "d3d9dce4a00648cf319309be45af50b193d312f92d4febd3063091444465a72b"
+    },
+    {
+      "id": "UPB_00000185",
+      "category": "PlumbingSanitary/BathroomAccessory",
+      "split": "test",
+      "source_identity_sha256": "5a9176d793ec07fac95b6d8ae4c162088bdb77ddcedff5b06b2e9610d646015e",
+      "geometry_sha256": "b8b25d83d77b9cee6db66175d567ceb8f8e77802fe0c5e7a42e7798474e1cb9f"
+    },
+    {
+      "id": "UPB_00000189",
+      "category": "ElectronicsDevices/CommunicationDevice",
+      "split": "test",
+      "source_identity_sha256": "8c744c9b6cda56d5803c50941c0e2cff178baef2309289ad3ff3e796c552bc16",
+      "geometry_sha256": "6fc465ae05230979b244b1e0710259c6ffec09e95006ec8c722324a7c8fc11d1"
+    },
+    {
+      "id": "UPB_00000121",
+      "category": "KitchenDining/KitchenStorage",
+      "split": "test",
+      "source_identity_sha256": "9f3203fadcd70ca8b99c119d0c59c27e7c8120308c41c7912418fa01a41c70a2",
+      "geometry_sha256": "4081d58d1929627734ec4cdc7119212a2b1778d4110528c48f2b83a2c063e6ea"
+    },
+    {
+      "id": "UPB_00000086",
+      "category": "ElectronicsDevices/AudioEquipment",
+      "split": "test",
+      "source_identity_sha256": "2c8abee6f19a5d2cfea58ca137e9d442e0a1c394fd35786eaf2ee441c57be5ad",
+      "geometry_sha256": "014613c7384814635d3e119fae2c07970bdd58f538ac5416376f80224387c356"
+    },
+    {
+      "id": "UPB_00000116",
+      "category": "ContainersStorage/WasteRecyclingContainer",
+      "split": "test",
+      "source_identity_sha256": "63702be1eaf0441eb67ece190c1fce1e9cf3e669888340801491f331672d22e2",
+      "geometry_sha256": "45d305b3dbc465c5d3c6970dc44f4c6c3e05c385c688284520f4ebd440f174bd"
+    },
+    {
+      "id": "UPB_00000111",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "test",
+      "source_identity_sha256": "f64ebc2979c1f1957a7589a50c102f25020eb5e0c6ec7e2321738e9f98a4733f",
+      "geometry_sha256": "6e335b3c68ea1f6263ec7a6bc2262558005b9eb32ee2d8487da2a427e9763012"
+    },
+    {
+      "id": "UPB_00000033",
+      "category": "Furniture/SeatingFurniture",
+      "split": "test",
+      "source_identity_sha256": "6c1a1f55157d1c947c7011b2ca4155bf61d96a8d3a1804f8bb4ea8e1bb19f722",
+      "geometry_sha256": "0e535a43cfae69edbc346403aff68c95641e1322c80b3a157d9869951780d941"
+    },
+    {
+      "id": "UPB_00000119",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "c11af8ac503fad16ca9843b3f6342d941aacf926e3e6064cdcc3a0893af9ec94",
+      "geometry_sha256": "be3cef68461e2209a01734c94bb2b33718bd5d6601a10cde73f910e3b701b33c"
+    },
+    {
+      "id": "UPB_00000225",
+      "category": "ArchitecturalBuilding/DoorWindowElement",
+      "split": "test",
+      "source_identity_sha256": "6e712241d199c85a73caffac3c29d21c0ed1cfcc9486246bdbdf6060b23a358c",
+      "geometry_sha256": "b0637574aa9b92e32fd78616ade99a8b06454816dec9511411ed492ec3548ab1"
+    },
+    {
+      "id": "UPB_00000259",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "test",
+      "source_identity_sha256": "8dc502055705ff1880943371a039c70a5646bce5f6c95a9731e6dddf6ab4e96d",
+      "geometry_sha256": "33569f6ebf6fe8c3c6037d10072d74a39ad66a3b6c8b80fb93d51b0ace3cd55a"
+    },
+    {
+      "id": "UPB_00000107",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "test",
+      "source_identity_sha256": "c22137fa7d50e9a93b9e0e73647ae5677482701ea2430f3d31c4b9f202d44161",
+      "geometry_sha256": "18de00b20fbfa86023c9652172f41841c45b4d516d3d720b4e86cb35bd3f1237"
+    },
+    {
+      "id": "UPB_00000036",
+      "category": "ArchitecturalBuilding/ArchitecturalFixture",
+      "split": "test",
+      "source_identity_sha256": "98a824e3b4c7289fe5296927260b5efc82a742361c08704b32fa3f6ca1c0833c",
+      "geometry_sha256": "d1575409ce4909e4deba87d3851bb19e3f4282c8c1f02d731ac9c7f82887c85a"
+    },
+    {
+      "id": "UPB_00000222",
+      "category": "ContainersStorage/GeneralContainer",
+      "split": "test",
+      "source_identity_sha256": "f839e48b3e41035ddc03dcf9c59f3ceacffb97f484b74c513e095cb305c992e3",
+      "geometry_sha256": "4cadd8a7f919559e0fe7e4145294e527d6a847e996f2139def3243995fe9e0d2"
+    },
+    {
+      "id": "UPB_00000159",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "test",
+      "source_identity_sha256": "41bcc794398119e081cde6a678975e97f949a4f0b29e37d7be8cf908a66700a4",
+      "geometry_sha256": "42e5a7967b40d821556e2ea17c8c0de780d124060509b8d02f7aa26b0c662b78"
+    },
+    {
+      "id": "UPB_00000093",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "86a6c0740c35c7153dff452abccdc9cb110c0a5f35041ec1982057c9db21f229",
+      "geometry_sha256": "18d55e6c38de6cf89bb845a30fe67c90450537755600523f120ce87ace673bbb"
+    },
+    {
+      "id": "UPB_00000229",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "test",
+      "source_identity_sha256": "bdcd3e7698ae1af6a53f82eb720f3b7bcbbb435f6f8c849535b5340648107472",
+      "geometry_sha256": "26955309c976c23d2fda5cb3e346f69914112d9a1a2835ed05e2aaca4e01024e"
+    },
+    {
+      "id": "UPB_00000146",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "4a2dc60b6943d6f155f7ff5dc67e1f00350589e0aa9993220bf0db25a55238c9",
+      "geometry_sha256": "7931a0c7f86e8566e1c387a29dd91bb54e4ec4ded2d1da94ae1e50d4b4ba7f01"
+    },
+    {
+      "id": "UPB_00000132",
+      "category": "ContainersStorage/GeneralContainer",
+      "split": "test",
+      "source_identity_sha256": "aca6503b280687055abc47cd911cbcb3a3666fc43e0c5d3b9ce1d016c8de1ac6",
+      "geometry_sha256": "fb0de61044969b2e5b9496af9a042c390bbe18f920e266f77729b57c18d0bd4b"
+    },
+    {
+      "id": "UPB_00000154",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "950927de9fffc029a4103c0ca3fea1deac846d6bbd0e168f54ffe6d5600f143a",
+      "geometry_sha256": "0cb20441414eda9d6ccd5179027b4f53dfccb8ba9b0a849cc43f0bddcab50b65"
+    },
+    {
+      "id": "UPB_00000216",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "test",
+      "source_identity_sha256": "2261cb9f57e46441b9593edb5c50c1a793a9f6a96d03b6ee18b7cf9e18770a50",
+      "geometry_sha256": "0185b6db9ed55c0cacc310f399c4cbb2f8ff63278bd98be1a473f4bc6a7e69a4"
+    },
+    {
+      "id": "UPB_00000099",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "test",
+      "source_identity_sha256": "fa64bd1cca9ba5a83dc84d0d7293d6f3c62f2696b3ba3eae1b3762c0bacd9b9a",
+      "geometry_sha256": "bd7818876b31e9217f0edeec610e86b9512d1fd622b339ae37bd9a46b9219fbf"
+    },
+    {
+      "id": "UPB_00000082",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "b32d1a390943b5924bf7137dacec87b80b60153863287656f064b2e74bfc44a5",
+      "geometry_sha256": "4338abdd807ae994c1f96506af8a21e54b244a379ad670a33834106c2ffa9040"
+    },
+    {
+      "id": "UPB_00000059",
+      "category": "ContainersStorage/GeneralContainer",
+      "split": "test",
+      "source_identity_sha256": "19e46ddccf16cd196776ba5c2dc38c7bfbfc2efd8cadeb22416d3fd1affd73bc",
+      "geometry_sha256": "7f330e4117e2f5720cd8267d19f3e212e1fd8e3595515c747dd21f756692a9eb"
+    },
+    {
+      "id": "UPB_00000198",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "test",
+      "source_identity_sha256": "1075df2fa40117fe326adfd22eb8783ec024869ddf981410e87dc39d103b3f57",
+      "geometry_sha256": "ae480477acfc159546388bce9b66d4d90c1a51125c2bebbb1812245dc346fa32"
+    },
+    {
+      "id": "UPB_00000230",
+      "category": "PublicInfrastructure/SafetySecurityEquipment",
+      "split": "test",
+      "source_identity_sha256": "664392e985ca454015822f53498f301670a04d0ff05f170c086c2efc5f1a8bda",
+      "geometry_sha256": "fbc0fb6b54483ffb2cf2dc07aac620c07d4f0c40ccff6439130ecf052c108519"
+    },
+    {
+      "id": "UPB_00000193",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "561a64d4e8af04d26a165afddf0cd6d50f2804927a5291ebc5af3c83c8e9e275",
+      "geometry_sha256": "9b4bd2c341187c7c10ff654bdfe27356aef11c2d3b1c9833c4d6342f1241b61d"
+    },
+    {
+      "id": "UPB_00000118",
+      "category": "KitchenDining/KitchenAppliance",
+      "split": "test",
+      "source_identity_sha256": "72b1251ab05e3b61d2b0f464c83a6cb54a8d715635963f0f01b59388f354aab2",
+      "geometry_sha256": "570ce4c1545045ed65fb29faee6a0ac41759dc721c624c41d4a88ce5fec3b167"
+    },
+    {
+      "id": "UPB_00000130",
+      "category": "ToolsEquipment/ToolsEquipment_Other",
+      "split": "test",
+      "source_identity_sha256": "dacd35ef1eb1d8c4b90e5fa473fa30e317efd3807e0ac7cdd5d8519ddb065078",
+      "geometry_sha256": "ac038ec3d42777dc87d8059e6b347d337eb63d252b0297b03f801e1aa600786d"
+    },
+    {
+      "id": "UPB_00000260",
+      "category": "ElectronicsDevices/ConsumerElectronics",
+      "split": "test",
+      "source_identity_sha256": "d5eab62d478ff61c64110b31a454e569b542de8698f3bd774e2637bdca1c22bb",
+      "geometry_sha256": "654f8ce3f4c7a3373944c4840d1bef70658b6151adbf57487e9a4dfd9e4d940c"
+    },
+    {
+      "id": "UPB_00000120",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "ca47d9cbe7f2a00e3c687afd3c11baa3e071c2c99c359b934eb21f1bc7ac544e",
+      "geometry_sha256": "d5602012a4a391413cc1f9204e5a814184437343b95676ea9206832a556baa1e"
+    },
+    {
+      "id": "UPB_00000241",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "test",
+      "source_identity_sha256": "76eada6ae1652bde22ecb0539f2d03bb63f6b9febad29f26447ac5c7e9922f4f",
+      "geometry_sha256": "c9ea4981b4dc8e33e4ed57d58f382c4085882df13ba961a2e750ed0cb9e319e4"
+    },
+    {
+      "id": "UPB_00000057",
+      "category": "KitchenDining/KitchenAppliance",
+      "split": "test",
+      "source_identity_sha256": "85c96106190e787e51cd31a5ee6129e7f6f56c859f82d4b1d1db34013df5b2ef",
+      "geometry_sha256": "187c18571d51adb502f775935203072b719ba3d8ca6d378013674e0fb149f249"
+    },
+    {
+      "id": "UPB_00000240",
+      "category": "ArchitecturalBuilding/ArchitecturalFixture",
+      "split": "test",
+      "source_identity_sha256": "d1a95ba35a0d7caed7f4a7eb6916b2236c18cc32e2dd167debb59581f2d35a38",
+      "geometry_sha256": "aac559062b22ee48cd6b57a0aa1658ac0cec33bb3f0863a00d573646fb8a3f25"
+    },
+    {
+      "id": "UPB_00000213",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "test",
+      "source_identity_sha256": "f6653b9aa74c3723c426b385324a6bff642b929f8b8ab9a4567348c3fe03e70c",
+      "geometry_sha256": "bdb6e3bab7c354d60061ce988227e1af84e28b71040c9a5c05a0729b585d7d24"
+    },
+    {
+      "id": "UPB_00000256",
+      "category": "PublicInfrastructure/PublicFacilityComponent",
+      "split": "test",
+      "source_identity_sha256": "1da5d1fc5445e7eb2d5e3dd360d29e6cff00b5823d9ea08ee89a83f97abf4e29",
+      "geometry_sha256": "e62393abedffb1c4373b0e89448013f5c96749a2501b89b71d85272a2bf77bcd"
+    },
+    {
+      "id": "UPB_00000080",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "b30ea919efbd176c3750f27b6af48390dc90bd9f807bdaa282de15d33a4995b3",
+      "geometry_sha256": "6458f064c56431aa28e28fc593c2ed2ae3129e975250309a7e06b65177b8c935"
+    },
+    {
+      "id": "UPB_00000194",
+      "category": "ElectronicsDevices/AudioEquipment",
+      "split": "test",
+      "source_identity_sha256": "a3dd41dbe6d2121f52790946ee06faf3e056ebcbe698214718d9b4436ba6c313",
+      "geometry_sha256": "2d3317f757c156e344b28836922aef6f90945344d0ef649d48eb4b14229dca4f"
+    },
+    {
+      "id": "UPB_00000250",
+      "category": "ElectronicsDevices/AudioEquipment",
+      "split": "test",
+      "source_identity_sha256": "e4635501568528faf67c00ba4a8860e44282f0df2a3d9dec4b8f0277c3e66cfb",
+      "geometry_sha256": "d3bdf059183c919caaec190f68c5410537e952168ea111dfcfb2766109e59ff1"
+    },
+    {
+      "id": "UPB_00000091",
+      "category": "ContainersStorage/GeneralContainer",
+      "split": "test",
+      "source_identity_sha256": "03ad31ce62f81e47f4c3846b9b9ef6c57da4e38e23ba67198a673b0e5fb66c6d",
+      "geometry_sha256": "5fab93700352346722b4e6047d6270e1b42f6f489777762451389b30241dfd87"
+    },
+    {
+      "id": "UPB_00000032",
+      "category": "ContainersStorage/GeneralContainer",
+      "split": "test",
+      "source_identity_sha256": "657938f051f13390ec549fd93f2b1a9908377f96a2fbf3925be684bb62e9c494",
+      "geometry_sha256": "9c3101c9d8937e9952e3b1bd7ba6d2091dcf462d7677fa830d0aa3b1dd8526b6"
+    },
+    {
+      "id": "UPB_00000228",
+      "category": "ElectronicsDevices/ConsumerElectronics",
+      "split": "test",
+      "source_identity_sha256": "a5b3eac635d3d73a08d13d9e35f5e81fdb63d0972baf84dd4714e7e5913302e8",
+      "geometry_sha256": "7151c5961671d33e8fea11c52fd362780f8dd0bb5b4c51b11434ed90e26fae27"
+    },
+    {
+      "id": "UPB_00000151",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "test",
+      "source_identity_sha256": "5b45010d793be64646df73686b7db2c0c464dab5613d93050ba4b86aab9ee322",
+      "geometry_sha256": "a7f94a9a3aa771ce1f7b257f09e07c523621d496cea0c1c97063b8b3cc957905"
+    },
+    {
+      "id": "UPB_00000209",
+      "category": "ElectronicsDevices/ConsumerElectronics",
+      "split": "test",
+      "source_identity_sha256": "be94926840f4dd8381b097d1ca83fe2897fb2eac4558633d3c61c93e08da3d4d",
+      "geometry_sha256": "08c775954d3ecfbe6cc9889b44ec2d7148a92205db987ff3e4cab10e81c10ee5"
+    },
+    {
+      "id": "UPB_00000070",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "014a9dc8a77a895bf558e7aea98c0d0c2521d06b6c0c786277319a2a00d3279a",
+      "geometry_sha256": "134b77b74f175cd82befb23cb22f5e13782790cef36291ee388d361ca74f3686"
+    },
+    {
+      "id": "UPB_00000034",
+      "category": "Furniture/SeatingFurniture",
+      "split": "test",
+      "source_identity_sha256": "e71983bf748c3f8d92f6ff3348e90566dc88394d8c41798ec57ae6b80cedab31",
+      "geometry_sha256": "871732f710778c1152299e5ee6de01db6497619c1f8cbe25bdbd029a870b4d3a"
+    },
+    {
+      "id": "UPB_00000108",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "test",
+      "source_identity_sha256": "5632eeb9b400f584027eb5ea13ee67cc864a460474c5d0fc4624f602f5981dc7",
+      "geometry_sha256": "a60502ba8c94e55195341c10c29684e557c4236c3d8ff70d799ebf10c33d1eef"
+    },
+    {
+      "id": "UPB_00000079",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "test",
+      "source_identity_sha256": "d41e8da675c861fb85da4872d82a0be33cecb97cae10909941c02eeac87e1d30",
+      "geometry_sha256": "d940a48886a789b9dfc5b139f50f2de20cf56b0078e383d2c6df6c5ac3460e19"
+    },
+    {
+      "id": "UPB_00000219",
+      "category": "ElectronicsDevices/CommunicationDevice",
+      "split": "test",
+      "source_identity_sha256": "75f296d1e0f621fc9248fb1a9cb82501808cf845fa1c90e94fbcd8d7078bf144",
+      "geometry_sha256": "58e4000a825cc9c65ce40d1e6996891c0ffc1f7cadb4659cd0812df5b53ab439"
+    },
+    {
+      "id": "UPB_00000226",
+      "category": "PublicInfrastructure/SafetySecurityEquipment",
+      "split": "test",
+      "source_identity_sha256": "26d34e3f009f6e358396743c4ad4c6e6f17303b3a98fd1131fed3e3999b194ed",
+      "geometry_sha256": "f3abe6eef2b88f4110f61c7b7ff0b7d35b0b8b3930caa3f2afab0919ca10b542"
+    },
+    {
+      "id": "UPB_00000068",
+      "category": "PlumbingSanitary/PlumbingSanitary_Other",
+      "split": "test",
+      "source_identity_sha256": "f5fd958607f4f3333be9f4bcfd366472991d56cf1700860e180a1ca852c525c0",
+      "geometry_sha256": "2ee546243edc57844a69038e504a94c4de4fda17c9543d71615eb2e8f2fb4ea5"
+    },
+    {
+      "id": "UPB_00000076",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "3ba3a891d39b82bd9a8ce3b782827d2b1b891f294591c781b4f505b7ef05cd32",
+      "geometry_sha256": "4cf780e8469f53f269ca449ed1c80e103fea9a3a9467fd46906aa6135e75e2aa"
+    },
+    {
+      "id": "UPB_00000174",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "699388b13a95c15490f512e1aae32375c6e92fbf06b8bfc717f2c097438b3b76",
+      "geometry_sha256": "8a95287f186c36a39091466702052378607dede8db7e011220bc6e10ec632835"
+    },
+    {
+      "id": "UPB_00000188",
+      "category": "OtherMiscellaneous/CompositeObject",
+      "split": "test",
+      "source_identity_sha256": "d3f83fbb3e76b699dd0c07dcb2643f978e314e01b36b176350bf07e1c96abea3",
+      "geometry_sha256": "f288e8c718f693bfe5533f1eccdedffeb6fea5a3eccbf322bced49a7c8d696b0"
+    },
+    {
+      "id": "UPB_00000179",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "test",
+      "source_identity_sha256": "ba3f1f0e2c1f90df84efeeb77bf03d184c723e017daa0ea70b0ec98d3dedac2c",
+      "geometry_sha256": "88a8bbb72f588a38beae65b4e2c83660f0b3884fe9897dc02666f29d60ed8f4a"
+    },
+    {
+      "id": "UPB_00000038",
+      "category": "ArchitecturalBuilding/ArchitecturalFixture",
+      "split": "test",
+      "source_identity_sha256": "fcecdc98c0cd1d8d8b2c2731c14b960ea37e73497125262526132d77d77e1e72",
+      "geometry_sha256": "30e65e6d6c576d55510310745cb7c8a5466ad8a7a248c4028b7316d34f1f00ab"
+    },
+    {
+      "id": "UPB_00000191",
+      "category": "ContainersStorage/StorageVessel",
+      "split": "test",
+      "source_identity_sha256": "023cbff82cd28e96d9686b05c657769c214dbbbdd8d857e8ecdaf62d0a5c988f",
+      "geometry_sha256": "5d7e134e555090b484246982a505f77d266c0201ca8e1c1f4df4c0bf1f0da644"
+    },
+    {
+      "id": "UPB_00000060",
+      "category": "ToolsEquipment/MeasurementInstrument",
+      "split": "test",
+      "source_identity_sha256": "bae38a08cb9c89304040a0c907f8452f033c34f5c54a1d25dc406e0b0bdca442",
+      "geometry_sha256": "6ca185471c861d28bd08603f2b0dae648103351dbacb500f435b8ba863dd9ad1"
+    },
+    {
+      "id": "UPB_00000245",
+      "category": "ElectronicsDevices/AudioEquipment",
+      "split": "test",
+      "source_identity_sha256": "6dfbcd3648ce0b93d610bb9d9ace1148f827d6544ff2f2de509e4b83c717f3c0",
+      "geometry_sha256": "08bea1778fa38c28e929259b60f9c9cf540adb70eb7030b5d85feb5deee97e81"
+    },
+    {
+      "id": "UPB_00000134",
+      "category": "PlumbingSanitary/PlumbingFixture",
+      "split": "test",
+      "source_identity_sha256": "102912cca3cd08be6c6e7c2e51974fdcae64abb18a4c9f04a01fe5854df8b765",
+      "geometry_sha256": "e1aa5104f6c1961934e26514a632e12e1073cae934d9426011aee518a925daad"
+    },
+    {
+      "id": "UPB_00000160",
+      "category": "Furniture/StorageFurniture",
+      "split": "test",
+      "source_identity_sha256": "009319835856a6bd55cecebf12e07aa971ad876ce44b09a94bda6451d215cfea",
+      "geometry_sha256": "f5f9ba2be1906a63f0322994946179cc9807b853874311d39b072b3e630b7eab"
+    }
+  ]
+}
