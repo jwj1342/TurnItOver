@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 import sys
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -68,9 +69,32 @@ def _load_carried_test(path: Path | None, revision: str) -> list[dict]:
     return rows
 
 
+def _convertible_isolated(folder: Path, category: str, timeout_seconds: int) -> tuple[bool, str | None]:
+    """Bound one mesh conversion to a child process so one oversized asset cannot end selection."""
+    code = (
+        "import json, sys; "
+        "from scripts.select_uniphys_trainval import _convertible; "
+        "print(json.dumps(_convertible(__import__('pathlib').Path(sys.argv[1]), sys.argv[2])))"
+    )
+    try:
+        result = subprocess.run(
+            [sys.executable, "-c", code, str(folder), category], cwd=REPO_ROOT,
+            capture_output=True, text=True, timeout=timeout_seconds, check=False)
+    except subprocess.TimeoutExpired:
+        return False, "conversion_timeout"
+    if result.returncode:
+        return False, f"conversion_exit_{result.returncode}"
+    try:
+        ok, reason = json.loads(result.stdout)
+    except (TypeError, ValueError):
+        return False, "conversion_invalid_output"
+    return bool(ok), reason if isinstance(reason, str) or reason is None else "conversion_invalid_reason"
+
+
 def select(root: Path, previous_test_splits: Path, trainval_splits: Path,
            trainval_plan: Path, output: Path, *, objects: int = 20,
-           seed: int = 20261011, carry_forward_plan: Path | None = None) -> dict:
+           seed: int = 20261011, carry_forward_plan: Path | None = None,
+           isolate_conversion: bool = False, conversion_timeout_seconds: int = 120) -> dict:
     if output.exists():
         raise ValueError(f"Selection output already exists: {output}")
     if objects < 1:
@@ -131,7 +155,9 @@ def select(root: Path, previous_test_splits: Path, trainval_splits: Path,
             reason = f"near_duplicate_{duplicate_key}"
             rejected[reason] = rejected.get(reason, 0) + 1
             continue
-        ok, reason = _convertible(root / "data" / row["id"], row["category"])
+        folder = root / "data" / row["id"]
+        ok, reason = (_convertible_isolated(folder, row["category"], conversion_timeout_seconds)
+                      if isolate_conversion else _convertible(folder, row["category"]))
         if not ok:
             rejected[reason or "conversion_unknown"] = rejected.get(
                 reason or "conversion_unknown", 0) + 1
@@ -185,12 +211,17 @@ def main() -> None:
                         help="existing frozen formal test to retain in the new version")
     parser.add_argument("--objects", type=int, default=20)
     parser.add_argument("--seed", type=int, default=20261011)
+    parser.add_argument("--isolate-conversion", action="store_true",
+                        help="run each mesh conversion in a bounded child process")
+    parser.add_argument("--conversion-timeout-seconds", type=int, default=120)
     args = parser.parse_args()
     result = select(args.root.resolve(), args.previous_test_splits.resolve(),
                     args.trainval_splits.resolve(), args.trainval_plan.resolve(),
                     args.out.resolve(), objects=args.objects, seed=args.seed,
                     carry_forward_plan=(args.carry_forward_plan.resolve()
-                                        if args.carry_forward_plan else None))
+                                        if args.carry_forward_plan else None),
+                    isolate_conversion=args.isolate_conversion,
+                    conversion_timeout_seconds=args.conversion_timeout_seconds)
     print(json.dumps({"status": "complete", "objects": len(result["objects"]),
                       "output": str(args.out.resolve())}))
 
