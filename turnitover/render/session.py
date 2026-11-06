@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import logging
 import mimetypes
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -104,7 +105,9 @@ class ObservationSession:
         from playwright.sync_api import sync_playwright
 
         self._pw = sync_playwright().start()
-        self._browser = self._pw.chromium.launch(headless=True, args=list(self.cfg.browser_args))
+        executable = os.environ.get("TURNITOVER_CHROMIUM_EXECUTABLE")
+        self._browser = self._pw.chromium.launch(
+            headless=True, args=list(self.cfg.browser_args), executable_path=executable or None)
         self._page = self._browser.new_page(viewport={"width": self.cfg.width, "height": self.cfg.height})
         self._page.route(f"{HARNESS_ORIGIN}/**", self._serve_dist)
         self._page.goto(f"{HARNESS_ORIGIN}/index.html")
