@@ -94,6 +94,17 @@ def _set_metric(rows, transform, *, joints_only=False):
     return _prf(counts["tp"], counts["fp"], counts["fn"])
 
 
+def _category_macro_f1(per_defect):
+    """Aggregate the frozen defect labels by their top-level taxonomy family."""
+    categories = defaultdict(list)
+    for defect_id, values in per_defect.items():
+        if values["tp"] + values["fn"] == 0:
+            continue
+        category, _, _ = defect_id.partition(".")
+        categories[category].append(values["f1"] if values["f1"] is not None else 0.0)
+    return {category: sum(values) / len(values) for category, values in sorted(categories.items())}
+
+
 def summarize(rows, task="diagnosis", defect_ids=None):
     if not rows:
         raise ValueError("Cannot score an empty evaluation")
@@ -128,6 +139,7 @@ def summarize(rows, task="diagnosis", defect_ids=None):
                   exact_verdict_accuracy=sum(row["valid"] and row["predicted_status"] == row["expected_status"] and _sets(row, "expected_findings") == _sets(row, "predicted_findings") for row in rows) / n,
                   defect_macro_f1=sum(f1s) / len(f1s) if f1s else None,
                   defect_labels=labels, defect_per_class=per_defect,
+                  defect_category_macro_f1=_category_macro_f1(per_defect),
                   finding_micro=_set_metric(rows, lambda f: f),
                   part_localization_micro=_set_metric(rows, lambda f: (f[0], f[2])),
                   joint_localization_micro=_set_metric(joint_rows, lambda f: (f[0], f[1]), joints_only=True) if joint_rows else None,

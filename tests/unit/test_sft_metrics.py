@@ -36,6 +36,7 @@ def test_invalid_predictions_are_kept_and_miss_gold_findings():
     assert report["n"] == 2
     assert report["valid_output_rate"] == .5
     assert report["defect_per_class"]["structure.part_offset"]["f1"] == pytest.approx(2 / 3)
+    assert report["defect_category_macro_f1"] == {"structure": pytest.approx(2 / 3)}
     assert report["finding_micro"]["fn"] == 1
     assert report["evidence_support_rate"] == 1
     assert report["joint_localization_micro"] is None
