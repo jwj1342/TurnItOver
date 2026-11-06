@@ -59,7 +59,8 @@ def _load_gold(path: Path, split: str) -> dict[str, dict]:
     return rows
 
 
-def _load_benchmark(benchmark: Path, split: str = "test") -> tuple[dict, list[dict], Path]:
+def _load_benchmark(benchmark: Path, split: str = "test",
+                    catalog_override: Path | None = None) -> tuple[dict, list[dict], Path]:
     if split not in SPLITS:
         raise ValueError(f"Unsupported benchmark split: {split}")
     root = benchmark.resolve()
@@ -86,7 +87,7 @@ def _load_benchmark(benchmark: Path, split: str = "test") -> tuple[dict, list[di
     catalog_value = manifest.get("catalog")
     if not isinstance(catalog_value, str) or not catalog_value:
         raise ValueError("Benchmark manifest is missing its catalog")
-    catalog = Path(catalog_value)
+    catalog = catalog_override.resolve() if catalog_override else Path(catalog_value)
     if not catalog.is_absolute():
         catalog = (root / catalog).resolve()
     if not catalog.is_file() or _sha256(catalog) != manifest.get("catalog_sha256"):
@@ -183,12 +184,13 @@ def run(
     action_adapter: Path | None = None,
     diagnosis_adapter: Path | None = None,
     case_ids: tuple[str, ...] | None = None,
+    catalog_override: Path | None = None,
     verify_case: Callable = verify,
     score: Callable = score_verifier,
 ) -> dict:
     if output.exists() and any(output.iterdir()):
         raise ValueError(f"Batch output directory is not empty: {output}")
-    benchmark_manifest, cases, gold_path = _load_benchmark(benchmark, split)
+    benchmark_manifest, cases, gold_path = _load_benchmark(benchmark, split, catalog_override)
     if case_ids:
         requested = set(case_ids)
         available = {case["id"] for case in cases}
@@ -215,6 +217,7 @@ def run(
         "benchmark": str(benchmark.resolve()),
         "benchmark_manifest_sha256": _sha256(benchmark.resolve() / "manifest.json"),
         "catalog_sha256": benchmark_manifest["catalog_sha256"],
+        "catalog_override": str(catalog_override) if catalog_override else None,
         "splits_sha256": benchmark_manifest.get("splits_sha256"),
         "model": model.public() if model else {
             "kind": "local_qwen" if local_model else "offline",
@@ -311,6 +314,8 @@ def main() -> None:
                         help="Optional final-readout LoRA; omit for Action + Base")
     parser.add_argument("--case-id", action="append",
                         help="Run one or more exact frozen case IDs as an unscored engineering smoke")
+    parser.add_argument("--catalog", type=Path,
+                        help="Local catalog mirror; must match the frozen catalog SHA exactly")
     args = parser.parse_args()
     report = run(
         args.benchmark.resolve(), args.out.resolve(), args.env_file.resolve(), split=args.split,
@@ -322,6 +327,7 @@ def main() -> None:
         action_adapter=args.action_adapter.resolve() if args.action_adapter else None,
         diagnosis_adapter=args.diagnosis_adapter.resolve() if args.diagnosis_adapter else None,
         case_ids=tuple(args.case_id) if args.case_id else None,
+        catalog_override=args.catalog.resolve() if args.catalog else None,
     )
     print(json.dumps({"status": report["status"], **report["totals"],
                       "manifest": str(args.out.resolve() / "batch-manifest.json")}))

@@ -1,5 +1,6 @@
 import hashlib
 import json
+from pathlib import Path
 
 import pytest
 
@@ -173,3 +174,18 @@ def test_exact_case_smoke_is_not_scored_as_a_full_benchmark(tmp_path):
     assert report["score_eligible"] is False
     assert report["metric_status"] == "not_scored_partial_smoke"
     assert not (output / "metrics.json").exists()
+
+
+def test_catalog_override_must_match_frozen_catalog_bytes(tmp_path):
+    benchmark = _benchmark(tmp_path)
+    manifest_path = benchmark / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    catalog = Path(manifest["catalog"])
+    manifest["catalog"] = "/unavailable/catalog.json"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    report = run_uniphys_verifier_batch.run(
+        benchmark, tmp_path / "results", tmp_path / ".env", policy="runtime",
+        catalog_override=catalog, verify_case=_complete_verify, score=_score)
+
+    assert report["status"] == "complete"
