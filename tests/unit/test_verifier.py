@@ -291,6 +291,40 @@ def test_staged_policy_uses_action_call_before_separate_final_call(tmp_path, con
     assert "Acquisition-only stage" not in final_calls[0]
 
 
+def test_binary_verdict_retries_uncertain_and_accepts_pass(tmp_path, context):
+    responses = iter([
+        {"action": {"type": "request_view", "view_id": "front"}},
+        final("uncertain"),
+        final("pass"),
+    ])
+    prompts = []
+
+    def model(prompt, images):
+        prompts.append(prompt)
+        return ModelResult(json.dumps(next(responses)), "mock", {}, "completed", 1)
+
+    policy = VisionPolicy(model, tmp_path, [], "active", binary_verdict=True)
+    result = run_verification(Session(), policy, context, 1, lambda i, p: f"{i}.png")
+
+    assert result.verdict.status == "pass" and result.termination == "budget_exhausted"
+    assert "Binary verdict mode" not in prompts[0]
+    assert "Binary verdict mode" in prompts[1]
+    assert "Binary verdict requires status pass or fail" in prompts[2]
+
+
+def test_binary_verdict_rejects_uncertain_after_all_retries(tmp_path, context):
+    decisions = [{"action": {"type": "request_view", "view_id": "front"}}] + [final("uncertain")] * 3
+
+    def model(prompt, images):
+        return ModelResult(json.dumps(decisions.pop(0)), "mock", {}, "completed", 1)
+
+    policy = VisionPolicy(model, tmp_path, [], "active", binary_verdict=True)
+    result = run_verification(Session(), policy, context, 1, lambda i, p: f"{i}.png")
+
+    assert result.termination == "invalid_decision"
+    assert result.error_message == "Binary verdict requires status pass or fail"
+
+
 def test_staged_policy_finalizes_prefix_after_invalid_action(tmp_path, context):
     def action(prompt, images):
         return ModelResult(json.dumps({"action": {"view_id": "back", "__type__": "RequestView"}}),

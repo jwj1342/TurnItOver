@@ -30,6 +30,7 @@ class VerifyConfig:
     runtime_properties: tuple[str, ...] = ("stats", "hierarchy", "joint_state", "state_delta")
     max_triangles: int = 5000
     max_draw_calls: int = 32
+    binary_verdict: bool = False
 
     def validate(self):
         if type(self.budget) is not int or not 0 <= self.budget <= 64:
@@ -42,6 +43,10 @@ class VerifyConfig:
             raise ValueError("Invalid runtime property allowlist")
         if self.max_triangles <= 0 or self.max_draw_calls <= 0:
             raise ValueError("Runtime thresholds must be positive")
+        if type(self.binary_verdict) is not bool:
+            raise ValueError("binary_verdict must be a boolean")
+        if self.binary_verdict and self.mode != "action_sft":
+            raise ValueError("binary_verdict is only valid for action_sft")
 
 
 def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tuple[ViewDef, ...],
@@ -93,7 +98,8 @@ def verify(program: ObjectProgram, output: Path, render: RenderConfig, views: tu
             staged = StagedQwen(local_model, action_adapter, diagnosis_adapter)
             metadata["model"]["adapters"] = staged.provenance
             policy = VisionPolicy(staged.action_call, output, copied, "active",
-                                  final_call=staged.final_call, action_only=True)
+                                  final_call=staged.final_call, action_only=True,
+                                  binary_verdict=cfg.binary_verdict)
         elif local_model:
             from turnitover.models.local_qwen import LocalQwen
 

@@ -183,6 +183,7 @@ def run(
     local_model: Path | None = None,
     action_adapter: Path | None = None,
     diagnosis_adapter: Path | None = None,
+    binary_verdict: bool = False,
     case_ids: tuple[str, ...] | None = None,
     catalog_override: Path | None = None,
     verify_case: Callable = verify,
@@ -199,7 +200,8 @@ def run(
             raise ValueError(f"Unknown frozen case IDs: {sorted(unknown)}")
         cases = [case for case in cases if case["id"] in requested]
     config = VerifyConfig(budget=budget, mode=policy, seed=seed, action_types=action_types,
-                          max_triangles=max_triangles, max_draw_calls=max_draw_calls)
+                          max_triangles=max_triangles, max_draw_calls=max_draw_calls,
+                          binary_verdict=binary_verdict)
     config.validate()
     model = None
     if policy != "runtime" and local_model is None:
@@ -227,6 +229,7 @@ def run(
             "split": split, "policy": policy, "budget": budget, "seed": seed, "size": size,
             "views": str(views_path.resolve()), "action_types": list(action_types),
             "max_triangles": max_triangles, "max_draw_calls": max_draw_calls,
+            "binary_verdict": binary_verdict,
         },
         "score_eligible": not bool(case_ids),
         "tasks": [{
@@ -312,6 +315,8 @@ def main() -> None:
                         help="Action LoRA required by --policy action_sft")
     parser.add_argument("--diagnosis-adapter", type=Path,
                         help="Optional final-readout LoRA; omit for Action + Base")
+    parser.add_argument("--binary-verdict", action="store_true",
+                        help="Require final action_sft verdicts to choose pass or fail")
     parser.add_argument("--case-id", action="append",
                         help="Run one or more exact frozen case IDs as an unscored engineering smoke")
     parser.add_argument("--catalog", type=Path,
@@ -326,6 +331,7 @@ def main() -> None:
         local_model=args.local_model.resolve() if args.local_model else None,
         action_adapter=args.action_adapter.resolve() if args.action_adapter else None,
         diagnosis_adapter=args.diagnosis_adapter.resolve() if args.diagnosis_adapter else None,
+        binary_verdict=args.binary_verdict,
         case_ids=tuple(args.case_id) if args.case_id else None,
         catalog_override=args.catalog.resolve() if args.catalog else None,
     )

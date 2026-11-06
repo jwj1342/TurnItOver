@@ -38,9 +38,10 @@ class VisionPolicy:
     def __init__(self, call: Callable[[str, list[Path]], ModelResult], output: Path,
                  references: list[Path], mode: str = "active", seed: int = 0,
                  final_call: Callable[[str, list[Path]], ModelResult] | None = None,
-                 action_only: bool = False):
+                 action_only: bool = False, binary_verdict: bool = False):
         self.call, self.output, self.references, self.mode = call, output, references, mode
         self.final_call, self.action_only = final_call, action_only
+        self.binary_verdict = binary_verdict
         self.rng = np.random.default_rng(seed)
         self.calls: list[dict] = []
         self._plan = None
@@ -66,6 +67,9 @@ class VisionPolicy:
         protocol = resources.files("turnitover.verifier").joinpath("final_prompt.txt" if final_only else "prompt.txt").read_text()
         if self.action_only and not final_only:
             protocol += "\nAcquisition-only stage: return exactly one JSON object with only the action key. Do not return a verdict."
+        if self.binary_verdict and final_only:
+            protocol += ('\nBinary verdict mode overrides any earlier uncertain option: status MUST be exactly '
+                         '"pass" or "fail". If evidence is incomplete, choose the more likely status.')
         prompt = protocol + "\nObserved task data:\n" + json.dumps(data, ensure_ascii=False)
         if validation_feedback:
             prompt += "\n\nValidation feedback from your previous response:\n" + validation_feedback
@@ -88,6 +92,9 @@ class VisionPolicy:
                 raise DecisionError("Judge decision must be a JSON object")
             if self.action_only and not final_only and set(parsed) != {"action"}:
                 raise DecisionError("Action-only acquisition requires exactly one action")
+            if (self.binary_verdict and final_only and isinstance(parsed.get("verdict"), dict)
+                    and parsed["verdict"].get("status") not in {"pass", "fail"}):
+                raise DecisionError("Binary verdict requires status pass or fail")
             if self.mode != "active" and "verdict" not in parsed:
                 raise DecisionError("Fixed/random baseline must return a final verdict")
             record["status"] = "received"

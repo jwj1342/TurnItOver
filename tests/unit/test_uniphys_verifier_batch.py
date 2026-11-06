@@ -176,6 +176,33 @@ def test_exact_case_smoke_is_not_scored_as_a_full_benchmark(tmp_path):
     assert not (output / "metrics.json").exists()
 
 
+def test_binary_verdict_is_recorded_and_forwarded(tmp_path):
+    benchmark = _benchmark(tmp_path)
+    seen = []
+
+    def record_config(program, output, render, views, config, **kwargs):
+        seen.append(config.binary_verdict)
+        return _complete_verify(program, output, render, views, config, **kwargs)
+
+    report = run_uniphys_verifier_batch.run(
+        benchmark, tmp_path / "binary-smoke", tmp_path / ".env", policy="action_sft",
+        binary_verdict=True, case_ids=("UPB_00000000-axis",),
+        local_model=tmp_path / "model", action_adapter=tmp_path / "action-adapter",
+        verify_case=record_config, score=_score)
+
+    assert seen == [True]
+    assert report["config"]["binary_verdict"] is True
+
+
+def test_binary_verdict_rejects_non_action_sft_policy(tmp_path):
+    benchmark = _benchmark(tmp_path)
+
+    with pytest.raises(ValueError, match="only valid for action_sft"):
+        run_uniphys_verifier_batch.run(
+            benchmark, tmp_path / "binary-runtime", tmp_path / ".env", policy="runtime",
+            binary_verdict=True, verify_case=_complete_verify, score=_score)
+
+
 def test_catalog_override_must_match_frozen_catalog_bytes(tmp_path):
     benchmark = _benchmark(tmp_path)
     manifest_path = benchmark / "manifest.json"
