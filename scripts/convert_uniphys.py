@@ -128,6 +128,8 @@ def convert(root: Path, output: Path, object_ids: tuple[str, ...], *,
             "role": "evaluation_only" if evaluation_only else "train_validation",
             "assets": entries,
         }
+        if evaluation_only:
+            catalog["expected_object_counts"] = {"test": len(object_ids)}
         (output / "catalog.json").write_text(
             json.dumps(catalog, indent=2) + "\n", encoding="utf-8")
         split_name = "test-splits.json" if evaluation_only else "trainval-splits.json"

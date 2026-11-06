@@ -105,7 +105,7 @@ def test_benchmark_catalog_is_the_only_20_object_identity_source(tmp_path, toy_s
         assets.append({"spec": spec_path.name, "split_group": f"uniphys:test:{asset_id}",
                        "origin": "fixture", "license": "fixture"})
     catalog = {"version": 1, "source_id": "uniphys-test", "dataset_revision": "a" * 40,
-               "evaluation_only": True, "assets": assets}
+               "evaluation_only": True, "expected_object_counts": {"test": 20}, "assets": assets}
     catalog_path = tmp_path / "catalog.json"
     catalog_path.write_text(json.dumps(catalog))
 

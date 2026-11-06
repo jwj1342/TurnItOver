@@ -50,9 +50,27 @@ def _split_ids(path: Path, expected: set[str]) -> set[str]:
     return ids
 
 
+def _load_carried_test(path: Path | None, revision: str) -> list[dict]:
+    if path is None:
+        return []
+    record = json.loads(path.read_text(encoding="utf-8"))
+    rows = record.get("objects")
+    if (record.get("version") != 1 or record.get("role") != "formal_test"
+            or record.get("dataset") != DATASET
+            or record.get("dataset_revision") != revision
+            or not isinstance(rows, list) or not rows):
+        raise ValueError("Carry-forward plan must be a pinned formal UniPhys test")
+    ids = [row.get("id") for row in rows]
+    if (len(set(ids)) != len(ids) or any(not isinstance(value, str)
+                                         or not OBJECT_RE.fullmatch(value) for value in ids)
+            or any(row.get("split") != "test" for row in rows)):
+        raise ValueError("Carry-forward plan contains invalid test objects")
+    return rows
+
+
 def select(root: Path, previous_test_splits: Path, trainval_splits: Path,
            trainval_plan: Path, output: Path, *, objects: int = 20,
-           seed: int = 20261011) -> dict:
+           seed: int = 20261011, carry_forward_plan: Path | None = None) -> dict:
     if output.exists():
         raise ValueError(f"Selection output already exists: {output}")
     if objects < 1:
@@ -62,14 +80,18 @@ def select(root: Path, previous_test_splits: Path, trainval_splits: Path,
     if (acquisition.get("dataset") != DATASET or acquisition.get("license") != LICENSE
             or not isinstance(revision, str) or len(revision) != 40):
         raise ValueError("Expected a pinned UniPhys-Bench Part 2 acquisition")
+    carried = _load_carried_test(carry_forward_plan, revision)
+    if len(carried) > objects:
+        raise ValueError("Target test size is smaller than the carry-forward test")
     previous_test_ids = _split_ids(previous_test_splits, {"test"})
     trainval_ids = _split_ids(trainval_splits, {"train", "validation"})
     plan = json.loads(trainval_plan.read_text(encoding="utf-8"))
     if ({row.get("id") for row in plan.get("objects", [])} != trainval_ids
             or plan.get("dataset_revision") != revision):
         raise ValueError("Train/validation plan and split manifest disagree")
+    carried_ids = {row["id"] for row in carried}
     development_ids = DEV_RANGE | previous_test_ids
-    excluded_ids = development_ids | trainval_ids
+    excluded_ids = development_ids | trainval_ids | carried_ids
 
     excluded_features = {"name_key": set(), "source_key": set(), "geometry_sha256": set()}
     for object_id in sorted(excluded_ids):
@@ -98,7 +120,7 @@ def select(root: Path, previous_test_splits: Path, trainval_splits: Path,
 
     candidates.sort(key=lambda row: hashlib.sha256(
         f"{seed}:{revision}:{row['id']}".encode()).hexdigest())
-    chosen, chosen_features = [], {key: set() for key in excluded_features}
+    chosen, chosen_features = list(carried), {key: set() for key in excluded_features}
     checked = 0
     for row in candidates:
         checked += 1
@@ -137,6 +159,9 @@ def select(root: Path, previous_test_splits: Path, trainval_splits: Path,
         "trainval_plan_sha256": _sha256(trainval_plan),
         "excluded_development_object_ids": sorted(development_ids),
         "excluded_train_validation_count": len(trainval_ids),
+        "carry_forward_plan_sha256": (_sha256(carry_forward_plan)
+                                        if carry_forward_plan else None),
+        "carried_forward_object_count": len(carried),
         "near_duplicate_policy": ["source_identity", "full_model_sha256", "normalized_object_name"],
         "candidates_checked": checked,
         "rejected": rejected,
@@ -156,12 +181,16 @@ def main() -> None:
                         default=Path("data/assets/uniphys-trainval-catalog-v1/trainval-splits.json"))
     parser.add_argument("--trainval-plan", type=Path, default=Path("configs/uniphys-trainval-v1.json"))
     parser.add_argument("--out", type=Path, default=Path("configs/uniphys-test.json"))
+    parser.add_argument("--carry-forward-plan", type=Path,
+                        help="existing frozen formal test to retain in the new version")
     parser.add_argument("--objects", type=int, default=20)
     parser.add_argument("--seed", type=int, default=20261011)
     args = parser.parse_args()
     result = select(args.root.resolve(), args.previous_test_splits.resolve(),
                     args.trainval_splits.resolve(), args.trainval_plan.resolve(),
-                    args.out.resolve(), objects=args.objects, seed=args.seed)
+                    args.out.resolve(), objects=args.objects, seed=args.seed,
+                    carry_forward_plan=(args.carry_forward_plan.resolve()
+                                        if args.carry_forward_plan else None))
     print(json.dumps({"status": "complete", "objects": len(result["objects"]),
                       "output": str(args.out.resolve())}))
 

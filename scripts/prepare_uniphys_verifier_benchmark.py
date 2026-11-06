@@ -25,7 +25,6 @@ from turnitover.verifier.contracts import VERIFIER_SCHEMA_VERSION
 from turnitover.verifier.gt_validator import validate_code
 
 
-OBJECT_COUNT = 20
 MAX_TRIANGLES = 1_000_000
 MAX_DRAW_CALLS = 1_024
 
@@ -57,13 +56,15 @@ def _validate_case_identity(cases: list[dict], gold: dict[str, list[dict]]) -> N
 
 def _load_frozen_catalog(catalog_path: Path) -> tuple[dict, CatalogSource, tuple]:
     record = json.loads(catalog_path.read_text(encoding="utf-8"))
-    if not record.get("evaluation_only") or not record.get("dataset_revision"):
+    expected = record.get("expected_object_counts", {}).get("test")
+    if (not record.get("evaluation_only") or not record.get("dataset_revision")
+            or not isinstance(expected, int) or expected < 1):
         raise ValueError("Expected a pinned evaluation-only UniPhys catalog")
     source = CatalogSource(str(catalog_path))
     specs = tuple(source)
     split_groups = [source.metadata(spec.asset_id)["split_group"] for spec in specs]
-    if len(specs) != OBJECT_COUNT:
-        raise ValueError(f"Expected {OBJECT_COUNT} catalog assets, got {len(specs)}")
+    if len(specs) != expected:
+        raise ValueError(f"Expected {expected} catalog assets, got {len(specs)}")
     if len(set(split_groups)) != len(split_groups):
         raise ValueError("Each catalog asset must have a unique split_group")
     return record, source, specs

@@ -154,3 +154,41 @@ def test_selects_formal_test_away_from_development_trainval_and_near_duplicates(
     ids, assignments, _ = convert_uniphys._load_split_plan(output)
     assert set(ids) == set(assignments) == {"UPB_00000042", "UPB_00000043"}
     assert set(assignments.values()) == {"test"}
+
+
+def test_expanded_formal_test_carries_forward_the_frozen_objects(tmp_path, monkeypatch):
+    root = tmp_path / "source"
+    revision = "f" * 40
+    root.mkdir()
+    (root / "download-manifest.json").write_text(json.dumps({
+        "dataset": "breezexian/UniPhys-Bench-Part2", "revision": revision,
+        "license": "CC-BY-NC-4.0",
+    }))
+    for index in range(20):
+        _write_asset(root, f"UPB_{index:08d}", geometry=f"dev-{index}".encode())
+    _write_asset(root, "UPB_00000020", geometry=b"carried")
+    _write_asset(root, "UPB_00000021", geometry=b"new")
+    previous = tmp_path / "previous.json"
+    previous.write_text(json.dumps({"version": 1, "unit": "split_group", "groups": {
+        f"uniphys:{revision}:UPB_00000020": "test"}}))
+    trainval_splits = tmp_path / "trainval-splits.json"
+    trainval_splits.write_text(json.dumps({"version": 1, "unit": "split_group", "groups": {
+        f"uniphys:{revision}:UPB_00000019": "train"}}))
+    trainval_plan = tmp_path / "trainval.json"
+    trainval_plan.write_text(json.dumps({"dataset_revision": revision,
+                                         "objects": [{"id": "UPB_00000019"}]}))
+    carried = tmp_path / "test-v1.json"
+    carried.write_text(json.dumps({"version": 1, "role": "formal_test",
+                                   "dataset": "breezexian/UniPhys-Bench-Part2",
+                                   "dataset_revision": revision,
+                                   "objects": [{"id": "UPB_00000020", "category": "fixture",
+                                                "split": "test"}]}))
+    monkeypatch.setattr(select_uniphys_test, "_convertible", lambda *args: (True, None))
+
+    report = select_uniphys_test.select(
+        root, previous, trainval_splits, trainval_plan, tmp_path / "test-v2.json",
+        objects=2, seed=7, carry_forward_plan=carried)
+
+    assert [row["id"] for row in report["objects"] if row["id"] == "UPB_00000020"] == ["UPB_00000020"]
+    assert {row["id"] for row in report["objects"]} == {"UPB_00000020", "UPB_00000021"}
+    assert report["carried_forward_object_count"] == 1
