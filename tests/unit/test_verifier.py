@@ -309,6 +309,7 @@ def test_binary_verdict_retries_uncertain_and_accepts_pass(tmp_path, context):
     assert result.verdict.status == "pass" and result.termination == "budget_exhausted"
     assert "Binary verdict mode" not in prompts[0]
     assert "Binary verdict mode" in prompts[1]
+    assert '"uncertain"' not in prompts[1]
     assert "Binary verdict requires status pass or fail" in prompts[2]
 
 

@@ -64,12 +64,11 @@ class VisionPolicy:
                 "taxonomy_ids": load_taxonomy().ids, "image_order": order,
                 "history": [to_dict(o) for o in history]}
         final_only = remaining == 0 or self.mode != "active"
-        protocol = resources.files("turnitover.verifier").joinpath("final_prompt.txt" if final_only else "prompt.txt").read_text()
+        prompt_name = ("binary_final_prompt.txt" if final_only and self.binary_verdict
+                       else "final_prompt.txt" if final_only else "prompt.txt")
+        protocol = resources.files("turnitover.verifier").joinpath(prompt_name).read_text()
         if self.action_only and not final_only:
             protocol += "\nAcquisition-only stage: return exactly one JSON object with only the action key. Do not return a verdict."
-        if self.binary_verdict and final_only:
-            protocol += ('\nBinary verdict mode overrides any earlier uncertain option: status MUST be exactly '
-                         '"pass" or "fail". If evidence is incomplete, choose the more likely status.')
         prompt = protocol + "\nObserved task data:\n" + json.dumps(data, ensure_ascii=False)
         if validation_feedback:
             prompt += "\n\nValidation feedback from your previous response:\n" + validation_feedback
