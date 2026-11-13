@@ -7,8 +7,8 @@ import json
 from pathlib import Path
 import zipfile
 
-from turnitover.oracle.episodes import episode_examples
-from turnitover.oracle.evidence import pixel_signal, pixels
+from turnitover.oracle.paired_observations import OBSERVATION_FORMAT, paired_terminal
+from turnitover.oracle.release_pairs import copy_pairs, prepare_pairs
 
 
 HARD_DEFECTS = {
@@ -150,25 +150,6 @@ def _members(case: ReleaseCase) -> list[ImageMember]:
     return members
 
 
-def _copy_images(case: ReleaseCase, output: Path) -> tuple[list[ImageMember], list[dict], list[str], list[str], list[bytes]]:
-    members = _members(case)
-    paths, digests, images = [], [], []
-    with zipfile.ZipFile(case.archive) as source:
-        for index, member in enumerate(members):
-            data = source.read(member.path)
-            relative = f"images/{case.gold['case_id']}/{index:02d}-{member.role}.png"
-            destination = output / relative
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            destination.write_bytes(data)
-            paths.append(relative)
-            digests.append(hashlib.sha256(data).hexdigest())
-            images.append(data)
-    history = [{"step": index, "image_ref": relative,
-                "action": {"type": "request_view", "view_id": member.view}}
-               for index, (member, relative) in enumerate(zip(members[1:], paths[1:], strict=True))]
-    return members, history, paths, digests, images
-
-
 def _identity(case: ReleaseCase, split_group: str, content: str) -> dict:
     dataset, source_asset, asset, _, _ = _provenance(case)
     return {"source_dataset": dataset, "source_asset_id": source_asset, "asset_id": asset,
@@ -190,16 +171,6 @@ def _roster(case: ReleaseCase, assets: dict[tuple[str, str], Path]) -> tuple[lis
         spec = json.loads(spec_path.read_text(encoding="utf-8"))
         return [row["id"] for row in spec["parts"]], [row["id"] for row in spec["joints"]]
     raise ValueError(f"No exact part/joint roster for {case.gold['case_id']}")
-
-
-def _exposures(members: list[ImageMember], images: list[bytes], labels: list[dict]) -> list[list[int]]:
-    if not labels:
-        return [[] for _ in members[1:]]
-    references = {(member.view, member.state): image for member, image in zip(members, images, strict=True)
-                  if member.kind == "reference"}
-    return [[0] if member.kind == "candidate"
-            and pixel_signal(pixels(references[(member.view, member.state)]), pixels(image))["exposed"] else []
-            for member, image in zip(members[1:], images[1:], strict=True)]
 
 
 def _context(parts: list[str], joints: list[str], members: list[ImageMember]) -> dict:
@@ -224,7 +195,8 @@ def _case_split(case: ReleaseCase, split_plan: dict[str, str] | None, *, allow_h
 
 def _export_cases(manifests: list[dict], cases: list[ReleaseCase], output: Path, dataset_version: str,
                   asset_roots: list[Path], *, split_plan: dict[str, str] | None = None,
-                  allow_hash_split: bool, expected_difficulty_counts: dict[str, int] | None = None) -> dict:
+                  allow_hash_split: bool, expected_difficulty_counts: dict[str, int] | None = None,
+                  easy_board_roots: list[Path] = (), exposure_audits: dict | None = None) -> dict:
     if output.exists() and any(output.iterdir()):
         raise ValueError(f"Output directory is not empty: {output}")
     output.mkdir(parents=True, exist_ok=True)
@@ -232,6 +204,7 @@ def _export_cases(manifests: list[dict], cases: list[ReleaseCase], output: Path,
     episodes = {split: [] for split in SPLITS}
     stopping = {split: [] for split in SPLITS}
     annotations, groups, group_splits = [], {}, {}
+    input_audits = []
     for case in sorted(cases, key=lambda item: item.gold["case_id"]):
         _, _, _, group, content = _provenance(case)
         split = _case_split(case, split_plan, allow_hash_split=allow_hash_split)
@@ -241,12 +214,14 @@ def _export_cases(manifests: list[dict], cases: list[ReleaseCase], output: Path,
         groups[group] = split
         labels = _labels(case)
         parts, joints = _roster(case, assets)
-        members, history, paths, digests, images = _copy_images(case, output)
-        exposures = _exposures(members, images, labels)
-        terminal = episode_examples(
-            case.gold["case_id"], _context(parts, joints, members), paths[0], history,
-            list(range(len(history))), exposures, labels, len(history),
-            objective="comprehensive_within_budget")[-1]
+        members, images, exposures, input_audit = prepare_pairs(
+            case, _members(case), labels, easy_board_roots=easy_board_roots,
+            exposure_audits=exposure_audits)
+        history, digests = copy_pairs(case, output, members, images)
+        terminal = paired_terminal(case.gold["case_id"], _context(parts, joints, members),
+                                   history, exposures, labels)
+        terminal["evidence"]["proxy"] = input_audit["exposure_method"]
+        input_audits.append({"id": case.gold["case_id"], **input_audit})
         identity = _identity(case, group, content)
         terminal.update(data_identity=identity, difficulty=case.level,
                         image_sha256=digests[:len(terminal["images"])])
@@ -274,6 +249,7 @@ def _export_cases(manifests: list[dict], cases: list[ReleaseCase], output: Path,
         raise ValueError(f"Unexpected per-tier case counts: {difficulty_counts}; expected {expected_difficulty_counts}")
     taxonomy = sorted({label["defect_id"] for row in annotations for label in row["labels"]})
     manifest = {"status": "complete", "formal_training": True, "dataset_version": dataset_version,
+                "observation_format": OBSERVATION_FORMAT, "images_per_case": 6, "pairs_per_case": 3,
                 "groups": groups, "source_releases": [row["tag"] for row in manifests],
                 "experiment_taxonomy": taxonomy,
                 "counts": {split: {"episodes": len(episodes[split]), "stopping": len(stopping[split]),
@@ -281,23 +257,28 @@ def _export_cases(manifests: list[dict], cases: list[ReleaseCase], output: Path,
                                                               for row in episodes[split])
                                                    for level in SEVERITY}}
                            for split in SPLITS}}
+    (output / "paired-input-audit.private.jsonl").write_text(
+        "".join(json.dumps(row, sort_keys=True) + "\n" for row in input_audits), encoding="utf-8")
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return manifest
 
 
 def export_releases(release_paths: list[Path], output: Path, dataset_version: str,
-                    asset_roots: list[Path]) -> dict:
+                    asset_roots: list[Path], *, easy_board_roots: list[Path] = (),
+                    exposure_audits: dict | None = None) -> dict:
     """Build one complete formal-training export from release directories."""
     manifests, cases = [], []
     for path in release_paths:
         manifest, release_cases = _release(path)
         manifests.append(manifest)
         cases.extend(release_cases)
-    return _export_cases(manifests, cases, output, dataset_version, asset_roots, allow_hash_split=True)
+    return _export_cases(manifests, cases, output, dataset_version, asset_roots, allow_hash_split=True,
+                         easy_board_roots=easy_board_roots, exposure_audits=exposure_audits)
 
 
 def export_three_tier_900(release_paths: list[Path], hard_candidate: Path, output: Path,
-                          dataset_version: str, asset_roots: list[Path], split_plan: dict[str, str]) -> dict:
+                          dataset_version: str, asset_roots: list[Path], split_plan: dict[str, str], *,
+                          easy_board_roots: list[Path] = (), exposure_audits: dict | None = None) -> dict:
     """Export the frozen 300-case Easy/Medium/Hard SFT corpus.
 
     Easy and Medium must be assigned by ``split_plan``.  Hard v1.1 retains the
@@ -313,4 +294,5 @@ def export_three_tier_900(release_paths: list[Path], hard_candidate: Path, outpu
     cases.extend(hard_cases)
     return _export_cases(manifests, cases, output, dataset_version, asset_roots,
                          split_plan=split_plan, allow_hash_split=False,
-                         expected_difficulty_counts={"easy": 300, "medium": 300, "hard": 300})
+                         expected_difficulty_counts={"easy": 300, "medium": 300, "hard": 300},
+                         easy_board_roots=easy_board_roots, exposure_audits=exposure_audits)

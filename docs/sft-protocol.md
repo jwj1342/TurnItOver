@@ -1,5 +1,7 @@
 # Qwen SFT 与固定观察评测协议
 
+三层 release exporter 的当前六图成对输入、数据补齐和证据审核要求见 [三状态成对观察 SFT](paired-observation-sft.md)。下文保留对旧 single-reference Episode 的加载兼容；新release每个history索引对应整对图片。
+
 本 PR 从 PR #7 (`laq/uniphys-e2e`, `0242f21`) 提取训练与评测基础设施。
 它依赖 #7 提供的 Episode 导出、verifier 契约和 Qwen processor adapter。
 不包含数据构造、教师采集、浏览器闭环、Action SFT、联合训练、课程训练、Level 0、motion-grounded、visual stopping 或 Kimi 实验。历史研究代码和附件继续保留在 `laq/sft-training`；[历史结论](sft-experiments.md) 不作为本次代码的验证证据。

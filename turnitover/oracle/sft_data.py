@@ -156,6 +156,10 @@ def validate_target(record, task, supervision="evidence", annotation=None):
             or any(type(index) is not int or not 0 <= index < len(labels) for index in covered)
             or len(set(covered)) != len(covered)):
         raise ValueError("Invalid covered label indices")
+    pair_steps = None
+    if "observation_format" in payload:
+        from turnitover.oracle.paired_observations import pair_support
+        pair_steps = pair_support(record["evidence"], len(labels), covered)
     if task == "diagnosis":
         verdict = parse_decision(target, Context(**payload["context"]),
                                  {row["step"] for row in payload["history"]}, final_only=True)
@@ -166,6 +170,12 @@ def validate_target(record, task, supervision="evidence", annotation=None):
             actual = {(f.defect_id, tuple(f.parts), f.joint_id) for f in verdict.findings}
             if actual != expected or len(verdict.findings) != len(covered):
                 raise ValueError("Evidence findings differ from audited visible labels")
+            if pair_steps is not None:
+                support = {_label_key(labels[index]): steps for index, steps in pair_steps.items()}
+                for finding in verdict.findings:
+                    key = (finding.defect_id, tuple(finding.parts), finding.joint_id)
+                    if set(finding.evidence_steps) != support[key]:
+                        raise ValueError("Evidence references differ from audited supporting pairs")
     else:
         from turnitover.oracle.sft_contracts import parse_stopping
         decision = parse_stopping(target)

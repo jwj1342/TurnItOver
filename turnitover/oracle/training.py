@@ -9,8 +9,8 @@ def tokenize_prompt(processor, record, images):
     user, assistant = record["messages"]
     if user["role"] != "user" or assistant["role"] != "assistant":
         raise ValueError("Expected one user/assistant pair")
-    content = [{"type": "image", "image": image} for image in images]
-    content.append({"type": "text", "text": user["content"]})
+    from turnitover.oracle.paired_observations import user_content
+    content = user_content(record, images)
     prompt = [{"role": "user", "content": content}]
     return prompt, processor.apply_chat_template(
         prompt, tokenize=True, add_generation_prompt=True, return_dict=True, return_tensors="pt")

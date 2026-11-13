@@ -11,7 +11,7 @@ def _reject_private_fields(value):
     """Reject known teacher-only metadata, including inside observation payloads."""
     private = {"labels", "corruptions", "exposures", "witness_indices", "data_identity",
                "future_history", "private_target", "teacher_metadata", "ground_truth",
-               "covered_label_indices", "uncovered_label_indices", "gold"}
+               "covered_label_indices", "uncovered_label_indices", "pair_label_indices", "gold"}
     if isinstance(value, dict):
         if private.intersection(value):
             raise ValueError("Private teacher metadata in public input")
@@ -89,7 +89,7 @@ def public_payload(record):
     payload = json.loads(messages[0]["content"].rsplit("\n", 1)[-1])
     _reject_private_fields(payload)
     allowed = {"context", "history", "image_order", "remaining", "taxonomy_ids",
-               "training_objective", "target_joint_id", "joint_id"}
+               "training_objective", "target_joint_id", "joint_id", "observation_format"}
     if set(payload) - allowed:
         raise ValueError("Unknown public input fields")
     history = payload["history"]
@@ -98,6 +98,12 @@ def public_payload(record):
         raise ValueError("History steps must be unique and causal")
     if payload.get("image_order") != record["images"]:
         raise ValueError("Public image order differs from image roster")
+    if "observation_format" in payload:
+        from turnitover.oracle.paired_observations import validate_pairs
+        validate_pairs(payload, record["images"])
+        return payload
+    if any("reference_image_ref" in row for row in history):
+        raise ValueError("Paired observations require observation_format")
     if record["images"][1:] != [row["image_ref"] for row in history]:
         raise ValueError("History observations differ from image roster")
     return payload

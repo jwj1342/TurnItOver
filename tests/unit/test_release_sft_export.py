@@ -50,18 +50,18 @@ def test_release_export_loads_all_sft_objectives(tmp_path):
             assert len(rows) == 1
             assert len(rows[0][1]) == 6
     record = json.loads((output / f"{split}.episodes.jsonl").read_text())
-    assert record["image_sha256"] == [hashlib.sha256(reference).hexdigest()] * 3 + [
-        hashlib.sha256(candidate).hexdigest()] * 3
+    assert record["image_sha256"] == [hashlib.sha256(reference).hexdigest(), hashlib.sha256(candidate).hexdigest()] * 3
     assert record["difficulty"] == "medium"
     payload = json.loads(record["messages"][0]["content"].rsplit("\n", 1)[-1])
     assert payload["context"]["parts"] == ["base", "link_0", "link_1"]
     assert payload["context"]["joints"] == ["joint_0", "joint_1"]
     finding = json.loads(record["messages"][1]["content"])["verdict"]["findings"][0]
-    assert finding["evidence_steps"] == [2, 3, 4]
+    assert finding["evidence_steps"] == [0, 1, 2]
 
 
 def test_hard_candidate_bundle_keeps_frozen_split_and_composite_labels(tmp_path):
     image = _png(tmp_path / "image.png", "blue")
+    reference_image = _png(tmp_path / "reference.png", "red")
     assets = tmp_path / "assets"
     assets.mkdir()
     spec = {"parts": [{"id": "base"}, {"id": "link_0"}], "joints": [{"id": "joint_0"}]}
@@ -82,13 +82,26 @@ def test_hard_candidate_bundle_keeps_frozen_split_and_composite_labels(tmp_path)
         for view in ("front", "side"):
             for kind in ("reference", "candidate"):
                 for state in ("rest", "mid", "limit"):
-                    archive.writestr(f"hard/native/hp-fixture/{view}/{kind}_{state}.png", image)
+                    archive.writestr(f"hard/native/hp-fixture/{view}/{kind}_{state}.png",
+                                 reference_image if kind == "reference" else image)
     manifest, cases = _candidate_bundle(bundle)
+    from turnitover.oracle.release_sft_export import _labels
+    audit = {"hp-fixture": {"views": {view: {
+        "reference_sha": gold["reference_sha"], "candidate_sha": gold["candidate_sha"],
+        "labels_sha256": hashlib.sha256(json.dumps(_labels(cases[0]), sort_keys=True).encode()).hexdigest(),
+        "image_sha256": [hashlib.sha256(data).hexdigest() for data in (reference_image, image) * 3],
+        "pair_label_indices": [[0], [1], [0, 1]],
+        "method": "fixture_independent_counterfactuals", "provenance": "synthetic_test"
+    } for view in ("front", "side")}}}
     output = tmp_path / "export"
-    result = _export_cases([manifest], cases, output, "fixture-hard-v1", [assets], allow_hash_split=False)
+    result = _export_cases([manifest], cases, output, "fixture-hard-v1", [assets], allow_hash_split=False, exposure_audits=audit)
     assert result["counts"]["test"]["episodes"] == 1
     record = json.loads((output / "test.episodes.jsonl").read_text())
-    assert len(record["images"]) == 12
+    assert len(record["images"]) == 6
+    payload = json.loads(record["messages"][0]["content"].rsplit("\n", 1)[-1])
+    assert len(payload["context"]["views"]) == 1
+    findings = json.loads(record["messages"][1]["content"])["verdict"]["findings"]
+    assert [row["evidence_steps"] for row in findings] == [[0, 2], [1, 2]]
     assert len(json.loads((output / "annotations.private.jsonl").read_text())["labels"]) == 2
     for task in ("diagnosis", "stopping"):
         assert len(list(load_training_examples(output, "test", task, "evidence"))) == 1

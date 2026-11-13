@@ -22,13 +22,20 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--dataset-version", required=True)
     parser.add_argument("--asset-root", action="append", type=Path, required=True)
+    parser.add_argument("--easy-board-root", action="append", type=Path, default=[],
+                        help="Native Easy boards used to recover verified mid frames")
+    parser.add_argument("--exposure-audit", type=Path,
+                        help="Hash-bound per-label paired exposure audit for composite cases")
     args = parser.parse_args()
+    exposure_audits = json.loads(args.exposure_audit.read_text()) if args.exposure_audit else None
     split_plan = json.loads(args.split_plan.read_text(encoding="utf-8"))
     split_plan = split_plan.get("source_splits", split_plan) if isinstance(split_plan, dict) else split_plan
     if not isinstance(split_plan, dict):
         raise ValueError("split plan must be a JSON object")
     print(json.dumps(export_three_tier_900(args.release, args.hard_candidate_zip, args.output,
-                                            args.dataset_version, args.asset_root, split_plan), indent=2))
+                                            args.dataset_version, args.asset_root, split_plan,
+                                            easy_board_roots=args.easy_board_root,
+                                            exposure_audits=exposure_audits), indent=2))
 
 
 if __name__ == "__main__":
