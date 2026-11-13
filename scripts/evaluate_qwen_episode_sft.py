@@ -15,6 +15,8 @@ sys.path.insert(0, str(REPO_ROOT))
 from turnitover.oracle.sft_data import load_training_examples
 from turnitover.oracle.training import tokenize_prompt
 from turnitover.taxonomy import load_taxonomy
+from turnitover.oracle.evaluation_snapshot import create_snapshot
+from turnitover.telemetry import git_state
 from turnitover.oracle.sft_metrics import (
     PROTOCOL_VERSION, object_bootstrap, public_input_digest, score_prediction, summarize,
     summarize_by_difficulty,
@@ -27,7 +29,8 @@ def _sha256(path):
 
 def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | None,
              max_new_tokens: int, dataset_manifest_sha256: str, task="diagnosis",
-             split="validation", seed=20261013, bootstrap_samples=0, device="cuda") -> dict:
+             split="validation", seed=20261013, bootstrap_samples=0, device="cuda",
+             training_seed=None) -> dict:
     import torch
     from transformers import AutoConfig, AutoProcessor, GenerationConfig, Qwen3VLForConditionalGeneration
 
@@ -45,6 +48,8 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
     if actual_manifest_sha != dataset_manifest_sha256:
         raise ValueError("Dataset manifest SHA mismatch")
     kind = "episodes" if task == "diagnosis" else "stopping"
+    annotation_sha = _sha256(dataset / "annotations.private.jsonl")
+    split_sha = _sha256(dataset / f"{split}.{kind}.jsonl")
     examples = list(load_training_examples(dataset, split, task, "evidence"))
     if not examples:
         raise ValueError("No evaluation examples")
@@ -66,17 +71,29 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
     effective_generation_sha = hashlib.sha256(json.dumps(effective_generation, sort_keys=True).encode()).hexdigest()
     protocol = {"effective_generation_config_sha256": effective_generation_sha, "defect_ids": defect_ids, "processor_sha256": processor_sha, "device": device, "version": PROTOCOL_VERSION, "task": task, "split": split,
                 "dataset_version": manifest.get("dataset_version", manifest.get("run_id", manifest.get("version"))),
-                "dataset_manifest_sha256": _sha256(dataset / "manifest.json"),
-                "annotations_sha256": _sha256(dataset / "annotations.private.jsonl"),
-                "split_sha256": _sha256(dataset / f"{split}.{kind}.jsonl"),
+                "dataset_manifest_sha256": actual_manifest_sha,
+                "annotations_sha256": annotation_sha,
+                "split_sha256": split_sha,
                 "public_input_sha256": public_input_digest(records),
                 "max_new_tokens": max_new_tokens, "do_sample": False, "seed": seed,
                 "n": len(records), "independent_objects": len({row["data_identity"]["source_identity_sha256"] for row in records})}
     output.mkdir(parents=True)
-    report = {"status": "incomplete", "protocol": protocol}
+    report = {"status": "incomplete", "protocol": protocol, "git": git_state(REPO_ROOT),
+              "training_seed": training_seed}
     rows = []
     started = time.perf_counter()
     try:
+        snapshot = create_snapshot(output, dataset, records, split, task, defect_ids)
+        source_hashes = snapshot["manifest"]["source_sha256"]
+        if (source_hashes["dataset_manifest"] != protocol["dataset_manifest_sha256"]
+                or source_hashes["annotations"] != protocol["annotations_sha256"]
+                or _sha256(dataset / f"{split}.{kind}.jsonl") != split_sha):
+            raise ValueError("Dataset changed while creating scoring snapshot")
+        report["scoring_snapshot_sha256"] = _sha256(snapshot["root"] / "manifest.json")
+        report["adapter_files_sha256"] = {
+            path.name: _sha256(path) for path in sorted(adapter.iterdir())
+            if path.is_file() and (path.name.startswith("adapter_") or path.name == "run.json")
+        } if adapter else None
         torch.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
         # The base processor is mandatory for both base and adapters.
@@ -127,6 +144,8 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
         report.update(status="incomplete", completed_cases=len(rows), error_type=type(exc).__name__, error=str(exc))
         raise
     finally:
+        if (output / "predictions.jsonl").is_file():
+            report["predictions_sha256"] = _sha256(output / "predictions.jsonl")
         (output / "metrics.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     return report
 
@@ -142,6 +161,7 @@ def main():
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cuda")
     parser.add_argument("--dataset-manifest-sha256", required=True)
     parser.add_argument("--seed", type=int, default=20261013)
+    parser.add_argument("--training-seed", type=int, help="Seed of the evaluated training run, if known")
     parser.add_argument("--max-new-tokens", type=int, default=512)
     parser.add_argument("--bootstrap-samples", type=int, default=0)
     args = parser.parse_args()
@@ -149,7 +169,7 @@ def main():
                       adapter=args.adapter.resolve() if args.adapter else None,
                       max_new_tokens=args.max_new_tokens, task=args.task, split=args.split,
                       seed=args.seed, bootstrap_samples=args.bootstrap_samples, device=args.device,
-                      dataset_manifest_sha256=args.dataset_manifest_sha256)
+                      dataset_manifest_sha256=args.dataset_manifest_sha256, training_seed=args.training_seed)
     print(json.dumps(report, indent=2))
 
 
