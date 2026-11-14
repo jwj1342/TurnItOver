@@ -55,6 +55,7 @@ def test_provider_vision_wire_formats(tmp_path, provider, suffix, image_key, tok
     cfg = ModelConfig("generator", provider, "test-model", "https://test/v1", "secret-key")
     url, headers, body = request_payload(cfg, "Describe this", [path])
     assert url.endswith(suffix)
+    assert headers["User-Agent"] == "TurnItOver/1.0"
     encoded = json.dumps(body)
     assert image_key in encoded and token_key in encoded
     assert "secret-key" not in encoded + url
