@@ -51,3 +51,24 @@ Success、Resolved、Needs motion／Visible at rest 和 Cost to success 均不�
 验证环境为 Playwright 1.58.0／已缓存 Chromium；可使用
 `uv run --with playwright==1.58.0 python ...` 复用该版本，避免浏览器版本不匹配。
 该记录只证明初始输入可执行，不代表模型产生的任意 patch 均可执行。
+
+## 可选共享请求间隔与重试
+
+模型客户端支持显式配置（默认均为 0，保留旧调用行为）：
+
+```dotenv
+TIO_GENERATOR_REQUEST_INTERVAL_SECONDS=60
+TIO_GENERATOR_MAX_RETRIES=3
+```
+
+同一 base URL／密钥的所有已启用客户端跨进程共用文件锁，一次只允许一个请求
+在途；重试也经过相同发送间隔。按请求开始时间计时，失败也占用时间槽。
+429、502/503/504、连接中断和超时最多重试三次（含首次最多四次）。重试等待
+取请求间隔、30秒基数的指数退避和服务端 Retry-After 的最大值；429冷却由所有
+共享客户端遵守。403等非临时HTTP错误、非法JSON与空文本不自动重试。
+
+状态与脱敏尝试日志位于系统临时目录的 `tio-request-control-<uid>/`；文件名
+只含 endpoint/key 的联合哈希，事件不包含密钥、URL、prompt或响应正文。
+所有相关角色都应设置相同间隔；默认未启用的旧客户端不会加入共享通道。
+此处60秒仅为单例验证设置，不能据此声称已满足账号TPM；应依据实际额度设置。
+超时请求可能已在服务端执行／计费，重试日志须与成功响应usage一起保留。

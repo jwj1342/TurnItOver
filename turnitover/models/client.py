@@ -1,4 +1,4 @@
-"""Small REST adapters for text + images. No implicit retries or SDK dependencies."""
+"""Small REST adapters for text + images. Explicit request control, no SDK dependencies."""
 from __future__ import annotations
 
 import base64
@@ -13,6 +13,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 from PIL import Image
 
 from turnitover.models.config import ModelConfig
+from turnitover.models.request_control import send
 
 
 class ModelError(RuntimeError):
@@ -114,14 +115,17 @@ def complete(cfg: ModelConfig, prompt: str, images: list[Path] | None = None) ->
     url, headers, payload = request_payload(cfg, prompt, images or [])
     request = Request(url, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
     start = time.perf_counter()
-    try:
+    def operation():
         with build_opener(_NoRedirect()).open(request, timeout=cfg.timeout) as response:
-            data = json.load(response)
+            return json.load(response)
+    exhausted = f"after up to {cfg.max_retries} retries" if cfg.max_retries else "no automatic retry"
+    try:
+        data = send(cfg, operation)
     except HTTPError as exc:
         # Never echo headers, URLs or provider error bodies (they can contain credentials).
-        raise ModelError(f"{cfg.provider} request failed with HTTP {exc.code}; no automatic retry") from None
+        raise ModelError(f"{cfg.provider} request failed with HTTP {exc.code}; {exhausted}") from None
     except (URLError, TimeoutError, OSError):
-        raise ModelError(f"{cfg.provider} connection failed or timed out; no automatic retry") from None
+        raise ModelError(f"{cfg.provider} connection failed or timed out; {exhausted}") from None
     except (ValueError, UnicodeError):
         raise ModelError("Provider returned invalid JSON") from None
     return parse_response(cfg.provider, data, (time.perf_counter() - start) * 1000)

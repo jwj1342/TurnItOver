@@ -109,7 +109,8 @@ def execution_hashes(native_root):
         'turnitover/repair/table1_runner.py', 'turnitover/repair/table1_judges.py',
         'turnitover/repair/loop.py', 'turnitover/repair/patches.py',
         'turnitover/repair/frozen_manifest.py', 'turnitover/models/client.py',
-        'turnitover/models/config.py', 'turnitover/verifier/contracts.py')]
+        'turnitover/models/config.py', 'turnitover/models/request_control.py',
+        'turnitover/verifier/contracts.py')]
     for folder in ('turnitover/core', 'turnitover/render', 'web/dist', 'configs'):
         files += [p for p in (native_root/folder).rglob('*')
                   if p.is_file() and p.suffix in {'.py', '.js', '.html', '.yaml'}]

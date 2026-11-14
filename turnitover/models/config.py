@@ -54,17 +54,23 @@ class ModelConfig:
     max_tokens: int = 4096
     timeout: float = 120
     enable_thinking: bool | None = None
+    request_interval: float = 0
+    max_retries: int = 0
 
     def public(self) -> dict:
         # Endpoint URLs can contain private routing information; do not log them.
         result = {"role": self.role, "provider": self.provider, "model": self.model,
                   "key_configured": bool(self.api_key), "max_tokens": self.max_tokens,
                   "timeout": self.timeout}
+        result.update(request_interval=self.request_interval, max_retries=self.max_retries)
         if self.enable_thinking is not None:
             result["enable_thinking"] = self.enable_thinking
         return result
 
     def validate(self, require_key: bool = True) -> None:
+        if (not math.isfinite(self.request_interval) or self.request_interval < 0
+                or type(self.max_retries) is not int or not 0 <= self.max_retries <= 3):
+            raise ValueError("Request interval must be nonnegative and retries must be 0..3")
         if not self.model:
             raise ValueError(f"Set TIO_{self.role.upper()}_MODEL to an explicit model ID")
         if require_key and not self.api_key and self.provider != "openai_compatible":
@@ -101,5 +107,12 @@ def model_config(role: str, env: dict[str, str]) -> ModelConfig:
         if value not in {"true", "false"}:
             raise ValueError("TIO_QWEN37_ENABLE_THINKING must be true or false")
         enable_thinking = value == "true"
+    try:
+        interval = float(env.get(f"{prefix}_REQUEST_INTERVAL_SECONDS", "0"))
+        retries = int(env.get(f"{prefix}_MAX_RETRIES", "0"))
+    except ValueError:
+        raise ValueError("Request interval and retries must be numeric") from None
+    if not math.isfinite(interval) or interval < 0 or not 0 <= retries <= 3:
+        raise ValueError("Request interval must be nonnegative and retries must be 0..3")
     return ModelConfig(role, provider, model, base.rstrip("/"), env.get(key_name, ""),
-                       limit, timeout, enable_thinking)
+                       limit, timeout, enable_thinking, interval, retries)
