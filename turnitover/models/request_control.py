@@ -10,6 +10,7 @@ from pathlib import Path
 import tempfile
 import time
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlsplit
 
 RETRYABLE = {429, 502, 503, 504}
 
@@ -78,6 +79,13 @@ def send(cfg, operation):
                 if isinstance(exc, HTTPError):
                     delay = max(delay, retry_after(exc.headers))
                     event['http_status'] = exc.code
+                    event['request_id'] = exc.headers.get('x-request-id') if exc.headers else None
+                    location = exc.headers.get('Location') if exc.headers else None
+                    if location:
+                        target = urlsplit(location)
+                        event['redirect_host'] = target.hostname
+                        event['redirect_scheme'] = target.scheme
+                        # No query/path: redirect targets may contain credentials.
                 event.update(error_type=type(exc).__name__, will_retry=retryable and attempt < cfg.max_retries)
                 if retryable:
                     save_state(state_path, max(started + cfg.request_interval, time.time() + delay))

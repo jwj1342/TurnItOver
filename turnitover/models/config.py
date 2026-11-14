@@ -56,13 +56,14 @@ class ModelConfig:
     enable_thinking: bool | None = None
     request_interval: float = 0
     max_retries: int = 0
+    stream: bool = False
 
     def public(self) -> dict:
         # Endpoint URLs can contain private routing information; do not log them.
         result = {"role": self.role, "provider": self.provider, "model": self.model,
                   "key_configured": bool(self.api_key), "max_tokens": self.max_tokens,
                   "timeout": self.timeout}
-        result.update(request_interval=self.request_interval, max_retries=self.max_retries)
+        result.update(request_interval=self.request_interval, max_retries=self.max_retries, stream=self.stream)
         if self.enable_thinking is not None:
             result["enable_thinking"] = self.enable_thinking
         return result
@@ -71,6 +72,8 @@ class ModelConfig:
         if (not math.isfinite(self.request_interval) or self.request_interval < 0
                 or type(self.max_retries) is not int or not 0 <= self.max_retries <= 3):
             raise ValueError("Request interval must be nonnegative and retries must be 0..3")
+        if type(self.stream) is not bool or self.stream and self.provider != "openai_compatible":
+            raise ValueError("Streaming is supported for openai_compatible only")
         if not self.model:
             raise ValueError(f"Set TIO_{self.role.upper()}_MODEL to an explicit model ID")
         if require_key and not self.api_key and self.provider != "openai_compatible":
@@ -114,5 +117,8 @@ def model_config(role: str, env: dict[str, str]) -> ModelConfig:
         raise ValueError("Request interval and retries must be numeric") from None
     if not math.isfinite(interval) or interval < 0 or not 0 <= retries <= 3:
         raise ValueError("Request interval must be nonnegative and retries must be 0..3")
+    stream_value = env.get(f"{prefix}_STREAM", "false").strip().lower()
+    if stream_value not in {"true", "false"} or stream_value == "true" and provider != "openai_compatible":
+        raise ValueError("STREAM must be true/false and requires openai_compatible")
     return ModelConfig(role, provider, model, base.rstrip("/"), env.get(key_name, ""),
-                       limit, timeout, enable_thinking, interval, retries)
+                       limit, timeout, enable_thinking, interval, retries, stream_value == "true")

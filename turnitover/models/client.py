@@ -14,6 +14,7 @@ from PIL import Image
 
 from turnitover.models.config import ModelConfig
 from turnitover.models.request_control import send
+from turnitover.models.streaming import read_chat_stream
 
 
 class ModelError(RuntimeError):
@@ -81,6 +82,8 @@ def request_payload(cfg: ModelConfig, prompt: str, images: list[Path]) -> tuple[
     if (cfg.provider == "openai_compatible" and cfg.model.startswith("qwen3.7-plus")
             and cfg.enable_thinking is not None):
         body["enable_thinking"] = cfg.enable_thinking
+    if cfg.stream:
+        body.update(stream=True, stream_options={"include_usage": True})
     return cfg.base_url + "/chat/completions", headers, body
 
 
@@ -117,7 +120,7 @@ def complete(cfg: ModelConfig, prompt: str, images: list[Path] | None = None) ->
     start = time.perf_counter()
     def operation():
         with build_opener(_NoRedirect()).open(request, timeout=cfg.timeout) as response:
-            return json.load(response)
+            return read_chat_stream(response) if cfg.stream else json.load(response)
     exhausted = f"after up to {cfg.max_retries} retries" if cfg.max_retries else "no automatic retry"
     try:
         data = send(cfg, operation)
