@@ -15,13 +15,27 @@ STATES = ("zero", "mid", "limit")
 
 def validate_pairs(payload, images):
     """Validate the ordered six-image, one-view public observation contract."""
-    if payload.get("observation_format") != OBSERVATION_FORMAT:
+    format_id = payload.get("observation_format")
+    single = format_id == 'single_reference_candidate_pair_runtime_v1'
+    if format_id not in {OBSERVATION_FORMAT, 'reference_candidate_pairs_runtime_v1', 'single_reference_candidate_pair_runtime_v1'}:
         raise ValueError("Unknown paired observation format")
     history = payload.get("history")
-    if not isinstance(history, list) or len(history) != len(STATES):
+    count = 1 if single else 3
+    if not isinstance(history, list) or len(history) < count:
         raise ValueError("Paired observations require three state pairs")
+    if format_id == OBSERVATION_FORMAT and len(history) != count:
+        raise ValueError('Legacy pairs cannot contain runtime history')
+    if [row.get('step') for row in history] != list(range(len(history))):
+        raise ValueError('History steps must be contiguous')
+    for row in history[count:]:
+        if (row.get('action', {}).get('type') != 'query_runtime'
+                or row.get('image_ref') is not None or row.get('reference_image_ref') is not None):
+            raise ValueError('Runtime history cannot contain images')
     flattened, views = [], []
-    for index, (row, state) in enumerate(zip(history, STATES, strict=True)):
+    states = [history[0].get('state')] if single else STATES
+    if single and states[0] not in STATES:
+        raise ValueError('Unknown single observation state')
+    for index, (row, state) in enumerate(zip(history[:count], states, strict=True)):
         if (set(row) != {"step", "state", "action", "reference_image_ref", "image_ref"}
                 or type(row["step"]) is not int or row["step"] != index or row["state"] != state):
             raise ValueError("Paired observations must be steps 0/1/2 at zero/mid/limit")
@@ -34,7 +48,7 @@ def validate_pairs(payload, images):
         flattened.extend((row["reference_image_ref"], row["image_ref"]))
     if any(not isinstance(path, str) or not path for path in flattened):
         raise ValueError("Paired observations need reference and candidate image paths")
-    if len(set(flattened)) != 6 or flattened != images:
+    if len(set(flattened)) != 2 * count or flattened != images:
         raise ValueError("Paired image order must be reference/candidate for each state")
     if len(set(views)) != 1 or payload["context"].get("views") != [views[0]]:
         raise ValueError("Paired observations require one shared view")
@@ -110,7 +124,12 @@ def user_content(record, images):
     from turnitover.oracle.supervision_validation import public_payload
     payload = public_payload(record)
     content = [{"type": "text", "text": record["messages"][0]["content"]}]
-    for index, row in enumerate(payload["history"]):
+    image_rows = [row for row in payload["history"]
+                  if row.get("action", {}).get("type") == "request_view"
+                  and "reference_image_ref" in row]
+    if 2 * len(image_rows) != len(images):
+        raise ValueError("Paired image history differs from image roster")
+    for index, row in enumerate(image_rows):
         content.extend([
             {"type": "text", "text": f"Observation {index}, state={row['state']}, view={row['action']['view_id']}: reference"},
             {"type": "image", "image": images[2 * index]},

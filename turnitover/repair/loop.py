@@ -61,8 +61,9 @@ def prepare_request(folder, source, packet, memory, remaining):
         paths.append(target); names[path.name]=target.name
     public=json.loads(json.dumps(packet.public))
     for observation in public.get('observations',[]):
-        if observation.get('image_ref'):
-            observation['image_ref']=names[observation['image_ref']]
+        for key in ('reference_image_ref', 'image_ref'):
+            if observation.get(key):
+                observation[key]=names[observation[key]]
     payload=dict(current_program=source,feedback=public,previous_attempts=memory,
                  remaining_repair_calls=remaining,image_order=[p.name for p in paths])
     prompt=PROTOCOL+'\n'+json.dumps(payload)

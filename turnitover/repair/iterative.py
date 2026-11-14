@@ -264,14 +264,17 @@ def _verification_feedback(task: str, references: tuple[Path, ...], result: dict
         if observation.get("step") not in cited:
             continue
         item = dict(observation)
-        image_ref = item.get("image_ref")
-        if image_ref:
-            image = verifier_dir / image_ref
-            images.append(image)
-            item["image_ref"] = image.name
+        for key in ("reference_image_ref", "image_ref"):
+            image_ref = item.get(key)
+            if image_ref:
+                image = verifier_dir / image_ref
+                images.append(image)
+                item[key] = image.name
         observations.append(item)
     public = {"task": task, "phase": "visual_revision", "verdict": verdict,
               "termination": result.get("termination"), "observations": observations}
+    if "findings_metadata" in result:
+        public["findings_metadata"] = result["findings_metadata"]
     return Feedback(public, tuple(images), len(observations))
 
 

@@ -45,7 +45,7 @@ def test_dataset_changes_during_loading_fail_before_model_initialization(tmp_pat
             with mutation_path.open("a") as stream:
                 stream.write("\n")
 
-    monkeypatch.setattr(module, "load_training_examples", load_and_mutate)
+    monkeypatch.setattr(module, "load_evaluation_examples", load_and_mutate)
     torch = ModuleType("torch")
     torch.manual_seed = Mock()
     torch.cuda = SimpleNamespace(manual_seed_all=Mock())
@@ -66,7 +66,7 @@ def test_dataset_changes_during_loading_fail_before_model_initialization(tmp_pat
     transformers.AutoConfig = SimpleNamespace(from_pretrained=Mock(return_value=object()))
     transformers.AutoProcessor = SimpleNamespace(from_pretrained=processor_init)
     transformers.GenerationConfig = FakeGenerationConfig
-    transformers.Qwen3VLForConditionalGeneration = SimpleNamespace(from_pretrained=model_init)
+    transformers.AutoModelForImageTextToText = SimpleNamespace(from_pretrained=model_init)
     monkeypatch.setitem(sys.modules, "transformers", transformers)
 
     output = tmp_path / "captured-evaluation"
