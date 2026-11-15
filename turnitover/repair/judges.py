@@ -1,9 +1,11 @@
 """Judge conditions for the repair table: each one turns the current program into Feedback for the generator.
 
 A judge never sees the private corruption record except the gold judge, which is the upper bound.
-The sweep renders the reference and the candidate at the same viewpoints and joint states, in the
-order and naming of the three-tier-900 training export, so that fine-tuned verifiers are queried
-in-distribution. Renders and verdicts are cached by program hash so repeated rounds and judges share work.
+The sweep renders the reference and the candidate at the same viewpoints and joint states with the case's fixed
+framing, in the order and naming of the three-tier-900 training export, so that fine-tuned verifiers are queried
+in-distribution. Every judge hands the generator the same images, the case's observation group (per sweep cell the
+reference then the candidate); judges differ only in their own section of the feedback (verdict or pixel report).
+Renders are cached by (sweep, framing, program hash), verdicts by (model identity, prompt, image bytes).
 """
 from __future__ import annotations
 
@@ -26,6 +28,10 @@ from turnitover.taxonomy import load_taxonomy
 
 PROMPT_900 = (Path(__file__).parent / "prompt_900.txt").read_text()   # her export's prompt text (code900), adds joint_id
 PROMPT_PREFIX = PROMPT_900.rstrip("\n") + "\n\n"                         # one blank line before the JSON, as in the export
+FRAMING_900 = Path(__file__).parent / "framing_900.json"               # per-case export framing, scripts/exp900/derive_pack_framing.py
+# Train-fitted status threshold of scripts/exp900/pixel_status_baseline.py (same score: mean absolute RGB difference in
+# [0,1] of one reference/candidate pair), from tio-runs/out/level900-base-2B4B-26612686/pixel-status/metrics.json.
+PIXEL_THRESHOLD = 0.0010002983617596328
 STATES = ("rest", "mid", "limit")
 TIER_STATES = {"easy": ("rest", "limit"), "medium": STATES, "hard": STATES}
 TASK = "Repair deviations from the reference while preserving task joint identities."
@@ -72,6 +78,8 @@ class Case:
     sweep: Sweep
     grid: list[dict] = field(default_factory=list)
     exposures: list[list[int]] = field(default_factory=list)
+    parts: tuple[str, ...] = ()      # part and joint order of the training export's prompt context; empty: harness order
+    joints: tuple[str, ...] = ()
 
     @staticmethod
     def load(folder: Path, default_views: tuple[str, ...] = ("front",)) -> "Case":
@@ -104,12 +112,15 @@ def exposing_cells_by_defect(episode: dict) -> dict[str, set[str]]:
     return out
 
 
-def load_pack(root: Path, labels_path: Path | None = None, episodes_path: Path | None = None) -> list[Case]:
+def load_pack(root: Path, labels_path: Path | None = None, episodes_path: Path | None = None,
+              framing_path: Path = FRAMING_900) -> list[Case]:
     """Her 58-case repair pack (manifest format three-tier-900-validation-repair-programs-v1).
-    Labels come from the 900 export's annotations.private.jsonl, per-cell exposure from validation.episodes.jsonl."""
+    Labels come from the 900 export's annotations.private.jsonl, per-cell exposure from validation.episodes.jsonl,
+    the fixed framing of her images from framing_path, the prompt's part/joint order from the reference AssetSpec."""
     manifest = json.loads((root / "manifest.json").read_text())
     if manifest.get("format") != PACK_FORMAT:
         raise ValueError(f"unexpected pack format: {manifest.get('format')}")
+    framings = json.loads(Path(framing_path).read_text())["cases"]
     labels: dict[str, list[dict]] = {}
     if labels_path:
         for line in Path(labels_path).read_text().splitlines():
@@ -143,8 +154,11 @@ def load_pack(root: Path, labels_path: Path | None = None, episodes_path: Path |
                          "detent": None if cell["state"] == "rest" else cell["state"]})
             name = cell["candidate_image"].split("/")[-1]
             exposures.append([i for i, l in enumerate(case_labels) if name in cited.get(l["defect_id"], ())])
-        cases.append(Case(uid, entry["difficulty"], texts["candidate"], ObjectProgram(texts["reference"]), None,
-                          case_labels, sweep, grid, exposures))
+        spec = json.loads((root / entry["programs"]["reference"]["spec"]).read_text())
+        framing = Framing(tuple(framings[uid]["center"]), framings[uid]["radius"])
+        cases.append(Case(uid, entry["difficulty"], texts["candidate"], ObjectProgram(texts["reference"]), framing,
+                          case_labels, sweep, grid, exposures,
+                          tuple(p["id"] for p in spec["parts"]), tuple(j["id"] for j in spec["joints"])))
     return cases
 
 
@@ -173,12 +187,8 @@ def render_program(session: ObservationSession, program: ObjectProgram, framing:
     return dict(parts=list(info.parts), joints=list(info.joints), framing=dataclasses.asdict(info.framing)), pngs
 
 
-def sweep_cells(session: ObservationSession, case: Case, candidate: str, cache: Path) -> tuple[list[Cell], dict]:
-    """Reference and candidate renders in the training order (per view, references then candidates), named as in the
-    training export so that feedback image names are unique. Cached per (sweep, framing, program, kind)."""
-    program = ObjectProgram(candidate)
-    root = cache / "renders" / f"{case.sweep.key}-{case.framing.radius if case.framing else 'auto'}"
-    folders = {"reference": root / case.reference.sha / "reference", "candidate": root / program.sha / "candidate"}
+def sweep_layout(case: Case, folders: dict[str, Path]) -> list[Cell]:
+    """Sweep cells in the training order (per view, references then candidates), named as in the training export."""
     single = len(case.sweep.views) == 1
     cells, index = [], 0
     for view in case.sweep.views:
@@ -187,6 +197,17 @@ def sweep_cells(session: ObservationSession, case: Case, candidate: str, cache: 
                 name = cell_name(index, view, kind, state, single)
                 cells.append(Cell(view, state, kind, name, folders[kind] / name))
                 index += 1
+    return cells
+
+
+def sweep_cells(session: ObservationSession, case: Case, candidate: str, cache: Path) -> tuple[list[Cell], dict]:
+    """Reference and candidate renders of the sweep with the case's framing; names are unique across both programs.
+    Cached per (sweep, framing, program, kind)."""
+    program = ObjectProgram(candidate)
+    framing = hashlib.sha256(json.dumps(dataclasses.asdict(case.framing)).encode()).hexdigest()[:12] if case.framing else "auto"
+    root = cache / "renders" / f"{case.sweep.key}-{framing}"
+    folders = {"reference": root / case.reference.sha / "reference", "candidate": root / program.sha / "candidate"}
+    cells = sweep_layout(case, folders)
     for kind, source in (("reference", case.reference), ("candidate", program)):
         folder = folders[kind]
         if (folder / "info.json").exists():
@@ -206,7 +227,8 @@ def image_ref(case: Case, cell: Cell) -> str:
 
 def judge_prompt(case: Case, info: dict, cells: list[Cell]) -> tuple[str, list[Path]]:
     """The three-tier-900 training prompt: references first, every later image is a request_view step."""
-    context = {"task": "compare reference and candidate articulation", "parts": info["parts"], "joints": info["joints"],
+    context = {"task": "compare reference and candidate articulation", "parts": list(case.parts or info["parts"]),
+               "joints": list(case.joints or info["joints"]),
                "views": list(case.sweep.views), "runtime_properties": [], "action_types": ["request_view"],
                "max_triangles": 1, "max_draw_calls": 1}
     history = [{"step": step, "image_ref": image_ref(case, cell), "action": {"type": "request_view", "view_id": cell.view}}
@@ -264,12 +286,13 @@ class JudgeModel:
     def __init__(self, base: Path, adapter: Path | None = None, max_new_tokens: int = 512):
         self.base, self.adapter, self.max_new_tokens = Path(base), Path(adapter) if adapter else None, max_new_tokens
         self.model = self.processor = None
-
-    def ident(self) -> dict:
-        out = {"base": self.base.name, "adapter": str(self.adapter) if self.adapter else None}
-        if self.adapter and (self.adapter / "adapter_model.safetensors").exists():
-            out["adapter_sha256"] = hashlib.sha256((self.adapter / "adapter_model.safetensors").read_bytes()).hexdigest()
-        return out
+        self.identity = {"base": self.base.name, "adapter": str(self.adapter) if self.adapter else None,
+                         "max_new_tokens": max_new_tokens}
+        if self.adapter:   # content, not path: jobs copy the checkpoint to node-local disk
+            digest = hashlib.sha256()
+            for name in ("adapter_config.json", "adapter_model.safetensors"):
+                digest.update((self.adapter / name).read_bytes())
+            self.identity["adapter_sha256"] = digest.hexdigest()
 
     def _load(self):
         import torch
@@ -307,26 +330,23 @@ def pixel_difference(reference: Path, candidate: Path) -> float:
         return sum(ImageStat.Stat(ImageChops.difference(a, b)).mean) / (3 * 255.0)
 
 
-def observation_entries(case: Case, cells: list[Cell], steps: list[int]) -> list[dict]:
-    out = []
-    for step in steps:
-        cell = cells[step + 1] if step >= 0 else cells[0]
-        out.append({"step": step, "view": cell.view, "state": cell.state, "kind": cell.kind, "image_ref": cell.name})
-    return out
+def observation_feedback(case: Case, cells: list[Cell], section: dict) -> Feedback:
+    """What every judge gives the generator: the case's observation group, per sweep cell (view-major, then state)
+    the reference image then the candidate image, plus the judge's own section. Observation cost is one per cell."""
+    by_key = {(c.view, c.state, c.kind): c for c in cells}
+    group = [by_key[(view, state, kind)] for view in case.sweep.views for state in case.sweep.states
+             for kind in ("reference", "candidate")]
+    public = {"task": TASK, "observations": [{"view": c.view, "state": c.state, "kind": c.kind, "image_ref": c.name} for c in group],
+              "reference_condition": "reference_then_candidate_per_cell", **section}
+    return Feedback(public, tuple(c.path for c in group), len(group) // 2)
 
 
-def verdict_feedback(case: Case, cells: list[Cell], verdict: dict, folder: Path, extra: dict | None = None) -> Feedback:
-    """The verdict plus the images it cites, reference first; a verdict without findings shows the rest pair."""
-    cited = sorted({s for f in verdict["findings"] for s in f["evidence_steps"]})
-    if not cited:
-        cited = [i for i, c in enumerate(cells[1:]) if c.kind == "candidate" and c.state == "rest" and c.view == cells[0].view][:1]
-    images = [cells[0].path] + [cells[s + 1].path for s in cited]
-    public = {"task": TASK, "verdict": verdict, "observations": observation_entries(case, cells, [-1] + cited),
-              "reference_condition": "first_reference_image_then_cited_observations"}
-    if extra:
-        public.update(extra)
+def verdict_section(verdict: dict, shown: list[Cell], folder: Path) -> dict:
+    """The verdict as validated, plus the observation cell behind every step it cites (step k is the judge's image k+1)."""
     (folder / "verdict.json").write_text(json.dumps(verdict, indent=2))
-    return Feedback(public, tuple(images), len(cells) - 1)
+    cited = sorted({s for f in verdict["findings"] for s in f["evidence_steps"]})
+    return {"verdict": verdict, "evidence_step_cells": [{"step": s, "view": shown[s + 1].view, "state": shown[s + 1].state,
+                                                         "kind": shown[s + 1].kind} for s in cited]}
 
 
 class Judge:
@@ -346,17 +366,14 @@ class NoneJudge(Judge):
     def bind(self, session, case, cache):
         def observe(source: str, gold: dict, folder: Path) -> Feedback:
             cells, _ = sweep_cells(session, case, source, cache)
-            rest = next(i for i, c in enumerate(cells[1:]) if c.kind == "candidate" and c.state == "rest")
-            public = {"task": TASK, "observations": observation_entries(case, cells, [-1, rest]),
-                      "reference_condition": "reference_rest_then_candidate_rest"}
-            return Feedback(public, (cells[0].path, cells[rest + 1].path), 1)
+            return observation_feedback(case, cells, {})
         return observe
 
 
 class PixelJudge(Judge):
     judge_id = "pixel"
 
-    def __init__(self, threshold: float = 0.002):
+    def __init__(self, threshold: float = PIXEL_THRESHOLD):
         self.threshold = threshold
 
     def describe(self):
@@ -365,30 +382,22 @@ class PixelJudge(Judge):
     def bind(self, session, case, cache):
         def observe(source: str, gold: dict, folder: Path) -> Feedback:
             cells, _ = sweep_cells(session, case, source, cache)
-            by_key = {(c.view, c.state, c.kind): (i, c) for i, c in enumerate(cells)}
-            report, images, cited = [], [cells[0].path], []
+            by_key = {(c.view, c.state, c.kind): c for c in cells}
+            report = []
             for view in case.sweep.views:
                 for state in case.sweep.states:
-                    ri, rc = by_key[(view, state, "reference")]
-                    ci, cc = by_key[(view, state, "candidate")]
-                    diff = pixel_difference(rc.path, cc.path)
-                    differs = diff > self.threshold
-                    report.append({"view": view, "state": state, "differs": differs, "difference": round(diff, 5),
-                                   "image_ref": cc.name if differs else None})
-                    if differs:
-                        images.append(cc.path)
-                        cited.append(ci - 1)
-            public = {"task": TASK, "pixel_difference": {"threshold": self.threshold, "cells": report,
-                                                         "summary": "Cells whose candidate rendering differs from the reference. No defect type or part is identified."},
-                      "observations": observation_entries(case, cells, [-1] + cited),
-                      "reference_condition": "first_reference_image_then_differing_candidate_cells"}
+                    diff = pixel_difference(by_key[(view, state, "reference")].path, by_key[(view, state, "candidate")].path)
+                    report.append({"view": view, "state": state, "differs": diff > self.threshold, "difference": round(diff, 6)})
             (folder / "pixel.json").write_text(json.dumps(report, indent=2))
-            return Feedback(public, tuple(images), len(cells) - 1)
+            return observation_feedback(case, cells, {"pixel_difference": {
+                "threshold": self.threshold, "cells": report,
+                "summary": "Cells (view, state) whose candidate rendering differs from the reference. No defect type or part is identified."}})
         return observe
 
 
 class VlmJudge(Judge):
-    """Zero-shot or fine-tuned Qwen3-VL on the single rest screenshot or the full sweep; verdicts cached by program hash."""
+    """Zero-shot or fine-tuned Qwen3-VL on the single rest screenshot or the full sweep; verdicts cached by
+    (model identity, prompt, image bytes)."""
 
     def __init__(self, judge_id: str, model: JudgeModel, mode: str = "sweep"):
         if mode not in ("screenshot", "sweep"):
@@ -396,7 +405,7 @@ class VlmJudge(Judge):
         self.judge_id, self.model, self.mode = judge_id, model, mode
 
     def describe(self):
-        return {"judge": self.judge_id, "mode": self.mode, **self.model.ident()}
+        return {"judge": self.judge_id, "mode": self.mode, **self.model.identity}
 
     def bind(self, session, case, cache):
         def observe(source: str, gold: dict, folder: Path) -> Feedback:
@@ -410,21 +419,25 @@ class VlmJudge(Judge):
             else:
                 shown = cells
             prompt, images = judge_prompt(case, info, shown)
-            key = cache / "verdicts" / self.judge_id / f"{case.sweep.key}-{self.mode}" / f"{ObjectProgram(source).sha}.json"
+            digest = hashlib.sha256(json.dumps(self.model.identity, sort_keys=True).encode())
+            digest.update(b"\0"); digest.update(prompt.encode())
+            for path in images:
+                digest.update(b"\0"); digest.update(hashlib.sha256(path.read_bytes()).digest())
+            key = cache / "verdicts" / self.judge_id / f"{digest.hexdigest()}.json"
             if key.exists():
                 record = json.loads(key.read_text())
                 record["cached"] = True
             else:
                 text, usage = self.model(prompt, images)
                 record = {"prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(), "response": text, "usage": usage,
-                          "model": self.model.ident(), "cached": False}
+                          "model": self.model.identity, "cached": False}
                 key.parent.mkdir(parents=True, exist_ok=True)
                 key.write_text(json.dumps(record))
             steps = set(range(len(shown) - 1))
             verdict, error = validate_verdict(record["response"], info["parts"], steps)
             (folder / "judge_call.json").write_text(json.dumps({**record, "validation_error": error, "images": [c.name for c in shown]}, indent=2))
             (folder / "judge_prompt.txt").write_text(prompt)
-            return verdict_feedback(case, shown, verdict, folder)
+            return observation_feedback(case, cells, verdict_section(verdict, shown, folder))
         return observe
 
 
@@ -433,6 +446,9 @@ class GoldJudge(Judge):
     judge_id = "gold"
 
     def bind(self, session, case, cache):
+        if not case.labels:
+            raise ValueError(f"the gold judge needs the case's defect labels (--labels): {case.uid}")
+
         def observe(source: str, gold: dict, folder: Path) -> Feedback:
             cells, info = sweep_cells(session, case, source, cache)
             # steps whose candidate cell exposes the label, from the annotation grid when it covers the sweep
@@ -466,7 +482,7 @@ class GoldJudge(Judge):
             verdict = {"status": "fail" if findings else "pass", "confidence": 1.0, "findings": findings,
                        "summary": "Findings from the corruption record and the privileged audit." if findings else "The audit passes.",
                        "limitations": ["Gold findings are an upper bound and never available to a deployed verifier."]}
-            return verdict_feedback(case, cells, verdict, folder)
+            return observation_feedback(case, cells, verdict_section(verdict, cells, folder))
         return observe
 
 
