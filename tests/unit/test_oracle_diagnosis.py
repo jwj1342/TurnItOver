@@ -13,7 +13,8 @@ def test_unexposed_truth_does_not_become_finding_or_clean_pass():
     verdict = json.loads(row["messages"][1]["content"])["verdict"]
     assert verdict["status"] == "uncertain"
     assert not verdict["findings"]
-    assert "severity" not in row["messages"][0]["content"] .split("experiment supplies")[-1]
+    public = json.loads(row["messages"][0]["content"].splitlines()[-1])
+    assert set(public) == {"context", "remaining", "taxonomy_ids", "paired_observations", "image_order"}
     annotation["exposures"] = [[0]]
     row = paired_example(annotation, context, "oracle", ["candidate.png"], ["reference.png"])
     verdict = json.loads(row["messages"][1]["content"])["verdict"]

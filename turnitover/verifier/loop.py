@@ -9,6 +9,7 @@ from turnitover.core.actions import Observation, action_cost
 from turnitover.core.serde import to_dict
 from turnitover.models.client import ModelError
 from turnitover.policy.loop import ImageSink, SessionLike, execute_observation
+from turnitover.render.session import HarnessError
 from turnitover.verifier.contracts import Context, DecisionError, Verdict, parse_decision, uncertain
 
 log = logging.getLogger("turnitover.verifier")
@@ -53,11 +54,7 @@ def run_verification(session: SessionLike, policy: VerificationPolicy, context: 
         # Browser failures are distinguished from invalid judgments by the outer runner.
         try:
             obs = execute_observation(session, decision, len(history), image_sink)
-        except Exception as exc:
-            from turnitover.render.session import HarnessError
-
-            if not isinstance(exc, HarnessError):
-                raise
+        except HarnessError as exc:
             return Episode(uncertain("Candidate failed while executing an observation."), "observation_error",
                            tuple(history), spent, type(exc).__name__, to_dict(decision))
         history.append(obs)

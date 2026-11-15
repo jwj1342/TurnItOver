@@ -1,3 +1,4 @@
+import base64
 import io
 import json
 from urllib.error import HTTPError
@@ -42,23 +43,40 @@ def test_reject_credential_urls_and_remote_plaintext(url):
         model_config("generator", {"TIO_GENERATOR_BASE_URL": url})
 
 
-@pytest.mark.parametrize("provider,suffix,image_key,token_key", [
-    ("openai", "/responses", "input_image", "max_output_tokens"),
-    ("anthropic", "/messages", "media_type", "max_tokens"),
-    ("gemini", "/models/test-model:generateContent", "inlineData", "maxOutputTokens"),
-    ("openai_compatible", "/chat/completions", "image_url", "max_tokens"),
-    ("openrouter", "/chat/completions", "image_url", "max_tokens"),
+@pytest.mark.parametrize("provider,suffix", [
+    ("openai", "/responses"), ("anthropic", "/messages"),
+    ("gemini", "/models/test-model:generateContent"),
+    ("openai_compatible", "/chat/completions"),
 ])
-def test_provider_vision_wire_formats(tmp_path, provider, suffix, image_key, token_key):
+def test_provider_vision_wire_formats(tmp_path, provider, suffix):
     path = tmp_path / "input.png"
     Image.new("RGB", (4, 4), "blue").save(path)
-    cfg = ModelConfig("generator", provider, "test-model", "https://test/v1", "secret-key")
+    cfg = ModelConfig("generator", provider, "test-model", "https://test/v1", "secret-key", max_tokens=321)
     url, headers, body = request_payload(cfg, "Describe this", [path])
-    assert url.endswith(suffix)
-    encoded = json.dumps(body)
-    assert image_key in encoded and token_key in encoded
-    assert "secret-key" not in encoded + url
-    assert "secret-key" in json.dumps(headers)
+    assert url == cfg.base_url + suffix
+    data = base64.b64encode(path.read_bytes()).decode()
+    data_url = f"data:image/png;base64,{data}"
+    if provider == "gemini":
+        assert body["generationConfig"]["maxOutputTokens"] == 321
+        assert body["contents"] == [{"role": "user", "parts": [
+            {"inlineData": {"mimeType": "image/png", "data": data}}, {"text": "Describe this"}]}]
+        assert headers["x-goog-api-key"] == "secret-key"
+    else:
+        assert body["model"] == "test-model"
+        if provider == "openai":
+            assert body["max_output_tokens"] == 321 and body["store"] is False
+            assert body["input"] == [{"role": "user", "content": [
+                {"type": "input_image", "image_url": data_url}, {"type": "input_text", "text": "Describe this"}]}]
+        else:
+            assert body["max_tokens"] == 321
+            image = ({"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": data}}
+                     if provider == "anthropic" else {"type": "image_url", "image_url": {"url": data_url}})
+            assert body["messages"] == [{"role": "user", "content": [image, {"type": "text", "text": "Describe this"}]}]
+        if provider == "anthropic":
+            assert headers["x-api-key"] == "secret-key"
+        else:
+            assert headers["Authorization"] == "Bearer secret-key"
+    assert "secret-key" not in json.dumps(body) + url
 
 
 @pytest.mark.parametrize("provider,response", [

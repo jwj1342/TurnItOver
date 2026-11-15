@@ -1,11 +1,10 @@
 import dataclasses
 import json
-from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
-from turnitover.core.actions import Observation, QueryRuntime, RequestView, RuntimeProperty, ViewId
+from turnitover.core.actions import ActuateJoint, Detent, Observation, QueryRuntime, RequestView, RuntimeProperty, ViewId
 from turnitover.models.client import ModelError, ModelResult
 from turnitover.render.session import HarnessError
 from turnitover.verifier.contracts import Context, DecisionError, parse_decision, parse_json
@@ -102,10 +101,6 @@ def test_findings_validate_ranges_parts_and_actual_evidence(context, key, value)
         parse_decision(final("fail", [f]), context, {0})
 
 
-def test_valid_evidence_linked_finding(context):
-    assert parse_decision(final("fail", [finding()]), context, {0}).findings[0].evidence_steps == (0,)
-
-
 def test_qwen_pass_with_findings_is_rejected_with_explanation(context):
     # Regression from the first real local Qwen trials: correct finding, contradictory pass.
     policy = Policy([{"action": {"type": "query_runtime", "property": "stats"}}, final("pass", [finding()])])
@@ -144,7 +139,8 @@ def test_runtime_baseline_cannot_claim_visual_pass(context):
     assert RuntimePolicy().decide(context, observed, 0)["verdict"]["status"] == "uncertain"
     observed[0].payload["triangles_scene"] = 7000
     decision = RuntimePolicy().decide(context, observed, 0)
-    assert parse_decision(decision, context, {0}).status == "fail"
+    verdict = parse_decision(decision, context, {0})
+    assert verdict.status == "fail" and verdict.findings[0].evidence_steps == (0,)
 
 
 def test_vision_receives_ordered_images_without_gold_or_source(tmp_path, context):
@@ -174,8 +170,43 @@ def test_fixed_baseline_uses_one_final_model_call(tmp_path, context):
     assert len(calls) == 1 and result.spent == 2
 
 
-def test_random_plan_is_seeded(tmp_path, context):
-    a = VisionPolicy(None, tmp_path, [], "random", 11)
-    b = VisionPolicy(None, tmp_path, [], "random", 11)
-    assert a.decide(context, [], 8) == b.decide(context, [], 8)
-    assert a._plan == b._plan
+def test_random_baseline_replays_seeded_action_permutations(tmp_path, context):
+    expected = [QueryRuntime(RuntimeProperty.STATS), RequestView(ViewId("front")),
+                ActuateJoint("hinge", Detent.LIMIT), ActuateJoint("hinge", Detent.ZERO)]
+
+    def run(seed, folder):
+        model = lambda *args: ModelResult(json.dumps(final()), "mock", {}, "completed", 1)
+        policy = VisionPolicy(model, tmp_path / folder, [], "random", seed)
+        episode = run_verification(Session(), policy, context, len(expected), lambda i, png: f"{i}.png")
+        assert episode.termination == "budget_exhausted"
+        return [obs.action for obs in episode.trajectory]
+
+    actions = run(11, "first")
+    assert actions == run(11, "repeat")
+    assert actions != run(12, "other") and actions != expected
+    assert sorted(map(repr, actions)) == sorted(map(repr, expected))
+
+
+@pytest.mark.parametrize("stage,error,handled", [
+    ("candidate", HarnessError("runtime", "broken candidate"), True),
+    ("candidate", TypeError("internal bug"), False),
+    ("reference", HarnessError("runtime", "broken reference"), False),
+])
+def test_audit_only_converts_candidate_execution_errors(monkeypatch, stage, error, handled):
+    from unittest.mock import MagicMock
+    from turnitover.verifier import audit as module
+
+    reference, candidate = SimpleNamespace(sha="reference"), SimpleNamespace(sha="candidate")
+    session = MagicMock()
+    session.__enter__.return_value = session
+    session.load.return_value = SimpleNamespace(joints={}, framing=None)
+    session.load.side_effect = [error] if stage == "reference" else [session.load.return_value, error]
+    monkeypatch.setattr(module, "ObservationSession", lambda *args: session)
+    monkeypatch.setattr(module, "collect_evidence", lambda *args: None)
+    if handled:
+        result = module.audit(candidate, reference, None, (), 5000, 32)
+        assert result["status"] == "error" and result["error_type"] == type(error).__name__
+    else:
+        with pytest.raises(type(error)) as caught:
+            module.audit(candidate, reference, None, (), 5000, 32)
+        assert caught.value is error

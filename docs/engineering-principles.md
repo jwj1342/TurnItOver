@@ -4,23 +4,46 @@
 
 | 原则 | 当前代码证据 | 判断与边界 |
 | --- | --- | --- |
-| DRY：避免重复 | `policy/loop.py` 的 `execute_observation` 供数据生成与 verifier 共用；`verifier/policies.py` 的 `action_plan` 供固定、随机与运行时策略复用；`models/client.py` 提供统一调用入口。 | 核心动作语义已有单一实现。各工作流仍有相似的清单写入、输入复制代码；其输出契约不同，暂不强行抽象为通用工作流框架。 |
+| DRY：避免重复 | `policy/loop.py` 的 `execute_observation` 供数据生成与 verifier 共用；`verifier/policies.py` 的 `action_plan` 供固定、随机与运行时策略复用；`models/client.py` 提供统一调用入口；`dataset/metrics.py` 共用缺陷统计，`oracle/readout.py` 共用观测数据读取与 strongest state 选择。 | 核心动作语义已有单一实现。各工作流仍有相似的清单写入、输入复制代码；其输出契约不同，暂不强行抽象为通用工作流框架。 |
 | 关注点分离 | `assets`/`corruptions` 构造输入，`render` 执行浏览器操作，`checkers` 检查证据，`verifier` 处理判定。 | 此次将 HTML 展示从 `verifier/runner.py` 移到 `verifier/report.py`，避免页面修改影响实验编排文件。 |
 | SRP：单一职责 | `verifier/contracts.py` 校验决策，`loop.py` 控制预算和终止，`audit.py` 执行独立审计，`report.py` 生成页面。 | `runner.py` 仍负责工作流组装和产物持久化；`preview.py` 包含多种展示产物。当前规模下保留直接编排，若将来有独立存储后端或模板需求再拆分。 |
 | 清晰抽象与契约 | `SessionLike`、`VerificationPolicy` 使用小型 Protocol；程序 ABI、浏览器协议、核心数据结构有固定契约；verifier 决策有显式校验。 | 此次补上共享执行函数遗漏的 `Action` 导入，使运行时类型解析可用。Python 尚未配置全仓静态类型检查；小接口不等于所有参数都有完整类型约束。 |
-| 低耦合、高内聚 | 检查器消费浏览器导出的 Evidence，不读取 AssetSpec；策略通过注入调用函数访问模型；独立 gold audit 在判定后执行。 | verifier 循环仍依赖适配层的 ModelError/HarnessError 类型，因此尚未完全隔离后端。现阶段只有既定后端，不为假设中的替换创建额外异常层。 |
+| 低耦合、高内聚 | 检查器消费浏览器导出的 Evidence，不读取 AssetSpec；策略通过注入调用函数访问模型；独立 gold audit 在判定后执行。 | verifier 循环仍依赖适配层的 ModelError/HarnessError 类型，因此尚未完全隔离后端。现阶段只有既定后端，不为假设中的替换创建额外异常层。独立 audit 仅转换候选执行的 CompileError/HarnessError；参考、环境及内部错误向上传播并保留 traceback。 |
 | 可扩展与无状态 | `engine/sharding.py` 按索引分片并生成稳定样本种子；Slurm 数组执行独立分片；随机策略使用实例级 NumPy Generator。 | 数据生成适合按任务横向扩展。浏览器、策略轨迹和本地模型缓存是任务内有状态对象，不应跨线程共享；verifier 尚无专用分布式调度和断点恢复。 |
 | 可观测与可测试 | `telemetry.py` 提供 JSON 日志与计时；观测轨迹、错误、输入、判定及模型 token/耗时落盘；策略可注入假会话与假模型。 | 有单元和实际浏览器测试。尚无跨运行指标汇总或分布式 tracing；模型置信度未校准，不能当作准确率。 |
 | KISS：保持简单 | 使用 dataclass、Protocol、argparse、YAML、标准库 HTTP 与现有 Slurm 脚本。 | 不增加服务注册中心、工作流框架或通用插件系统；配置与文件输出满足当前实验规模。 |
 | YAGNI：避免过度设计 | 本地 Qwen 依赖单独安装、推理时延迟导入；已按当前里程碑接入真实资产转换与修复 pilot；训练、RL 和完整 oracle 上界仍未完成。 | 只为当前调用和实验提供接口；RP 中的长期模块保留为研究任务，避免用空实现造成已完成的错觉。 |
 
-## 本次修改与验证
+## 前次整理与验证
 
 - README 的介绍、章节、表格、操作说明及命令注释改为中文；模型名、路径和命令保留原始拼写。
 - README 的离线验证命令改用仓库已有的候选程序，避免依赖某次本地预览目录。
 - HTML 报告移至独立模块，运行入口继续使用同一份结构化结果。
 - 共享观测函数补齐 `Action` 类型导入；没有修改核心数据协议或观测成本。
 - 用单元测试、浏览器集成测试、类型注解解析和文档链接检查验证本次变更。
+
+## 过度工程化审查后的精简
+
+- serde 移除 Union 试错解码和未使用的 Annotated 分支，拒绝未知动作标记、非法 null 和向量截断；合法记录保持兼容，见 [读取边界](protocol.md#json-读取边界)。
+- corruption 使用显式实现映射，移除装饰器注册、导入副作用和运行时类属性赋值。taxonomy 与实现一致性仍由测试检查。
+- 删除无调用的点集 `chamfer` 和不再生效的 `point_surface_distance(k=...)` 参数；几何检查继续使用点到三角面的算法。
+- 合并重复的 TP/FP/FN 和 precision/recall/F1 计算，保留各实验的独立 prompt、条件和产物结构。
+- 简化 verifier 与模型配置中的异常捕获；保留记录失败后重抛、清理资源的异常边界。
+- 删除依赖 emitter 局部变量名的源码断言，stats 契约改由浏览器返回值验证；模型请求测试验证字段层级与值，随机计划测试同时验证打乱和动作集合。
+- 拆开 repair 和 readout 中的同行语句，并给关键回调边界补齐类型；物理行数可因此增加，不以压行替代逻辑精简。
+
+上一轮实现精简的验证结果：默认测试 115 passed、1 skipped（本地环境未安装 torch）；浏览器测试 12 passed。
+修改涉及的 Python 文件通过 pyflakes，diff 通过空白检查。移除类型注解与导入后，repair
+三个模块的 AST 与修改前一致；实验脚本的长 prompt 文本保持一致。实现代码的物理行数净增
+53 行，包含拆行和类型注解；本轮没有实现全仓物理 LOC 减少。
+
+## 默认测试必要性审查
+
+后续按独立错误检测能力审查全部默认测试，删除 6 个测试函数和 4 个重复参数案例，保留独立
+失败路径；测试代码相对上一轮工作区净减 48 行。默认验证变为 105 passed、1 skipped，浏览器
+仍为 12 passed。随机策略改为验证实际 episode，Sample fixture 移出测试模块。
+六种临时进程内错误注入均被现有测试捕获；删减明细、保留依据和验证边界见
+[测试必要性审查](test-review.md)。
 
 ## 后续维护规则
 

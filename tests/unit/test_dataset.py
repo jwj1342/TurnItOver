@@ -3,11 +3,9 @@ import json
 
 import pytest
 
-from tests.unit.test_serde import _sample
 from turnitover.assets.catalog import CatalogSource, decode_spec, validate_spec
 from turnitover.core.sample import CheckResult, CorruptionSpec, Invariant
-from turnitover.core.serde import from_dict, to_dict
-from turnitover.core.sample import Sample
+from turnitover.core.serde import to_dict
 from turnitover.dataset.prepare import make_splits, prepare
 from turnitover.dataset.evaluate import evaluate_runtime
 from turnitover.engine.quality import qualify, validate_label
@@ -58,11 +56,10 @@ def test_catalog_never_silently_discards_meshes_or_vector_entries(toy_spec):
         decode_spec(raw)
 
 
-def _write_shard(tmp_path, *, leak=False, bad_quality=False):
+def _write_shard(tmp_path, sample, *, leak=False, bad_quality=False):
     with ShardWriter(tmp_path, 0) as writer:
         for i in range(3):
-            s = _sample()
-            s = dataclasses.replace(s, sample_id=f"fixture-{i}", asset_id=f"asset-{i}", reference_sha="same" if leak else f"ref-{i}",
+            s = dataclasses.replace(sample, sample_id=f"fixture-{i}", asset_id=f"asset-{i}", reference_sha="same" if leak else f"ref-{i}",
                 corruptions=(), dataset={"category": "fixture", "split_group": f"group-{i}", "origin": "unit test", "license": "fixture",
                     "quality": {"status": "quarantined" if bad_quality and i == 0 else "accepted"},
                     "reference_images": ["reference/00.png"], "parts": ["door"], "joints": ["door"], "views": ["front"],
@@ -72,8 +69,8 @@ def _write_shard(tmp_path, *, leak=False, bad_quality=False):
     return [tmp_path / "shard-0000.tar"]
 
 
-def test_splits_export_privilege_boundary_quarantine_and_evaluation(tmp_path):
-    shards = _write_shard(tmp_path / "raw", bad_quality=True)
+def test_splits_export_privilege_boundary_quarantine_and_evaluation(tmp_path, sample):
+    shards = _write_shard(tmp_path / "raw", sample, bad_quality=True)
     split_path = tmp_path / "splits.json"
     mapping = make_splits(shards, split_path, seed=42)
     assert set(mapping.values()) == {"train", "validation", "test"}
@@ -91,29 +88,25 @@ def test_splits_export_privilege_boundary_quarantine_and_evaluation(tmp_path):
         prepare(shards, split_path, output)
 
 
-def test_reference_leakage_and_legacy_samples_rejected(tmp_path):
-    shards = _write_shard(tmp_path / "raw", leak=True)
+def test_reference_leakage_rejected(tmp_path, sample):
+    shards = _write_shard(tmp_path / "raw", sample, leak=True)
     splits = tmp_path / "splits.json"
     make_splits(shards, splits)
     with pytest.raises(ValueError, match="leakage"):
         prepare(shards, splits, tmp_path / "bad")
     assert json.loads((tmp_path / "bad/manifest.json").read_text())["status"] == "incomplete"
-    old = to_dict(_sample())
-    old.pop("dataset")
-    old["schema_version"] = 1
-    assert from_dict(Sample, old).dataset == {}
 
 
-def test_single_asset_cannot_be_randomly_split(tmp_path):
+def test_single_asset_cannot_be_randomly_split(tmp_path, sample):
     with ShardWriter(tmp_path / "raw", 0) as writer:
-        writer.add(dataclasses.replace(_sample(), dataset={"split_group": "one"}), {}, {})
+        writer.add(dataclasses.replace(sample, dataset={"split_group": "one"}), {}, {})
         writer.write_manifest({"status": "complete"})
     with pytest.raises(ValueError, match="three independent"):
         make_splits([tmp_path / "raw/shard-0000.tar"], tmp_path / "splits.json")
 
 
-def test_evaluation_counts_uncertain_as_miss_with_undefined_precision(tmp_path):
-    shards = _write_shard(tmp_path / "raw")
+def test_evaluation_counts_uncertain_as_miss_with_undefined_precision(tmp_path, sample):
+    shards = _write_shard(tmp_path / "raw", sample)
     splits = tmp_path / "splits.json"
     make_splits(shards, splits)
     prepared = tmp_path / "prepared"

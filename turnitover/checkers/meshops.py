@@ -55,13 +55,12 @@ def _point_triangle_distance(points: np.ndarray, triangles: np.ndarray) -> np.nd
     return np.sqrt(np.maximum(best, 0))
 
 
-def point_surface_distance(points: np.ndarray, vertices: np.ndarray, faces: np.ndarray, k: int = 16) -> np.ndarray:
+def point_surface_distance(points: np.ndarray, vertices: np.ndarray, faces: np.ndarray) -> np.ndarray:
     """Exact nearest triangle distance with conservative centroid-ball pruning.
 
     The nearest referenced vertex supplies an upper bound. A triangle can improve
     that bound only when its centroid ball reaches the point's upper-bound ball.
     Unlike fixed-k nearest-centroid lookup, this cannot omit a large nearby face.
-    ``k`` remains accepted for source compatibility; it no longer limits candidates.
     """
     triangles = vertices[faces].astype(np.float64)
     points = np.asarray(points, dtype=np.float64)
@@ -84,13 +83,6 @@ def point_surface_distance(points: np.ndarray, vertices: np.ndarray, faces: np.n
         distances = _point_triangle_distance(chunk[point_ids], triangles[tri_ids])
         np.minimum.at(result, start+point_ids, distances)
     return result
-
-
-def chamfer(a: np.ndarray, b: np.ndarray) -> float:
-    """Symmetric mean nearest-neighbour distance between two point sets."""
-    da = cKDTree(b).query(a)[0]
-    db = cKDTree(a).query(b)[0]
-    return float(0.5 * (da.mean() + db.mean()))
 
 
 def surface_chamfer(va: np.ndarray, fa: np.ndarray, vb: np.ndarray, fb: np.ndarray, n: int, seed: int = 0) -> float:

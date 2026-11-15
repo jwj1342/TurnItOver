@@ -103,3 +103,9 @@ python scripts/summarize_repair_experiment.py output/repair-model-new
 本次提交前执行：102 项单元测试通过，1 项可选 torch 依赖测试跳过；12 项实际浏览器测试通过。
 新增回归检查核对全部快照哈希、从逐轨迹记录重算修复汇总，并拒绝汇总与轨迹不一致的结果。
 本地文档链接与 `git diff --check` 通过。此次整理没有新增付费模型调用，也没有重新选择或剔除实验案例。
+
+## 2026-11-11 状态
+
+- 论文（Overleaf 克隆 `paper/`，不进本仓库）已按"作用于程序再判断、只报告看到的"这条主线重排，第 3 节问题定义、第 4 节方法三小节、第 5 节实验按 grounding、repair、headroom、qualitative 排。审稿式修改报告在 `/scratch/jwj/tio-runs/notes/paper-review-2026-11-11.md`。
+- 有数的实验只有固定观察诊断（三层 900 例验证集，2B/4B/8B，三 seed）和由曝光记录离线算出的 headroom。修复主表、取证 Oracle 行、withheld 实验、定性图都待跑，脚本就绪，见 `/scratch/jwj/tio-runs/README.md`。
+- 本仓库工作树有两批未提交改动。11 月初的 37 个文件改动待整理；本次新增 `turnitover/repair/judges.py`、`prompt_900.txt`、`scripts/run_repair_table.py`、`scripts/summarize_repair_table.py`、`tests/unit/test_repair_judges.py`、`configs/repair_pack900.yaml`、`docs/repair-table.md` 与 `client.py` 的 User-Agent 行。单元测试 114 过 1 跳。

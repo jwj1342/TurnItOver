@@ -34,7 +34,7 @@ AssetSource ──AssetSpec──▶ Corruption ──ObjectProgram(spec, ts)─
 | `core` | pinned dataclasses: spec, program, actions, sample; JSON serde | – |
 | `taxonomy` | `defects.yaml` loader, doc renderer | – |
 | `assets` | toy and local mesh catalogs, URDF import, independent FK audit, spec → TypeScript emitter | core, numpy, scipy, trimesh |
-| `corruptions` | registry keyed by defect id; three implementations | core, taxonomy |
+| `corruptions` | explicit mapping keyed by defect id; three implementations | core, taxonomy |
 | `render` | Playwright session, TS transpile, view set, protocol mirror | core, checkers.base |
 | `policy` | `JudgePolicy` protocol, `ScriptedPolicy`, budgeted loop | core |
 | `checkers` | evidence collection, pure mesh math, two checkers | core, render (evidence only) |

@@ -44,7 +44,8 @@ def image_part(path: Path) -> tuple[str, str]:
 
 def request_payload(cfg: ModelConfig, prompt: str, images: list[Path]) -> tuple[str, dict, dict]:
     parts = [image_part(path) for path in images]
-    headers = {"Content-Type": "application/json"}
+    # Relays behind Cloudflare reject the default urllib user agent (error 1010).
+    headers = {"Content-Type": "application/json", "User-Agent": "turnitover-model-client/1.0"}
     if cfg.provider == "anthropic":
         headers.update({"x-api-key": cfg.api_key, "anthropic-version": "2023-06-01"})
         content = [{"type": "image", "source": {"type": "base64", "media_type": mime, "data": data}}

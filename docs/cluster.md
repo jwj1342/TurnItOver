@@ -49,3 +49,9 @@ CONFIG=configs/generate_toy.yaml sbatch --account=YOUR_ACCOUNT scripts/slurm/gen
 - `squeue` 查看任务，`sacct -j JOB_ID --format=JobID,State,Elapsed,MaxRSS` 查看资源与退出情况。
 
 数据引擎按分片和样本索引生成稳定随机种子；已完成的分片可跳过。verifier 单次运行不支持断点恢复，失败后使用新输出目录重新运行。
+
+## Nibi 现状记录（2026-11-11）
+
+- `def-zhouyang` 的 GPU 公平份额已降到 0.16，整卡 H100 作业预计等待约一周，MIG 切片队列同样拥挤。短期内 GPU 实验需换到其他集群或账户。
+- Alliance 文档写明 Nibi 所有节点都有网络，与本文件上方"计算节点无网"的旧假设不同；作业内的探测尚未实测。换集群后仍按新集群文档确认。
+- MIG 切片的申请写法为 `--gpus=h100_3g.40gb:1` 或 `--gpus-per-node=h100_2g.20gb:1`，整卡为 `--gpus-per-node=h100:1`。

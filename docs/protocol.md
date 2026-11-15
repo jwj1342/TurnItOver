@@ -94,3 +94,13 @@ URDF extrinsic xyz angles are converted to this representation without changing 
 The reader accepts earlier specs through field defaults; prepared dataset export accepts Sample v2/v3.
 URDF import retains visual mesh topology and node transforms; textures are sampled to vertex colors,
 not imported as textures. Collision geometry and physical properties are not certified by this path.
+
+## JSON 读取边界
+
+`core.serde` 按声明类型读取数据。多种 dataclass 组成的 Union（如 `Action`）必须携带
+匹配的 `__type__`，未知或缺失标记会报错，不再通过试错猜测动作。明确指定的 dataclass
+及其 Optional 形式仍支持省略类型标记；已有标记必须匹配目标类型。固定长度 tuple 拒绝
+缺项和多项，只有 Optional 或 Any 字段允许 null。
+
+本次修复收紧无效输入的处理，没有改变合法记录的字段、编码或默认值，`SCHEMA_VERSION`
+继续为 3；已有 v1/v2/v3 合法记录仍可读取。

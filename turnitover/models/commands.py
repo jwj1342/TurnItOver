@@ -16,16 +16,14 @@ def check_models(args) -> int:
     env = read_environment(args.env_file)
     rows = []
     for role in ROLES:
+        row = {"role": role}
         try:
             cfg = model_config(role, env)
             row = cfg.public()
-            try:
-                cfg.validate()
-                row["ready"] = True
-            except ValueError as exc:
-                row.update(ready=False, error=str(exc))
+            cfg.validate()
+            row["ready"] = True
         except ValueError as exc:
-            row = {"role": role, "ready": False, "error": str(exc)}
+            row.update(ready=False, error=str(exc))
         rows.append(row)
     print(json.dumps(rows, indent=2))
     return 0 if all(row["ready"] for row in rows) else 1

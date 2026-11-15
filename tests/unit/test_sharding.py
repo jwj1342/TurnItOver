@@ -10,7 +10,8 @@ def test_shards_partition_index_space():
 def test_seeds_stable_and_distinct():
     seeds = [sample_seed(1234, i) for i in range(50)]
     assert len(set(seeds)) == 50
-    assert sample_seed(1234, 3) == sample_seed(1234, 3)
+    # Pin the seed mapping so existing shards remain reproducible after refactoring.
+    assert seeds[:4] == [6882349382922872486, 5790931612419668221, 3844723945885009171, 197244009799789105]
     assert sample_seed(1234, 3) != sample_seed(1235, 3)
 
 

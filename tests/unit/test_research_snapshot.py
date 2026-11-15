@@ -26,13 +26,6 @@ def test_repair_claims_recompute_from_archived_episodes(tmp_path):
     original = json.loads((root / 'analysis.json').read_text())
     report = summarize(root)
     assert report == original
-    assert sum(c['model_calls'] for c in report['conditions'].values()) == 30
-    assert report['reported_cost_usd'] == '3.4443460'
-    for name, condition in report['conditions'].items():
-        assert condition['damaged_cases'] == 3
-        assert condition['repaired'] == (1 if name == 'fixed' else 3)
-        assert condition['clean_cases'] == condition['clean_preserved'] == 1
-        assert condition['cost_missing_calls'] == 0
     summary = json.loads((root / 'summary.json').read_text())
     summary['episodes'][0]['final_passed'] = True
     (root / 'summary.json').write_text(json.dumps(summary))

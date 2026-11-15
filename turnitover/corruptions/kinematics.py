@@ -6,12 +6,13 @@ import numpy as np
 
 from turnitover.core.program import ObjectProgram
 from turnitover.core.sample import CorruptionSpec
-from turnitover.corruptions.base import register, require_spec, unit_vector
+from turnitover.corruptions.base import require_spec, unit_vector
 
 
-@register("kinematics.joint_axis")
 class JointAxis:
     """Rotate one joint's axis by a random angle about a random perpendicular. Rest pose unchanged."""
+
+    defect_id = "kinematics.joint_axis"
 
     def __init__(self, min_deg: float = 15.0, max_deg: float = 60.0):
         self.min_deg, self.max_deg = min_deg, max_deg

@@ -9,20 +9,18 @@ from collections import Counter
 import json
 from pathlib import Path
 
+from turnitover.dataset.metrics import count_labels, detection_metrics
 from turnitover.models.local_qwen import LocalQwen
+from turnitover.oracle.readout import load_readout_data
 from turnitover.taxonomy import load_taxonomy
 from turnitover.verifier.contracts import Context, parse_json, parse_decision
 
 
 def run(oracle, paired, model_path, output, limit=None, final_protocol=False):
-    oracle_manifest = json.loads((oracle / 'manifest.json').read_text())
-    if oracle_manifest['status'] != 'complete' or json.loads((paired / 'manifest.json').read_text())['status'] != 'complete':
-        raise ValueError('Complete evidence and paired export required')
+    oracle_manifest, pairs, annotations = load_readout_data(oracle, paired)
     benchmark = Path(oracle_manifest['benchmark'])
     inputs = {r['id']: r for r in map(json.loads, (benchmark / 'prepared/test.inputs.jsonl').read_text().splitlines())}
     gold = {r['id']: r for r in map(json.loads, (benchmark / 'prepared/test.gold.jsonl').read_text().splitlines())}
-    pairs = {r['id']: r for r in map(json.loads, (paired / 'test.diagnosis.jsonl').read_text().splitlines())}
-    annotations = [r for r in map(json.loads, (oracle / 'annotations.private.jsonl').read_text().splitlines()) if r['split'] == 'test']
     if limit is not None:
         annotations = annotations[:limit]
     if not annotations:
@@ -49,7 +47,9 @@ def run(oracle, paired, model_path, output, limit=None, final_protocol=False):
                     history = trajectory['history']
                     for condition in ('single', 'paired'):
                         key = f'{mode}/{condition}'
-                        metric = metrics.setdefault(key, dict(n=0, invalid=0, statuses=Counter(), classes={}))
+                        metric = metrics.setdefault(key, dict(
+                            n=0, invalid=0, statuses=Counter(),
+                            classes={label: Counter() for label in load_taxonomy().implemented_ids()}))
                         if condition == 'single':
                             images = [Path('images') / uid / 'reference.png'] + [Path(o['image_ref']) for o in history]
                             prompt = protocol + '\n' + json.dumps(dict(context=context, remaining=0, history=history,
@@ -77,21 +77,14 @@ def run(oracle, paired, model_path, output, limit=None, final_protocol=False):
                             error = str(exc)
                             metric['invalid'] += 1
                         expected = {f['defect_id'] for f in gold[uid]['target']['findings']}
-                        for label in set(load_taxonomy().implemented_ids()) | expected | predicted:
-                            counts = metric['classes'].setdefault(label, Counter())
-                            if label in expected | predicted:
-                                counts['tp' if label in expected & predicted else 'fp' if label in predicted else 'fn'] += 1
+                        count_labels(metric['classes'], expected, predicted)
                         metric['n'] += 1
                         stream.write(json.dumps(dict(id=uid, mode=mode, condition=condition, raw=response.text,
                             decision=decision, error=error, expected=sorted(expected), predicted=sorted(predicted)))+'\n')
                         stream.flush()
                         print(json.dumps(dict(id=uid, condition=key, error=error)), flush=True)
         for metric in metrics.values():
-            for label, counts in list(metric['classes'].items()):
-                tp, fp, fn = (counts[k] for k in ('tp','fp','fn'))
-                metric['classes'][label] = dict(tp=tp, fp=fp, fn=fn,
-                    precision=tp/(tp+fp) if tp+fp else None, recall=tp/(tp+fn) if tp+fn else None,
-                    f1=2*tp/(2*tp+fp+fn) if 2*tp+fp+fn else None)
+            metric['classes'] = detection_metrics(metric['classes'])
         report.update(status='complete', metrics=metrics)
     except Exception as exc:
         report.update(error=str(exc), metrics=metrics)

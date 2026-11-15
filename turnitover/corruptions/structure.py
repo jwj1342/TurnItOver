@@ -4,12 +4,13 @@ import numpy as np
 
 from turnitover.core.program import ObjectProgram
 from turnitover.core.sample import CorruptionSpec
-from turnitover.corruptions.base import register, require_spec, unit_vector
+from turnitover.corruptions.base import require_spec, unit_vector
 
 
-@register("structure.part_offset")
 class PartOffset:
     """Translate one part by a random vector. Static-visible."""
+
+    defect_id = "structure.part_offset"
 
     def __init__(self, min_m: float = 0.02, max_m: float = 0.08):
         self.min_m, self.max_m = min_m, max_m

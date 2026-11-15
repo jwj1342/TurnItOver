@@ -12,6 +12,7 @@ def test_deterministic_given_seed(toy_program, defect_id):
     p2, s2 = c.apply(toy_program, np.random.default_rng(42))
     p3, s3 = c.apply(toy_program, np.random.default_rng(43))
     assert p1.source == p2.source and s1 == s2
+    assert p1.source != toy_program.source and p1.sha != toy_program.sha
     assert p1.source != p3.source or s1 != s3
     assert s1.defect_id == defect_id
     assert 0.0 <= s1.severity <= 1.0

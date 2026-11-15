@@ -5,6 +5,7 @@ import pytest
 from PIL import Image
 
 from turnitover.core.actions import Detent, RuntimeProperty
+from turnitover.render.protocol import STATS_KEYS
 
 pytestmark = pytest.mark.browser
 
@@ -22,6 +23,9 @@ def test_load_view_actuate_export(session_factory, toy_program):
     rest = s.export_geometry()
     assert set(rest) == set(info.parts)
     stats = s.query_runtime(RuntimeProperty.STATS)
+    assert set(stats) == set(STATS_KEYS)
+    assert stats["property"] == "stats"
+    assert all(type(value) in (int, float) for key, value in stats.items() if key != "property")
     assert stats["mesh_count"] == 9 and stats["triangles_scene"] == 12 * 9
     assert stats["draw_calls"] >= 1
 

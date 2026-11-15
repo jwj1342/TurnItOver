@@ -6,14 +6,15 @@ import numpy as np
 
 from turnitover.core.program import ObjectProgram
 from turnitover.core.sample import CorruptionSpec
-from turnitover.corruptions.base import register, require_spec
+from turnitover.corruptions.base import require_spec
 
 
-@register("runtime.triangle_budget")
 class TriangleBudget:
     """Multiply box segments of k parts so the triangle count explodes. Probe-only visible."""
 
     FACTORS = (8, 16, 32)
+
+    defect_id = "runtime.triangle_budget"
 
     def __init__(self, k_parts: int = 2):
         self.k_parts = k_parts

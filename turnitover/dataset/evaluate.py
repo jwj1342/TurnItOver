@@ -5,6 +5,7 @@ from pathlib import Path
 
 from turnitover.core.actions import Observation
 from turnitover.core.serde import from_dict
+from turnitover.dataset.metrics import count_labels, detection_metrics
 from turnitover.verifier.contracts import Context, parse_decision
 from turnitover.verifier.policies import RuntimePolicy
 
@@ -35,21 +36,13 @@ def evaluate_runtime(dataset: Path, split: str, output: Path):
             statuses[verdict.status] += 1
             predicted = {v.defect_id for v in verdict.findings}
             expected = {v["defect_id"] for v in gold[row["id"]]["target"]["findings"]}
-            for label in predicted | expected:
-                counts = per_class.setdefault(label, Counter())
-                counts["tp" if label in predicted & expected else "fp" if label in predicted else "fn"] += 1
+            count_labels(per_class, expected, predicted)
             f.write(json.dumps({"id": row["id"], **decision}) + "\n")
     if seen != set(gold):
         raise ValueError("Missing input rows")
-    for label, counts in list(per_class.items()):
-        tp, fp, fn = (counts[k] for k in ("tp", "fp", "fn"))
-        per_class[label] = {"tp": tp, "fp": fp, "fn": fn,
-                            "precision": tp/(tp+fp) if tp+fp else None,
-                            "recall": tp/(tp+fn) if tp+fn else None,
-                            "f1": 2*tp/(2*tp+fp+fn) if 2*tp+fp+fn else None}
     result = {"status": "complete", "policy": "runtime", "split": split, "n": len(seen),
               "statuses": dict(statuses), "uncertain_rate": statuses["uncertain"]/len(seen),
-              "per_class": per_class, "scope": "detection_on_saved_scripted_observations",
+              "per_class": detection_metrics(per_class), "scope": "detection_on_saved_scripted_observations",
               "limitations": ["Uncertain samples count as missed detections for their gold defects.",
                               "No visual judge, active policy, or generator repair loop was evaluated."]}
     (output / "metrics.json").write_text(json.dumps(result, indent=2))

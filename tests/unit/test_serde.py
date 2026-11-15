@@ -1,36 +1,43 @@
-from turnitover.core.actions import ActuateJoint, Detent, Observation, QueryRuntime, RequestView, RuntimeProperty, Stop, ViewId
-from turnitover.core.sample import SCHEMA_VERSION, CheckResult, CorruptionSpec, Framing, Invariant, Sample
+import pytest
+
+from turnitover.core.actions import Action, Detent
+from turnitover.core.sample import Framing, Sample
 from turnitover.core.serde import from_dict, to_dict
 
 
-def _sample() -> Sample:
-    return Sample(
-        schema_version=SCHEMA_VERSION, sample_id="toy-0", run_id="t", idx=0, seed=7, asset_id="toy", source_id="toy",
-        program_sha="abc", program_source="export default 1", reference_sha="def",
-        corruptions=(CorruptionSpec("structure.part_offset", ("door",), 0.5, {"m": 1.0}, {"part": "door"}),),
-        framing=Framing((0.0, 0.4, 0.0), 0.6),
-        trajectory=(
-            Observation(0, RequestView(ViewId("front")), "obs/00.png", {"render_ms": 1.0}, 2.0),
-            Observation(1, ActuateJoint("door", Detent.LIMIT), "obs/01.png", None, 2.0),
-            Observation(2, QueryRuntime(RuntimeProperty.STATS), None, {"draw_calls": 3}, 1.0),
-            Observation(3, Stop(), None, None, 0.0),
-        ),
-        checks=(CheckResult("runtime.budget", True, (Invariant("triangles", 12.0, 100.0, True),), 1.0),),
-        compile_ok=True, error=None, timing_ms={"load": 3.0}, host="h", created_at="2026-09-11T00:00:00+00:00",
-    )
-
-
-def test_sample_round_trip():
-    s = _sample()
-    d = to_dict(s)
+def test_sample_wire_format_and_round_trip(sample):
+    d = to_dict(sample)
     assert d["trajectory"][1]["action"]["__type__"] == "ActuateJoint"
-    assert from_dict(Sample, d) == s
-
-
-def test_enum_and_none():
-    s = _sample()
-    d = to_dict(s)
     assert d["trajectory"][1]["action"]["detent"] == "limit"
     back = from_dict(Sample, d)
+    assert back == sample
     assert back.trajectory[1].action.detent is Detent.LIMIT
-    assert back.trajectory[3].action == Stop()
+    # Legacy records predate the dataset mapping but use the same action encoding.
+    d.pop("dataset")
+    d["schema_version"] = 1
+    assert from_dict(Sample, d).dataset == {}
+
+
+@pytest.mark.parametrize("data", [
+    {"__type__": "UnknownAction", "view_id": "front"},
+    {"view_id": "front"},
+    None,
+])
+def test_bad_action_tags_never_become_valid_actions(data):
+    with pytest.raises(ValueError, match="tag"):
+        from_dict(Action, data)
+
+
+@pytest.mark.parametrize("center", [[1, 2], [1, 2, 3, 4]])
+def test_fixed_vectors_reject_missing_or_extra_entries(center):
+    with pytest.raises(ValueError):
+        from_dict(Framing, {"center": center, "radius": 1})
+
+
+def test_optional_dataclasses_preserve_tags_and_nullability():
+    assert from_dict(Framing | None, None) is None
+    assert from_dict(Framing | None, {"center": [1, 2, 3], "radius": 1}) == Framing((1, 2, 3), 1)
+    with pytest.raises(ValueError, match="type tag"):
+        from_dict(Framing | None, {"__type__": "Unknown", "center": [1, 2, 3], "radius": 1})
+    with pytest.raises(ValueError, match="Null"):
+        from_dict(Framing, None)
