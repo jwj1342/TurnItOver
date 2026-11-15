@@ -49,6 +49,8 @@ def same_surface(a, b):
     """Fast exact triangle-position multiset match, independent of numbering."""
     if a.faces.shape != b.faces.shape:
         return False
+    if np.array_equal(a.vertices, b.vertices) and np.array_equal(a.faces, b.faces):
+        return True
     def canonical(mesh):
         tri = np.sort(mesh.vertices[mesh.faces].view(
             np.dtype((np.void, mesh.vertices.dtype.itemsize * 3))).reshape(-1, 3), axis=1)

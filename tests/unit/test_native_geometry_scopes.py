@@ -103,6 +103,51 @@ def test_unhealthy_reference_overlap_cannot_authorize_a_contact_pass():
                     support={'part': 'other'})['passed'] is None
 
 
+def test_contact_regression_compares_each_unchanged_part_once_per_state(monkeypatch):
+    import turnitover.repair.native_geometry as native
+    parts = {str(index): box(index * 2.) for index in range(6)}
+    histories = {role: {'zero': parts} for role in ('reference', 'candidate')}
+    original = native.same_surface
+    calls = []
+    def counted(a, b):
+        calls.append(1)
+        return original(a, b)
+    monkeypatch.setattr(native, 'same_surface', counted)
+    assert native.contact_regressions(histories)['passed'] is True
+    assert len(calls) == len(parts)
+
+
+def test_contact_regression_reuses_identical_pair_across_snapshots(monkeypatch):
+    import turnitover.repair.native_geometry as native
+    reference = {'part': box(), 'other': box(1.)}
+    candidate = {'part': box(), 'other': box(1.3)}
+    histories = {role: {state: deepcopy(parts) for state in ('zero', 'mid', 'limit')}
+                 for role, parts in (('reference', reference), ('candidate', candidate))}
+    original, calls = native.solid_relation, []
+    def counted(a, b):
+        calls.append(1)
+        return original(a, b)
+    monkeypatch.setattr(native, 'solid_relation', counted)
+    assert native.contact_regressions(histories)['passed'] is False
+    assert len(calls) == 2
+
+
+def test_feature_regression_cache_is_local_and_geometry_bound(monkeypatch):
+    import turnitover.repair.native_geometry as native
+    histories = {role: {state: {'part': box(scale=size)} for state in ('zero', 'mid', 'limit')}
+                 for role, size in (('reference', 1.), ('candidate', .8))}
+    calls = []
+    def matched(a, b):
+        calls.append(1)
+        return {'passed': False}
+    monkeypatch.setattr(native, 'surface_match', matched)
+    assert native.feature_regressions(histories)['passed'] is False
+    assert len(calls) == 1
+    histories['candidate']['limit']['part'] = box(scale=.7)
+    assert native.feature_regressions(histories)['passed'] is False
+    assert len(calls) == 3  # Fresh invocation; the changed snapshot gets its own key.
+
+
 def test_scope_must_match_current_reference_source_and_label():
     histories = {r: {s: {'part': box()} for s in ('zero', 'mid', 'limit')}
                  for r in ('reference', 'candidate')}

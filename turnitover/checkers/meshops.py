@@ -73,26 +73,41 @@ def point_surface_distance(points: np.ndarray, vertices: np.ndarray, faces: np.n
         raise ValueError("Point-to-surface distance requires triangles")
     centers = triangles.mean(axis=1)
     radii = np.linalg.norm(triangles-centers[:, None, :], axis=2).max(axis=1)
-    tree = cKDTree(centers)
+    # A few large faces must not inflate every small face's search radius.
+    # Power-of-two radius groups keep each ball query conservative and local.
+    exponents = np.frexp(radii)[1]
+    exponents[radii == 0] = np.iinfo(exponents.dtype).min
+    groups = []
+    for exponent in np.unique(exponents):
+        ids = np.flatnonzero(exponents == exponent)
+        groups.append((ids, cKDTree(centers[ids]), radii[ids].max()))
     upper = cKDTree(vertices[np.unique(faces)]).query(points)[0]
     epsilon = 1e-12 * max(1., float(np.abs(vertices).max()), float(np.abs(points).max()) if len(points) else 1.)
     result = np.full(len(points), np.inf)
     nearest = np.full(len(points), -1, dtype=int) if return_face_ids else None
     for start in range(0, len(points), 64):
         chunk = points[start:start+64]
-        neighbours = tree.query_ball_point(chunk, upper[start:start+64] + radii.max() + epsilon)
-        point_ids = np.repeat(np.arange(len(chunk)), [len(x) for x in neighbours])
-        tri_ids = np.concatenate(neighbours).astype(int)
-        bound = np.linalg.norm(centers[tri_ids]-chunk[point_ids], axis=1)-radii[tri_ids]
-        keep = bound <= upper[start+point_ids] + epsilon
-        point_ids, tri_ids = point_ids[keep], tri_ids[keep]
-        distances = _point_triangle_distance(chunk[point_ids], triangles[tri_ids])
-        np.minimum.at(result, start+point_ids, distances)
-        if return_face_ids:
-            order = np.lexsort((tri_ids, distances, point_ids))
-            _, first = np.unique(point_ids[order], return_index=True)
-            chosen = order[first]
-            nearest[start + point_ids[chosen]] = tri_ids[chosen]
+        for ids, tree, radius in groups:
+            bound_upper = np.minimum(upper[start:start+len(chunk)], result[start:start+len(chunk)])
+            neighbours = tree.query_ball_point(chunk, bound_upper + radius + epsilon)
+            point_ids = np.repeat(np.arange(len(chunk)), [len(x) for x in neighbours])
+            if not len(point_ids):
+                continue
+            tri_ids = ids[np.concatenate(neighbours).astype(int)]
+            bound = np.linalg.norm(centers[tri_ids]-chunk[point_ids], axis=1)-radii[tri_ids]
+            keep = bound <= bound_upper[point_ids] + epsilon
+            point_ids, tri_ids = point_ids[keep], tri_ids[keep]
+            distances = _point_triangle_distance(chunk[point_ids], triangles[tri_ids])
+            if return_face_ids:
+                order = np.lexsort((tri_ids, distances, point_ids))
+                _, first = np.unique(point_ids[order], return_index=True)
+                chosen = order[first]
+                positions = start + point_ids[chosen]
+                better = ((distances[chosen] < result[positions]) |
+                          ((distances[chosen] == result[positions]) &
+                           ((nearest[positions] < 0) | (tri_ids[chosen] < nearest[positions]))))
+                nearest[positions[better]] = tri_ids[chosen[better]]
+            np.minimum.at(result, start+point_ids, distances)
     return (result, nearest) if return_face_ids else result
 
 

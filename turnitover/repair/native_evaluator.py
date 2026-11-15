@@ -45,7 +45,8 @@ SUPPORTED = (*ALIGNMENT_DEFECTS, *CONTRACT_DEFECTS, *BUDGET_DEFECTS,
              'structure.wrong_parent', 'runtime.missing_dispose', 'runtime.tick_missing_or_phase',
              *FEATURE_DEFECTS, *CONTACT_DEFECTS)
 SCORING_CONTRACT = {
-    'status': 'development', 'version': 4, 'exposure_status': 'unreviewed',
+    'status': 'development', 'version': 5, 'exposure_status': 'unreviewed',
+    'runtime_caps': 'Explicit public task budgets; context sentinel 2147483647 is not a task cap',
     'heuristics': HEURISTICS,
     'material_attribute_profiles': ATTRIBUTE_PROFILE_TOLERANCE,
     'supported_defects': list(SUPPORTED),
@@ -66,6 +67,32 @@ SCORING_CONTRACT = {
         'Defaults are versioned engineering tolerances, not Validation-fitted or Train-calibrated.',
     ],
 }
+
+
+def check_environment():
+    """Exercise the lazy Trimesh normal-repair dependency before any batch work."""
+    from importlib.metadata import PackageNotFoundError, version
+    report = {'ready': False, 'packages': {}, 'missing': []}
+    for name in ('numpy', 'scipy', 'trimesh', 'networkx'):
+        try:
+            report['packages'][name] = version(name)
+        except PackageNotFoundError:
+            report['missing'].append(name)
+    if report['missing']:
+        return report
+    try:
+        import trimesh
+        from turnitover.repair.native_geometry import convex_certificate
+        box = trimesh.creation.box()
+        faces = box.faces.copy()
+        faces[0] = faces[0][::-1]
+        mesh = PartMesh(box.vertices, faces)
+        if component_count(mesh) != 1 or convex_certificate(mesh) is None:
+            raise RuntimeError('Scoring mesh smoke check failed')
+        report.update(ready=True, normal_repair_smoke=True)
+    except Exception as exc:
+        report.update(error_type=type(exc).__name__, error=str(exc))
+    return report
 
 
 def _join(values):
@@ -147,13 +174,19 @@ def _topology(docs):
     if (any(value is None for value in histories.values())
             or set(histories['reference']) != set(histories['candidate'])):
         return None
-    result = {}
+    result, cache = {}, {}
+    def measure(mesh):
+        key = (mesh.vertices.shape, mesh.faces.shape, mesh.vertices.dtype.str, mesh.faces.dtype.str,
+               hashlib.sha256(mesh.vertices.tobytes() + mesh.faces.tobytes()).digest())
+        if key not in cache:
+            cache[key] = {'topology': topology(mesh), 'crossings': self_crossings(mesh),
+                          'components': component_count(mesh)}
+        return cache[key]
     for state in histories['reference']:
         roles = {role: _mesh_export(history[state].get('geometry')) for role, history in histories.items()}
         if any(parts is None for parts in roles.values()) or not roles['reference']:
             return None
-        result[state] = {role: {part: {'topology': topology(mesh), 'crossings': self_crossings(mesh),
-                                      'components': component_count(mesh)}
+        result[state] = {role: {part: measure(mesh)
                                 for part, mesh in parts.items()} for role, parts in roles.items()}
     return result
 
@@ -292,11 +325,13 @@ def measure_replay(evidence, labels, context, scopes=None):
         'geometry.feature_shapes': feature_regressions(histories),
         'structure.contacts': contact_regressions(histories)}
     caps = (context.get('max_triangles'), context.get('max_draw_calls'))
-    budgets = {kind: runtime_budget_predicate({'defect_id': kind}, evidence,
-                    max_triangles=caps[0], max_draw_calls=caps[1])
-               if all(type(v) is int and v >= 0 for v in caps)
-               else {'passed': None, 'checker_id': 'runtime.budget',
-                     'reason': 'Missing explicit public task caps'} for kind in BUDGET_DEFECTS}
+    budgets = {}
+    for kind, cap in zip(BUDGET_DEFECTS, caps, strict=True):
+        budgets[kind] = (runtime_budget_predicate({'defect_id': kind}, evidence,
+                            max_triangles=caps[0], max_draw_calls=caps[1])
+                        if type(cap) is int and cap >= 0 else
+                        {'passed': None, 'checker_id': 'runtime.budget',
+                         'reason': 'Missing explicit public task caps'})
     checks = {name: None for name in SCORING_CONTRACT['required_checks']}
     checks.update({'compile_render': (evidence.get('gate') or {}).get('passed'),
         'program.contract': contract_check['passed'] if contract_check else None,
@@ -360,10 +395,33 @@ def measure_replay(evidence, labels, context, scopes=None):
                             'budgets': budgets}}
 
 
+def _public_runtime_context(case):
+    context = dict(case.get('public_context') or {})
+    for key in ('max_triangles', 'max_draw_calls'):
+        if context.get(key) == 2_147_483_647:
+            context.pop(key)
+    for row in case.get('task_runtime_requirements', []):
+        payload = row.get('payload') or {}
+        if payload.get('measurement_kind') != 'public_task_budget':
+            continue
+        observation = payload.get('observation') or {}
+        for key in ('max_triangles', 'max_draw_calls'):
+            value = observation.get('task_' + key)
+            if value is None:
+                continue
+            if type(value) is not int or value < 0:
+                raise ValueError('Invalid explicit public runtime cap')
+            if context.get(key) is not None and context[key] != value:
+                raise ValueError('Conflicting explicit public runtime caps')
+            context[key] = value
+    return context
+
+
 def make_audit(case, replay):
     labels = case.get('private_labels')
     if not labels:
         raise ValueError('Native evaluator requires hash-bound private label instances')
+    context = _public_runtime_context(case)
     last = {}
 
     def measured(source):
@@ -373,7 +431,7 @@ def make_audit(case, replay):
             raise ValueError('Native scoring requires complete current-source replay')
         # A failed compile/render is handled by make_repair_audit without mesh IO.
         if (evidence.get('gate') or {}).get('passed') is not False:
-            last['scores'] = measure_replay(evidence, labels, case.get('public_context') or {},
+            last['scores'] = measure_replay(evidence, labels, context,
                                             case.get('private_scoring_scopes'))
         else:
             last['scores'] = None

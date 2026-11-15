@@ -177,3 +177,38 @@ def test_sdk_compile_failure_feedback_allows_a_later_repair(tmp_path, monkeypatc
     assert 'Expected semicolon' in json.dumps(seen[1])
     assert result['final_passed'] is True
     assert result['completed_rounds'] == 2
+
+
+def test_large_program_is_read_in_windows_and_edited_without_truncating_source(tmp_path, monkeypatch):
+    from turnitover.repair.openhands_runner import SOURCE_READ_CHARS
+    source = 'prefix\n' + '0123456789' * SOURCE_READ_CHARS + '\nconst target = "broken";'
+    fixed = source.replace('"broken"', '"fixed"')
+    llm, seen = mock_llm(monkeypatch, [
+        (ProgramTool.name, {'operation': 'read', 'query': 'const target'}),
+        (ProgramTool.name, {'operation': 'submit',
+                           'edits': [{'old': '"broken"', 'new': '"fixed"'}]})])
+    result = run_openhands_repair(source, None, lambda *a: {},
+        lambda current: {'passed': current == fixed}, tmp_path/'large',
+        condition='none', max_rounds=1, max_agent_steps=10, llm=llm)
+    initial = json.loads(seen[0][-1]['content'][0]['text'])
+    assert initial['current_program'] == source[:SOURCE_READ_CHARS]
+    assert initial['source_incomplete'] is True
+    assert initial['source_chars'] == len(source)
+    assert 'const target' in json.dumps(seen[1])
+    assert len(json.dumps(seen[1])) < SOURCE_READ_CHARS * 3
+    assert result['completed_rounds'] == 1 and result['generator_calls'] == 2
+    assert result['final_passed'] is True
+    assert (tmp_path/'large/final.ts').read_text() == fixed
+
+
+def test_program_read_offsets_and_query_misses_do_not_return_full_source():
+    from turnitover.repair.openhands_runner import program_view, ProgramAction, SOURCE_READ_CHARS
+    source = 'header\n' + 'x' * SOURCE_READ_CHARS + '\ntail'
+    view = program_view(source, offset=len(source) - 4, limit=3)
+    assert view['current_program'] == 'tai' and view['next_offset'] == len(source) - 1
+    assert program_view(source, query='absent')['query_found'] is False
+    assert program_view('small') == {'current_program': 'small'}
+    with pytest.raises(ValueError):
+        ProgramAction(operation='read', limit=SOURCE_READ_CHARS + 1)
+    with pytest.raises(ValueError):
+        ProgramAction(operation='read', offset=-1)

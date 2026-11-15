@@ -6,6 +6,7 @@ Unknown correspondence or exhausted geometry work is unknown, never success.
 from __future__ import annotations
 
 from collections import Counter
+import hashlib
 import itertools
 import math
 
@@ -29,6 +30,13 @@ MAX_PAIRS = 1_000_000
 
 def _face_counter(faces):
     return Counter(tuple(sorted(map(int, face))) for face in faces)
+
+
+def _mesh_key(mesh):
+    digest = hashlib.sha256(mesh.vertices.tobytes())
+    digest.update(mesh.faces.tobytes())
+    return (mesh.vertices.shape, mesh.faces.shape, mesh.vertices.dtype.str,
+            mesh.faces.dtype.str, digest.digest())
 
 
 def select_pair(reference, candidate, selector):
@@ -254,7 +262,11 @@ def contact_regressions(histories):
     if (any(value is None for value in histories.values())
             or set(histories['reference']) != set(histories['candidate'])):
         return {'passed': None, 'checker_id': 'native.all_part_contacts'}
-    outcomes = []
+    outcomes, relations = [], {}
+    def relation(a, b, key):
+        if key not in relations:
+            relations[key] = solid_relation(a, b)
+        return relations[key]
     for state, reference in histories['reference'].items():
         candidate = histories['candidate'][state]
         if reference is None or candidate is None or not reference or set(reference) != set(candidate):
@@ -262,12 +274,17 @@ def contact_regressions(histories):
             continue
         if len(reference) < 2:
             outcomes.append(True)
+        keys = {role: {part: _mesh_key(mesh) for part, mesh in meshes.items()}
+                for role, meshes in (('reference', reference), ('candidate', candidate))}
+        unchanged = {part: same_surface(mesh, candidate[part]) for part, mesh in reference.items()}
         for left, right in itertools.combinations(reference, 2):
-            if all(same_surface(reference[p], candidate[p]) for p in (left, right)):
+            if unchanged[left] and unchanged[right]:
                 outcomes.append(True)
                 continue
-            original = solid_relation(reference[left], reference[right])
-            current = solid_relation(candidate[left], candidate[right])
+            original = relation(reference[left], reference[right],
+                                (keys['reference'][left], keys['reference'][right]))
+            current = relation(candidate[left], candidate[right],
+                               (keys['candidate'][left], keys['candidate'][right]))
             if original['relation'] is None:
                 outcomes.append(None)
             elif current['relation'] is None:
@@ -299,7 +316,7 @@ def feature_regressions(histories):
     if (any(value is None for value in histories.values())
             or set(histories['reference']) != set(histories['candidate'])):
         return {'passed': None, 'checker_id': 'native.full_native_feature_restoration'}
-    values = []
+    values, cache = [], {}
     for state, reference in histories['reference'].items():
         candidate = histories['candidate'][state]
         if reference is None or candidate is None or not reference or set(reference) != set(candidate):
@@ -307,9 +324,13 @@ def feature_regressions(histories):
             continue
         for part, a in reference.items():
             b = candidate[part]
-            matched = (a.vertices.shape == b.vertices.shape and np.array_equal(a.vertices, b.vertices)
-                       and _face_counter(a.faces) == _face_counter(b.faces))
-            values.append(True if matched else surface_match(a, b)['passed'])
+            key = (_mesh_key(a), _mesh_key(b))
+            if key not in cache:
+                matched = (a.vertices.shape == b.vertices.shape and np.array_equal(a.vertices, b.vertices)
+                           and (np.array_equal(a.faces, b.faces)
+                                or _face_counter(a.faces) == _face_counter(b.faces)))
+                cache[key] = True if matched else surface_match(a, b)['passed']
+            values.append(cache[key])
     return {'passed': join(values), 'checker_id': 'native.reference_surface_features',
             'scope': 'bidirectional_surface_coverage_over_all_current_snapshots',
             'limitations': ['Area sampling and relative tolerances approximate surface equivalence.']}

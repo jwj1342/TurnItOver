@@ -137,3 +137,21 @@ def test_shared_output_lock_prevents_duplicate_queue(tmp_path, monkeypatch):
     with batch._output_lock(path):
         with pytest.raises(RuntimeError, match='Another process'):
             batch.run(tmp_path/'manifest.json',tmp_path,output,{})
+
+
+def test_missing_lazy_scoring_dependency_blocks_before_model_setup(tmp_path, monkeypatch):
+    import turnitover.repair.native_evaluator as evaluator
+    batch = module()
+    manifest = tmp_path/'manifest.json'
+    manifest.write_text('{}')
+    monkeypatch.setattr(batch, 'load_cases', lambda p: ({}, [(manifest, {'id': 'case'})]))
+    monkeypatch.setattr(evaluator, 'check_environment', lambda: {'ready': False, 'missing': ['networkx']})
+    monkeypatch.setattr(batch, 'model_config', lambda *a: pytest.fail('Model setup before environment check'))
+    report = batch.run(manifest, tmp_path, tmp_path/'out', {}, conditions=('none',), preflight_only=True,
+        evaluator_module='turnitover.repair.native_evaluator')
+    assert report['api_calls'] == 0 and report['scoring_environment']['ready'] is False
+    assert any('Independent scoring environment not ready' in item for item in report['blockers'])
+    with pytest.raises(ValueError, match='Independent scoring environment not ready'):
+        batch.run(manifest, tmp_path, tmp_path/'out', {}, conditions=('none',), rounds=3, max_agent_steps=10,
+            repetition='r1', collect_unscored=True, evaluator_module='turnitover.repair.native_evaluator')
+    assert not (tmp_path/'out').exists()

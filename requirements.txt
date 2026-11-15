@@ -2,6 +2,7 @@
 numpy==2.4.2
 scipy==1.18.1
 trimesh==4.7.1
+networkx==3.6.1
 pyyaml==6.0.3
 pillow==12.1.0
 playwright==1.57.0

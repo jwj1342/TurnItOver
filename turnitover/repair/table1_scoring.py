@@ -104,9 +104,14 @@ def runtime_budget_predicate(label, evidence, *, max_triangles, max_draw_calls):
     names = {'runtime.triangle_budget': 'triangles', 'runtime.draw_calls': 'draw_calls'}
     if label['defect_id'] not in names:
         raise ValueError('Not a runtime budget defect')
-    if any(type(value) is not int or value < 0 for value in (max_triangles, max_draw_calls)):
+    caps = {'runtime.triangle_budget': max_triangles, 'runtime.draw_calls': max_draw_calls}
+    if (type(caps[label['defect_id']]) is not int or caps[label['defect_id']] < 0
+            or any(value is not None and (type(value) is not int or value < 0)
+                   for value in caps.values())):
         raise ValueError('Frozen public runtime caps are required')
-    checker = RuntimeBudgetChecker(max_triangles, max_draw_calls)
+    # Only the selected invariant is scored. A missing companion cap is not a
+    # fabricated public requirement; its unused checker threshold is immaterial.
+    checker = RuntimeBudgetChecker(max_triangles or 0, max_draw_calls or 0)
     measurements = [row for row in evidence.get('runtime', [])
                     if row.get('role') == 'candidate' and row.get('kind') == 'public_stats']
     result = {'passed': None, 'checker_id': checker.checker_id,

@@ -16,6 +16,39 @@ from turnitover.repair.native_properties import PROPERTIES, TEXTURES
 from turnitover.checkers.native_mesh import self_crossings
 
 
+def test_scoring_environment_exercises_lazy_normal_repair_dependency(monkeypatch):
+    from importlib import metadata
+    from turnitover.repair.native_evaluator import check_environment
+    report = check_environment()
+    assert report['ready'] is True and report['normal_repair_smoke'] is True
+    original_version = metadata.version
+    def without_networkx(name):
+        if name == 'networkx':
+            raise metadata.PackageNotFoundError(name)
+        return original_version(name)
+    monkeypatch.setattr(metadata, 'version', without_networkx)
+    report = check_environment()
+    assert report['ready'] is False and report['missing'] == ['networkx']
+
+
+def test_topology_cache_reuses_only_byte_identical_meshes(native, monkeypatch):
+    import turnitover.repair.native_evaluator as evaluator
+    _, docs, _ = native
+    calls = []
+    original = evaluator.self_crossings
+    def measured(mesh):
+        calls.append(mesh.vertices.copy())
+        return original(mesh)
+    monkeypatch.setattr(evaluator, 'self_crossings', measured)
+    first = evaluator._topology(docs)
+    assert len(calls) == 2
+    docs['candidate']['states']['mid']['geometry']['parts'][0] = mesh(offset=.2)
+    calls.clear()
+    second = evaluator._topology(docs)
+    assert len(calls) == 3
+    assert first['zero'] == second['zero']
+
+
 def mesh(name='part', offset=0):
     vertices = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype='<f4') + offset
     faces = np.array([[0, 2, 1], [0, 1, 3], [0, 3, 2], [1, 2, 3]], dtype='<u4')
@@ -199,6 +232,48 @@ def test_contract_checker_does_not_truncate_different_limit_lengths():
     candidate = deepcopy(reference)
     candidate['joints']['joint']['limits'] = [0]
     assert _check_contract(candidate, reference)['passed'] is False
+
+
+@pytest.mark.parametrize('kind,key,stats_key', [
+    ('runtime.draw_calls', 'max_draw_calls', 'draw_calls'),
+    ('runtime.triangle_budget', 'max_triangles', 'triangles_scene'),
+])
+def test_public_task_budget_overrides_context_sentinel_independently(native, kind, key, stats_key):
+    source, _, replay = native
+    case = audit_case(kind)
+    case['public_context'] = {'max_triangles': 2_147_483_647, 'max_draw_calls': 2_147_483_647}
+    case['task_runtime_requirements'] = [{'payload': {
+        'measurement_kind': 'public_task_budget', 'observation': {'task_' + key: 6}}}]
+    value = replay()
+    value['runtime'][1]['value'][stats_key] = 872
+    result = make_audit(case, lambda _: value)(source)
+    assert result['defects'][0]['resolved'] is False
+    assert result['program_checks']['runtime.budget'] is False
+    assert result['passed'] is False
+    assert result['measurements'][0]['caps'][key] == 6
+    for row in value['runtime']:
+        row['value'][stats_key] = 3
+    assert make_audit(case, lambda _: value)(source)['defects'][0]['resolved'] is True
+    assert case['public_context'][key] == 2_147_483_647
+
+
+def test_context_sentinels_and_unmarked_runtime_are_not_public_caps(native):
+    source, _, replay = native
+    case = audit_case('runtime.draw_calls')
+    case['public_context'] = {'max_triangles': 2_147_483_647, 'max_draw_calls': 2_147_483_647}
+    case['task_runtime_requirements'] = [{'payload': {'observation': {'task_max_draw_calls': 6}}}]
+    result = make_audit(case, lambda _: replay())(source)
+    assert result['defects'][0]['resolved'] is None
+    assert result['program_checks']['runtime.budget'] is None
+
+
+def test_conflicting_public_task_caps_are_rejected(native):
+    _, _, replay = native
+    case = audit_case('runtime.draw_calls')
+    case['task_runtime_requirements'] = [{'payload': {
+        'measurement_kind': 'public_task_budget', 'observation': {'task_max_draw_calls': 6}}}]
+    with pytest.raises(ValueError, match='Conflicting explicit public runtime caps'):
+        make_audit(case, lambda _: replay())
 
 
 def test_range_repair_uses_current_detents_while_legacy_numeric_policy_is_preserved():

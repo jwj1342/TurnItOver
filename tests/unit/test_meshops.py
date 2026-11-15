@@ -71,3 +71,27 @@ def test_bounded_search_matches_brute_force():
     paired = trimesh.triangles.closest_point(np.tile(triangles, (len(points), 1, 1)), np.repeat(points, len(faces), axis=0))
     brute = np.linalg.norm(paired-np.repeat(points, len(faces), axis=0), axis=1).reshape(len(points), -1).min(axis=1)
     assert np.allclose(meshops.point_surface_distance(points, vertices, faces), brute, atol=1e-12)
+
+
+def test_radius_groups_preserve_nearest_face_and_ties():
+    # Face 0 wins a tie even though the smaller-radius face 1 is searched first.
+    vertices = np.array([[-100., -100., 0], [100., -100., 0], [0, 100., 0],
+                         [-1., -1., 0], [1., -1., 0], [0, 1., 0], [0, 0, 3.]])
+    faces = np.array([[0, 1, 2], [3, 4, 5], [6, 6, 6]])
+    points = np.array([[0., 0., .2], [0, 0, 3.], [90., -90., .1]])
+    distance, nearest = meshops.point_surface_distance(points, vertices, faces, return_face_ids=True)
+    assert np.allclose(distance, [.2, 0., .1])
+    assert nearest.tolist() == [0, 2, 0]
+
+
+def test_mixed_radius_search_matches_brute_force():
+    rng = np.random.default_rng(19)
+    triangles = rng.normal(size=(50, 3, 3)) * np.geomspace(1e-5, 100, 50)[:, None, None]
+    vertices = triangles.reshape(-1, 3)
+    faces = np.arange(len(vertices)).reshape(-1, 3)
+    points = rng.normal(size=(25, 3))
+    brute = np.array([meshops._point_triangle_distance(np.repeat(p[None], len(faces), axis=0),
+                                                       triangles) for p in points])
+    distance, nearest = meshops.point_surface_distance(points, vertices, faces, return_face_ids=True)
+    assert np.allclose(distance, brute.min(axis=1), atol=1e-12)
+    assert np.array_equal(nearest, brute.argmin(axis=1))

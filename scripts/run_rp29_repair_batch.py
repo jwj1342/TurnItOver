@@ -212,6 +212,11 @@ def _run(manifest, native_root, output, env, *, rounds=None, conditions=('none',
     if harness == 'legacy' and set(conditions) - {'none', 'pixel', 'zero-shot-single', 'zero-shot-sweep'}:
         raise ValueError('Full Table 1 matrix requires OpenHands')
     blockers = []
+    scoring_environment = None
+    if evaluator is not None and callable(getattr(evaluator, 'check_environment', None)):
+        scoring_environment = evaluator.check_environment()
+        if not scoring_environment.get('ready'):
+            blockers.append('Independent scoring environment not ready: ' + json.dumps(scoring_environment))
     native_files = ('turnitover/render/session.py', 'configs/views.yaml',
                     'web/dist/index.html', 'web/node_modules/.bin/esbuild')
     missing_native = [name for name in native_files if not (native_root / name).is_file()]
@@ -263,7 +268,8 @@ def _run(manifest, native_root, output, env, *, rounds=None, conditions=('none',
                 'scoring': 'independent_callback' if audit_factory else 'unscored_trajectory', 'success_rate': None,
                 'resolved_rate': None, 'cost_to_success': None, 'harness': harness,
                 'experiment_ready': not blockers, 'blockers': blockers,
-                'checker_coverage': coverage, 'scoring_contract': contract}
+                'checker_coverage': coverage, 'scoring_contract': contract,
+                'scoring_environment': scoring_environment}
     if audit_factory is None and not collect_unscored:
         raise ValueError('Full independent scoring unavailable; --collect-unscored is required '
                          'to explicitly collect trajectories without Success/Resolved scores.')
@@ -274,9 +280,11 @@ def _run(manifest, native_root, output, env, *, rounds=None, conditions=('none',
         raise ValueError('; '.join(execution_blockers))
     config = model_config('generator', env)
     config.validate()
+    program_access_policy = None
     if harness == 'openhands' and case_runner is run_case:
-        from turnitover.repair.openhands_runner import generator_llm
+        from turnitover.repair.openhands_runner import generator_llm, PROGRAM_ACCESS_POLICY
         generator_llm(config)  # No API call; reject incompatible settings before the queue.
+        program_access_policy = dict(PROGRAM_ACCESS_POLICY)
     judge_configs = {condition: replace(model_config('judge', values), max_tokens=512) for condition, values in (judge_envs or {}).items()
                      if condition in model_conditions}
     for judge_config in judge_configs.values():
@@ -286,6 +294,8 @@ def _run(manifest, native_root, output, env, *, rounds=None, conditions=('none',
                   'endpoint_sha256': hashlib.sha256(config.base_url.encode()).hexdigest(),
                   'native_root': str(native_root), 'conditions': list(conditions), 'rounds': rounds,
                   'harness': harness, 'max_agent_steps': max_agent_steps,
+                  'program_access_policy': program_access_policy,
+                  'scoring_environment': scoring_environment,
                   'native_python': str(native_python) if native_python else sys.executable,
                   'repetition': repetition,
                   'evaluator': {'module': evaluator_module, 'contract': contract,
@@ -301,7 +311,8 @@ def _run(manifest, native_root, output, env, *, rounds=None, conditions=('none',
                   'scoring': 'unscored_trajectory' if audit_factory is None else 'independent_callback'}
     comparison_protocol = {name: run_config[name] for name in (
         'manifest_sha256', 'code_sha256', 'harness', 'max_agent_steps', 'rounds',
-        'calibration_sha256', 'evaluator', 'agent_environment', 'native_environment', 'native_python')}
+        'calibration_sha256', 'evaluator', 'agent_environment', 'native_environment', 'native_python',
+        'program_access_policy', 'scoring_environment')}
     comparison_sha = hashlib.sha256(json.dumps(comparison_protocol, sort_keys=True).encode()).hexdigest()
     output.mkdir(parents=True, exist_ok=True)
     config_path = output / 'config.json'
