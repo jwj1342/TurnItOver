@@ -2,6 +2,10 @@
 #   source scripts/setup_env.sh
 module purge
 module load StdEnv/2023 python/3.12 nodejs/24.15.0
+# vLLM generator server (TIO_ENV=vllm): cv2 comes from the opencv module, which must be loaded before any venv exists.
+if [ "${TIO_ENV:-}" = vllm ]; then
+  module load gcc/12.3 opencv/4.11.0
+fi
 
 export TIO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export PLAYWRIGHT_BROWSERS_PATH="$TIO_ROOT/.cache/ms-playwright"
