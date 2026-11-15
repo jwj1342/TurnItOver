@@ -19,7 +19,9 @@ verdict 类 judge 的反馈是 verdict 本身（status、findings 含 part、def
 
 扫描按案例元数据定义，视角乘以关节状态，状态是 rest、mid、limit。渲染顺序和文件命名与 three-tier-900 训练导出一致，每个视角先参考图后候选图，单视角命名 `NN-reference_rest.png`，多视角命名 `NN-left_candidate_mid.png`。提示词用 `turnitover/repair/prompt_900.txt`（她导出分支的 `verifier/prompt.txt`，比主分支多 joint_id 规则）加 JSON 载荷，键顺序 context、remaining、history、image_order、taxonomy_ids、training_objective，和训练记录逐字节一致（`tests/unit/test_repair_judges.py` 对真实导出记录做了核对）。
 
-渲染按程序哈希缓存在 `<out>/cache/renders/`，verdict 按 (judge, 扫描, 程序哈希) 缓存在 `<out>/cache/verdicts/`，生成器回复按 (生成器, 提示词, 图片哈希) 缓存在 `<out>/cache/generator/`。已完成的 episode（`result.json` 的 status 为 complete）会跳过，可以重复提交续跑。
+渲染按程序哈希缓存在 `<out>/cache/renders/`，verdict 按 (judge, 扫描, 程序哈希) 缓存在 `<out>/cache/verdicts/`，生成器回复按 (生成器, 提示词, 图片哈希) 缓存在 `<out>/cache/generator/`。已完成的 episode（`result.json` 的 status 为 complete）会跳过，可以重复提交续跑。只缓存正常结束的回复，截断的不缓存。生成器调用遇到 HTTP 429/500/502/503/504、连接失败或超时会重试，等待从 20 秒起翻倍、不短于 Retry-After、单次不超过 300 秒，每次调用总预算由 `TIO_GENERATOR_RETRY_BUDGET_S` 给（默认 1800 秒）。生成器最终失败（`ModelError`）只结束当前 episode，`result.json` 记 status `generator_error` 和错误信息，作业继续跑下一个案例，结束时以非零状态退出，重交会重跑这些 episode。
+
+程序里不少于 200 个字符的数值数组字面量在给生成器看的文本里换成 `__GEOM_<k>__` 占位符（k 按出现顺序），生成器在省略后的文本上编辑，碰到、删除、复制或部分覆盖占位符的编辑按无效补丁处理，应用后占位符原样展开回原数组。58 例修复包上省略再展开逐字节一致，候选与参考的数组逐例相同，所以缺陷都在可见文本里。每轮在 `result.json` 的 rounds 里记 `program_chars` 和 `elided_program_chars`。
 
 ## 案例目录格式
 
@@ -44,10 +46,10 @@ verdict 类 judge 的反馈是 verdict 本身（status、findings 含 part、def
 ```bash
 CASES=... OUT=... JUDGES="none pixel zs8b_screenshot zs8b_sweep ours_2b_ordinary ours_2b_evidence ours_8b_evidence gold" \
 GENERATOR=api ROUNDS=3 sbatch --account=<账户> --gpus-per-node=<GPU>:1 scripts/slurm/repair_table.sbatch
-python scripts/summarize_repair_table.py --out <OUT> [<OUT2> ...] --cases <CASES> [--case-ids-file eligible.txt]
+python scripts/summarize_repair_table.py --out <OUT> [<OUT2> ...] --cases <CASES> --case-ids-file eligible.txt
 ```
 
-汇总表的列是成功率、按缺陷类型的 resolved（该标签涉及部件的全部审计不变量在最终程序上通过）、定位率（finding 的部件与同类型标签部件相交）、到首次通过的生成器调用数和 token、非改进率、状态重访率和供应商报告费用。
+每个 judge 的分母都是 `--case-ids-file` 列出的案例（必填）。缺失、未完成和 `generator_error` 的 episode 在成功率里算失败，其标签算未解决，分别计入 Missing（缺失或未完成）和 Error 两列。汇总表的列是成功率及 Wilson 95% 置信区间、按缺陷类型的 resolved（该标签涉及部件的全部审计不变量在最后一次被采纳补丁的程序上通过，没有采纳过补丁时用初始程序）、定位率（finding 的部件与同类型标签部件相交）、Inv.（返回补丁的轮次中无效补丁的比例）、到首次通过的生成器调用数和 token、非改进率和状态重访率（只数补丁被采纳的轮次）以及供应商报告费用。后几列在完成的 episode 上按轮次或 finding 合并计算。
 
 ## 她的 58 例修复包
 
