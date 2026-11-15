@@ -120,7 +120,50 @@ def test_citations_deliver_actual_reference_candidate_pair(observations):
         evaluate_judge('gold', pairs, public_record=record)
     gold = evaluate_judge('gold', pairs, public_record=record, gold_call=lambda: verdict('pass'))
     assert gold['status'] == 'pass'
-    assert len(CONDITIONS) == 8
+    assert len(CONDITIONS) == 10
+
+
+@pytest.mark.parametrize('condition', ['ordinary-active', 'evidence-active'])
+def test_active_conditions_select_x_of_three_with_zero_visible(condition, observations):
+    pairs, _, record = observations
+    calls = []
+    def response(prompt, images):
+        calls.append((prompt, tuple(images)))
+        if prompt.startswith('Select additional joint-state observations'):
+            assert tuple(images) == (pairs[0].reference, pairs[0].candidate)
+            return ModelResult('{"observe":["mid"]}', 'selector',
+                               {'total_tokens': 2}, 'stop', 1)
+        payload = json.loads(prompt.rsplit('\n', 1)[-1])
+        state = payload['history'][0]['state']
+        return ModelResult(json.dumps({'verdict': verdict('fail', step=0)}), state,
+                           {'total_tokens': 5}, 'stop', 1)
+    result = evaluate_judge(condition, pairs, public_record=record, model_call=response)
+    assert result['selection']['valid'] is True
+    assert result['selection']['selected_states'] == ['zero', 'mid']
+    assert len(calls) == 3  # one selection plus zero/mid diagnosis
+    assert result['usage']['total_tokens'] == 12
+    assert result['feedback']['findings'][0]['evidence_steps'] == [0, 1]
+    assert {row['kind'] for row in result['attempts'] if 'kind' in row} == {'selection'}
+
+
+def test_invalid_active_selection_falls_back_to_full_sweep(observations):
+    pairs, _, record = observations
+    calls = []
+    def response(prompt, images):
+        calls.append(prompt)
+        if prompt.startswith('Select additional joint-state observations'):
+            return ModelResult('{"verdict":{}}', 'selector',
+                               {'total_tokens': 3}, 'stop', 1)
+        return ModelResult(json.dumps({'verdict': verdict('pass')}), 'judge',
+                           {'total_tokens': 5}, 'stop', 1)
+    result = evaluate_judge('evidence-active', pairs, public_record=record,
+                            model_call=response)
+    assert result['selection']['valid'] is False
+    assert result['selection']['fallback'] == 'all_states'
+    assert result['selection']['selected_states'] == ['zero', 'mid', 'limit']
+    assert len(calls) == 4
+    assert result['usage']['total_tokens'] == 18
+    assert result['status'] == 'pass'
 
 
 def test_multi_defect_scoring_requires_each_instance_and_regression_checks():

@@ -19,7 +19,15 @@ from turnitover.models.client import ModelError, ModelResult, is_normal_finish_r
 from turnitover.verifier.contracts import Context, parse_decision, parse_json
 
 CONDITIONS = ('none', 'pixel', 'zero-shot-single', 'zero-shot-sweep',
-              'zero-shot-claude-sweep', 'ordinary', 'evidence', 'gold')
+              'zero-shot-claude-sweep', 'ordinary', 'evidence',
+              'ordinary-active', 'evidence-active', 'gold')
+
+ACTIVE_SELECTION_PROTOCOL = (
+    'Select additional joint-state observations before diagnosis. The zero-state '
+    'reference/candidate pair is currently visible. Return only JSON with exactly '
+    'one key: {"observe": [...]}. observe must be a unique ordered subset of '
+    '["mid", "limit"]. Use [] when zero alone is sufficient. Do not return a verdict.'
+)
 
 
 @dataclass(frozen=True)
@@ -58,9 +66,10 @@ def evaluate_judge(condition: str, pairs: list[ObservationPair], *,
                    invalid_retries: int = 3) -> dict:
     """Return public feedback, status and usage for one candidate.
 
-    For the sweep, callers must provide exactly zero/mid/limit matched pairs
-    from one fixed view, in that order. This function does not select views or
-    infer states. For a single screenshot it consumes the zero-state pair.
+    Callers provide exactly zero/mid/limit matched pairs from one fixed view,
+    in that order. Active conditions first expose zero, then let the same judge
+    select a model-visible subset of mid/limit before diagnosis. All pairs are
+    still acquired by the caller, so this does not claim rendering savings.
     """
     if condition == 'none':
         return {'status': 'continue', 'feedback': {}, 'usage': {}}
@@ -141,7 +150,7 @@ def make_public_record(pairs, runtime, context, *, case_id='current', view_id=No
 
 def _structured_judge(condition, pairs, record, model_call, gold_call, retries):
     from turnitover.oracle.supervision_validation import public_payload
-    from turnitover.oracle.observation_inputs import PROTOCOL
+    from turnitover.oracle.observation_inputs import PROTOCOL, build_observation_inputs
     from turnitover.oracle.observation_inference import infer_observationwise
     if type(retries) is not int or not 0 <= retries <= 3:
         raise ValueError('Invalid-decision retries must be 0..3')
@@ -183,17 +192,58 @@ def _structured_judge(condition, pairs, record, model_call, gold_call, retries):
         # This callback is enabled ONLY for the explicit upper-bound condition.
         verdict = asdict(parse_decision({'verdict': gold_call()}, Context(**payload['context']),
                          {row['step'] for row in payload['history']}, final_only=True))
-    elif condition in {'ordinary', 'evidence', 'zero-shot-sweep', 'zero-shot-claude-sweep'}:
+    elif condition in {'ordinary', 'evidence', 'ordinary-active', 'evidence-active',
+                       'zero-shot-sweep', 'zero-shot-claude-sweep'}:
         if model_call is None:
             raise ValueError('Sweep judge requires its model callback')
+        selected = ['zero', 'mid', 'limit']
+        selection = None
+        if condition in {'ordinary-active', 'evidence-active'}:
+            zero = build_observation_inputs(record, images, withheld=('mid', 'limit'))
+            if len(zero) != 1 or zero[0].observation_id != 'zero':
+                raise ValueError('Active selection requires one zero-state observation')
+            current = public_payload(zero[0].record)
+            response = model_call(ACTIVE_SELECTION_PROTOCOL + '\n' + json.dumps(current),
+                                  zero[0].images)
+            for key, value in response.usage.items():
+                if type(value) in (int, float) and math.isfinite(value):
+                    usage[key] = usage.get(key, 0) + value
+            selection = {'raw': response.text, 'usage': response.usage,
+                         'model': response.model, 'valid': False,
+                         'fallback': 'all_states'}
+            attempts.append({'kind': 'selection', **selection})
+            try:
+                if not is_normal_finish_reason(response.finish_reason):
+                    raise ValueError('Incomplete active selection response')
+                decision = parse_json(response.text)
+                observe = decision.get('observe') if isinstance(decision, dict) else None
+                if (set(decision) != {'observe'} or not isinstance(observe, list)
+                        or any(state not in {'mid', 'limit'} for state in observe)
+                        or len(set(observe)) != len(observe)
+                        or observe != [state for state in ('mid', 'limit') if state in observe]):
+                    raise ValueError('Active selection must be an ordered subset of mid/limit')
+            except (TypeError, ValueError) as exc:
+                selection['error'] = str(exc)
+                attempts[-1]['error'] = str(exc)
+            else:
+                selected = ['zero', *observe]
+                selection.update(valid=True, fallback=None, selected_states=selected)
+                attempts[-1].update(valid=True, fallback=None, selected_states=selected)
+            selection.setdefault('selected_states', selected)
+            withheld = [state for state in ('mid', 'limit') if state not in selected]
+        else:
+            withheld = ()
         def single_call(item, pair_images):
             current = public_payload(item)
             return validated(current, pair_images)[0]
-        inferred = infer_observationwise(record, images, single_call)
+        inferred = infer_observationwise(record, images, single_call, withheld=withheld)
         verdict = inferred['verdict']
-        return {'status': verdict['status'], 'feedback': verdict, 'usage': usage,
+        result = {'status': verdict['status'], 'feedback': verdict, 'usage': usage,
                 'attempts': attempts, 'observations': payload['history'],
                 'findings_metadata': inferred['findings_metadata']}
+        if selection is not None:
+            result['selection'] = selection
+        return result
     else:
         if model_call is None:
             raise ValueError('Zero-shot judge requires a model call')
