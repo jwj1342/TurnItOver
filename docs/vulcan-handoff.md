@@ -47,10 +47,12 @@ Nibi 上的 `/scratch/jwj/TurnItOver` 已经整合好了，模型、数据、che
 ```bash
 cd ~/scratch/TurnItOver               # Vulcan 上的实际路径
 rm -rf .venv                          # Nibi 的 venv 在 Vulcan 不能用，第 3 步会重建
-git status && git branch --show-current     # 应为干净的 exp/vulcan-900
-git pull                              # 取我之后推送的修改
+git fetch origin && git checkout exp/vulcan-900 && git reset --hard origin/exp/vulcan-900   # 这里还没有本地工作，只是同步
 chmod 600 .env
+bash scripts/exp900/vulcan_preflight.sh     # 体检：传输完整性、.env、模块、wheel、账户与并发上限、网络
 ```
+
+体检报告里的 `ACTION` 和 `MISSING` 先处理。之后用 `scripts/slurm/vulcan_probe.sbatch` 在计算节点上测一次网络路径和浏览器，见 `docs/vulcan-quickstart.md` 第 3 节。精简版流程在 `docs/vulcan-quickstart.md`。
 
 `.cache/ms-playwright` 和 `web/node_modules` 留着也没关系，第 3 步的 bootstrap 会检查并补齐。
 
@@ -160,7 +162,7 @@ module spider nodejs                # setup_env.sh 里是 nodejs/24.15.0，Vulca
 avail_wheels torch==2.7.1 torchvision==0.22.1 transformers==4.57.6 peft==0.18.0 accelerate==1.11.0 --python 3.12
 avail_wheels playwright==1.57.0 trimesh==4.7.1 scipy==1.18.1 --python 3.12
 bash scripts/bootstrap_login.sh
-source scripts/setup_env.sh && python -m pytest -q tests/unit      # 应为 113 passed, 1 skipped
+source scripts/setup_env.sh && python -m pytest -q tests/unit      # 应为 116 passed, 1 skipped
 ```
 
 ## 4. 账户与提交参数
