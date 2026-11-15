@@ -1,8 +1,8 @@
 """Defect F1 under observation conditions (tables/acquisition.tex), scored offline against the annotated labels.
 
 Rows: viewpoints only and joints only (runs cond-<condition>-<size>-<job>, from build_condition_exports.py) and the
-complete fixed scan (the L40S re-evaluations level900-eval-<size>-<job> of the full validation export), so every row is
-the same hardware. Per tier: case-level macro-F1 over the five taxonomy labels, a label absent from the tier scoring 0
+complete fixed scan (every L40S evaluation of the full validation export: the level900-eval-* re-evaluations and the
+Vulcan-trained 8B Ordinary seed), so every row is the same hardware. Per tier: case-level macro-F1 over the five taxonomy labels, a label absent from the tier scoring 0
 as in her scorer, but against all annotated defects of each case (a condition that hides a defect costs recall).
 Usage: python scripts/exp900/analysis/condition_f1.py  -> prints and writes $TIO_RUNS/out/RESULTS-condition-f1.md
 """
@@ -40,14 +40,21 @@ def score(pred: Path, gold: dict) -> dict:
     return {t: macro_f1(rows) for t, rows in by.items()}
 
 
+def complete(pred: Path) -> bool:
+    metrics = pred.with_name("metrics.json")
+    return metrics.exists() and json.loads(metrics.read_text()).get("status") == "complete"
+
+
 def runs() -> dict:
     found = defaultdict(list)
     for cond in ("viewpoints", "joints"):
         for pred in OUT.glob(f"cond-{cond}-*/*/seed*-*-withheld/predictions.jsonl"):
             seed, sup = pred.parent.name.split("-")[:2]
-            found[cond, pred.parents[1].name, sup].append(pred)
-    for pred in OUT.glob("level900-eval-*/*/seed*/*-diagnosis/eval-validation/predictions.jsonl"):
-        found["complete", pred.parents[3].name, pred.parents[1].name.split("-")[0]].append(pred)
+            if complete(pred):
+                found[cond, pred.parents[1].name, sup].append(pred)
+    for pred in OUT.glob("level900-*/*/seed*/*-diagnosis/eval-validation/predictions.jsonl"):
+        if complete(pred) and "L40S" in (pred.parents[4] / "env.txt").read_text().splitlines()[0]:
+            found["complete", pred.parents[3].name, pred.parents[1].name.split("-")[0]].append(pred)
     return found
 
 
