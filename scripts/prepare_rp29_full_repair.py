@@ -222,10 +222,74 @@ def prepare(release, dataset, output):
     return result
 
 
+def refresh_scoring_scopes(frozen, dataset, output):
+    """Write a sibling manifest revision; preserve frozen observations/results."""
+    from scripts.run_rp29_repair_batch import load_cases
+    from turnitover.repair.frozen_manifest import _file
+
+    frozen, dataset, output = [Path(p).resolve() for p in (frozen, dataset, output)]
+    if output.parent != frozen.parent or output == frozen:
+        raise ValueError('Scoring revision must be a new sibling manifest')
+    labels_path = output.with_name(output.stem + '.labels.private.jsonl')
+    if output.exists() or labels_path.exists():
+        raise FileExistsError('Scoring revision already exists')
+    metadata, loaded = load_cases(frozen)
+    source = read(dataset / 'manifest.json')
+    if sha(dataset / 'manifest.json') != metadata['source_manifest_sha256']:
+        raise ValueError('Scoring revision dataset identity mismatch')
+    annotations_path = _file(dataset, 'annotations.private.jsonl',
+                             source['files']['annotations.private.jsonl'], 'annotations')
+    ids = {case['id'] for _, case in loaded}
+    annotations = {row['id']: row for row in rows(annotations_path)
+                   if row['split'] == 'validation' and row['id'] in ids}
+    if set(annotations) != ids:
+        raise ValueError('Scoring revision annotation roster mismatch')
+    old_labels = _file(frozen.parent, metadata['private_labels'],
+                       metadata['private_labels_sha256'], 'private labels')
+    cases = {case['id']: case for _, case in loaded}
+    revised = []
+    for row in rows(old_labels):
+        case = cases[row['id']]
+        annotation = annotations[row['id']]
+        for role, key in (('reference', 'reference_program'), ('candidate', 'initial_program')):
+            if annotation['programs']['case_' + role]['sha256'] != case['sha256'][key]:
+                raise ValueError('Scoring revision program identity mismatch')
+        recovered = construction_scopes(annotation, case['sha256']['reference_program'])
+        labels = recovered['labels']
+        if [r['defect_id'] for r in labels] != [r['defect_id'] for r in row['labels']]:
+            raise ValueError('Scoring revision cannot change defect instances')
+        for old, new in zip(row['labels'], labels, strict=True):
+            for key in ('parts', 'joint_id'):
+                if not old.get(key) and new.get(key):
+                    old[key] = new[key]
+        row['scoring_scopes'] = [new if new is not None else old
+            for old, new in zip(row.get('scoring_scopes') or [None] * len(labels),
+                                recovered['scopes'], strict=True)]
+        row['scoring_scope_provenance'] = recovered['provenance']
+        revised.append(row)
+    with labels_path.open('x', encoding='utf-8') as handle:
+        handle.write(''.join(json.dumps(row) + '\n' for row in revised))
+    result = {**metadata, 'private_labels': labels_path.name,
+              'private_labels_sha256': sha(labels_path),
+              'scoring_revision_of_sha256': sha(frozen)}
+    with output.open('x', encoding='utf-8') as handle:
+        handle.write(json.dumps(result, indent=2) + '\n')
+    load_cases(output)
+    return result
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ('release','dataset','output'):
+    parser.add_argument('--release', type=Path)
+    parser.add_argument('--refresh-scoring-scopes-from', type=Path,
+                        help='Create a new sibling manifest with refreshed private identifiers only')
+    for name in ('dataset','output'):
         parser.add_argument('--'+name, type=Path, required=True)
     args = parser.parse_args()
-    result = prepare(args.release, args.dataset, args.output)
+    if args.refresh_scoring_scopes_from:
+        result = refresh_scoring_scopes(args.refresh_scoring_scopes_from, args.dataset, args.output)
+    else:
+        if args.release is None:
+            parser.error('--release is required when preparing a new batch')
+        result = prepare(args.release, args.dataset, args.output)
     print(json.dumps({'status': result['status'], 'counts': result['counts'], 'cases': len(result['cases'])}))

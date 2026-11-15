@@ -89,8 +89,30 @@ def construction_scopes(annotation, reference_sha256, *, resolve=Path):
     for label in labels:
         kind = label['defect_id']
         target = native.get('target')
+        # Collectors use several explicit selector spellings. Recover only
+        # identifiers for this defect, never infer them from saved outcomes.
+        native_kind = native.get('defect_id', native.get('primary_defect'))
+        matching = native_kind == kind or (native_kind is None and
+                    {item['defect_id'] for item in labels} == {kind})
+        if matching:
+            condition = native.get('condition') or {}
+            if target is None:
+                target = condition.get('target') or condition.get('part')
+            if target is None and kind == 'geometry.duplicate_part':
+                target = native.get('duplicate_target')
+            if kind.startswith('kinematics.'):
+                joint = native.get('joint')
+                params = label.get('params') or {}
+                if isinstance(joint, str) and joint and not (
+                        label.get('joint_id') or params.get('joint_id') or params.get('joint')):
+                    label['joint_id'] = joint
+                subtree = native.get('target_subtree')
+                if (not label.get('parts') and isinstance(subtree, list) and subtree
+                        and all(isinstance(part, str) and part for part in subtree)):
+                    label['parts'] = list(subtree)
         if isinstance(target, str) and target and not label.get('parts'):
-            label['parts'] = [target]
+            if matching:
+                label['parts'] = [target]
         scope = {'defect_id': kind, 'reference_program_sha256': reference_sha256,
                  'provenance': list(provenance), 'status': 'development'}
         if kind == 'geometry.thin_sheet' and isinstance(target, str):

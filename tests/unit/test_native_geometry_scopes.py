@@ -180,6 +180,36 @@ def test_scope_recovery_uses_identifiers_not_historical_verdicts(tmp_path):
     assert recovered['scopes'][0]['reference_program_sha256'] == 'a' * 64
 
 
+@pytest.mark.parametrize('kind,fields,parts,joint', [
+    ('geometry.missing_part', {'condition': {'target': 'part'}}, ['part'], None),
+    ('geometry.duplicate_part', {'duplicate_target': 'part'}, ['part'], None),
+    ('material.metalness', {'condition': {'part': 'part'}}, ['part'], None),
+    ('material.tiling_scale', {'condition': {'target': 'part'}}, ['part'], None),
+    ('kinematics.joint_type', {'joint': 'hinge', 'target_subtree': ['part']}, ['part'], 'hinge'),
+    ('kinematics.joint_range', {'joint': 'hinge', 'target_subtree': ['part']}, ['part'], 'hinge'),
+])
+def test_original_collector_selector_spellings(tmp_path, kind, fields, parts, joint):
+    row = annotation(tmp_path, {'defect_id': kind, **fields, 'historical_pass': True}, kind)
+    result = construction_scopes(row, 'a' * 64)
+    assert result['labels'][0]['parts'] == parts
+    assert result['labels'][0].get('joint_id') == joint
+    assert 'historical_pass' not in json.dumps(result)
+
+
+def test_other_defect_report_cannot_supply_missing_target(tmp_path):
+    row = annotation(tmp_path, {'defect_id': 'material.metalness',
+        'condition': {'part': 'unrelated'}}, 'geometry.missing_part')
+    assert construction_scopes(row, 'a' * 64)['labels'][0]['parts'] == []
+
+
+def test_shared_report_does_not_assign_one_target_to_other_instances(tmp_path):
+    row = annotation(tmp_path, {'defect_id': 'material.metalness',
+        'condition': {'part': 'part'}}, 'material.metalness')
+    row['labels'].append({'defect_id': 'geometry.missing_part', 'parts': []})
+    recovered = construction_scopes(row, 'a' * 64)['labels']
+    assert [label['parts'] for label in recovered] == [['part'], []]
+
+
 def test_bevel_scope_preserves_original_small_tolerance_and_native_range(tmp_path):
     row = annotation(tmp_path, {'target': 'part', 'native_component_chamfer_proof': {
         'raw_component_chamfer_proof': {'strict_local_native_edge_proof': {

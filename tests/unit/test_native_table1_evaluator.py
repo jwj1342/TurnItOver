@@ -116,6 +116,77 @@ def test_global_scale_predicate_covers_all_reference_parts(native):
     assert result['defects'][0]['resolved'] is False
 
 
+@pytest.mark.parametrize('kind', ['geometry.global_scale', 'geometry.anisotropic_scale'])
+def test_global_alignment_ignores_empty_abi_container_but_checks_history(native, kind):
+    source, docs, replay = native
+    for doc in docs.values():
+        doc['contract']['parts'].append('base')
+        doc['return_to_zero'] = deepcopy(doc['states']['zero'])
+    case = audit_case(kind)
+    case['private_labels'][0]['parts'] = []
+    audit = make_audit(case, lambda _: replay())
+    assert audit(source)['defects'][0]['resolved'] is True
+    docs['candidate']['return_to_zero']['geometry']['parts'][0] = mesh(offset=.2)
+    result = audit(source)
+    assert result['defects'][0]['resolved'] is False
+    assert result['program_checks']['geometry.alignment'] is False
+
+
+def test_missing_part_in_authored_history_is_not_hidden_by_three_states(native):
+    source, docs, replay = native
+    for doc in docs.values():
+        doc['authored_history'] = {'complete': True, 'snapshots': [deepcopy(doc['states']['zero'])]}
+    audit = make_audit(audit_case('geometry.missing_part'), lambda _: replay())
+    assert audit(source)['defects'][0]['resolved'] is True
+    docs['candidate']['authored_history']['snapshots'][0]['geometry']['parts'] = [mesh('other', 3)]
+    assert audit(source)['defects'][0]['resolved'] is False
+
+
+def test_target_duplicate_under_another_abi_owner_is_not_resolved(native):
+    source, docs, replay = native
+    for doc in docs.values():
+        doc['return_to_zero'] = deepcopy(doc['states']['zero'])
+    audit = make_audit(audit_case('geometry.duplicate_part'), lambda _: replay())
+    assert audit(source)['defects'][0]['resolved'] is True
+    docs['candidate']['return_to_zero']['geometry']['parts'].append(mesh('different-owner'))
+    result = audit(source)
+    assert result['defects'][0]['resolved'] is False
+    assert result['measurements'][0]['cross_owner_target_face_multiplicity'] is False
+
+
+def test_duplicate_predicate_does_not_borrow_unrelated_part_failure(native):
+    source, docs, replay = native
+    docs['candidate']['states']['mid']['geometry']['parts'].append(mesh('other-clone', 3))
+    result = make_audit(audit_case('geometry.duplicate_part'), lambda _: replay())(source)
+    assert result['defects'][0]['resolved'] is True
+    assert result['program_checks']['geometry.alignment'] is False
+
+
+def test_unmatched_history_cannot_pass_alignment_or_presence(native):
+    source, docs, replay = native
+    docs['reference']['return_to_zero'] = deepcopy(docs['reference']['states']['zero'])
+    result = make_audit(audit_case('geometry.missing_part'), lambda _: replay())(source)
+    assert result['defects'][0]['resolved'] is None
+    assert result['program_checks']['geometry.alignment'] is None
+
+
+@pytest.mark.parametrize('kind', ['kinematics.joint_axis', 'kinematics.joint_type', 'kinematics.joint_range'])
+def test_native_joint_parameter_alias_selects_only_named_joint(native, kind):
+    source, docs, replay = native
+    case = audit_case(kind)
+    case['private_labels'][0].update(parts=[], params={'joint': 'joint'})
+    audit = make_audit(case, lambda _: replay())
+    assert audit(source)['defects'][0]['resolved'] is True
+    if kind == 'kinematics.joint_axis':
+        docs['candidate']['states']['mid']['geometry']['parts'][0] = mesh(offset=.2)
+    else:
+        field, value = ('type', 'prismatic') if kind.endswith('type') else ('limits', [0, .5])
+        docs['candidate']['contract']['joints']['joint'][field] = value
+    assert audit(source)['defects'][0]['resolved'] is False
+    case['private_labels'][0]['params']['joint'] = 'unknown'
+    assert audit(source)['defects'][0]['resolved'] is None
+
+
 @pytest.mark.parametrize('field,value,kind', [
     ('type', 'prismatic', 'kinematics.joint_type'),
     ('limits', [0, .5], 'kinematics.joint_range'),

@@ -6,6 +6,7 @@ missing predicates into passing checks. No validation-fitted thresholds.
 """
 from __future__ import annotations
 
+from collections import Counter
 import hashlib
 import json
 import math
@@ -45,7 +46,7 @@ SUPPORTED = (*ALIGNMENT_DEFECTS, *CONTRACT_DEFECTS, *BUDGET_DEFECTS,
              'structure.wrong_parent', 'runtime.missing_dispose', 'runtime.tick_missing_or_phase',
              *FEATURE_DEFECTS, *CONTACT_DEFECTS)
 SCORING_CONTRACT = {
-    'status': 'development', 'version': 5, 'exposure_status': 'unreviewed',
+    'status': 'development', 'version': 6, 'exposure_status': 'unreviewed',
     'runtime_caps': 'Explicit public task budgets; context sentinel 2147483647 is not a task cap',
     'heuristics': HEURISTICS,
     'material_attribute_profiles': ATTRIBUTE_PROFILE_TOLERANCE,
@@ -221,6 +222,36 @@ def _topology_predicate(measured, parts, kind):
             'scope': 'exact_position_edge_incidence_or_proper_nonadjacent_noncoplanar_crossings'}
 
 
+def _duplicate_faces_across_owners(histories, parts):
+    """A cloned target can be exported under a different ABI parent part."""
+    ref, cand = histories['reference'], histories['candidate']
+    if ref is None or cand is None or set(ref) != set(cand) or not parts:
+        return None
+    cache = {}
+    def faces(mesh):
+        key = hashlib.sha256(mesh.vertices.tobytes() + mesh.faces.tobytes()).digest()
+        if key not in cache:
+            tri = mesh.vertices[mesh.faces]
+            order = np.lexsort((tri[:, :, 2], tri[:, :, 1], tri[:, :, 0]), axis=1)
+            tri = np.take_along_axis(tri, order[:, :, None], axis=1)
+            cache[key] = Counter(map(tuple, tri.reshape(-1, 9)))
+        return cache[key]
+    values = []
+    for state in ref:
+        if ref[state] is None or cand[state] is None or not set(parts) <= set(ref[state]):
+            values.append(None)
+            continue
+        targets = set().union(*(faces(ref[state][part]) for part in parts))
+        counts = []
+        for scene in (ref[state], cand[state]):
+            total = Counter()
+            for mesh in scene.values():
+                total.update({key: count for key, count in faces(mesh).items() if key in targets})
+            counts.append(total)
+        values.append(not any(counts[1][key] > counts[0][key] for key in targets))
+    return _join(values)
+
+
 def _native_pose(a, b, parts):
     if a is None or b is None or not parts or not set(parts) <= set(a):
         return None
@@ -273,9 +304,16 @@ def _temporal(docs, parts, *, require_motion=False):
 
 
 def _alignment(evidence, docs):
-    geometries = {role: _meshes(doc) for role, doc in docs.items()}
+    histories = {role: snapshots(doc) for role, doc in docs.items()}
+    if (any(history is None for history in histories.values())
+            or set(histories['reference']) != set(histories['candidate'])):
+        return None
+    geometries = {role: {state: _mesh_export(row.get('geometry'))
+                        if isinstance(row, dict) else None
+                        for state, row in history.items()} for role, history in histories.items()}
     reference, candidate = geometries['reference'], geometries['candidate']
-    if (reference is None or candidate is None or any(not reference[s] for s in STATES)):
+    if (any(parts is None for geometry in geometries.values() for parts in geometry.values())
+            or any(not reference[s] for s in STATES)):
         return None
     checker = GeometryAlignmentChecker(**SCORING_CONTRACT['geometry'])
     values = {role: Evidence(evidence['program_sha256'][role], True, None,
@@ -290,7 +328,16 @@ def _part_alignment(label, alignment, reference):
     parts = set(label.get('parts') or [])
     if label['defect_id'] == 'geometry.global_scale' or (
             not parts and label['defect_id'] == 'geometry.anisotropic_scale'):
-        parts = set(reference['parts'])
+        # ABI part rosters also contain empty root/helper containers. Geometry
+        # predicates cover exported reference meshes, including history probes.
+        parts = {part for inv in alignment.invariants for part in inv.parts
+                 if part in reference['parts']}
+    if not parts:
+        params = label.get('params') or {}
+        joint_id = label.get('joint_id') or params.get('joint_id') or params.get('joint')
+        joint = reference['joints'].get(joint_id)
+        if joint is not None:
+            parts = {joint['part']}
     if not parts or not parts <= set(reference['parts']):
         return {**result, 'reason': 'Missing or unknown target part IDs'}
     invariants = [inv for inv in alignment.invariants if set(inv.parts) & parts]
@@ -350,6 +397,10 @@ def measure_replay(evidence, labels, context, scopes=None):
             item = materials(docs['reference'], docs['candidate'], label)
         elif kind in TOPOLOGY_DEFECTS:
             item = _topology_predicate(topology_evidence, label.get('parts') or [], kind)
+            if kind == 'geometry.duplicate_part':
+                cross_owner = _duplicate_faces_across_owners(histories, label.get('parts') or [])
+                item = {**item, 'passed': _join([item['passed'], cross_owner]),
+                        'cross_owner_target_face_multiplicity': cross_owner}
         elif kind == 'structure.wrong_parent':
             item = hierarchy(docs['reference'], docs['candidate'], label.get('parts') or [])
         elif kind == 'runtime.missing_dispose':
@@ -358,18 +409,21 @@ def measure_replay(evidence, labels, context, scopes=None):
             item = _temporal(docs, label.get('parts') or [], require_motion=True)
         elif kind == 'geometry.missing_part':
             parts = set(label.get('parts') or [])
-            geometry = _meshes(docs['candidate'])
+            geometry = histories['candidate']
             valid = bool(parts) and reference is not None and parts <= set(reference['parts'])
             passed = None
             if valid and candidate is not None:
                 if not parts <= set(candidate['parts']):
                     passed = False
-                elif geometry is not None:
-                    passed = all(parts <= set(geometry[state]) for state in STATES)
+                elif (geometry is not None and histories['reference'] is not None
+                      and set(geometry) == set(histories['reference'])
+                      and all(row is not None for row in geometry.values())):
+                    passed = all(parts <= set(row) for row in geometry.values())
             item = {'checker_id': 'program.part_presence', 'passed': passed}
         elif kind in CONTRACT_DEFECTS:
             parts = set(label.get('parts') or [])
-            joint_id = label.get('joint_id') or label.get('params', {}).get('joint_id')
+            params = label.get('params') or {}
+            joint_id = label.get('joint_id') or params.get('joint_id') or params.get('joint')
             joints = ([joint_id] if joint_id and reference and joint_id in reference['joints']
                       else [key for key, joint in (reference or {}).get('joints', {}).items()
                             if joint['part'] in parts] if not joint_id else [])
@@ -479,7 +533,8 @@ def make_gold(case, replay):
             if defect['resolved'] is not False:
                 continue
             label = case['private_labels'][defect['label_index']]
-            joint = label.get('joint_id') or label.get('params', {}).get('joint_id')
+            params = label.get('params') or {}
+            joint = label.get('joint_id') or params.get('joint_id') or params.get('joint')
             if defect['defect_id'] == 'kinematics.joint_axis' and joint not in context['joints']:
                 continue
             states = {row['state'] for key in ('details', 'invariants', 'mismatches')
