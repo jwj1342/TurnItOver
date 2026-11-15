@@ -2,9 +2,12 @@ import json
 
 import pytest
 
-from turnitover.models.client import ModelResult
+from turnitover.models.client import ModelError, ModelResult
 from turnitover.repair.loop import Feedback, run_repair
-from turnitover.repair.patches import apply_response
+from turnitover.repair.patches import apply_response, elide, expand
+
+GEOMETRY = '['+', '.join(f'{i*0.25:.2f}' for i in range(80))+']'
+OTHER = '['+', '.join(f'{-i*1.5e-3:.6f}' for i in range(40))+']'
 
 
 def test_patches_are_atomic_unique_and_nonoverlapping():
@@ -30,8 +33,9 @@ def test_loop_keeps_regressions_and_counts_failed_iterations_without_leaking_gol
     assert result['score_trace']==[0.,1.,0.,0.]
     assert result['first_success_round']==1
     assert not result['final_passed']
-    assert result['exact_state_revisit_rate']==pytest.approx(2/3)
-    assert result['non_improving_rate']==pytest.approx(2/3)
+    assert result['applied_patches']==2
+    assert result['exact_state_revisit_rate']==pytest.approx(1/2)
+    assert result['non_improving_rate']==pytest.approx(1/2)
     assert result['stop_error_rounds']==2
     assert result['total_tokens']==60
     assert result['observation_cost']==6
@@ -77,3 +81,48 @@ def test_token_cost_counts_router_and_provider_reasoning_usage():
     assert usage_tokens({'input_tokens':100,'output_tokens':30})==130
     assert usage_tokens({'promptTokenCount':100,'candidatesTokenCount':20,'thoughtsTokenCount':10})==130
     assert usage_tokens({'promptTokenCount':100,'candidatesTokenCount':20,'totalTokenCount':130})==130
+
+
+def test_elision_round_trips_and_keeps_placeholders_fixed():
+    source=f'const a = {GEOMETRY};\nconst b = [1, 2, 3];\nconst c = {OTHER};\n'
+    elided,arrays=elide(source)
+    assert elided=='const a = __GEOM_0__;\nconst b = [1, 2, 3];\nconst c = __GEOM_1__;\n'
+    assert arrays==[GEOMETRY,OTHER] and expand(elided,arrays)==source
+    edited=apply_response(elided,{'edits':[{'old':'const b = [1, 2, 3]','new':'const b = [1, 2, 4]'}]})
+    assert expand(edited,arrays)==source.replace('[1, 2, 3]','[1, 2, 4]')
+    for edit in [{'old':'a = __GEOM_0__','new':'a = []'},                     # contains and removes
+                 {'old':'GEOM_1','new':'GEOM_0'},                              # partial overlap
+                 {'old':'__;\nconst b','new':'__;\nlet b'},                     # partial overlap at the end
+                 {'old':'const b = [1, 2, 3]','new':'const b = __GEOM_1__'},   # duplicates
+                 {'old':'const b','new':'const b = __GEOM_'}]:                 # writes placeholder text
+        with pytest.raises(ValueError,match='placeholders'): apply_response(elided,{'edits':[edit]})
+
+
+def test_loop_shows_elided_program_and_restores_geometry(tmp_path):
+    initial=f'const shape = {GEOMETRY};\nconst axis = [1, 0, 0];\n'
+    outputs=iter([{'edits':[{'old':'__GEOM_0__','new':'[0, 0]'}]},
+                  {'edits':[{'old':'axis = [1, 0, 0]','new':'axis = [0, 1, 0]'}]}])
+    def generator(prompt,images):
+        assert GEOMETRY not in prompt and '__GEOM_0__' in prompt
+        return ModelResult(json.dumps(next(outputs)),'fake',{},'stop',0.)
+    audited=[]
+    def audit(source):
+        audited.append(source)
+        return dict(usable=True,passed='[0, 1, 0]' in source,score=float('[0, 1, 0]' in source))
+    result=run_repair(initial,generator,lambda *args:Feedback({},(),0),audit,tmp_path/'run',max_rounds=2)
+    assert [r['outcome'] for r in result['rounds']]==['invalid_patch','applied']
+    assert audited[-1]==initial.replace('[1, 0, 0]','[0, 1, 0]') and result['final_passed']
+    assert result['rounds'][0]['program_chars']==len(initial)
+    assert result['rounds'][0]['elided_program_chars']==len(elide(initial)[0])
+
+
+@pytest.mark.parametrize('failure',['raise','truncate'])
+def test_generator_error_ends_only_that_episode(tmp_path,failure):
+    def generator(prompt,images):
+        if failure=='raise': raise ModelError('openai_compatible request failed with HTTP 400')
+        return ModelResult('{"edits": [','fake',{},'length',0.)
+    result=run_repair('old',generator,lambda *args:Feedback({},(),0),
+                      lambda source:dict(usable=True,passed=False,score=0.),tmp_path/'run')
+    saved=json.loads((tmp_path/'run/result.json').read_text())
+    assert result['status']==saved['status']=='generator_error'
+    assert ('HTTP 400' if failure=='raise' else 'length') in saved['error']

@@ -7,6 +7,8 @@ Case directory layout (as scripts/prepare_repair_experiment.py writes, one folde
                          "sweep": {"views": [...], "joints": [...], "states": [...]}  (optional, defaults from tier),
                          "annotation": {"id", "labels": [{defect_id, parts, severity, params{joint}}], "grid", "exposures", ...}}
 Output: <out>/<generator_id>/<judge_id>/<case_id>/ with the run_repair ledger, plus judge_call.json / verdict.json per round.
+An episode whose generator call fails (ModelError) ends with result.json status generator_error and is rerun on resume;
+the process then exits non-zero after all cases. TIO_GENERATOR_RETRY_BUDGET_S (default 1800) bounds retries per call.
 """
 from __future__ import annotations
 
@@ -19,34 +21,36 @@ from pathlib import Path
 
 from turnitover.config import load_generate_config
 from turnitover.core.program import ObjectProgram
-from turnitover.models.client import ModelError, ModelResult, complete
+from turnitover.models.client import FINISHED, ModelResult, TransientModelError, complete
 from turnitover.models.config import model_config, read_environment
 from turnitover.render.session import ObservationSession
 from turnitover.render.views import load_views
 from turnitover.repair.environment import RepairEnvironment
 from turnitover.repair.judges import PACK_FORMAT, Case, judge_from_id, load_pack
 from turnitover.repair.loop import run_repair
+from turnitover.repair.patches import PLACEHOLDER, elide
 
 
-RETRY_WAITS = (20, 40, 80, 160)   # seconds; rate limits, server errors and dropped connections only (a timeout may already be billed)
-
-
-def retryable(exc: ModelError) -> bool:
-    text = str(exc)
-    return "HTTP 429" in text or any(f"HTTP {code}" in text for code in (500, 502, 503, 504, 520, 522, 524)) \
-        or "connection failed or timed out" in text
+FIRST_WAIT_S, MAX_WAIT_S = 20, 300
 
 
 def complete_with_retry(config, prompt: str, images: list[Path]) -> ModelResult:
-    for wait in (*RETRY_WAITS, None):
+    """Retry HTTP 429/500/502/503/504 and dropped or timed-out connections (a timed-out call may already be billed).
+    Wait doubles from 20 s, at least Retry-After, at most 300 s; give up once the next wait would pass the budget."""
+    budget = float(os.environ.get("TIO_GENERATOR_RETRY_BUDGET_S", "1800"))
+    start = time.monotonic()
+    backoff = FIRST_WAIT_S
+    while True:
         try:
             return complete(config, prompt, images)
-        except ModelError as exc:
-            if wait is None or not retryable(exc):
+        except TransientModelError as exc:
+            wait = min(MAX_WAIT_S, max(backoff, exc.retry_after or 0))
+            elapsed = time.monotonic() - start
+            if elapsed + wait > budget:
                 raise
-            print(json.dumps({"generator_retry": str(exc), "wait_s": wait}), flush=True)
+            print(json.dumps({"generator_retry": exc.reason, "wait_s": wait, "elapsed_s": round(elapsed, 1)}), flush=True)
             time.sleep(wait)
-    raise AssertionError("unreachable")
+            backoff = min(MAX_WAIT_S, 2 * backoff)
 
 
 def cached_api_generator(config, generator_id: str, cache: Path):
@@ -62,20 +66,24 @@ def cached_api_generator(config, generator_id: str, cache: Path):
             data = json.loads(key.read_text())
             return ModelResult(data["text"], data["model"], data["usage"], data["finish_reason"], 0.0)
         result = complete_with_retry(config, prompt, images)
-        key.write_text(json.dumps({"text": result.text, "model": result.model, "usage": result.usage,
-                                   "finish_reason": result.finish_reason, "elapsed_ms": result.elapsed_ms,
-                                   "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(), "images": [p.name for p in images]}))
+        if result.finish_reason in FINISHED:   # a truncated response is not cached, so a rerun calls the model again
+            key.write_text(json.dumps({"text": result.text, "model": result.model, "usage": result.usage,
+                                       "finish_reason": result.finish_reason, "elapsed_ms": result.elapsed_ms,
+                                       "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(), "images": [p.name for p in images]}))
         return result
     return generator
 
 
 def scripted_generator(kind: str, case: Case):
-    """Not a model. scripted-stop stops at once; scripted-fix replaces the program with the reference, then stops."""
+    """Not a model. scripted-stop stops at once; scripted-fix rewrites every text segment between geometry placeholders
+    that differs from the reference (in the pack both programs hold the same arrays in the same order), then stops."""
     state = {"calls": 0}
+    segments = zip(PLACEHOLDER.split(elide(case.initial)[0]), PLACEHOLDER.split(elide(case.reference.source)[0]), strict=True)
+    edits = [{"old": old, "new": new} for old, new in segments if old != new]
     def generator(prompt: str, images: list[Path]) -> ModelResult:
         state["calls"] += 1
         if kind == "scripted-fix" and state["calls"] == 1:
-            body = {"edits": [{"old": case.initial, "new": case.reference.source}]}
+            body = {"edits": edits}
         else:
             body = {"stop": True}
         return ModelResult(json.dumps(body), kind, {"input_tokens": 0, "output_tokens": 0}, "completed", 0.0)
@@ -138,6 +146,7 @@ def main() -> None:
 
     args.out.mkdir(parents=True, exist_ok=True)
     cache = args.out / "cache"
+    generator_errors = 0
     manifest = {"status": "running", "generator": generator_meta, "generator_id": generator_id, "rounds": args.rounds,
                 "config": str(args.config), "cases": [c.uid for c in cases], "judges": [j.describe() for j in judges],
                 "started": time.strftime("%Y-%m-%dT%H:%M:%S")}
@@ -160,15 +169,20 @@ def main() -> None:
                 t0 = time.time()
                 result = run_repair(case.initial, generator, judge.bind(session, case, cache), environment.audit,
                                     folder, max_rounds=args.rounds)
+                generator_errors += result["status"] == "generator_error"
                 row = {"judge": judge.judge_id, "case": case.uid, "tier": case.tier,
                        "labels": [l["defect_id"] for l in case.labels], "seconds": round(time.time() - t0, 1),
-                       **{k: result.get(k) for k in ("final_passed", "first_success_round", "model_calls", "termination",
-                                                     "non_improving_rate", "exact_state_revisit_rate", "total_tokens")}}
+                       **{k: result.get(k) for k in ("status", "error", "final_passed", "first_success_round", "model_calls",
+                                                     "termination", "non_improving_rate", "exact_state_revisit_rate",
+                                                     "total_tokens")}}
                 with ledger.open("a") as stream:
                     stream.write(json.dumps(row) + "\n")
                 print(json.dumps(row), flush=True)
-    manifest.update(status="complete", finished=time.strftime("%Y-%m-%dT%H:%M:%S"))
+    manifest.update(status="complete" if not generator_errors else "generator_error", generator_errors=generator_errors,
+                    finished=time.strftime("%Y-%m-%dT%H:%M:%S"))
     (args.out / f"manifest-{generator_id}.json").write_text(json.dumps(manifest, indent=2))
+    if generator_errors:
+        raise SystemExit(f"{generator_errors} episodes ended in generator_error; resubmit to rerun them")
 
 
 if __name__ == "__main__":
