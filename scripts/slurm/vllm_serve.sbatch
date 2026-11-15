@@ -6,7 +6,8 @@
 #     --time=12:00:00 --output=tio-runs/logs/%x-%j.out scripts/slurm/vllm_serve.sbatch
 # Writes http://<node>:<port>/v1 to $TIO_RUNS/vllm/<jobid>.endpoint. Requests need the key in ~/.tio-vllm-token
 # (COMPATIBLE_API_KEY); repair jobs pass GEN_NO_PROXY=<node> so they bypass the Squid http_proxy set by the prolog.
-# Required env: MODEL. Optional: SERVED_NAME (default basename of MODEL), TP (1), MAX_MODEL_LEN (65536),
+# Required env: MODEL. Optional: SERVED_NAME (default basename of MODEL), TP (1), MAX_MODEL_LEN (65536), MAX_NUM_SEQS (32;
+#   Qwen3.5-family hybrid attention needs one Mamba cache block per sequence, about 185 fit on one L40S),
 #   VLLM_EXTRA (extra `vllm serve` arguments), TIO_RUNS (default <repo>/tio-runs).
 set -euo pipefail
 : "${MODEL:?MODEL=<weights dir> required}"
@@ -27,4 +28,5 @@ python -c "import torch, vllm, transformers; print(torch.__version__, vllm.__ver
 echo "model $MODEL revision $(cat "$MODEL/REVISION.txt" 2>/dev/null)  repo $(git rev-parse HEAD)"
 exec vllm serve "$MODEL" --served-model-name "${SERVED_NAME:-$(basename "$MODEL")}" --host 0.0.0.0 --port "$PORT" \
   --tensor-parallel-size "${TP:-1}" --max-model-len "${MAX_MODEL_LEN:-65536}" --gpu-memory-utilization 0.92 \
+  --max-num-seqs "${MAX_NUM_SEQS:-32}" \
   --reasoning-parser qwen3 --limit-mm-per-prompt '{"image": 16}' ${VLLM_EXTRA:-}
