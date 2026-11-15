@@ -14,6 +14,7 @@ from turnitover.render.session import ObservationSession
 from turnitover.render.views import load_views
 from turnitover.repair.environment import CONDITIONS,RepairEnvironment
 from turnitover.repair.loop import prepare_request
+from turnitover.repair.patches import elide
 
 
 def prepare(oracle,config,output,rounds=3):
@@ -56,7 +57,7 @@ def prepare(oracle,config,output,rounds=3):
                 for condition in CONDITIONS:
                     target=folder/condition;target.mkdir()
                     packet=environment.observer(condition)(sample.program_source,gold,target)
-                    _,paths=prepare_request(target,sample.program_source,packet,[],rounds)
+                    _,paths=prepare_request(target,elide(sample.program_source)[0],packet,[],rounds)
                     (target/'images.json').write_text(json.dumps([p.name for p in paths]))
                 report['cases'].append(dict(id=uid,stratum=list(key),initial_passed=gold['passed'],initial_score=gold['score']))
         report['status']='prepared'

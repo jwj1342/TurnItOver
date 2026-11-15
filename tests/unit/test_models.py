@@ -1,12 +1,13 @@
 import base64
 import io
 import json
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 import pytest
 from PIL import Image
 
-from turnitover.models.client import ModelError, complete, parse_response, request_payload
+from turnitover.models.client import (FINISHED, ModelError, TransientModelError, complete, parse_response,
+                                      request_payload)
 from turnitover.models.commands import extract_program
 from turnitover.models.config import ModelConfig, model_config, read_environment
 
@@ -111,6 +112,75 @@ def test_mock_transport_end_to_end(monkeypatch):
     monkeypatch.setattr("turnitover.models.client.build_opener", lambda *a: Opener())
     result = complete(ModelConfig("generator", "openai", "test", "https://test/v1", "key"), "hi")
     assert result.model == "test-pinned" and result.usage["input_tokens"] == 12
+
+
+def test_vllm_generator_request_and_env_precedence(tmp_path, monkeypatch):
+    env_file = tmp_path / ".env"
+    env_file.write_text("TIO_GENERATOR_PROVIDER=openai\nTIO_GENERATOR_MODEL=other\nCOMPATIBLE_BASE_URL=http://localhost:1/v1\n")
+    env = read_environment(env_file, {"TIO_GENERATOR_PROVIDER": "openai_compatible",
+                                      "TIO_GENERATOR_MODEL": "Qwen/Qwen3.8-27B-FP8",
+                                      "COMPATIBLE_BASE_URL": "http://gpu-node-7:8000/v1",
+                                      "TIO_GENERATOR_MAX_TOKENS": "16384",
+                                      "TIO_GENERATOR_CHAT_TEMPLATE_KWARGS": '{"enable_thinking": false}'})
+    cfg = model_config("generator", env)
+    cfg.validate()
+    assert cfg.public()["chat_template_kwargs"] == {"enable_thinking": False}
+    images = []
+    for name, colour in (("reference.png", "red"), ("candidate.png", "blue")):
+        images.append(tmp_path / name)
+        Image.new("RGB", (4, 4), colour).save(images[-1])
+    seen = {}
+    class Opener:
+        def open(self, request, timeout):
+            seen.update(url=request.full_url, body=json.loads(request.data), headers=dict(request.header_items()))
+            return io.BytesIO(json.dumps({"model": "Qwen/Qwen3.8-27B-FP8", "usage": {"total_tokens": 99},
+                "choices": [{"message": {"content": '{"stop": true}', "reasoning_content": "hidden"},
+                             "finish_reason": "stop"}]}).encode())
+
+    monkeypatch.setattr("turnitover.models.client.build_opener", lambda *a: Opener())
+    result = complete(cfg, "repair this", images)
+    assert seen["url"] == "http://gpu-node-7:8000/v1/chat/completions"
+    assert "Authorization" not in seen["headers"]
+    body = seen["body"]
+    assert body["model"] == "Qwen/Qwen3.8-27B-FP8" and body["max_tokens"] == 16384
+    assert body["chat_template_kwargs"] == {"enable_thinking": False}
+    urls = [part["image_url"]["url"] for part in body["messages"][0]["content"] if part["type"] == "image_url"]
+    assert urls == [f"data:image/png;base64,{base64.b64encode(p.read_bytes()).decode()}" for p in images]
+    assert body["messages"][0]["content"][-1] == {"type": "text", "text": "repair this"}
+    assert result.text == '{"stop": true}' and result.finish_reason in FINISHED and result.usage["total_tokens"] == 99
+    plain = model_config("generator", {**env, "TIO_GENERATOR_CHAT_TEMPLATE_KWARGS": ""})
+    assert "chat_template_kwargs" not in request_payload(plain, "x", [])[2]
+    assert model_config("generator", {**env, "TIO_GENERATOR_PROVIDER": "openrouter"}).chat_template_kwargs is None
+
+
+@pytest.mark.parametrize("error,reason,retry_after", [
+    (HTTPError("https://secret-key.example", 503, "secret-key", {"Retry-After": "7"}, io.BytesIO(b"secret-key")), "HTTP 503", 7.0),
+    (HTTPError("https://secret-key.example", 429, "secret-key", {}, io.BytesIO(b"secret-key")), "HTTP 429", None),
+    (URLError(ConnectionRefusedError("secret-key.example")), "URLError/ConnectionRefusedError", None),
+    (TimeoutError("timed out"), "TimeoutError", None),
+    (ConnectionResetError("reset"), "ConnectionResetError", None),
+])
+def test_transient_failures_are_classified_without_leaking(monkeypatch, error, reason, retry_after):
+    class Opener:
+        def open(self, request, timeout):
+            raise error
+
+    monkeypatch.setattr("turnitover.models.client.build_opener", lambda *a: Opener())
+    with pytest.raises(TransientModelError) as caught:
+        complete(ModelConfig("generator", "openai_compatible", "m", "http://node:8000/v1", "secret-key"), "hi")
+    assert caught.value.reason == reason and caught.value.retry_after == retry_after
+    assert "secret-key" not in str(caught.value)
+
+
+def test_other_client_errors_are_not_transient(monkeypatch):
+    class Opener:
+        def open(self, request, timeout):
+            raise HTTPError("https://x", 400, "bad", {}, io.BytesIO(b""))
+
+    monkeypatch.setattr("turnitover.models.client.build_opener", lambda *a: Opener())
+    with pytest.raises(ModelError) as caught:
+        complete(ModelConfig("generator", "openai_compatible", "m", "http://node:8000/v1", ""), "hi")
+    assert not isinstance(caught.value, TransientModelError) and "HTTP 400" in str(caught.value)
 
 
 def test_reconstruct_dry_run_never_calls_api(tmp_path, monkeypatch):

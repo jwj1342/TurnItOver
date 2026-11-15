@@ -1,6 +1,7 @@
 """Explicit model selection and a non-executing, intentionally small .env reader."""
 from __future__ import annotations
 
+import json
 import math
 import os
 import re
@@ -53,12 +54,13 @@ class ModelConfig:
     api_key: str = field(repr=False)
     max_tokens: int = 4096
     timeout: float = 120
+    chat_template_kwargs: dict | None = None   # openai_compatible only, e.g. {"enable_thinking": false} for Qwen on vLLM
 
     def public(self) -> dict:
         # Endpoint URLs can contain private routing information; do not log them.
         return {"role": self.role, "provider": self.provider, "model": self.model,
                 "key_configured": bool(self.api_key), "max_tokens": self.max_tokens,
-                "timeout": self.timeout}
+                "timeout": self.timeout, "chat_template_kwargs": self.chat_template_kwargs}
 
     def validate(self, require_key: bool = True) -> None:
         if not self.model:
@@ -80,7 +82,8 @@ def model_config(role: str, env: dict[str, str]) -> ModelConfig:
     if (url.scheme not in {"http", "https"} or not url.hostname or url.username or url.password
             or url.query or url.fragment):
         raise ValueError("Base URL must be an HTTP(S) endpoint without credentials, query or fragment")
-    if url.scheme == "http" and url.hostname not in {"localhost", "127.0.0.1", "::1"}:
+    # openai_compatible may be an in-cluster vLLM server (http://<node>:<port>/v1); hosted APIs need HTTPS.
+    if url.scheme == "http" and url.hostname not in {"localhost", "127.0.0.1", "::1"} and provider != "openai_compatible":
         raise ValueError("Remote model endpoints require HTTPS; use a localhost tunnel for local servers")
     key_name = env.get(f"{prefix}_API_KEY_ENV") or f"{provider_prefix}_API_KEY"
     try:
@@ -90,5 +93,6 @@ def model_config(role: str, env: dict[str, str]) -> ModelConfig:
         raise ValueError("Model token limit and timeout must be numeric") from None
     if limit <= 0 or not math.isfinite(timeout) or timeout <= 0:
         raise ValueError("Model token limit and timeout must be positive and finite")
+    kwargs = env.get(f"{prefix}_CHAT_TEMPLATE_KWARGS") if provider == "openai_compatible" else None
     return ModelConfig(role, provider, env.get(f"{prefix}_MODEL", "").strip(), base.rstrip("/"),
-                       env.get(key_name, ""), limit, timeout)
+                       env.get(key_name, ""), limit, timeout, json.loads(kwargs) if kwargs else None)

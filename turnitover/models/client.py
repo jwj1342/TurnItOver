@@ -1,10 +1,13 @@
-"""Small REST adapters for text + images. No implicit retries or SDK dependencies."""
+"""Small REST adapters for text + images. No implicit retries (TransientModelError lets callers retry) or SDK dependencies."""
 from __future__ import annotations
 
 import base64
 import json
 import time
 from dataclasses import dataclass
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
+from http.client import IncompleteRead
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote
@@ -15,8 +18,22 @@ from PIL import Image
 from turnitover.models.config import ModelConfig
 
 
+# Finish reasons of a normally finished response: OpenAI Responses, OpenAI-compatible chat, Anthropic, Gemini.
+FINISHED = frozenset({"completed", "stop", "end_turn", "stop_sequence", "STOP"})
+TRANSIENT_HTTP = frozenset({429, 500, 502, 503, 504})
+
+
 class ModelError(RuntimeError):
     pass
+
+
+class TransientModelError(ModelError):
+    """Rate limit, overload or dropped connection: the same request may succeed later. The caller decides on retries."""
+
+    def __init__(self, provider: str, reason: str, retry_after: float | None = None):
+        super().__init__(f"{provider} request failed transiently: {reason}")
+        self.reason = reason
+        self.retry_after = retry_after
 
 
 class _NoRedirect(HTTPRedirectHandler):
@@ -69,8 +86,10 @@ def request_payload(cfg: ModelConfig, prompt: str, images: list[Path]) -> tuple[
             "max_output_tokens": cfg.max_tokens, "input": [{"role": "user", "content": content}]}
     content = [{"type": "image_url", "image_url": {"url": f"data:{mime};base64,{data}"}} for mime, data in parts]
     content.append({"type": "text", "text": prompt})
-    return cfg.base_url + "/chat/completions", headers, {"model": cfg.model, "max_tokens": cfg.max_tokens,
-        "messages": [{"role": "user", "content": content}]}
+    body = {"model": cfg.model, "max_tokens": cfg.max_tokens, "messages": [{"role": "user", "content": content}]}
+    if cfg.chat_template_kwargs is not None:
+        body["chat_template_kwargs"] = cfg.chat_template_kwargs
+    return cfg.base_url + "/chat/completions", headers, body
 
 
 def parse_response(provider: str, data: dict, elapsed_ms: float) -> ModelResult:
@@ -99,6 +118,15 @@ def parse_response(provider: str, data: dict, elapsed_ms: float) -> ModelResult:
         raise ModelError("Unexpected provider response schema") from None
 
 
+def retry_after_seconds(value: str | None) -> float | None:
+    """Retry-After header: delta-seconds or an HTTP date."""
+    if value is None:
+        return None
+    if value.strip().isdigit():
+        return float(value)
+    return max(0.0, (parsedate_to_datetime(value) - datetime.now(timezone.utc)).total_seconds())
+
+
 def complete(cfg: ModelConfig, prompt: str, images: list[Path] | None = None) -> ModelResult:
     cfg.validate()
     url, headers, payload = request_payload(cfg, prompt, images or [])
@@ -109,9 +137,13 @@ def complete(cfg: ModelConfig, prompt: str, images: list[Path] | None = None) ->
             data = json.load(response)
     except HTTPError as exc:
         # Never echo headers, URLs or provider error bodies (they can contain credentials).
-        raise ModelError(f"{cfg.provider} request failed with HTTP {exc.code}; no automatic retry") from None
-    except (URLError, TimeoutError, OSError):
-        raise ModelError(f"{cfg.provider} connection failed or timed out; no automatic retry") from None
+        if exc.code in TRANSIENT_HTTP:
+            raise TransientModelError(cfg.provider, f"HTTP {exc.code}",
+                                      retry_after_seconds(exc.headers.get("Retry-After"))) from None
+        raise ModelError(f"{cfg.provider} request failed with HTTP {exc.code}") from None
+    except (OSError, IncompleteRead) as exc:   # URLError, timeouts, connection resets; type names only, never the URL
+        reason = type(exc).__name__ + (f"/{type(exc.reason).__name__}" if isinstance(exc, URLError) else "")
+        raise TransientModelError(cfg.provider, reason) from None
     except (ValueError, UnicodeError):
         raise ModelError("Provider returned invalid JSON") from None
     return parse_response(cfg.provider, data, (time.perf_counter() - start) * 1000)

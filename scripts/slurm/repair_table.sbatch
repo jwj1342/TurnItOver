@@ -5,7 +5,10 @@
 # Required env: CASES (case dir or pack root), OUT (output dir), JUDGES (space list), GENERATOR (api|scripted-stop|scripted-fix).
 # Optional: GENERATOR_MODEL, ROUNDS (3), LIMIT, CASE_IDS (space list), CASE_IDS_FILE (one id per line), CONFIG,
 #           GEN_PROXY (http://user:token@host:port, used only for the generator API), PROBE_URL (curl probe at start),
+#           GEN_NO_PROXY (comma list of hosts, e.g. the in-cluster vLLM node, that bypass the prolog's http_proxy),
+#           TIO_GENERATOR_RETRY_BUDGET_S (seconds of retries per generator call, default 1800),
 #           TIO_RUNS (default <repo>/tio-runs), TIO_MODELS (default <repo>/models).
+# Exit status is the runner's: non-zero if any episode ended in generator_error (resubmit to rerun those).
 set -uo pipefail
 : "${CASES:?}" "${OUT:?}" "${JUDGES:?}" "${GENERATOR:?}"
 CASE_IDS=${CASE_IDS:-}
@@ -18,6 +21,9 @@ pip install --no-index -q -r requirements.txt -r scripts/exp900/requirements-900
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 TOKENIZERS_PARALLELISM=false OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 if [ -n "${GEN_PROXY:-}" ]; then
   export https_proxy=$GEN_PROXY HTTPS_PROXY=$GEN_PROXY         # urllib in turnitover/models/client.py reads these
+fi
+if [ -n "${GEN_NO_PROXY:-}" ]; then                           # urllib prefers no_proxy, curl reads either
+  export no_proxy=${no_proxy:+$no_proxy,}$GEN_NO_PROXY NO_PROXY=${NO_PROXY:+$NO_PROXY,}$GEN_NO_PROXY
 fi
 [ -n "${PROBE_URL:-}" ] && { curl -sS -o /dev/null -m 15 -w "probe $PROBE_URL HTTP %{http_code}\n" "$PROBE_URL" || echo "probe $PROBE_URL unreachable"; }
 mkdir -p "$OUT"
@@ -55,4 +61,6 @@ EXPORT900=${EXPORT900:-$TIO_RUNS/data900/three-tier-900-sft-v1/episode_export}
 [ "$PACK" = 1 ] && EXTRA+=(--labels "$EXPORT900/annotations.private.jsonl" --episodes "$EXPORT900/validation.episodes.jsonl")
 python scripts/run_repair_table.py --cases "$CASES" --out "$OUT" --judges $JUDGES --generator "$GENERATOR" \
   --rounds "${ROUNDS:-3}" "${MODEL_ARGS[@]}" "${EXTRA[@]}"
-echo "RUN DONE $(date -Is) exit=$?"
+rc=$?
+echo "RUN DONE $(date -Is) exit=$rc"
+exit $rc
