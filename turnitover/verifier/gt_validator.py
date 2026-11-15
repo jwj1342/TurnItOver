@@ -59,8 +59,9 @@ def _check_contract(candidate: dict, reference: dict) -> dict:
         for field in ("type", "part"):
             if actual[field] != expected[field]:
                 differences.append(f"joint:{joint_id}:{field}")
-        if any(not math.isclose(a, b, rel_tol=1e-9, abs_tol=1e-9)
-               for a, b in zip(actual["limits"], expected["limits"])):
+        if (len(actual['limits']) != len(expected['limits'])
+                or any(not math.isclose(a, b, rel_tol=1e-9, abs_tol=1e-9)
+                       for a, b in zip(actual["limits"], expected["limits"]))):
             differences.append(f"joint:{joint_id}:limits")
     return {"checker_id": "program.contract", "passed": not differences,
             "differences": differences, "candidate": candidate, "reference": reference}

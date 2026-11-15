@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import base64
 import json
+import math
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -51,7 +52,17 @@ def image_part(path: Path) -> tuple[str, str]:
     return mime, base64.b64encode(path.read_bytes()).decode("ascii")
 
 
-def request_payload(cfg: ModelConfig, prompt: str, images: list[Path]) -> tuple[str, dict, dict]:
+def request_payload(cfg: ModelConfig, prompt: str, images: list[Path], *, temperature=None) -> tuple[str, dict, dict]:
+    url, headers, payload = _request_payload(cfg, prompt, images)
+    if temperature is not None:
+        if type(temperature) not in (int, float) or not math.isfinite(temperature) or not 0 <= temperature <= 1:
+            raise ValueError('Temperature must be finite and in [0, 1]')
+        target = payload['generationConfig'] if cfg.provider == 'gemini' else payload
+        target['temperature'] = temperature
+    return url, headers, payload
+
+
+def _request_payload(cfg: ModelConfig, prompt: str, images: list[Path]) -> tuple[str, dict, dict]:
     parts = [image_part(path) for path in images]
     headers = {"Content-Type": "application/json", "User-Agent": "TurnItOver/1.0"}
     if cfg.provider == "anthropic":
@@ -113,9 +124,9 @@ def parse_response(provider: str, data: dict, elapsed_ms: float) -> ModelResult:
         raise ModelError("Unexpected provider response schema") from None
 
 
-def complete(cfg: ModelConfig, prompt: str, images: list[Path] | None = None) -> ModelResult:
+def complete(cfg: ModelConfig, prompt: str, images: list[Path] | None = None, *, temperature=None) -> ModelResult:
     cfg.validate()
-    url, headers, payload = request_payload(cfg, prompt, images or [])
+    url, headers, payload = request_payload(cfg, prompt, images or [], temperature=temperature)
     request = Request(url, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
     start = time.perf_counter()
     def operation():

@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "status": "development",
+  "source_repository": {
+    "host": "10.201.37.233",
+    "root": "/91004t2/laq/code/ThreejsJudge/TurnItOver-taxonomy-900",
+    "branch": "laq/taxonomy-900-pilot",
+    "head": "7c535b646574d7eeb755f74dea088392d5263683",
+    "dirty_worktree": true,
+    "identity": "Working-source SHA256 values below take precedence over HEAD alone."
+  },
+  "files": [
+    {
+      "path": "scripts/verify_contact_surface.py",
+      "sha256": "62b79904c2a5181bb1d20843aa8de73224bc8cbef198619a0d64e7d579cbfc97"
+    },
+    {
+      "path": "scripts/contact_solid_probe.py",
+      "sha256": "d10b52a8a0e6fdee443306e8031a0bc053f8a4e407fc92fcd19a0ce4ad64956f"
+    },
+    {
+      "path": "scripts/verify_self_intersection.py",
+      "sha256": "7a37f0d471e50eaf93db8f1aae8542d59864cfd8f6d947ee4ab3a9d61eddb759"
+    },
+    {
+      "path": "scripts/support_surface_topology.py",
+      "sha256": "427c437ed706fe4a2faba058b180f780ab5f3fcc1aae2561328c17f5037f9260"
+    },
+    {
+      "path": "scripts/native_bevel_profile.py",
+      "sha256": "42caee5760692c3a808042f246975d82b5ce9a0cad164337b319bc3f986a57cf"
+    },
+    {
+      "path": "scripts/native_local_bevel.py",
+      "sha256": "7abc48f6cb9f3132ba8ee6fcd6b3291dead842cc3f66e550fede7f8beca5e66f"
+    },
+    {
+      "path": "scripts/native_prism_chamfer.py",
+      "sha256": "009d9966ad9fcc923c18482a66957ebb16dfe98e41dd58ba85acefa277cee83a"
+    },
+    {
+      "path": "scripts/native_fresh_solid_recipe.py",
+      "sha256": "8ab29067b72f3afcc7537b4e16a3bf49e49af8689c65bb6c8a2df59dc2fcea12"
+    },
+    {
+      "path": "scripts/rp29_component_feature_bevel_recipe.py",
+      "sha256": "aef48365f1bc83a52049337bff4bf7190386b85fbd27af115a69fce7048fcde3"
+    },
+    {
+      "path": "scripts/rp29_component_strict_chamfer_recipe.py",
+      "sha256": "4f69af177bb5582b4acee70389ef23c9440ecf9cea92dcb75d57bcd018ccec9d"
+    },
+    {
+      "path": "scripts/balanced_component_floating_isolated.py",
+      "sha256": "36daedb77ed387eeff3c0950511db78cbb4db835af16803efa1f00db78ad6a3d"
+    },
+    {
+      "path": "scripts/partnet_native_material_readback.js",
+      "sha256": "47349bdaeeacf546124e4362482c1761043b5c49f3f980f7fd6406191f3d5e21"
+    },
+    {
+      "path": "scripts/native_multi_missing_dispose_arm.py",
+      "sha256": "d05b66212b79c49a09307c6edf2c01cfd43d410f6086c6edc929134ef1e71d29"
+    },
+    {
+      "path": "scripts/balanced_runtime_tick_history.py",
+      "sha256": "5fd2bd932904a2cb6a4b4d86b65f6355341fb6fcb45a159b5616c6ee2705942a"
+    },
+    {
+      "path": "scripts/balanced_duplicate_history_pilot.py",
+      "sha256": "8392e7a57b34009c4a44ca1cb4c11ccf56e83126614d4f2d3486aae9901ed8f2"
+    }
+  ],
+  "adaptations": [
+    {
+      "target": "turnitover/checkers/native_surface.py",
+      "source": "scripts/verify_contact_surface.py",
+      "scope": "Original pure segment/point/triangle distances and surface checks; no renderer copied."
+    },
+    {
+      "target": "turnitover/checkers/native_mesh.py",
+      "source": "scripts/verify_self_intersection.py",
+      "scope": "Exact-position edge counts and proper nonadjacent noncoplanar crossings only. Work exhaustion is unknown."
+    },
+    {
+      "target": "scripts/rp29_private_readback.js",
+      "source": "scripts/partnet_native_material_readback.js",
+      "scope": "Existing native harness material, last-render GPU uniforms, attributes and owned-resource event observations."
+    },
+    {
+      "target": "turnitover/repair/native_geometry.py",
+      "source": "scripts/native_local_bevel.py",
+      "scope": "Source-defined feature selectors and original profile tolerance; exact native restoration remains a sufficient fast path, with remesh heuristics recorded below."
+    },
+    {
+      "target": "turnitover/repair/native_geometry.py",
+      "source": "scripts/contact_solid_probe.py",
+      "scope": "Checker-only exact weld/deduplicate/orient; convex supporting-plane certificate; source surface tolerances 1e-8 and contact acceptance 1e-7."
+    }
+  ],
+  "extensions": [
+    {
+      "method": "Complete convex separating-axis test on actual certified closed surfaces",
+      "status": "development",
+      "reason": "Certify positive-volume overlap including containment; zero surface crossings alone is insufficient.",
+      "limits": "Uncertified inputs use the separately recorded occupancy heuristic; ambiguous or work-capped measurements remain unknown."
+    },
+    {
+      "method": "Hash-bound private per-label construction scopes",
+      "status": "development",
+      "reason": "Recover target/component IDs from Train/Validation construction metadata; never reuse historical verdicts.",
+      "limits": "Missing metadata/correspondence remains unknown. Test stays sealed."
+    },
+    {
+      "method": "Reference-relative mesh repair heuristics (mesh_heuristics.py, version 1; scoring contract v4)",
+      "status": "development",
+      "reason": "Accept equal-surface remeshing using bidirectional area sampling, PCA quantile thickness and local bevel normals; estimate nonconvex penetration by fixed multiray occupancy; preserve contact coverage and count shifted duplicate components.",
+      "limits": "Seed 0 and versioned engineering defaults, not Train-calibrated or Validation-fitted. Spatial component matching, sampled coverage and occupancy are approximate, not physical certificates."
+    },
+    {
+      "method": "Area-integrated native attribute profiles",
+      "status": "development",
+      "reason": "Compare area moments and attribute-position correlations after hash changes so subdivision or vertex renumbering does not fail material regression by itself.",
+      "limits": "Assumes stable native mesh/material slots and corresponding local coordinates. Finite moments cannot establish arbitrary UV/shader equivalence; unreadable evidence remains unknown."
+    },
+    {
+      "method": "Current-program injected-defect Gold callback",
+      "status": "development",
+      "reason": "Re-evaluate current source on every version, remove repaired findings, emit only public identifiers and generic repair guidance.",
+      "limits": "Unattributed regressions remain uncertain. Current-step citations identify replay context and do not create frozen exposure annotations."
+    }
+  ],
+  "eligibility": {
+    "table1": false,
+    "reason": "29 predicate routes do not establish complete per-case scopes, physical validity of native references, reviewed exposure or a frozen experimental protocol."
+  }
+}

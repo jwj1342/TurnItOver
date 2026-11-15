@@ -32,7 +32,8 @@ def test_batch_keeps_failed_denominator_and_resume_never_repeats_calls(tmp_path,
     batch = module()
     manifest = tmp_path / 'manifest.json'
     manifest.write_text('{}')
-    cases = [(tmp_path / 'a.json', {'id': 'a'}), (tmp_path / 'b.json', {'id': 'b'})]
+    cases = [(tmp_path / f'{name}.json', {'id': name,
+              'private_labels': [{'defect_id': 'structure.part_offset'}]}) for name in ('a', 'b')]
     monkeypatch.setattr(batch, 'load_cases', lambda p: ({'benchmark': 'RP29 v2.1-pre.1'}, cases))
     calls = []
     def runner(path, case, native, folder, *args):
@@ -52,6 +53,8 @@ def test_batch_keeps_failed_denominator_and_resume_never_repeats_calls(tmp_path,
     assert len(result['results']) == 2
     assert result['success_rate'] is None
     assert result['total_tokens'] == 7
+    assert result['conditions']['none']['resolved_by_type']['structure.part_offset'] == {
+        'total': 2, 'known': 0, 'resolved': 0, 'rate': None}
     before = (output / 'none/b/summary.json').read_bytes()
     batch.run(manifest, tmp_path, output, env, conditions=('none',), case_runner=runner, collect_unscored=True)
     assert calls == ['a', 'b']
@@ -78,7 +81,7 @@ def test_none_public_task_and_unscored_audit_do_not_leak_runtime(tmp_path):
         seen.append(prompt)
         return ModelResult('{"stop":true}', 'model', {'total_tokens': 4}, 'stop', 1)
     result = batch.run_case(tmp_path/'manifest.json', case, tmp_path, tmp_path/'out', generator,
-                            'none', 2, None, replay_factory=replay_factory)
+                            'none', 2, None, replay_factory=replay_factory, harness='legacy')
     assert len(seen) == 2
     assert result['final_passed'] is None
     assert result['total_tokens'] == 8
@@ -91,6 +94,8 @@ def test_scoring_gate_blocks_before_any_model_setup(tmp_path, monkeypatch):
     monkeypatch.setattr(batch, 'model_config', lambda *a: pytest.fail('Model setup before scoring gate'))
     result = batch.run(manifest, tmp_path, tmp_path/'out', {}, conditions=('none',), preflight_only=True)
     assert result['status'] == 'inputs_validated' and result['api_calls'] == 0
+    assert any('--rounds' in blocker for blocker in result['blockers'])
+    assert any('exposure' in blocker for blocker in result['blockers'])
     assert not (tmp_path/'out').exists()
     with pytest.raises(ValueError, match='Full independent scoring unavailable'):
         batch.run(manifest, tmp_path, tmp_path/'out', {}, conditions=('none',))
@@ -107,14 +112,28 @@ def test_reject_underfilled_manifest(tmp_path):
         batch.load_cases(path)
 
 
+def test_builtin_native_evaluator_preflight_reports_actual_partial_coverage(tmp_path, monkeypatch):
+    batch = module()
+    manifest = tmp_path/'manifest.json'; manifest.write_text('{}')
+    monkeypatch.setattr(batch, 'load_cases', lambda p: ({}, [(manifest,
+        {'id': 'case', 'private_labels': [{'defect_id': 'structure.part_offset'}]})]))
+    monkeypatch.setattr(batch, 'model_config', lambda *a: pytest.fail('Preflight made model setup'))
+    result = batch.run(manifest, tmp_path, tmp_path/'out', {}, conditions=('none',),
+        preflight_only=True, evaluator_module='turnitover.repair.native_evaluator')
+    assert len(result['checker_coverage']['supported']) == 29
+    assert len(result['checker_coverage']['missing']) == 0
+    assert result['scoring_contract']['status'] == 'development'
+    assert result['experiment_ready'] is False and result['api_calls'] == 0
+    assert not (tmp_path/'out').exists()
+
+
 def test_shared_output_lock_prevents_duplicate_queue(tmp_path, monkeypatch):
     batch = module()
-    import fcntl, hashlib, tempfile
+    import hashlib, tempfile
     output = tmp_path/'out'
     key = hashlib.sha256(str(output.resolve()).encode()).hexdigest()
     path = Path(tempfile.gettempdir())/('rp29-batch-'+key+'.lock')
     monkeypatch.setattr(batch, '_run', lambda *a, **k: pytest.fail('Duplicate queue started'))
-    with path.open('a') as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    with batch._output_lock(path):
         with pytest.raises(RuntimeError, match='Another process'):
             batch.run(tmp_path/'manifest.json',tmp_path,output,{})

@@ -1,0 +1,6 @@
+# 独立 Python 3.12 环境；SDK 的 Pillow>=13 与旧渲染环境 Pillow==12.1 冲突。
+# 原生浏览器重放使用 --native-python 指定已有渲染环境，不升级该环境。
+openhands-sdk==1.62.0
+numpy==2.4.2
+scipy==1.18.1
+pyyaml==6.0.3

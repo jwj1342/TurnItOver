@@ -2,7 +2,7 @@
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
-import fcntl
+import getpass
 import hashlib
 import json
 import os
@@ -11,6 +11,7 @@ import tempfile
 import time
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
+from turnitover.file_lock import file_lock
 
 RETRYABLE = {429, 502, 503, 504}
 
@@ -30,7 +31,8 @@ def retry_after(headers):
 
 
 def state_directory():
-    path = Path(tempfile.gettempdir()) / f'tio-request-control-{os.getuid()}'
+    user = str(os.getuid()) if hasattr(os, 'getuid') else hashlib.sha256(getpass.getuser().encode()).hexdigest()[:16]
+    path = Path(tempfile.gettempdir()) / f'tio-request-control-{user}'
     path.mkdir(mode=0o700, exist_ok=True)
     return path
 
@@ -40,8 +42,7 @@ def request_slot(cfg):
     # Account-wide scope: models/roles on the same endpoint/key share one lane.
     key = hashlib.sha256((cfg.base_url + '\0' + cfg.api_key).encode()).hexdigest()
     root = state_directory()
-    with (root / (key + '.lock')).open('a') as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
+    with file_lock(root / (key + '.lock')):
         yield root / (key + '.json'), root / (key + '.jsonl')
 
 

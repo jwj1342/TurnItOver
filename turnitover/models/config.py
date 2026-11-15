@@ -57,6 +57,7 @@ class ModelConfig:
     request_interval: float = 0
     max_retries: int = 0
     stream: bool = False
+    supports_vision: bool | None = None
 
     def public(self) -> dict:
         # Endpoint URLs can contain private routing information; do not log them.
@@ -66,9 +67,13 @@ class ModelConfig:
         result.update(request_interval=self.request_interval, max_retries=self.max_retries, stream=self.stream)
         if self.enable_thinking is not None:
             result["enable_thinking"] = self.enable_thinking
+        if self.supports_vision is not None:
+            result["supports_vision"] = self.supports_vision
         return result
 
     def validate(self, require_key: bool = True) -> None:
+        if self.supports_vision is not None and type(self.supports_vision) is not bool:
+            raise ValueError('SUPPORTS_VISION must be true/false when declared')
         if (not math.isfinite(self.request_interval) or self.request_interval < 0
                 or type(self.max_retries) is not int or not 0 <= self.max_retries <= 3):
             raise ValueError("Request interval must be nonnegative and retries must be 0..3")
@@ -120,5 +125,9 @@ def model_config(role: str, env: dict[str, str]) -> ModelConfig:
     stream_value = env.get(f"{prefix}_STREAM", "false").strip().lower()
     if stream_value not in {"true", "false"} or stream_value == "true" and provider != "openai_compatible":
         raise ValueError("STREAM must be true/false and requires openai_compatible")
+    vision_value = env.get(f"{prefix}_SUPPORTS_VISION")
+    if vision_value is not None and vision_value.strip().lower() not in {"true", "false"}:
+        raise ValueError('SUPPORTS_VISION must be true/false when declared')
+    vision = None if vision_value is None else vision_value.strip().lower() == 'true'
     return ModelConfig(role, provider, model, base.rstrip("/"), env.get(key_name, ""),
-                       limit, timeout, enable_thinking, interval, retries, stream_value == "true")
+                       limit, timeout, enable_thinking, interval, retries, stream_value == "true", vision)

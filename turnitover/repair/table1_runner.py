@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 from turnitover.repair.loop import Feedback, propose_repair, usage_tokens
-from turnitover.repair.table1_judges import evaluate_judge
+from turnitover.repair.table1_judges import evaluate_judge, feedback_images
 
 
 def _write(path, value):
@@ -76,7 +76,7 @@ def run_table1_repair(initial, generator, observe, audit, output, *, condition='
         result = evaluate_judge(condition, pairs, model_call=call if judge_model_call else None,
                                 calibration=calibration, runtime=runtime)
         _write(folder / 'judge.json', result)
-        return result
+        return result, pairs
 
     def generate(prompt, images):
         response = generator(prompt, images)
@@ -89,14 +89,14 @@ def run_table1_repair(initial, generator, observe, audit, output, *, condition='
         for index in range(max_rounds):
             folder = output / f'round-{index:03d}'
             folder.mkdir()
-            verdict = judge(folder)
+            verdict, pairs = judge(folder)
             if condition != 'none' and verdict['status'] == 'pass':
                 report['termination'] = 'judge_pass'
                 break
             public = {} if condition == 'none' else {'status': verdict['status'], **verdict['feedback']}
             if public_task is not None:
                 public['task_requirements'] = public_task
-            packet = Feedback(public, (Path(reference_image),) if reference_image else (), 0)
+            packet = Feedback(public, feedback_images(verdict, pairs, reference_image), 0)
             proposal = propose_repair(source, generate, packet, folder / 'generator',
                                       previous_attempts=memory, remaining_calls=max_rounds-index)
             if proposal.outcome == 'applied':
@@ -116,7 +116,7 @@ def run_table1_repair(initial, generator, observe, audit, output, *, condition='
         else:
             report['termination'] = 'round_limit'
         report.update(status='complete', final_passed=audits[-1]['passed'],
-                      total_tokens=total_tokens(), completed_rounds=len(ledger))
+                      final_audit=audits[-1], total_tokens=total_tokens(), completed_rounds=len(ledger))
     except Exception as exc:
         report.update(error_type=type(exc).__name__, error=str(exc), total_tokens=total_tokens(),
                       completed_rounds=len(ledger))

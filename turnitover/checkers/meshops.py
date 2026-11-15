@@ -19,18 +19,21 @@ def aabb_iou(a: np.ndarray, b: np.ndarray) -> float:
     return float(inter / union) if union > 0 else 0.0
 
 
-def sample_surface(vertices: np.ndarray, faces: np.ndarray, n: int, rng: np.random.Generator) -> np.ndarray:
+def sample_surface(vertices: np.ndarray, faces: np.ndarray, n: int, rng: np.random.Generator,
+                   *, return_face_ids: bool = False) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
     """Area-weighted uniform surface samples (deterministic given rng)."""
     tri = vertices[faces]  # (M, 3, 3)
     areas = 0.5 * np.linalg.norm(np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0]), axis=1)
     if areas.sum() <= 0:
-        return vertices[rng.integers(0, len(vertices), size=n)]
+        points = vertices[rng.integers(0, len(vertices), size=n)]
+        return (points, np.full(n, -1, dtype=int)) if return_face_ids else points
     idx = rng.choice(len(faces), size=n, p=areas / areas.sum())
     r1, r2 = rng.random(n), rng.random(n)
     s = np.sqrt(r1)
     w0, w1, w2 = 1 - s, s * (1 - r2), s * r2
     t = tri[idx]
-    return w0[:, None] * t[:, 0] + w1[:, None] * t[:, 1] + w2[:, None] * t[:, 2]
+    points = w0[:, None] * t[:, 0] + w1[:, None] * t[:, 1] + w2[:, None] * t[:, 2]
+    return (points, idx) if return_face_ids else points
 
 
 def _point_triangle_distance(points: np.ndarray, triangles: np.ndarray) -> np.ndarray:
@@ -55,7 +58,8 @@ def _point_triangle_distance(points: np.ndarray, triangles: np.ndarray) -> np.nd
     return np.sqrt(np.maximum(best, 0))
 
 
-def point_surface_distance(points: np.ndarray, vertices: np.ndarray, faces: np.ndarray, k: int = 16) -> np.ndarray:
+def point_surface_distance(points: np.ndarray, vertices: np.ndarray, faces: np.ndarray, k: int = 16,
+                           *, return_face_ids: bool = False) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
     """Exact nearest triangle distance with conservative centroid-ball pruning.
 
     The nearest referenced vertex supplies an upper bound. A triangle can improve
@@ -73,6 +77,7 @@ def point_surface_distance(points: np.ndarray, vertices: np.ndarray, faces: np.n
     upper = cKDTree(vertices[np.unique(faces)]).query(points)[0]
     epsilon = 1e-12 * max(1., float(np.abs(vertices).max()), float(np.abs(points).max()) if len(points) else 1.)
     result = np.full(len(points), np.inf)
+    nearest = np.full(len(points), -1, dtype=int) if return_face_ids else None
     for start in range(0, len(points), 64):
         chunk = points[start:start+64]
         neighbours = tree.query_ball_point(chunk, upper[start:start+64] + radii.max() + epsilon)
@@ -83,7 +88,12 @@ def point_surface_distance(points: np.ndarray, vertices: np.ndarray, faces: np.n
         point_ids, tri_ids = point_ids[keep], tri_ids[keep]
         distances = _point_triangle_distance(chunk[point_ids], triangles[tri_ids])
         np.minimum.at(result, start+point_ids, distances)
-    return result
+        if return_face_ids:
+            order = np.lexsort((tri_ids, distances, point_ids))
+            _, first = np.unique(point_ids[order], return_index=True)
+            chosen = order[first]
+            nearest[start + point_ids[chosen]] = tri_ids[chosen]
+    return (result, nearest) if return_face_ids else result
 
 
 def chamfer(a: np.ndarray, b: np.ndarray) -> float:

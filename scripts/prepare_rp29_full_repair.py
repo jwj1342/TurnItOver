@@ -13,6 +13,7 @@ from pathlib import Path
 import shutil
 
 from turnitover.repair.pixel_calibration import calibrate_pixel_threshold
+from turnitover.repair.native_scopes import construction_scopes
 
 RELEASE_SHA = 'ba59783d06e938b0ae5bc66e3c6b467ecca2a1615e56ea3cb85d69030ed7009a'
 STATES = ('zero', 'mid', 'limit')
@@ -178,11 +179,24 @@ def prepare(release, dataset, output):
         runtime = [h for h in public['history'] if h['action']['type'] == 'query_runtime']
         case['task_runtime_requirements'] = [h for h in runtime if h.get('payload',{}).get('measurement_kind') == 'public_task_budget']
         case['public_task'] = public['context']['task']
+        # Public ABI IDs and budgets only. Old verdicts/runtime never become fresh feedback.
+        case['public_context'] = public['context']
         write(folder/'initial-runtime.public.json', runtime)
         case['initial_runtime'] = 'initial-runtime.public.json'
         case['sha256']['initial_runtime'] = sha(folder/case['initial_runtime'])
         recovered, provenance = recipe(release, annotation, row, resource)
         case.update(recovered, view=public['history'][0]['action']['view_id'])
+        # Original action order is necessary for view/history-triggered defects.
+        # Store only actions and state/time coordinates, never saved payloads,
+        # labels or verdicts. The private auditor re-executes these observations.
+        case['authored_audit_history'] = [{key: observation[key] for key in ('action', 'state', 'time')
+                                           if key in observation} for observation in public['history']]
+        by_role = recovered.get('commands_by_role', {})
+        if (by_role.get('reference') != by_role.get('candidate')
+                and any(label['defect_id'] == 'kinematics.joint_range' for label in annotation['labels'])):
+            # The paper's states are semantic detents. Reusing the initial wrong
+            # range after a repair would reject even a correctly repaired joint.
+            case['replay_command_policy'] = 'current_joint_limits'
         case['recipe_provenance'] = [{'path': str(p), 'sha256': sha(p)} for p in provenance]
         case['runtime_policy'] = 'Fresh native replay after edits; initial runtime is archived only, never reused as candidate feedback.'
         metadata = {'schema_version': 1, 'status': 'frozen', 'split': 'validation',
@@ -190,7 +204,11 @@ def prepare(release, dataset, output):
         write(folder/'manifest.json', metadata)
         cases.append({'id': uid, 'manifest': str((folder/'manifest.json').relative_to(output)),
                       'manifest_sha256': sha(folder/'manifest.json')})
-        private.append({'id': uid, 'labels': annotation['labels'], 'evidence': row['evidence'],
+        scoring = construction_scopes(annotation, case['sha256']['reference_program'])
+        private.append({'id': uid, 'labels': scoring['labels'], 'evidence': row['evidence'],
+                        'scoring_scopes': scoring['scopes'],
+                        'scoring_scope_provenance': scoring['provenance'],
+                        'history': public['history'],
                         'recipe_provenance': case['recipe_provenance']})
     (output/'labels.private.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in private))
     result = {'schema_version': 1, 'status': 'frozen', 'benchmark': 'RP29 v2.1-pre.1', 'split': 'validation',
