@@ -4,7 +4,7 @@
 set -uo pipefail
 TIO_RUNS=${TIO_RUNS:-/scratch/jwj/tio-runs}
 RUN=$1; DATASET=$2; MODELS=$3; SIZE=$4
-MANIFEST_SHA=$(sha256sum "$DATASET/manifest.json" | cut -d' ' -f1)
+MANIFEST_SHA=${MANIFEST_SHA:?expected manifest sha256 of the derived export}   # given by the caller, so the evaluator check means something
 STATUS=$RUN/status.tsv; mkdir -p "$RUN/logs"
 step() { local name=$1; shift; local t0=$(date +%s)
   if "$@" > "$RUN/logs/$name.log" 2>&1; then printf '%s\tok\t%ss\n' "$name" "$(( $(date +%s) - t0 ))" | tee -a "$STATUS"
