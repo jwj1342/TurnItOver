@@ -1,0 +1,11 @@
+# Mirrors code900/requirements-qwen.txt (laq/three-tier-900-sft-export 88ac0df); all pins present in the Alliance wheelhouse for python/3.12.
+torch==2.7.1
+torchvision==0.22.1
+transformers==4.57.6
+accelerate==1.11.0
+huggingface_hub==0.36.0
+peft==0.18.0
+numpy==2.4.2
+pillow==12.1.0
+pyyaml==6.0.3
+safetensors

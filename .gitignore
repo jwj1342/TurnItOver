@@ -23,3 +23,6 @@ __pycache__/
 # web build
 web/node_modules/
 web/dist/
+
+# experiment data, checkpoints and logs on the cluster (docs/vulcan-handoff.md)
+tio-runs/
