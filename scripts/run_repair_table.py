@@ -19,13 +19,34 @@ from pathlib import Path
 
 from turnitover.config import load_generate_config
 from turnitover.core.program import ObjectProgram
-from turnitover.models.client import ModelResult, complete
+from turnitover.models.client import ModelError, ModelResult, complete
 from turnitover.models.config import model_config, read_environment
 from turnitover.render.session import ObservationSession
 from turnitover.render.views import load_views
 from turnitover.repair.environment import RepairEnvironment
 from turnitover.repair.judges import PACK_FORMAT, Case, judge_from_id, load_pack
 from turnitover.repair.loop import run_repair
+
+
+RETRY_WAITS = (20, 40, 80, 160)   # seconds; rate limits, server errors and dropped connections only (a timeout may already be billed)
+
+
+def retryable(exc: ModelError) -> bool:
+    text = str(exc)
+    return "HTTP 429" in text or any(f"HTTP {code}" in text for code in (500, 502, 503, 504, 520, 522, 524)) \
+        or "connection failed or timed out" in text
+
+
+def complete_with_retry(config, prompt: str, images: list[Path]) -> ModelResult:
+    for wait in (*RETRY_WAITS, None):
+        try:
+            return complete(config, prompt, images)
+        except ModelError as exc:
+            if wait is None or not retryable(exc):
+                raise
+            print(json.dumps({"generator_retry": str(exc), "wait_s": wait}), flush=True)
+            time.sleep(wait)
+    raise AssertionError("unreachable")
 
 
 def cached_api_generator(config, generator_id: str, cache: Path):
@@ -40,7 +61,7 @@ def cached_api_generator(config, generator_id: str, cache: Path):
         if key.exists():
             data = json.loads(key.read_text())
             return ModelResult(data["text"], data["model"], data["usage"], data["finish_reason"], 0.0)
-        result = complete(config, prompt, images)
+        result = complete_with_retry(config, prompt, images)
         key.write_text(json.dumps({"text": result.text, "model": result.model, "usage": result.usage,
                                    "finish_reason": result.finish_reason, "elapsed_ms": result.elapsed_ms,
                                    "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(), "images": [p.name for p in images]}))
