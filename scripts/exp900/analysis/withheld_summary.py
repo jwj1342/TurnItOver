@@ -50,12 +50,21 @@ def discover_withheld():
     return runs
 
 
+FULL_HARDWARE = os.environ.get('FULL_HARDWARE', 'original')   # l40s: compare with the Vulcan L40S re-evaluations (same hardware as withheld)
+
+
+def on_l40s(run_dir: Path) -> bool:
+    return 'L40S' in (run_dir / 'env.txt').read_text().splitlines()[0]
+
+
 def discover_full():
     runs = {}
-    for m in sorted(TIO.glob('out/level900-sft-*/*/seed*/*-diagnosis/eval-validation/predictions.jsonl')):
-        runs[(m.parts[-5], m.parts[-3].split('-')[0], m.parts[-4][4:])] = m
+    for m in sorted(TIO.glob('out/level900-*/*/seed*/*-diagnosis/eval-validation/predictions.jsonl')):
+        if (on_l40s(m.parents[4]) if FULL_HARDWARE == 'l40s' else m.parts[-6].startswith('level900-sft-')):
+            runs[(m.parts[-5], m.parts[-3].split('-')[0], m.parts[-4][4:])] = m
     for m in sorted(TIO.glob('out/level900-base-*/*/base-validation/predictions.jsonl')):
-        runs[(m.parts[-3], 'zero-shot', '-')] = m
+        if FULL_HARDWARE != 'l40s' or on_l40s(m.parents[2]):
+            runs[(m.parts[-3], 'zero-shot', '-')] = m
     return runs
 
 
@@ -115,7 +124,7 @@ def main() -> None:
     lines += ['## Notes', '', f'- Cases per tier: {dict(n)}. The first reference image is always shown; for Easy the remaining cell is the rest pair, which is pixel-identical to the reference for kinematic defects.',
               '- Statuses and defect ids come from her parsed row when the output was valid, otherwise from a lenient JSON parse of the raw text, so outputs rejected only for citing a step that no longer exists still count as findings.',
               '- "reports a withheld gold defect" is the share of cases, not findings. Mislabeled findings on withheld cases show up in "any finding" but not here.']
-    (TIO / 'out/RESULTS-withheld.md').write_text('\n'.join(lines) + '\n')
+    (TIO / ('out/RESULTS-withheld-l40s.md' if FULL_HARDWARE == 'l40s' else 'out/RESULTS-withheld.md')).write_text('\n'.join(lines) + '\n')
     print('\n'.join(lines))
 
 
