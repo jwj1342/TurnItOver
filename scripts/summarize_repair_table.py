@@ -15,9 +15,14 @@ from collections import defaultdict
 from pathlib import Path
 
 from turnitover.repair.loop import stability, usage_tokens
+from turnitover.taxonomy import load_taxonomy
 
 TYPES = ("kinematics.joint_axis", "kinematics.direction_flip", "kinematics.joint_anchor", "structure.part_offset", "structure.part_rotation")
 Z95 = 1.959963984540054
+
+
+def visibility(defect_id: str) -> str:
+    return load_taxonomy().by_id(defect_id).visibility.value
 
 
 def wilson(k: int, n: int) -> tuple[float, float]:
@@ -136,6 +141,10 @@ def main() -> None:
         summary = {"n": len(case_ids), "n_complete": len(episodes), "n_missing": n_missing, "n_error": n_error,
                    "success": len(succ) / len(case_ids), "success_ci95": wilson(len(succ), len(case_ids)),
                    "resolved": {t: mean([float(x) for x in by_type[t]]) for t in TYPES if by_type[t]},
+                   "resolved_counts": {t: [sum(by_type[t]), len(by_type[t])] for t in TYPES if by_type[t]},
+                   # pooled by the taxonomy's observation requirement: needs joint motion vs visible at rest
+                   "resolved_motion": mean([float(x) for t in TYPES if visibility(t) == "animation_required" for x in by_type[t]]),
+                   "resolved_rest": mean([float(x) for t in TYPES if visibility(t) == "static_visible" for x in by_type[t]]),
                    "localization": ratio(sum(e["localization"][0] for e in episodes), sum(e["localization"][1] for e in episodes)),
                    "invalid_patch_rate": ratio(sum(e["invalid"][0] for e in episodes), patches), "patch_rounds": patches,
                    "iterations_to_success": mean([e["first_success_round"] for e in succ]),
@@ -152,12 +161,13 @@ def main() -> None:
         rows.append((gen_dir.name, judge_dir.name, summary))
     (args.summary or args.out[0] / "summary-table.json").write_text(json.dumps(table, indent=2))
     print("| Generator | Judge | n | Missing | Error | Success | 95% CI | " + " | ".join(t.split(".")[1] for t in TYPES)
-          + " | Loc. | Inv. | Iter. | Tokens (k) | Non-impr. | Revisit | Cost $ |")
-    print("|---|---|" + "--:|" * 17)
+          + " | Motion | Rest | Loc. | Inv. | Iter. | Tokens (k) | Non-impr. | Revisit | Cost $ |")
+    print("|---|---|" + "--:|" * 19)
     for gen, judge, s in rows:
         low, high = s["success_ci95"]
         print(f"| {gen} | {judge} | {s['n']} | {s['n_missing']} | {s['n_error']} | {fmt(s['success'], 100)} | "
               f"{fmt(low, 100)}-{fmt(high, 100)} | " + " | ".join(fmt(s['resolved'].get(t), 100) for t in TYPES)
+              + f" | {fmt(s['resolved_motion'], 100)} | {fmt(s['resolved_rest'], 100)}"
               + f" | {fmt(s['localization'], 100)} | {fmt(s['invalid_patch_rate'], 100)} | {fmt(s['iterations_to_success'])} | "
               + f"{fmt(s['tokens_to_success_k'])} | {fmt(s['non_improving_rate'], 100)} | {fmt(s['exact_state_revisit_rate'], 100)} | "
               + f"{s['reported_cost_usd']:.2f} |")
