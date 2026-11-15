@@ -34,7 +34,27 @@ Nibi 从 11-15 08:10 起大面积停机，故障单 #1194，GPU 节点 39 个里
 - **Kimi K3 中转站不稳定。** 11-15 14:40 EST 从 Nibi 登录节点测了一次，先返回 HTTP 429，再次请求返回 503 "Service temporarily unavailable"。第 5 步的生成器冒烟是硬检查点，不通就按最后一节的 Plan B 换生成器。
 - **代码基线。** 代码在分支 `exp/vulcan-900` 上，基于 `7d6928e`，没有合入 origin/main 上的 `e735f70`（11-04 的迭代合成功能），两者有 9 个文件重叠。截稿后再合并，现在不要在这个分支上 merge main。
 
-## 1. 克隆与目录布局
+## 0. 推荐做法：整个文件夹用 Globus 传过去
+
+Nibi 上的 `/scratch/jwj/TurnItOver` 已经整合好了，模型、数据、checkpoint 和 `.env` 都按下面的布局放在里面。这些是硬链接，不额外占 Nibi 空间，Globus 会当普通文件传，没有符号链接。git 工作树停在分支 `exp/vulcan-900` 上。
+
+- **传输**：把整个文件夹传到 Vulcan 的 scratch，共约 24GB，其中模型约 21GB。
+- **加密**：Globus 传输选项里勾选 encrypt transfer，因为 `.env` 里有 API 凭证。
+- **跳过的步骤**：这样传就不用做第 1 步的克隆，也不用做第 2 步的搬运和解压，只需要跑第 2 步最后的检查命令。
+
+传完后在 Vulcan 登录节点先执行：
+
+```bash
+cd ~/scratch/TurnItOver               # Vulcan 上的实际路径
+rm -rf .venv                          # Nibi 的 venv 在 Vulcan 不能用，第 3 步会重建
+git status && git branch --show-current     # 应为干净的 exp/vulcan-900
+git pull                              # 取我之后推送的修改
+chmod 600 .env
+```
+
+`.cache/ms-playwright` 和 `web/node_modules` 留着也没关系，第 3 步的 bootstrap 会检查并补齐。
+
+## 1. 克隆与目录布局（不整体传输时）
 
 放在 scratch 上：
 
@@ -53,7 +73,7 @@ TurnItOver/
 ├── models/
 │   ├── Qwen3-VL-2B-Instruct/     4.0G  revision 89644892e4d85e24eaac8bacfd4f463576704203
 │   ├── Qwen3-VL-8B-Instruct/     17G   revision 0c351dd01ed87e9c1b53cbc748cba10e6187ff3b
-│   └── Qwen3-VL-4B-Instruct/     8.3G  revision ebb281ec70b05090aa6165b016eac8ec08e71b17（可选，本轮不用）
+│   └── Qwen3-VL-4B-Instruct/     8.3G  revision ebb281ec70b05090aa6165b016eac8ec08e71b17（可选，本轮不用，整合的文件夹里没有）
 └── tio-runs/
     ├── code900/                  她的训练评测脚本（laq/three-tier-900-sft-export 88ac0df），作业里 cd 进去运行
     ├── data900/
@@ -62,7 +82,7 @@ TurnItOver/
     │   ├── three-tier-900-withheld-v1/             withheld 导出
     │   └── repair58/three-tier-900-validation-repair-58-v1/   58 例修复包
     ├── out/                      17 个 checkpoint 和评测结果（level900-*），新结果也写到这里
-    ├── repair/                   修复表输出（新建）
+    ├── repair/                   修复表输出；calib-login16/ 是 Nibi 上 16 例校准的原始结果
     └── logs/                     作业日志（新建）
 ```
 
@@ -72,7 +92,9 @@ TurnItOver/
 
 如果放在别处，提交作业前 export 这两个变量即可。
 
-## 2. 用 Globus 从 Nibi 搬数据
+## 2. 用 Globus 从 Nibi 搬数据（不整体传输时）
+
+整体传输的话跳过本节的搬运，只跑本节最后的检查命令，其中 unzip 那一行也可以跳过，因为已经解压好了。
 
 Vulcan 的 collection 见 [Vulcan.md](https://docs.alliancecan.ca/wiki/Vulcan) 里的 Globus 链接，Nibi 用它自己的 collection。按下表搬，总量约 31GB，绝大部分是模型。
 
