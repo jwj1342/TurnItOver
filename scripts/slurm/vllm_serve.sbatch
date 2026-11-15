@@ -18,7 +18,8 @@ virtualenv --no-download "$SLURM_TMPDIR/venv" > /dev/null
 source "$SLURM_TMPDIR/venv/bin/activate"
 pip install --no-index --no-deps -q -r scripts/vllm/requirements-vllm.txt     # full lock; see the file header
 export HF_HUB_OFFLINE=1 HF_HOME=$SLURM_TMPDIR/hf XDG_CACHE_HOME=$SLURM_TMPDIR/cache VLLM_CACHE_ROOT=$SLURM_TMPDIR/vllm-cache \
-       OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
+       OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1} \
+       VLLM_USE_FLASHINFER_SAMPLER=0   # flashinfer JIT-compiles its sampler with nvcc; the torch sampler needs no CUDA toolkit
 VLLM_API_KEY=$(cat ~/.tio-vllm-token)
 export VLLM_API_KEY
 PORT=$((20000 + SLURM_JOB_ID % 20000))
