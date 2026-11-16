@@ -19,8 +19,8 @@ ROWS = [("none", "No verifier"), ("pixel", "pixel difference"),
         ("zs4b_screenshot", "zero-shot Qwen3-VL-4B, at rest"), ("zs4b_sweep", "zero-shot Qwen3-VL-4B, fixed scan"),
         ("zs8b_screenshot", "zero-shot Qwen3-VL-8B, at rest"), ("zs8b_sweep", "zero-shot Qwen3-VL-8B, fixed scan"),
         ("claude_sweep", "zero-shot Claude Fable 5.1, fixed scan"), ("zsapi_sweep", "zero-shot Qwen3.8-27B, fixed scan"),
-        ("ours_2b_ordinary", r"\paper{} 2B, Ordinary"), ("ours_2b_evidence", r"\paper{} 2B, Evidence"),
-        ("ours_8b_evidence", r"\paper{} 8B, Evidence"), ("gold", "Ground-truth diagnosis")]
+        ("ours_2b_ordinary", "Fine-tuned 2B, Ordinary"), ("ours_2b_evidence", "Fine-tuned 2B, Evidence"),
+        ("ours_8b_evidence", "Fine-tuned 8B, Evidence"), ("gold", "Ground-truth diagnosis")]
 TYPES = ("kinematics.joint_axis", "kinematics.direction_flip", "kinematics.joint_anchor", "structure.part_offset",
          "structure.part_rotation")
 
