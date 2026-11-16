@@ -15,7 +15,7 @@ import json
 import os
 import sys
 
-ROWS = [("none", "No verifier (fixed iterations)"), ("pixel", "pixel difference"),
+ROWS = [("none", "No verifier"), ("pixel", "pixel difference"),
         ("zs4b_screenshot", "zero-shot Qwen3-VL-4B, at rest"), ("zs4b_sweep", "zero-shot Qwen3-VL-4B, fixed scan"),
         ("zs8b_screenshot", "zero-shot Qwen3-VL-8B, at rest"), ("zs8b_sweep", "zero-shot Qwen3-VL-8B, fixed scan"),
         ("claude_sweep", "zero-shot Claude Fable 5.1, fixed scan"), ("zsapi_sweep", "zero-shot Qwen3.8-27B, fixed scan"),
@@ -60,7 +60,7 @@ def main() -> None:
         s = table.get(f"{gen}/{judge}")
         if s is None:
             continue
-        iters = "--" if judge == "none" else num(s["iterations_to_success"])
+        iters = num(s["iterations_to_success"])
         out.append(f"{label} & {pct(s['success'])} & {pct(s['resolved_motion'])} & {pct(s['resolved_rest'])} & {iters} & "
                    f"{num(s['tokens_to_success_k'])} \\\\")
     boot_path = os.environ.get("TIO_BOOTSTRAP_JSON")
@@ -73,7 +73,7 @@ def main() -> None:
                 continue
             lo, hi = b["ci"]
             d = "--" if "diff_none" not in b else (f"{b['diff_none']:+.1f}" + r"\,{\tiny[%+.1f, %+.1f]}" % tuple(b["diff_none_ci"]))
-            iters = "--" if judge == "none" else num(s["iterations_to_success"])
+            iters = num(s["iterations_to_success"])
             out.append(f"{label} & {b['success']:.1f}" + r"\,{\tiny[%.1f, %.1f]}" % (lo, hi) + f" & {d} & {pct(s['resolved_motion'])} & "
                        f"{pct(s['resolved_rest'])} & {iters} & {num(s['tokens_to_success_k'])} \\\\")
     out.append("% repair_breakdown.tex: Judge & Generator & Success & Axis & Flip & Anchor & Offset & Rotation & Loc. & Iter. & Tokens (k)")
@@ -82,7 +82,7 @@ def main() -> None:
         if s is None:
             continue
         loc = "--" if judge in ("none", "pixel") else pct(s["localization"])
-        out.append(f"{label} & {gen} & {pct(s['success'])} & " + " & ".join(pct(s["resolved"].get(t)) for t in TYPES)
+        out.append(f"{label} & {gen.removesuffix('-FP8')} & {pct(s['success'])} & " + " & ".join(pct(s["resolved"].get(t)) for t in TYPES)
                    + f" & {loc} & {num(s['iterations_to_success'])} & {num(s['tokens_to_success_k'])} \\\\")
     out.append("% repair_cost.tex: Judge & Non-impr. & Osc. & Inv. (share of geometry invariants the final program passes)")
     for judge, label in ROWS:

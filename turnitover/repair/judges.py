@@ -300,7 +300,8 @@ class JudgeModel:
         source = self.adapter if self.adapter and (self.adapter / "preprocessor_config.json").exists() else self.base
         self.processor = AutoProcessor.from_pretrained(source, local_files_only=True, trust_remote_code=False)
         model = Qwen3VLForConditionalGeneration.from_pretrained(self.base, local_files_only=True, trust_remote_code=False,
-                                                                torch_dtype=torch.bfloat16, attn_implementation="sdpa").cuda()
+                                                                torch_dtype=torch.bfloat16, attn_implementation="sdpa")
+        model = model.to("cuda" if torch.cuda.is_available() else "cpu")   # CPU only for reruns without a free GPU
         if self.adapter:
             from peft import PeftModel
             model = PeftModel.from_pretrained(model, self.adapter, local_files_only=True)

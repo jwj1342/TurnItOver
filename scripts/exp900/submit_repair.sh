@@ -20,7 +20,7 @@ reps=($REPLICAS)
 k=0
 for j in $JUDGES; do
   case $j in
-    zs?b_*|ours_*) RES="--gpus-per-node=l40s:1 --cpus-per-task=$((P > 1 ? 16 : 8)) --mem=$((P > 1 ? 96 : 64))G" ;;
+    zs?b_*|ours_*) RES="--gpus-per-node=l40s:1 --cpus-per-task=$((P > 1 ? 12 : 8)) --mem=$((P > 1 ? 64 : 48))G" ;;
     *) RES="--cpus-per-task=$((4 * P)) --mem=$((16 * P))G" ;;
   esac
   for s in $(seq 0 $((NSHARD - 1))); do
@@ -34,7 +34,7 @@ for j in $JUDGES; do
          TIO_JUDGE_MAX_TOKENS=${JUDGE_MAX_TOKENS:-16384} TIO_JUDGE_TIMEOUT=${TIMEOUT:-3600} \
          CASES=$PACK OUT=$ROOT/$j JUDGES=$j GENERATOR=api GENERATOR_MODEL=${MODEL_ID:-Qwen3.8-27B-FP8} ROUNDS=3 \
          CASE_IDS_FILE=$ROOT/shards/$TAG-n$NSHARD-$s.txt JUDGE_SEED=${JUDGE_SEED:-20261013} PARALLEL=$P CKPT_TAG=${CKPT_TAG:-level900} \
-         sbatch --parsable --account=aip-zhouyang $RES --time=08:00:00 --job-name="$TAG-$j-s$s" ${DEPEND:+--dependency=$DEPEND} \
+         sbatch --parsable --account=aip-zhouyang $RES --time=${TIME:-08:00:00} --job-name="$TAG-$j-s$s" ${DEPEND:+--dependency=$DEPEND} \
            --output=tio-runs/logs/%x-%j.out scripts/slurm/repair_table.sbatch)
     echo "$id $j s$s $rep" >> "$ROOT/jobs.txt"
   done

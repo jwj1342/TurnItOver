@@ -66,5 +66,5 @@ print("\\textbf{Pixel-difference status baseline (no model):} pass/fail status a
       + ". Clean candidates are byte-identical to their references, so status metrics do not measure understanding.")
 PY
 # paper style: capitalized supervision labels; no negative zero
-sed -i -E 's/^([0-9]+B) & zero-shot &/\1 \& Zero-shot \&/; s/^([0-9]+B) & ordinary &/\1 \& Ordinary \&/; s/^([0-9]+B) & evidence &/\1 \& Evidence \&/' $S/rec-*.tex
+sed -i -E 's/^Kimi-K3 & zero-shot &/Kimi K3 \& Zero-shot \&/; s/^27B & zero-shot &/Qwen3.8-27B \& Zero-shot \&/; s/^([0-9]+B) & zero-shot &/\1 \& Zero-shot \&/; s/^([0-9]+B) & ordinary &/\1 \& Ordinary \&/; s/^([0-9]+B) & evidence &/\1 \& Evidence \&/' $S/rec-*.tex
 sed -i -E 's/-0\.0\\,\{/0.0\\,{/g; s/\[-0\.0,/[0.0,/g' $S/repair-*-table1.tex
