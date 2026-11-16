@@ -16,7 +16,7 @@ import sys
 
 ROWS = [("none", "none (fixed rounds)"), ("pixel", "pixel difference"),
         ("zs8b_screenshot", "zero-shot Qwen3-VL-8B, single screenshot"), ("zs8b_sweep", "zero-shot Qwen3-VL-8B, fixed sweep"),
-        ("claude_sweep", "zero-shot Claude Fable 5.1, fixed sweep"),
+        ("claude_sweep", "zero-shot Claude Fable 5.1, fixed sweep"), ("zsapi_sweep", "zero-shot Qwen3.8-27B, fixed sweep"),
         ("ours_2b_ordinary", r"\paper{} 2B, Ordinary"), ("ours_2b_evidence", r"\paper{} 2B, Evidence"),
         ("ours_8b_evidence", r"\paper{} 8B, Evidence"), ("gold", "gold findings (upper bound)")]
 TYPES = ("kinematics.joint_axis", "kinematics.direction_flip", "kinematics.joint_anchor", "structure.part_offset",

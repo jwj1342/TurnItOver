@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 LABELS = ROOT / "tio-runs/data900/three-tier-900-sft-v1/episode_export/annotations.private.jsonl"
 ELIGIBLE = ROOT / "tio-runs/repair/eligible.txt"
-JUDGES = ("none", "pixel", "zs8b_screenshot", "zs8b_sweep", "ours_2b_ordinary", "ours_2b_evidence", "ours_8b_evidence", "gold")
+JUDGES = ("none", "pixel", "zs8b_screenshot", "zs8b_sweep", "zsapi_sweep", "ours_2b_ordinary", "ours_2b_evidence", "ours_8b_evidence", "gold")
 
 
 def outcome(folder: Path) -> str:
