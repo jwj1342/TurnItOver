@@ -1,0 +1,3 @@
+# Preserve original experimental script bytes, including mixed line endings.
+*.py -text whitespace=cr-at-eol,-blank-at-eof
+*.html -text whitespace=cr-at-eol,-blank-at-eof
