@@ -6,14 +6,15 @@
 #   ROOT=tio-runs/repair/q38/rep2 TAG=q38r2 JUDGES="none pixel gold" REPLICAS="<vllm job ids>" bash scripts/exp900/submit_repair.sh
 # Optional: JUDGE_SEED (ours_* adapters, default 20261013), NSHARD (jobs per judge, 6), PARALLEL (runner processes per job,
 #   1; GPU jobs with PARALLEL>1 share one L40S: up to 4 with 2B judges, 2 with 8B judges), MODEL_ID (Qwen3.8-27B-FP8),
-#   MAX_TOKENS (32768).
+#   MAX_TOKENS (32768), TIMEOUT (seconds per generator request, 3600: at ten concurrent requests per replica a response
+#   that uses the whole 32768-token budget takes about 1800 s), CASE_LIST (default tio-runs/repair/eligible.txt).
 set -euo pipefail
 : "${ROOT:?}" "${TAG:?}" "${JUDGES:?}" "${REPLICAS:?}"
 NSHARD=${NSHARD:-6}
 P=${PARALLEL:-1}
 PACK=tio-runs/data900/repair58/three-tier-900-validation-repair-58-v1
 mkdir -p "$ROOT/shards"
-grep -v '^#' tio-runs/repair/eligible.txt | awk -v n="$NSHARD" -v d="$ROOT/shards" '{print > (d "/n" n "-" (NR-1) % n ".txt")}'
+grep -v '^#' "${CASE_LIST:-tio-runs/repair/eligible.txt}" | awk -v n="$NSHARD" -v d="$ROOT/shards/$TAG" '{print > (d "-n" n "-" (NR-1) % n ".txt")}'
 reps=($REPLICAS)
 k=0
 for j in $JUDGES; do
@@ -26,10 +27,10 @@ for j in $JUDGES; do
     k=$((k + 1))
     ep=$(cat "tio-runs/vllm/$rep.endpoint")
     host=$(echo "$ep" | sed -E 's|http://([^:/]+).*|\1|')
-    id=$(TIO_GENERATOR_PROVIDER=openai_compatible TIO_GENERATOR_MAX_TOKENS=${MAX_TOKENS:-32768} TIO_GENERATOR_TIMEOUT=1800 \
+    id=$(TIO_GENERATOR_PROVIDER=openai_compatible TIO_GENERATOR_MAX_TOKENS=${MAX_TOKENS:-32768} TIO_GENERATOR_TIMEOUT=${TIMEOUT:-3600} \
          COMPATIBLE_API_KEY=$(cat ~/.tio-vllm-token) TIO_GENERATOR_BASE_URL=$ep GEN_NO_PROXY=$host \
          CASES=$PACK OUT=$ROOT/$j JUDGES=$j GENERATOR=api GENERATOR_MODEL=${MODEL_ID:-Qwen3.8-27B-FP8} ROUNDS=3 \
-         CASE_IDS_FILE=$ROOT/shards/n$NSHARD-$s.txt JUDGE_SEED=${JUDGE_SEED:-20261013} PARALLEL=$P \
+         CASE_IDS_FILE=$ROOT/shards/$TAG-n$NSHARD-$s.txt JUDGE_SEED=${JUDGE_SEED:-20261013} PARALLEL=$P \
          sbatch --parsable --account=aip-zhouyang $RES --time=08:00:00 --job-name="$TAG-$j-s$s" \
            --output=tio-runs/logs/%x-%j.out scripts/slurm/repair_table.sbatch)
     echo "$id $j s$s $rep" >> "$ROOT/jobs.txt"
