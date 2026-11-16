@@ -8,7 +8,7 @@
 #   1; GPU jobs with PARALLEL>1 share one L40S: up to 4 with 2B judges, 2 with 8B judges), MODEL_ID (Qwen3.8-27B-FP8),
 #   MAX_TOKENS (32768), TIMEOUT (seconds per generator request, 3600: at ten concurrent requests per replica a response
 #   that uses the whole 32768-token budget takes about 1800 s), CASE_LIST (default tio-runs/repair/eligible.txt),
-#   JUDGE_MAX_TOKENS (16384; zsapi_* judges call the same model on the same replica as the generator, thinking on).
+#   CKPT_TAG (level900 | level900v11, which training runs the ours_* adapters come from), JUDGE_MAX_TOKENS (16384; zsapi_* judges call the same model on the same replica as the generator, thinking on).
 set -euo pipefail
 : "${ROOT:?}" "${TAG:?}" "${JUDGES:?}" "${REPLICAS:?}"
 NSHARD=${NSHARD:-6}
@@ -33,7 +33,7 @@ for j in $JUDGES; do
          TIO_JUDGE_PROVIDER=openai_compatible TIO_JUDGE_MODEL=${MODEL_ID:-Qwen3.8-27B-FP8} TIO_JUDGE_BASE_URL=$ep \
          TIO_JUDGE_MAX_TOKENS=${JUDGE_MAX_TOKENS:-16384} TIO_JUDGE_TIMEOUT=${TIMEOUT:-3600} \
          CASES=$PACK OUT=$ROOT/$j JUDGES=$j GENERATOR=api GENERATOR_MODEL=${MODEL_ID:-Qwen3.8-27B-FP8} ROUNDS=3 \
-         CASE_IDS_FILE=$ROOT/shards/$TAG-n$NSHARD-$s.txt JUDGE_SEED=${JUDGE_SEED:-20261013} PARALLEL=$P \
+         CASE_IDS_FILE=$ROOT/shards/$TAG-n$NSHARD-$s.txt JUDGE_SEED=${JUDGE_SEED:-20261013} PARALLEL=$P CKPT_TAG=${CKPT_TAG:-level900} \
          sbatch --parsable --account=aip-zhouyang $RES --time=08:00:00 --job-name="$TAG-$j-s$s" \
            --output=tio-runs/logs/%x-%j.out scripts/slurm/repair_table.sbatch)
     echo "$id $j s$s $rep" >> "$ROOT/jobs.txt"

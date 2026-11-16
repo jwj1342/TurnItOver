@@ -8,6 +8,7 @@
 #           GEN_NO_PROXY (comma list of hosts, e.g. the in-cluster vLLM node, that bypass the prolog's http_proxy),
 #           TIO_GENERATOR_RETRY_BUDGET_S (seconds of retries per generator call, default 1800),
 #           JUDGE_SEED (training seed of the ours_* adapters, default 20261013), PARALLEL (runner processes, default 1),
+#           CKPT_TAG (training runs the ours_* adapters come from, $TIO_RUNS/out/$CKPT_TAG-sft-*; default level900, v1.1: level900v11),
 #           TIO_RUNS (default <repo>/tio-runs), TIO_MODELS (default <repo>/models).
 # Exit status is the runner's: non-zero if any episode ended in generator_error (resubmit to rerun those).
 set -uo pipefail
@@ -42,7 +43,7 @@ if need 'zs8b_*' || need 'ours_*'; then
   for name in "${!SRC[@]}"; do
     need "$name" || continue
     size=${SRC[$name]%%/*}
-    ck=$(ls -d "$TIO_RUNS"/out/level900-sft-$size-*/${SRC[$name]}-diagnosis/checkpoint 2>/dev/null | head -1)
+    ck=$(ls -d "$TIO_RUNS"/out/${CKPT_TAG:-level900}-sft-$size-*/${SRC[$name]}-diagnosis/checkpoint 2>/dev/null | head -1)
     [ -f "$ck/adapter_config.json" ] || { echo "adapter missing for $name"; exit 5; }
     cp -r "$ck" "$SLURM_TMPDIR/models/$name" && MODEL_ARGS+=(--adapter "$name=$SLURM_TMPDIR/models/$name")
     echo "$name $ck" >> "$OUT/env-$SLURM_JOB_ID.txt"
