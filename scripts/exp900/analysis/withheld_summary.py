@@ -8,7 +8,8 @@ Per model, supervision and seed, per tier and overall, on the withheld cases:
   invalid     = share of cases her parser rejected (e.g. citing a step that does not exist); statuses and findings are
                 taken from a lenient JSON parse of the raw output so rejected outputs still count
 The same three rates on the original full-observation predictions restricted to the same case ids are shown for
-comparison. Usage: python analysis/withheld_summary.py  (writes out/RESULTS-withheld.md)
+comparison. Usage: [VERSION=v11] python analysis/withheld_summary.py  (writes out/RESULTS-withheld[-v11].md; v11 compares the
+withheld11-* runs with the level900v11-* full-observation evaluations, all on L40S)
 """
 from __future__ import annotations
 import os
@@ -16,8 +17,10 @@ import json, re
 from collections import defaultdict
 from pathlib import Path
 TIO = Path(os.environ.get('TIO_RUNS', '/scratch/jwj/tio-runs'))
-WITHHELD = TIO / 'data900/three-tier-900-withheld-v1/episode_export'
-SRC = TIO / 'data900/three-tier-900-sft-v1/episode_export'
+VERSION = os.environ.get('VERSION', 'v1')
+WITHHELD = TIO / f'data900/three-tier-900-withheld-{VERSION}/episode_export'
+SRC = TIO / ('data900/three-tier-900-sft-v1.1' if VERSION == 'v11' else 'data900/three-tier-900-sft-v1/episode_export')
+RUN_WITHHELD, RUN_FULL = ('withheld11-', 'level900v11-') if VERSION == 'v11' else ('withheld-', 'level900-')
 TIERS = ('easy', 'medium', 'hard', 'all')
 ORDER = {'zero-shot': 0, 'ordinary': 1, 'evidence': 2}
 
@@ -40,7 +43,7 @@ def lenient(raw: str):
 
 def discover_withheld():
     runs = {}
-    for m in sorted(TIO.glob('out/withheld-*/*/*-withheld/predictions.jsonl')):
+    for m in sorted(TIO.glob(f'out/{RUN_WITHHELD}*/*/*-withheld/predictions.jsonl')):
         size = m.parts[-3]; leaf = m.parts[-2]
         if leaf == 'base-withheld':
             key = (size, 'zero-shot', '-')
@@ -59,10 +62,10 @@ def on_l40s(run_dir: Path) -> bool:
 
 def discover_full():
     runs = {}
-    for m in sorted(TIO.glob('out/level900-*/*/seed*/*-diagnosis/eval-validation/predictions.jsonl')):
-        if (on_l40s(m.parents[4]) if FULL_HARDWARE == 'l40s' else m.parts[-6].startswith('level900-sft-')):
+    for m in sorted(TIO.glob(f'out/{RUN_FULL}*/*/seed*/*-diagnosis/eval-validation/predictions.jsonl')):
+        if (on_l40s(m.parents[4]) if FULL_HARDWARE == 'l40s' else m.parts[-6].startswith(f'{RUN_FULL}sft-')):
             runs[(m.parts[-5], m.parts[-3].split('-')[0], m.parts[-4][4:])] = m
-    for m in sorted(TIO.glob('out/level900-base-*/*/base-validation/predictions.jsonl')):
+    for m in sorted(TIO.glob(f'out/{RUN_FULL}base-*/*/base-validation/predictions.jsonl')):
         if FULL_HARDWARE != 'l40s' or on_l40s(m.parents[2]):
             runs[(m.parts[-3], 'zero-shot', '-')] = m
     return runs
@@ -124,7 +127,8 @@ def main() -> None:
     lines += ['## Notes', '', f'- Cases per tier: {dict(n)}. The first reference image is always shown; for Easy the remaining cell is the rest pair, which is pixel-identical to the reference for kinematic defects.',
               '- Statuses and defect ids come from her parsed row when the output was valid, otherwise from a lenient JSON parse of the raw text, so outputs rejected only for citing a step that no longer exists still count as findings.',
               '- "reports a withheld gold defect" is the share of cases, not findings. Mislabeled findings on withheld cases show up in "any finding" but not here.']
-    (TIO / ('out/RESULTS-withheld-l40s.md' if FULL_HARDWARE == 'l40s' else 'out/RESULTS-withheld.md')).write_text('\n'.join(lines) + '\n')
+    name = 'RESULTS-withheld-v11.md' if VERSION == 'v11' else ('RESULTS-withheld-l40s.md' if FULL_HARDWARE == 'l40s' else 'RESULTS-withheld.md')
+    (TIO / 'out' / name).write_text('\n'.join(lines) + '\n')
     print('\n'.join(lines))
 
 
