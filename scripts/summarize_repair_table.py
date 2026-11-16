@@ -4,7 +4,9 @@ invalid patches, cost to success and stability over applied patches.
 Every judge is scored on the same case list (--case-ids-file). Missing, incomplete and generator_error episodes count as
 failures for Success and leave their labels unresolved; they are reported per judge as n_missing (missing or incomplete)
 and n_error (generator_error). The remaining columns pool the complete episodes: Loc. over findings, Inv. over generator
-rounds that returned a patch, Non-impr. and Revisit over rounds whose patch was applied.
+rounds that returned a patch, Non-impr. and Revisit over rounds whose patch was applied. Phys. inv. is the per-episode
+share of physical invariants (geometry.alignment: per-part bbox IoU and Chamfer at rest and at each joint state) that
+the final program satisfies, averaged over complete episodes.
 """
 from __future__ import annotations
 
@@ -47,6 +49,11 @@ def resolved(audit: dict, parts: list[str]) -> bool:
     return all(i["passed"] for i in mine)
 
 
+def physical_invariant_rate(audit: dict) -> float:
+    found = [i["passed"] for c in audit["checks"] if c["checker_id"] != "runtime.budget" for i in c.get("invariants", [])]
+    return sum(found) / len(found)
+
+
 def episode_metrics(folder: Path, result: dict, labels: list[dict]) -> dict:
     rounds = sorted(folder.glob("round-*"))
     first = result.get("first_success_round")
@@ -73,7 +80,7 @@ def episode_metrics(folder: Path, result: dict, labels: list[dict]) -> dict:
     return {"final_passed": bool(result["final_passed"]), "first_success_round": first,
             "tokens_to_success": tokens_to_success if first is not None else None, "total_tokens": result.get("total_tokens"),
             "reported_cost_usd": cost, "resolved": [(l["defect_id"], resolved(audit, l.get("parts", []))) for l in labels],
-            "localization": (loc_hit, loc_total),
+            "localization": (loc_hit, loc_total), "physical_invariants": physical_invariant_rate(audit),
             "invalid": (outcomes.count("invalid_patch"), len(outcomes) - outcomes.count("stop")),
             "stability": stability(result["rounds"], result["initial_sha256"], result["delta"])}
 
@@ -146,6 +153,7 @@ def main() -> None:
                    "resolved_motion": mean([float(x) for t in TYPES if visibility(t) == "animation_required" for x in by_type[t]]),
                    "resolved_rest": mean([float(x) for t in TYPES if visibility(t) == "static_visible" for x in by_type[t]]),
                    "localization": ratio(sum(e["localization"][0] for e in episodes), sum(e["localization"][1] for e in episodes)),
+                   "physical_invariant_rate": mean([e["physical_invariants"] for e in episodes]),
                    "invalid_patch_rate": ratio(sum(e["invalid"][0] for e in episodes), patches), "patch_rounds": patches,
                    "iterations_to_success": mean([e["first_success_round"] for e in succ]),
                    "tokens_to_success_k": mean([e["tokens_to_success"] / 1000 for e in succ]),
@@ -161,14 +169,14 @@ def main() -> None:
         rows.append((gen_dir.name, judge_dir.name, summary))
     (args.summary or args.out[0] / "summary-table.json").write_text(json.dumps(table, indent=2))
     print("| Generator | Judge | n | Missing | Error | Success | 95% CI | " + " | ".join(t.split(".")[1] for t in TYPES)
-          + " | Motion | Rest | Loc. | Inv. | Iter. | Tokens (k) | Non-impr. | Revisit | Cost $ |")
-    print("|---|---|" + "--:|" * 19)
+          + " | Motion | Rest | Loc. | Phys. inv. | Inv. patch | Iter. | Tokens (k) | Non-impr. | Revisit | Cost $ |")
+    print("|---|---|" + "--:|" * 20)
     for gen, judge, s in rows:
         low, high = s["success_ci95"]
         print(f"| {gen} | {judge} | {s['n']} | {s['n_missing']} | {s['n_error']} | {fmt(s['success'], 100)} | "
               f"{fmt(low, 100)}-{fmt(high, 100)} | " + " | ".join(fmt(s['resolved'].get(t), 100) for t in TYPES)
               + f" | {fmt(s['resolved_motion'], 100)} | {fmt(s['resolved_rest'], 100)}"
-              + f" | {fmt(s['localization'], 100)} | {fmt(s['invalid_patch_rate'], 100)} | {fmt(s['iterations_to_success'])} | "
+              + f" | {fmt(s['localization'], 100)} | {fmt(s['physical_invariant_rate'], 100)} | {fmt(s['invalid_patch_rate'], 100)} | {fmt(s['iterations_to_success'])} | "
               + f"{fmt(s['tokens_to_success_k'])} | {fmt(s['non_improving_rate'], 100)} | {fmt(s['exact_state_revisit_rate'], 100)} | "
               + f"{s['reported_cost_usd']:.2f} |")
 

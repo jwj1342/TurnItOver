@@ -3,8 +3,8 @@
 One generator per summary (the generator column of repair.tex holds that generator's Success; the other columns are
 that generator's numbers, not a two-generator average). Judges without runs are printed as N/A rows. Resolved needs
 motion / visible at rest pools labels by the taxonomy's observation requirement (summary fields resolved_motion and
-resolved_rest). Inv. in repair_cost.tex is defined in its caption as a physical-invariant pass rate of the final program,
-which the audit does not measure, so it is printed as -- (the summary's invalid-patch rate is listed separately).
+resolved_rest). Inv. in repair_cost.tex is the physical-invariant pass rate of the final program (summary field
+physical_invariant_rate: share of geometry.alignment invariants the final program satisfies, mean over complete episodes).
 Usage: python scripts/exp900/analysis/paper_repair.py <summary.json> <generator id>
 """
 from __future__ import annotations
@@ -50,13 +50,13 @@ def main() -> None:
         loc = "--" if judge in ("none", "pixel") else pct(s["localization"])
         out.append(f"{label} & {gen} & {pct(s['success'])} & " + " & ".join(pct(s["resolved"].get(t)) for t in TYPES)
                    + f" & {loc} & {num(s['iterations_to_success'])} & {num(s['tokens_to_success_k'])} \\\\")
-    out.append("% repair_cost.tex: Judge & Non-impr. & Osc. & Inv. (caption: physical-invariant pass rate; not measured)")
+    out.append("% repair_cost.tex: Judge & Non-impr. & Osc. & Inv. (share of geometry invariants the final program passes)")
     for judge, label in ROWS:
         s = table.get(f"{gen}/{judge}")
         if s is None:
             out.append(f"{label} & N/A & N/A & N/A \\\\")
             continue
-        out.append(f"{label} & {pct(s['non_improving_rate'])} & {pct(s['exact_state_revisit_rate'])} & -- \\\\")
+        out.append(f"{label} & {pct(s['non_improving_rate'])} & {pct(s['exact_state_revisit_rate'])} & {pct(s['physical_invariant_rate'])} \\\\")
     out.append("% supporting counts per judge: n, complete, missing, error, success CI95, invalid-patch rate, resolved counts")
     for judge, _ in ROWS:
         s = table.get(f"{gen}/{judge}")

@@ -12,7 +12,7 @@ SPEC.loader.exec_module(summary)
 
 
 def audit(passed: bool, part: str) -> dict:
-    return {"passed": passed, "checks": [{"invariants": [{"parts": [part], "passed": passed}]}]}
+    return {"passed": passed, "checks": [{"checker_id": "geometry.alignment", "invariants": [{"parts": [part], "passed": passed}]}]}
 
 
 def episode(folder: Path, result: dict, audits: dict[str, dict]) -> None:
@@ -59,4 +59,5 @@ def test_summary_counts_every_listed_case_and_uses_last_applied_audit(tmp_path, 
     assert row["success_ci95"] == pytest.approx([0.0362, 0.6245], abs=1e-4)
     assert row["resolved"] == {"kinematics.joint_axis": pytest.approx(1 / 3), "structure.part_offset": 0.0}
     assert row["invalid_patch_rate"] == pytest.approx(1 / 3) and row["patch_rounds"] == 3
+    assert row["physical_invariant_rate"] == 0.5          # a: last applied audit passes; b: initial audit fails
     assert (row["applied_rounds"], row["non_improving_rate"], row["exact_state_revisit_rate"]) == (1, 0.0, 0.0)
