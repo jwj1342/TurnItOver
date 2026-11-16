@@ -7,17 +7,29 @@ Cases are kept only if at least one cell was removed and at least one non-exposi
 rebuilt byte-exactly in her format with the reduced history/image_order and remaining=0. The assistant target becomes
 an uncertain verdict with no findings (no remaining step can be cited), and evidence.covered_label_indices becomes [].
 Images are copied (not symlinked: her loader resolves paths and rejects anything outside the dataset root).
-Usage: python analysis/build_withheld_export.py
+v11 (VERSION=v11): derive from three-tier-900-sft-v1.1-pre.1, admitted cases only; the v1.1 certificate fields are dropped
+(the derived targets are all uncertain). Observation cells come from the same case inventory (images are unchanged in v1.1).
+Usage: [VERSION=v11] python analysis/build_withheld_export.py
 """
 from __future__ import annotations
 import os
-import hashlib, json, shutil
+import hashlib, json, re, shutil
 from collections import Counter, defaultdict
 from pathlib import Path
 TIO = Path(os.environ.get('TIO_RUNS', '/scratch/jwj/tio-runs'))
-SRC = TIO / 'data900/three-tier-900-sft-v1/episode_export'
-DST = TIO / 'data900/three-tier-900-withheld-v1/episode_export'
+VERSION = os.environ.get('VERSION', 'v1')
+SRC = TIO / ('data900/three-tier-900-sft-v1.1' if VERSION == 'v11' else 'data900/three-tier-900-sft-v1/episode_export')
+DST = TIO / f'data900/three-tier-900-withheld-{VERSION}/episode_export'
+V11_FIELDS = ('is_clean', 'label_policy', 'pass_certificate')
 INV = TIO / 'action900/inventory/case-inventory.private.jsonl'
+
+
+NAME = re.compile(r"^\d+-(?:(?P<view>.+)_)?(?P<kind>reference|candidate)_(?P<state>rest|zero|mid|limit)\.png$")
+
+
+def cell(image_ref: str) -> tuple[str, str]:
+    m = NAME.match(image_ref.rsplit("/", 1)[-1])
+    return m["view"] or "default", m["state"]
 
 
 def rows(path: Path) -> list[dict]:
@@ -27,12 +39,15 @@ def rows(path: Path) -> list[dict]:
 def main() -> None:
     if DST.exists():
         raise SystemExit(f'refusing to overwrite {DST}')
-    inv = {r['id']: r for r in rows(INV) if r['split'] == 'validation'}
-    ann = {a['id']: a for a in rows(SRC / 'annotations.private.jsonl') if a['split'] == 'validation'}
+    ann = {a['id']: {k: v for k, v in a.items() if k not in V11_FIELDS} for a in rows(SRC / 'annotations.private.jsonl')
+           if a['split'] == 'validation' and a.get('admission', 'eligible') == 'eligible'}
     stats = Counter(); removed = Counter(); kept_cells = Counter(); by_type = Counter()
     out_records, kept_ids = [], []
     for ep in rows(SRC / 'validation.episodes.jsonl'):
-        cid = ep['episode_id']; a = ann[cid]; r = inv[cid]
+        if ep.get('admission', 'eligible') != 'eligible':
+            continue
+        ep = {k: v for k, v in ep.items() if k not in V11_FIELDS}
+        cid = ep['episode_id']; a = ann[cid]
         if not a['labels']:
             stats[('skip_clean', ep['difficulty'])] += 1; continue
         content = ep['messages'][0]['content']; i = content.index('{"context"')
@@ -41,20 +56,16 @@ def main() -> None:
         step_img = {h['step']: h['image_ref'] for h in payload['history']}
         target = json.loads(ep['messages'][-1]['content'])['verdict']
         cited = {step_img[s] for f in target['findings'] for s in f['evidence_steps']}
-        cell_of = {}
-        for cell in r['observation_cells']:
-            key = (cell['view_id'], cell['state'])
-            cell_of[cell['candidate_image']] = key; cell_of[cell['reference_image']] = key
+        cell_of = {img: cell(img) for img in payload['image_order'][1:]}   # cells from the image names
         exposing = {cell_of[img] for img in cited}
-        all_cells = [(c['view_id'], c['state']) for c in r['observation_cells']]
-        keep = [c for c in r['observation_cells'] if (c['view_id'], c['state']) not in exposing]
+        keep = sorted({c for c in cell_of.values() if c not in exposing})
         if not exposing:
             stats[('skip_nothing_exposed', ep['difficulty'])] += 1; continue
         if not keep:
             stats[('skip_no_cell_left', ep['difficulty'])] += 1
             for lab in a['labels']: by_type[(lab['defect_id'], 'excluded')] += 1
             continue
-        keep_imgs = {payload['image_order'][0]} | {p for c in keep for p in (c['reference_image'], c['candidate_image'])}
+        keep_imgs = {payload['image_order'][0]} | {img for img, c in cell_of.items() if c in keep}
         images = [p for p in payload['image_order'] if p in keep_imgs]
         sha = dict(zip(ep['images'], ep['image_sha256']))
         history = [{**h, 'step': n} for n, h in enumerate(h for h in payload['history'] if h['image_ref'] in keep_imgs)]
@@ -67,7 +78,7 @@ def main() -> None:
         rec['images'] = images; rec['image_sha256'] = [sha[p] for p in images]
         rec['messages'] = [{'role': 'user', 'content': prefix + json.dumps(new_payload)}, {'role': 'assistant', 'content': json.dumps(verdict)}]
         rec['evidence'] = {**ep.get('evidence', {}), 'covered_label_indices': [], 'uncovered_label_indices': list(range(len(a['labels']))), 'status': 'withheld'}
-        rec['withheld'] = {'removed_cells': sorted(map(list, exposing)), 'kept_cells': [[c['view_id'], c['state']] for c in keep]}
+        rec['withheld'] = {'removed_cells': sorted(map(list, exposing)), 'kept_cells': [list(c) for c in keep]}
         out_records.append(rec); kept_ids.append(cid)
         stats[('kept', ep['difficulty'])] += 1; removed[ep['difficulty']] += len(exposing); kept_cells[ep['difficulty']] += len(keep)
         for lab in a['labels']: by_type[(lab['defect_id'], 'kept')] += 1
@@ -78,9 +89,10 @@ def main() -> None:
     man = json.loads((SRC / 'manifest.json').read_text())
     tiers = Counter(r['difficulty'] for r in out_records)
     man['counts'] = {'validation': {'difficulty': dict(tiers), 'episodes': len(out_records), 'stopping': 0}, 'train': {'episodes': 0, 'stopping': 0}, 'test': {'episodes': 0, 'stopping': 0}}
-    man['dataset_version'] = 'three-tier-900-withheld-v1'
-    man['derived_from'] = {'dataset_version': 'three-tier-900-sft-v1', 'manifest_sha256': hashlib.sha256((SRC / 'manifest.json').read_bytes()).hexdigest(),
-                           'release_zip_sha256': '185d2d6ba7ca2b6d2fb7426d407e50c9682a8632e3a827f18502cab9c309e2e0'}
+    man['dataset_version'] = f'three-tier-900-withheld-{VERSION}'
+    man.pop('label_policy', None); man.pop('label_revision_counts', None)
+    man['derived_from'] = {'dataset_version': 'three-tier-900-sft-v1.1-pre.1' if VERSION == 'v11' else 'three-tier-900-sft-v1',
+                           'manifest_sha256': hashlib.sha256((SRC / 'manifest.json').read_bytes()).hexdigest()}
     man['withheld_rule'] = ('defective validation cases only; every cell cited by the evidence-constrained target for any gold label removed; '
                             'first reference image kept; cases kept only if something was removed and a non-exposing cell remains; targets set to uncertain; built by analysis/build_withheld_export.py')
     (DST / 'manifest.json').write_text(json.dumps(man, indent=2, sort_keys=True) + '\n')
