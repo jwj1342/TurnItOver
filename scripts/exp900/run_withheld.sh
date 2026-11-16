@@ -11,9 +11,9 @@ step() { local name=$1; shift; local t0=$(date +%s)
   else printf '%s\tFAIL\t%ss\n' "$name" "$(( $(date +%s) - t0 ))" | tee -a "$STATUS"; tail -n 12 "$RUN/logs/$name.log"; fi; }
 common=(--dataset "$DATASET" --dataset-manifest-sha256 "$MANIFEST_SHA" --task diagnosis --split validation --seed 20261013 --max-new-tokens 512 --device cuda)
 M=$MODELS/Qwen3-VL-$SIZE-Instruct
-cd "$TIO_RUNS/code900"
+cd "${CODE:-$TIO_RUNS/code900}"
 step "$SIZE-base-withheld" python scripts/evaluate_qwen_episode_sft.py "${common[@]}" --model "$M" --out "$RUN/$SIZE/base-withheld"
-for ck in "$TIO_RUNS"/out/level900-sft-$SIZE-*/$SIZE/seed*/*-diagnosis/checkpoint; do
+for ck in "$TIO_RUNS"/out/${CKPT_TAG:-level900}-sft-$SIZE-*/$SIZE/seed*/*-diagnosis/checkpoint; do
   [ -f "$ck/adapter_config.json" ] || continue
   seed=$(basename "$(dirname "$(dirname "$ck")")"); sup=$(basename "$(dirname "$ck")" | cut -d- -f1)
   A=$SLURM_TMPDIR/adapters/$SIZE-$seed-$sup; mkdir -p "$A"; cp "$ck"/* "$A"/
