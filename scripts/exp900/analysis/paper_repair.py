@@ -1,11 +1,13 @@
 """LaTeX rows for tables/repair.tex, repair_breakdown.tex and repair_cost.tex from summarize_repair_table.py's JSON.
 
-One generator per summary (the generator column of repair.tex holds that generator's Success; the other columns are
-that generator's numbers, not a two-generator average). Judges without runs are printed as N/A rows. Resolved needs
+One generator per call (the generator column of repair.tex holds that generator's Success; the other columns are
+that generator's numbers, not a two-generator average). Several summaries (one per run: generator repetitions for the
+fixed judges, training seeds for the ours_* judges) are averaged per judge over the runs that contain it; Success is
+printed as the mean with the [min, max] over runs in the comment lines. Judges without runs are printed as N/A rows. Resolved needs
 motion / visible at rest pools labels by the taxonomy's observation requirement (summary fields resolved_motion and
 resolved_rest). Inv. in repair_cost.tex is the physical-invariant pass rate of the final program (summary field
 physical_invariant_rate: share of geometry.alignment invariants the final program satisfies, mean over complete episodes).
-Usage: python scripts/exp900/analysis/paper_repair.py <summary.json> <generator id>
+Usage: python scripts/exp900/analysis/paper_repair.py <generator id> <summary.json> [<summary.json> ...]
 """
 from __future__ import annotations
 
@@ -29,8 +31,27 @@ def num(v) -> str:
     return "--" if v is None else f"{v:.1f}"
 
 
+def mean(values):
+    values = [v for v in values if v is not None]
+    return sum(values) / len(values) if values else None
+
+
+def combine(runs: list[dict], key: str):
+    rows = [r[key] for r in runs if key in r]
+    if not rows:
+        return None
+    out = {f: mean([r[f] for r in rows]) for f in ("success", "resolved_motion", "resolved_rest", "localization",
+                                                   "iterations_to_success", "tokens_to_success_k", "non_improving_rate",
+                                                   "exact_state_revisit_rate", "physical_invariant_rate")}
+    out["resolved"] = {t: mean([r["resolved"].get(t) for r in rows]) for t in TYPES}
+    out["runs"] = rows
+    return out
+
+
 def main() -> None:
-    table, gen = json.loads(open(sys.argv[1]).read()), sys.argv[2]
+    gen, runs = sys.argv[1], [json.loads(open(path).read()) for path in sys.argv[2:]]
+    table = {f"{gen}/{judge}": combine(runs, f"{gen}/{judge}") for judge, _ in ROWS}
+    table = {k: v for k, v in table.items() if v is not None}
     out = [f"% generator {gen}; Success with Wilson 95% CI in the markdown summary; n per judge = eligible cases",
            "% repair.tex: Judge & Success & Resolved needs motion & Resolved visible at rest & Iter. & Tokens (k)"]
     for judge, label in ROWS:
@@ -57,12 +78,16 @@ def main() -> None:
             out.append(f"{label} & N/A & N/A & N/A \\\\")
             continue
         out.append(f"{label} & {pct(s['non_improving_rate'])} & {pct(s['exact_state_revisit_rate'])} & {pct(s['physical_invariant_rate'])} \\\\")
-    out.append("% supporting counts per judge: n, complete, missing, error, success CI95, invalid-patch rate, resolved counts")
+    out.append("% per run: n, complete, missing, error, success with Wilson 95% CI, invalid-patch rate, resolved counts")
     for judge, _ in ROWS:
-        s = table.get(f"{gen}/{judge}")
-        if s:
+        c = table.get(f"{gen}/{judge}")
+        if c is None:
+            continue
+        rates = [r["success"] for r in c["runs"]]
+        out.append(f"% {judge}: {len(rates)} runs, success mean {pct(c['success'])} [{pct(min(rates))}, {pct(max(rates))}]")
+        for s in c["runs"]:
             lo, hi = s["success_ci95"]
-            out.append(f"% {judge}: n={s['n']} complete={s['n_complete']} missing={s['n_missing']} error={s['n_error']} "
+            out.append(f"%   n={s['n']} complete={s['n_complete']} missing={s['n_missing']} error={s['n_error']} "
                        f"success={pct(s['success'])} [{pct(lo)}, {pct(hi)}] invalid_patch={pct(s['invalid_patch_rate'])} "
                        f"resolved_counts={s['resolved_counts']}")
     print("\n".join(out))
