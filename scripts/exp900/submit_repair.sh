@@ -20,7 +20,7 @@ reps=($REPLICAS)
 k=0
 for j in $JUDGES; do
   case $j in
-    zs8b_*|ours_*) RES="--gpus-per-node=l40s:1 --cpus-per-task=$((P > 1 ? 16 : 8)) --mem=$((P > 1 ? 96 : 64))G" ;;
+    zs?b_*|ours_*) RES="--gpus-per-node=l40s:1 --cpus-per-task=$((P > 1 ? 16 : 8)) --mem=$((P > 1 ? 96 : 64))G" ;;
     *) RES="--cpus-per-task=$((4 * P)) --mem=$((16 * P))G" ;;
   esac
   for s in $(seq 0 $((NSHARD - 1))); do

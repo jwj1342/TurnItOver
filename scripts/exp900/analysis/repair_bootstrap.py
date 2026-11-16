@@ -16,7 +16,7 @@ from pathlib import Path
 
 import numpy as np
 
-ORDER = ("none", "pixel", "zs8b_screenshot", "zs8b_sweep", "zsapi_sweep", "ours_2b_ordinary", "ours_2b_evidence",
+ORDER = ("none", "pixel", "zs4b_screenshot", "zs4b_sweep", "zs8b_screenshot", "zs8b_sweep", "zsapi_sweep", "ours_2b_ordinary", "ours_2b_evidence",
          "ours_8b_evidence", "gold")
 
 
@@ -35,6 +35,7 @@ def main() -> None:
     parser.add_argument("--ref", nargs="+", default=["none", "pixel"])
     parser.add_argument("--samples", type=int, default=10000)
     parser.add_argument("--seed", type=int, default=20261116)
+    parser.add_argument("--latex", type=Path, help="also write LaTeX rows: judge & runs & Success & 95% CI & diffs")
     args = parser.parse_args()
     cases = [l.strip() for l in args.cases.read_text().splitlines() if l.strip() and not l.startswith("#")]
     runs: dict[str, list[list[float]]] = {}
@@ -64,6 +65,13 @@ def main() -> None:
             diffs.append(f"{100 * (score[j].mean() - score[r].mean()):+.1f} [{dlo:+.1f}, {dhi:+.1f}]")
         lines.append(f"| {j} | {len(runs[j])} | {100 * score[j].mean():.1f} | {lo:.1f}-{hi:.1f} | " + " | ".join(diffs) + " |")
     print("\n".join(lines))
+    if args.latex:
+        rows = []
+        for line in lines[4:]:
+            judge, n_runs, succ, interval, *diffs = [c.strip() for c in line.strip("|").split("|")]
+            rows.append(f"{judge.replace('_', chr(92) + '_')} & {n_runs} & {succ} & [{interval.replace('-', ', ')}] & "
+                        + " & ".join(diffs) + r" \\")
+        args.latex.write_text("\n".join(rows) + "\n")
 
 
 if __name__ == "__main__":

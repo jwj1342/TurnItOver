@@ -509,10 +509,11 @@ def judge_from_id(judge_id: str, model_root: Path | None, adapters: dict[str, Pa
         return PixelJudge()
     if judge_id == "gold":
         return GoldJudge()
-    if judge_id.startswith("zs8b_"):
+    if judge_id.startswith(("zs2b_", "zs4b_", "zs8b_")):
         if model_root is None:
             raise ValueError("--model-root is required for VLM judges")
-        return VlmJudge(judge_id, JudgeModel(model_root / "Qwen3-VL-8B-Instruct"), judge_id.removeprefix("zs8b_"))
+        size, mode = judge_id[2:4].upper(), judge_id[5:]
+        return VlmJudge(judge_id, JudgeModel(model_root / f"Qwen3-VL-{size}-Instruct"), mode)
     if judge_id.startswith("zsapi_"):
         if api_model is None:
             raise ValueError("zsapi_ judges need the TIO_JUDGE_* settings")

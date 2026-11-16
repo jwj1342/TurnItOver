@@ -33,9 +33,10 @@ echo "repo $(git rev-parse HEAD) dirty=$(git status --porcelain | wc -l)" > "$OU
 # judge weights on node-local disk, only for the judges requested
 MODEL_ARGS=()
 need() { for j in $JUDGES; do case $j in $1) return 0;; esac; done; return 1; }
-if need 'zs8b_*' || need 'ours_*'; then
+if need 'zs?b_*' || need 'ours_*'; then
   mkdir -p "$SLURM_TMPDIR/models"
-  sizes=""; need 'zs8b_*' && sizes="8B"; need 'ours_2b_*' && sizes="$sizes 2B"; need 'ours_8b_*' && sizes="$sizes 8B"
+  sizes=""; need 'zs8b_*' && sizes="8B"; need 'zs4b_*' && sizes="$sizes 4B"; need 'zs2b_*' && sizes="$sizes 2B"
+  need 'ours_2b_*' && sizes="$sizes 2B"; need 'ours_8b_*' && sizes="$sizes 8B"
   for size in $(echo $sizes | tr ' ' '\n' | sort -u); do cp -r "$TIO_MODELS/Qwen3-VL-$size-Instruct" "$SLURM_TMPDIR/models/" || exit 4; done
   MODEL_ARGS+=(--model-root "$SLURM_TMPDIR/models")
   seed=seed${JUDGE_SEED:-20261013}

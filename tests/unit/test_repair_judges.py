@@ -240,3 +240,9 @@ def test_api_judge_model_is_a_zero_shot_vlm_judge():
     assert isinstance(judge, VlmJudge) and judge.mode == "sweep" and judge.describe()["api_model"] == "big-vlm"
     with pytest.raises(ValueError):
         judges.judge_from_id("zsapi_sweep", None, {})
+
+
+def test_zero_shot_judge_ids_pick_the_model_size(tmp_path):
+    judge = judges.judge_from_id("zs4b_screenshot", tmp_path, {})
+    assert judge.mode == "screenshot" and judge.model.base == tmp_path / "Qwen3-VL-4B-Instruct"
+    assert judges.judge_from_id("zs8b_sweep", tmp_path, {}).model.base == tmp_path / "Qwen3-VL-8B-Instruct"

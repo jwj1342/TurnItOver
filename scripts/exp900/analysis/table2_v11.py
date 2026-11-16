@@ -116,6 +116,19 @@ def main() -> None:
                 tiers = [("N/E" if cond == "viewpoints" and t in ("easy", "medium") else cell([s[t] for s in scores if t in s]))
                          for t in TIERS + ("all",)]
                 lines.append(f"| {cond} | {size} | {sup} | {len(preds)} | " + " | ".join(tiers) + " |")
+    tex = ["% Visibility: condition & Easy & Medium & Hard & All (defective cases exposed / defective cases)"]
+    for line in lines:
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if line.startswith("| viewpoints |") or line.startswith("| joints |") or line.startswith("| full |"):
+            if len(cells) == 5:
+                tex.append("\\multicolumn{4}{@{}l}{%s visibility} & " % cells[0]
+                           + " & ".join(c.replace("(", "{\\tiny(").replace(")", ")}") for c in cells[1:]) + r" \\")
+            else:
+                cond, size, model, n_runs, *vals = cells
+                tex.append(f"{cond} & {size} & {model} & {n_runs} & " + " & ".join(
+                    v if "[" not in v else "\\rng{%s}{%s}{%s}" % (v.split(" [")[0], v.split("[")[1].split(",")[0], v.split(", ")[1].rstrip("]"))
+                    for v in vals) + r" \\")
+    (OUT / "RESULTS-table2-v11.tex").write_text("\n".join(tex) + "\n")
     (OUT / "RESULTS-table2-v11.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))
 
