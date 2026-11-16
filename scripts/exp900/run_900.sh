@@ -28,7 +28,7 @@ common=(--dataset "$DATASET" --dataset-manifest-sha256 "$MANIFEST_SHA")
 evalcommon=(--task diagnosis --split "$SPLIT" --seed 20261013 --max-new-tokens 512 --bootstrap-samples 1000 --device cuda)   # eval seed fixed by her protocol
 case "${MODE:-sft}" in
   base)
-    step pixel-status python "$TIO_ROOT/scripts/exp900/pixel_status_baseline.py" --dataset "$DATASET" --out "$RUN/pixel-status"
+    step pixel-status python "$TIO_ROOT/scripts/exp900/pixel_status_baseline.py" --dataset "$DATASET" --split "$SPLIT" --out "$RUN/pixel-status"
     for size in ${SIZES:-2B 4B 8B}; do
         M=$MODELS/Qwen3-VL-$size-Instruct
         step "$size-base-$SPLIT" python scripts/evaluate_qwen_episode_sft.py "${common[@]}" --model "$M" --out "$RUN/$size/base-$SPLIT" "${evalcommon[@]}"
