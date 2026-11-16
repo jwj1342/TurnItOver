@@ -36,6 +36,7 @@ def main() -> None:
     parser.add_argument("--samples", type=int, default=10000)
     parser.add_argument("--seed", type=int, default=20261116)
     parser.add_argument("--latex", type=Path, help="also write LaTeX rows: judge & runs & Success & 95% CI & diffs")
+    parser.add_argument("--json", type=Path, help="also write {judge: {runs, success, ci, diff_<ref>, diff_<ref>_ci}} in percent")
     args = parser.parse_args()
     cases = [l.strip() for l in args.cases.read_text().splitlines() if l.strip() and not l.startswith("#")]
     runs: dict[str, list[list[float]]] = {}
@@ -65,6 +66,16 @@ def main() -> None:
             diffs.append(f"{100 * (score[j].mean() - score[r].mean()):+.1f} [{dlo:+.1f}, {dhi:+.1f}]")
         lines.append(f"| {j} | {len(runs[j])} | {100 * score[j].mean():.1f} | {lo:.1f}-{hi:.1f} | " + " | ".join(diffs) + " |")
     print("\n".join(lines))
+    if args.json:
+        out = {}
+        for j in judges:
+            row = {"runs": len(runs[j]), "success": 100 * score[j].mean(), "ci": list(ci(boot[j]))}
+            for r in args.ref:
+                if r in score and r != j:
+                    row[f"diff_{r}"] = 100 * (score[j].mean() - score[r].mean())
+                    row[f"diff_{r}_ci"] = list(ci(boot[j] - boot[r]))
+            out[j] = row
+        args.json.write_text(json.dumps(out, indent=2))
     if args.latex:
         rows = []
         for line in lines[4:]:

@@ -12,6 +12,7 @@ Usage: python scripts/exp900/analysis/paper_repair.py <generator id> <summary.js
 from __future__ import annotations
 
 import json
+import os
 import sys
 
 ROWS = [("none", "No verifier (fixed iterations)"), ("pixel", "pixel difference"),
@@ -58,16 +59,27 @@ def main() -> None:
     for judge, label in ROWS:
         s = table.get(f"{gen}/{judge}")
         if s is None:
-            out.append(f"{label} & N/A & N/A & N/A & N/A & N/A \\\\")
             continue
         iters = "--" if judge == "none" else num(s["iterations_to_success"])
         out.append(f"{label} & {pct(s['success'])} & {pct(s['resolved_motion'])} & {pct(s['resolved_rest'])} & {iters} & "
                    f"{num(s['tokens_to_success_k'])} \\\\")
+    boot_path = os.environ.get("TIO_BOOTSTRAP_JSON")
+    if boot_path:
+        boot = json.loads(open(boot_path).read())
+        out.append("% table1: Verifier & Success [95% CI] & vs none [95% CI] & Visible after motion & Visible at rest & Iter. & Tokens (k)")
+        for judge, label in ROWS:
+            s, b = table.get(f"{gen}/{judge}"), boot.get(judge)
+            if s is None or b is None:
+                continue
+            lo, hi = b["ci"]
+            d = "--" if "diff_none" not in b else (f"{b['diff_none']:+.1f}" + r"\,{\tiny[%+.1f, %+.1f]}" % tuple(b["diff_none_ci"]))
+            iters = "--" if judge == "none" else num(s["iterations_to_success"])
+            out.append(f"{label} & {b['success']:.1f}" + r"\,{\tiny[%.1f, %.1f]}" % (lo, hi) + f" & {d} & {pct(s['resolved_motion'])} & "
+                       f"{pct(s['resolved_rest'])} & {iters} & {num(s['tokens_to_success_k'])} \\\\")
     out.append("% repair_breakdown.tex: Judge & Generator & Success & Axis & Flip & Anchor & Offset & Rotation & Loc. & Iter. & Tokens (k)")
     for judge, label in ROWS:
         s = table.get(f"{gen}/{judge}")
         if s is None:
-            out.append(f"{label} & {gen} & " + " & ".join(["N/A"] * 9) + " \\\\")
             continue
         loc = "--" if judge in ("none", "pixel") else pct(s["localization"])
         out.append(f"{label} & {gen} & {pct(s['success'])} & " + " & ".join(pct(s["resolved"].get(t)) for t in TYPES)
@@ -76,7 +88,6 @@ def main() -> None:
     for judge, label in ROWS:
         s = table.get(f"{gen}/{judge}")
         if s is None:
-            out.append(f"{label} & N/A & N/A & N/A \\\\")
             continue
         out.append(f"{label} & {pct(s['non_improving_rate'])} & {pct(s['exact_state_revisit_rate'])} & {pct(s['physical_invariant_rate'])} \\\\")
     out.append("% per run: n, complete, missing, error, success with Wilson 95% CI, invalid-patch rate, resolved counts")

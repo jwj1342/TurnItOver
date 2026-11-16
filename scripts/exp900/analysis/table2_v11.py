@@ -129,6 +129,18 @@ def main() -> None:
                     v if "[" not in v else "\\rng{%s}{%s}{%s}" % (v.split(" [")[0], v.split("[")[1].split(",")[0], v.split(", ")[1].rstrip("]"))
                     for v in vals) + r" \\")
     (OUT / "RESULTS-table2-v11.tex").write_text("\n".join(tex) + "\n")
+    # main-text rows (tables/acquisition.tex): visibility per tier, then All F1 per size and supervision
+    main = []
+    for cond, name in (("viewpoints", "Viewpoint changes"), ("joints", "Joint motion"), ("full", "Full sequence")):
+        vis = [c for c in lines if c.startswith(f"| {cond} |") and c.count("|") == 6][0].strip("|").split("|")[1:]
+        cells = [v.strip().split(" (")[0] for v in vis]
+        for size in ("2B", "4B", "8B"):
+            for sup in ("ordinary", "evidence"):
+                preds = found.get((cond, size, sup), [])
+                vals = [score(p, gold[cond])["all"] for p in preds]
+                cells.append(cell(vals).replace(" [", "\\,{\\tiny[").replace("]", "]}") if vals else "TBD")
+        main.append(f"{name} & " + " & ".join(cells) + r" \\")
+    (OUT / "RESULTS-table2-v11-main.tex").write_text("\n".join(main) + "\n")
     (OUT / "RESULTS-table2-v11.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))
 
