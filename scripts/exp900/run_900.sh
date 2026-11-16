@@ -10,7 +10,8 @@ set -uo pipefail
 TIO_RUNS=${TIO_RUNS:-/scratch/jwj/tio-runs}
 SPLIT=${SPLIT:-validation}
 RUN=$1; DATASET=$2; MODELS=$3
-MANIFEST_SHA=6d0fc5344810396e9454e83c58572f9a9ecdcae4cb53a477f59e9dd541fc6c25   # her launch_three_tier_2b_wave.sh
+MANIFEST_SHA=${MANIFEST_SHA:-6d0fc5344810396e9454e83c58572f9a9ecdcae4cb53a477f59e9dd541fc6c25}   # v1: her launch_three_tier_2b_wave.sh
+RUN_TAG=${RUN_TAG:-level900}   # checkpoints of MODE=eval come from $TIO_RUNS/out/$RUN_TAG-sft-*
 STATUS=$RUN/status.tsv
 mkdir -p "$RUN/logs"
 step() {
@@ -48,7 +49,7 @@ case "${MODE:-sft}" in
     size=${SIZE:-2B}; M=$MODELS/Qwen3-VL-$size-Instruct
     for seed in ${SEEDS:-20261013 20261113 20261213}; do
         for sup in ${SUPS:-evidence ordinary}; do
-            for ck in "$TIO_RUNS"/out/level900-sft-$size-*/$size/seed$seed/$sup-diagnosis/checkpoint; do
+            for ck in "$TIO_RUNS"/out/$RUN_TAG-sft-$size-*/$size/seed$seed/$sup-diagnosis/checkpoint; do
                 [ -f "$ck/adapter_config.json" ] || continue
                 step "$size-seed$seed-$sup-eval-$SPLIT" python scripts/evaluate_qwen_episode_sft.py "${common[@]}" --model "$M" --adapter "$ck" \
                     --out "$RUN/$size/seed$seed/$sup-diagnosis/eval-$SPLIT" "${evalcommon[@]}"
