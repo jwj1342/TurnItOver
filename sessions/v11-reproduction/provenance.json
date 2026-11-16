@@ -1,0 +1,227 @@
+{
+  "format": "tio-v11-reproduction-v1",
+  "dataset_manifest_sha256": "b64e50f027a8788554f9248b6aa7da51b4010e16103f3ffafc9e6bb41806179b",
+  "runtime_commit": "89e07db82890af02ae651dcd8b86082981fb7d1b",
+  "repair_source_commit": "3e1fbd5e0c38afd78ac53548172f4b0f61f06242",
+  "table23_commit": "3ca533a72f972cadc82da19e28deead94865bdcc",
+  "case_ids_sha256": "b628ea8767380800c8af2548000bf8f00d6523557a80716f6dc89c3b307b9c0c",
+  "frozen_files": [
+    {
+      "path": "frozen/batch_common.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "76699eaf7f3ab00690f40ed7d392ce4b0270baa7c7e9ff7c521bc7b198669b24"
+    },
+    {
+      "path": "frozen/worker_v2.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "26dceef1c3f6b6bea01dd8a9283e3f8ffc4554e810701d58b659103db863d1b8"
+    },
+    {
+      "path": "frozen/worker_gold_v3.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "7b90ae5a6669cc63338d81cc7d2d454b51e073eb6e6365a81ee84e60f796f118"
+    },
+    {
+      "path": "frozen/worker_gold_v4.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "dd7b99be39151fcbc5f6ec84fca57d944f1fcdd9b44b0b53a9ce62b8d69e999a"
+    },
+    {
+      "path": "frozen/visible_gold_v2.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "c52c392355e671eb98fab934f4c472d33f20c310dd5df7fd8ac86acc27bbb6e7"
+    },
+    {
+      "path": "frozen/visible_gold_v3.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "5e5c75e023dbd478cdc384537cf88abe17cbaec0df8c92038bde10e69ef74bb8"
+    },
+    {
+      "path": "frozen/visible_gold_v4.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "0ce96f5436451a1b367c2741e377edb660323c3cae9b36ef825ee45ccc4e48f9"
+    },
+    {
+      "path": "frozen/audited_environment.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "8c072c9be70753f6c83f24f382a16029a71f72b49b391e2b3785f8dfd5c67cd5"
+    },
+    {
+      "path": "frozen/audited_environment_v2.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "b3652affa6a69d06236e1f93ee9d2353bac407d5d821968660bf9985ec9e82cd"
+    },
+    {
+      "path": "frozen/physical_scoring.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "7413506281b378bb82128534b949b6bd33e8b36eac7a7da60efc3553afa41231"
+    },
+    {
+      "path": "frozen/physical_scoring_v4.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "f91f844a7013ef19ca1e1c331f29f8dc2c8edf914c8f9a11443c2d4d9ce06753"
+    },
+    {
+      "path": "frozen/score_physical_batch.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "55f452fa617f9e611eadf1509e51c2fea3d34261faa0cd070c9f4f35e627fd57"
+    },
+    {
+      "path": "frozen/score_physical_batch_v4.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "5ef9d55572d6f3e15c8607f4e10a39835368183931c7fa3082697d06a93af6c9"
+    },
+    {
+      "path": "frozen/infer_server.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "03529304b6dac62aae893493d302c1c691ebd389b18e6d29125a45bff0fc7084"
+    },
+    {
+      "path": "frozen/turnitover/repair/openhands_runner.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "db29b4cc0ba750b2b206fe23c1e315997c8b868795a9ab9ed90c9be99676cefd"
+    },
+    {
+      "path": "frozen/turnitover/repair/table1_judges.py",
+      "origin": "SOAR final code-v2 snapshot",
+      "sha256": "ca9061c62cacbca022be82a97b68d5fbe59288b8f3278c8c5c8c42ec342d71e7"
+    },
+    {
+      "path": "frozen/preflight.py",
+      "origin": "local original batch script",
+      "sha256": "3287d4ec272b06511c79e92c0590a1341a6be7894031300f6b86a74275c00ff5"
+    },
+    {
+      "path": "frozen/calibrate_pixel.py",
+      "origin": "local original batch script",
+      "sha256": "94d42b77dc61b548030f5afe42b28bbcb7481f688db50cf17c132cf7c45a5f4c"
+    },
+    {
+      "path": "frozen/analyze_batch.py",
+      "origin": "local original batch script",
+      "sha256": "95378ba0ca10e009f3f13e498793f47bd327151a06cecb059f637a8652c1f165"
+    },
+    {
+      "path": "frozen/renderer/index.html",
+      "origin": "SOAR compiled renderer entry page",
+      "sha256": "06220eedfd10d170188df320c8f4616c00f69f4d3942eccd565e0c7af6dfc673"
+    }
+  ],
+  "runtime_files_normalized_lf": {
+    "web/build.mjs": "17375ae4d95e7a04e368e6cb21086afd20802a2385567ab359de5e4aedbed9b5",
+    "web/package.json": "8211c934069936d78f80f8c43d8d9ea9b582569c5efe56f74318c05e67fee98d",
+    "web/package-lock.json": "28d26f11fafcbb456cbcab2db2040bbce2800fb51c89b381cc6774b95dfbaa06",
+    "turnitover/__init__.py": "9b8a91652382be62887321e93154ae351222b95a2ad05814eede6f1ba6be10e6",
+    "turnitover/__main__.py": "c197d9c614fa458ceb42a26e08f5da52e5c808eb35bce22b380c29b422a12f33",
+    "turnitover/assets/__init__.py": "36ebe21b858840217d67b010c724241b7aac6762aa96eba86638177fe2d814b7",
+    "turnitover/assets/audit_urdf.py": "71d92cfafa51bba38ef667963a180121f4c60208a70fbf06e36db5d68d5bbd8d",
+    "turnitover/assets/catalog.py": "b98059d065d57247cf8f634b8dd901ecb29990f61d02436d8f7131c29d548ebe",
+    "turnitover/assets/emit.py": "d7e636abbf1867a2ea149fae2993c44ddb6448654fff34ed21479c7577fda50d",
+    "turnitover/assets/source.py": "2443233d042e5dd5b36fff8bdae0d5123b6e1ebeb0c7a0b0a1a7ff0b2a103147",
+    "turnitover/assets/toy.py": "adea5f29070ba0d048561c9ac98d6402ee4cca5cc148d1306b396a08a101cb38",
+    "turnitover/assets/uniphys40k.py": "ca519f8b557e6824f6e9a1e8023880fa63216ab6f0ee6e4dd832123f01d5a943",
+    "turnitover/assets/urdf.py": "766f3045078e2384406714960f9c0c1d438951a486d2dbe9f8b547132ed500ae",
+    "turnitover/checkers/__init__.py": "cb86724a49f2c192bbd5e0e3c0f0ed3107b1b0bda90f37eb298cea243cbad855",
+    "turnitover/checkers/base.py": "1a44b8728c41e896d804865562712aaae8528aa1ca1e5271d101f55ca0ada835",
+    "turnitover/checkers/evidence.py": "f4a8009eb872070db813eb9d42db685e1e5c34a00fae12dd3bdc4af0cf297ae6",
+    "turnitover/checkers/geometry.py": "700a983b6d151f907b100851a6acb6f977358eca44637046a1573b32546c6b92",
+    "turnitover/checkers/meshops.py": "a2225a3079df9ee72f9979c7b6c3b473916b9f66dc83e90068a689db67372e53",
+    "turnitover/checkers/runtime_budget.py": "b143e54b52c899704818959f4fd4c628ec996da13df1890d4335efb0c8d56124",
+    "turnitover/cli.py": "a54d1a6dd2a5524b7cbe7351970e0249dc59a01c2334d4a095e05f7e0b3002f4",
+    "turnitover/config.py": "6d6aee9aa947060879c1fb88da1390828d9e53c982f785ca8dbe53084877d953",
+    "turnitover/core/__init__.py": "f075a98e1ede25479be57f5ff8bc4f450f208b168bce60e50870267d0fe8e6fb",
+    "turnitover/core/actions.py": "dc9746ff09046ab77a8b313c23409502516fb776985b43e82eff844fc89b5cdf",
+    "turnitover/core/jsonio.py": "b95fd641f7ff8b26c2981bfc4879da7807acdb8b18e13e306401b999e491be13",
+    "turnitover/core/program.py": "1fd81b0c262b2de660990e51172939f2bea8166f53e4aedebcd64f617c645e42",
+    "turnitover/core/sample.py": "5fe3ffc2efc3d98ad7c6f316f2caa45f6056570ca2152a91d1f03db83518d549",
+    "turnitover/core/serde.py": "f7a77bfeb147ea0abbf11e2738b6196a90755e196b95daabd87fe2f6d259d1f0",
+    "turnitover/core/spec.py": "eeac480da59f3174acb627aabe019c830dbde5f2509b8afa2c638a18afe19e96",
+    "turnitover/corruptions/__init__.py": "19d7bfe537ae3ff8f1f05acc314e5a6c3b83d137edb6aa3c674c46f2ba35293c",
+    "turnitover/corruptions/base.py": "2fa3308385de58d701255df53c05c846c42f7e0483c463af38fb5366a746fd1f",
+    "turnitover/corruptions/kinematics.py": "67fd9c0d4fdf6c1a903d7c071c0ef5fb4e8ec733aba1479bdff6e304a4288d8c",
+    "turnitover/corruptions/runtime.py": "ab9e55ff2f5beb2a35eea35844679ab0be6680e1bafd4a49e5013888a07ee626",
+    "turnitover/corruptions/structure.py": "9fd6c799c6fee3f7b787db1657e43a0321c0c5b8851c2c3bb45e9148e110d821",
+    "turnitover/dataset/__init__.py": "8b53a8459ba975a60522445d78975f76a3bd59673b96f602dea15e220921322c",
+    "turnitover/dataset/evaluate.py": "863ffba5d833f6c8fc606e8d44fd4a3233b853d0911566577012e3d438185a5c",
+    "turnitover/dataset/prepare.py": "db263c3f4b53cfffc7dc71cebf58882a0ca98889c0d38ba2728b700b3601e809",
+    "turnitover/detectability/__init__.py": "961c1fd0e5d9b942a33defc80a848f5290152f59571d358c7da31b482b40ddc0",
+    "turnitover/detectability/matrix.py": "5d7f0deda8ef77bd469317147811dfe3d4659f9bf4d962e289bc3532e380ccfc",
+    "turnitover/engine/__init__.py": "a3a688afd9c927b26a7a668642e8baab061e71a99f04811a8b4f15518314ac85",
+    "turnitover/engine/generate.py": "8a44132e286ee7329770f7527a43cbdc68da482751ba55ddfe3d45e34e6de100",
+    "turnitover/engine/quality.py": "9f3bfa8d9ffe57f077c5f840ab94d8f94fd92b3d206b59f14ddc30fd423196d3",
+    "turnitover/engine/sharding.py": "5a62c0bf3ea647ad66c98bf2ec13a57d31f5b8aa016f0dd09018dfe7b5f8df9c",
+    "turnitover/media.py": "b6e3d807d7690127d27ee85a68774429c78d64078ecc3f838d51659cb220e8cf",
+    "turnitover/models/__init__.py": "69e1f171cb7bd964dd0252959e329591af2beb519ff1e58c012b42e1f8ddd038",
+    "turnitover/models/client.py": "8ee755ca3fdce9eb9b83230d702fd8768cc6948ad33c07c2fdc21b6f67e7a8c0",
+    "turnitover/models/commands.py": "568509798823f90d87d750eda76a09c0cea9a092fd2c106b648e497fb83db1a4",
+    "turnitover/models/config.py": "5adde427d707fa89b187d31ced30ea88b544ab2f6b7f3327b7653a2ab5e43665",
+    "turnitover/models/generation.py": "ae5e35371ffae6cbacfba62fbb1949ad65958c6fa2628d2337d11289bd03bee3",
+    "turnitover/models/local_qwen.py": "c4e5895dc3ddb77a068edaafeca9a80b4daa2df66f1d2260cb1c151d8d61cf26",
+    "turnitover/oracle/__init__.py": "a41618de180d0c309fb29d3d90bb19bf4c83b5b2bc09ec025d94fd8e62d11636",
+    "turnitover/oracle/ambiguity.py": "3a9b77c96c746a2ab7de478f1e772beeeafd498d44d4477167f34ffe938f38a0",
+    "turnitover/oracle/clean_pass.py": "2dd550be1e9739dcf759c6d50d3647d489322b678420c08922c5cc9b3a9a120b",
+    "turnitover/oracle/diagnosis.py": "0bdfefa9b07bdbaa0d0f25f22d9fbccebbad15c0b1455eb2d51eb8c4004955f3",
+    "turnitover/oracle/episodes.py": "fb0863dd2c94f93b78501b8bf4d46f0ce326667fb77c5cae5b824af462d4da39",
+    "turnitover/oracle/evidence.py": "9bb64b13bf132f98e99df2ca9a9d5998f4a19e119903b5cc83c511012dbc5b5b",
+    "turnitover/oracle/pass_evidence.py": "39f130d195d59ec37340deaed969f69eea099996b562e6b5ff8da906495d3686",
+    "turnitover/oracle/release_sft_export.py": "00df73c84a71839e983a85ec1dae2a87d7397ab356914d54f233fa8d393ac86c",
+    "turnitover/oracle/sft_contracts.py": "59b524a227575e19190b3f9c91b5fa33652cc838d4f1d70b00e00fa517dd6b95",
+    "turnitover/oracle/sft_data.py": "dc94274ab73dd4b902419c1387492a0022a43c269d7848efcba04cf1b2cbb0cb",
+    "turnitover/oracle/sft_metrics.py": "b5c986e076724ae9e46715a21307d7a66fda58bb45b84c4f0d3f84f41e7491d3",
+    "turnitover/oracle/supervision.py": "bbcc58778276455f0ce3d916882a81905ef5fa533ff5345f887b8c502e8f4724",
+    "turnitover/oracle/supervision_validation.py": "94ed0407ded689c174b9230857e9c11e24477e10958272a92f220941feb344f7",
+    "turnitover/oracle/training.py": "77496f63a27a459e2ed2974c01b907242fa2ac075fd788abb0230a3dd1f8bab3",
+    "turnitover/oracle/witnesses.py": "7b34a26e69f29fd10eaa96441e2a3f05ffd1e15eef23ee102cb84b677677f954",
+    "turnitover/policy/__init__.py": "9b552d42eba12785262b8c273df5f9e3dcd8ff3758befde55be7ff8b97a3b813",
+    "turnitover/policy/base.py": "0760c4c55ef8664f4edc8d36778f273390ed318887830ed31a364ca56cdfd773",
+    "turnitover/policy/loop.py": "dfbe82a6cab745e3c03a0603cb167637e97d3223dcac5b2fa2b3099dfb4b16f6",
+    "turnitover/policy/scripted.py": "32475acf4d275d5588fbad514a839e1e83036cc81cb08741e6a54a2d5f18b12b",
+    "turnitover/preview.py": "94eed6f17ddcb45f97bda53552d5576c5302182fdced4f831c6fe5f8a3ed4463",
+    "turnitover/render/__init__.py": "f0466223ed792a2cfe59be51b4db6bef7fb5091c521cd56ab93fa44bf50ccb9e",
+    "turnitover/render/gate.py": "16d7e0216635b6e4aa8ff61176df3a9aecdcd62c966334d70d6578c543bbeec8",
+    "turnitover/render/protocol.py": "93bedda75f01bd80d1d5db5edc0cfa107b70e835ba631cbe71b8483dcee687ec",
+    "turnitover/render/session.py": "ab83de67052303620254e1129341628a7b2f971d6b64edc3d25994a2e81bfa55",
+    "turnitover/render/transpile.py": "c35b7ec9894ece123149a68d6df01301a35a837a508baf190faab3541ff4ee1c",
+    "turnitover/render/views.py": "58cb2b0175cf085c7d41c016b4598f31a6c40ab51cbda70fb95c6ddc9f788187",
+    "turnitover/repair/__init__.py": "6b28a1e5c10682080e6911c5ff1f3f76cdad1c3834c538deeb5fc76ef93ada0f",
+    "turnitover/repair/environment.py": "c4ddf055308a876fb59a498f6d8c5cbabc764cb0b971007b1d892747dbb70918",
+    "turnitover/repair/iterative.py": "5a4eb9a84fef89b16e839a616ff5fdd40d408f3e72a5e5a83d633c3e9498adc2",
+    "turnitover/repair/loop.py": "ff297aa08c8a021f010caa151cf6c8cadaa49aa0194d607edc4efaaa3525096b",
+    "turnitover/repair/patches.py": "5a4fe8716f151dc2bb56005220ff89b422b26ec3293fe8b14c4dd261479de706",
+    "turnitover/storage/__init__.py": "35cce2c1b8337c4f4d893fddcdcb991c160d52ea47de2d2b02d1025a306df2d2",
+    "turnitover/storage/reader.py": "3585da4360ae13f2cc5c881751738276e3687153f8edd30c422a9c1005da0c15",
+    "turnitover/storage/writer.py": "2bec18171310daaa484c0db21175ff72bc19e17f3a0880e5882958f60843290a",
+    "turnitover/taxonomy/__init__.py": "9a1db883b8669c456c5520bce1bedc13cd6ab9ad2e10a239acec629e946fc1ad",
+    "turnitover/taxonomy/render_docs.py": "51ebfdae00d3ed83121327bd8b90f7ac914b397bb32030defc129a7aaf0d8b74",
+    "turnitover/telemetry.py": "13df26b9dc66e01a02f18d22343ae3cf8d0098a0c284bc17f3a676aecceaacfa",
+    "turnitover/verifier/__init__.py": "7b58730580cb791f372ef3b4a2473f98cfcb0dbe8964e0993142ca5ebc3324a0",
+    "turnitover/verifier/audit.py": "33ab91de1b997b1e75a45352891354c0506cbd8928eef7d50146aed7e56da133",
+    "turnitover/verifier/contracts.py": "7342f9c9dcd2646a463c9a776427d62688c646b0cd4cd5bf93f494796fea7481",
+    "turnitover/verifier/gt_validator.py": "7eb518a75512f862fa923243802d3a495a780dc5ef05228ba4de57c806f4e3dc",
+    "turnitover/verifier/loop.py": "77be10b501e865051a03cc946027590ae5e4c6b96119721c2cdb5b0f78c22a2b",
+    "turnitover/verifier/policies.py": "273051c5fee1f596cc59a0bc5e1be93ce9aeff667b9631ad275a9e5cbe746c91",
+    "turnitover/verifier/report.py": "577ea7fa0ebf72e70985941864c2fa82963a93c84997d1ed0bb1cbe6608f93a4",
+    "turnitover/verifier/runner.py": "0c23cf53236e962cf08576f292f7d18a0675f0b522899f673592f9d8087a316a",
+    "turnitover/verifier/scoring.py": "a539a9cfb44a47b18e6f108154eb73d5dd780cadd51d1b8ee42abc70c5ec638b",
+    "configs/detectability_toy.yaml": "eb6011d07ef4b7de07cfd5ba3b376e2d741b63afc910f09227a62f51eefa8bbc",
+    "configs/generate_dataset.yaml": "d5698dcc4793d8e45d53eefc98e4916ac41c881c4d4ed414e5209276a9cfec5a",
+    "configs/generate_replicacad.yaml": "778fa77762f6baeecc8aec731597d4414eb776c5e9f2b7a3966de7b2ee6ce5be",
+    "configs/generate_toy.yaml": "a357964b74c394eacdfc4f8bbb71eb10e19d973dd733f0a5e03f2a4b1a8f94ac",
+    "configs/generate_uniphys40k_sft_smoke.yaml": "3768c55137573ab8081ed23797949e4beb53835140df2ae06055e60c889407bc",
+    "configs/generate_uniphys_supervision.yaml": "2c984bea963753a4f705b11880628cf3ccea42e7edab40c950a30cf1fbe348ab",
+    "configs/partnet-mobility-sft-v1.json": "82e79b7f1b447f8475018ad90a3b1019028259775fbbba07a0173cd8b622e812",
+    "configs/uniphys-test.json": "3623a753cdcf5063090e91e414f335b08cce9d38e57ca63e1a7eb04e0a44eb99",
+    "configs/uniphys-trainval-v1.json": "2fc0294458cf2147e3c654250fc1864f2c1fc42418e6f0a488712f9f1e2f48e1",
+    "configs/uniphys40k-trainval-v2.json": "cc0e379a7a46d66c1b03cd64cd40d8bac54178b10117c95a1dfaeebecac68949",
+    "configs/uniphys40k-v2-failure-audit.json": "4c73feb1e7bdf789de50dbb32d39a083ef17f568ebc0fb0a9843c4dcace34849",
+    "configs/views.yaml": "2ffc104f9a13d11c6f7a752179e96367c01f77187397cdbb774e7ec49fd77cce",
+    "web/src/camera.ts": "96787912fe7e6bb782626767b4ded1af0721c41ba52201ff9819bae997e6b526",
+    "web/src/export.ts": "d7504c63d2b902dac0f9d96f0f14e7b47360f33b1c2f96863196c9c7cdd9c039",
+    "web/src/harness.ts": "978be28012c0d8f04894828f56eed1637109c65e17cc1bb6c6eac9f89a2e9edf",
+    "web/src/index.html": "c05a6cfbdea91769c32f5955d6658e03ca2af4752ec87b7d7bf3db1711f5e8a7",
+    "web/src/program_abi.ts": "1c6fc047ca5101a769583b8041de0464c1d1f3c28676311d6e4aed0030bb9b8e",
+    "web/src/protocol.ts": "f6150351a0f77984032eace13a3e392f29ad304409e79d48b6ead3d397b2410b",
+    "web/src/stats.ts": "c5ef17eb77a367a491d4fd1cb36dcf3aeb4f70757a6241cafbdc2a7ce2930ce9",
+    "web/src/three-entry.ts": "8e1595d32d22e7ada828b6023f51c9e41bc3ba6c3d8ceb9c75612ab9020ab9e6"
+  }
+}

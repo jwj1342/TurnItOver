@@ -1,0 +1,19 @@
+{
+  "status": "frozen",
+  "version": 1,
+  "scope": "Physical parameters in the declared parent-part frame; overall success remains the unchanged independent geometry/runtime test",
+  "part_offset": "effective rest position = anchor + joint_frame @ local_position; no-joint position otherwise",
+  "part_rotation": "effective rest rotation = joint_frame @ local_part_rotation",
+  "joint_axis": "undirected parent-frame axis line orientation; direction sign tested separately",
+  "direction_flip": "same aligned signed parent-frame motion direction; a wrong axis cannot count as a corrected direction",
+  "joint_anchor": "revolute anchor point distance to reference axis line; displacement along that line is physically equivalent",
+  "roundoff_tolerances": {
+    "position_linf_m": 1e-09,
+    "rotation_matrix_linf": 1e-09,
+    "axis_sine_error": 1e-06
+  },
+  "unknown": "Non-executable program or unsupported source semantics -> null, retain in denominator and separately report coverage/bounds",
+  "initial_equivalence": "Original finding already physically equivalent under the independent predicate -> null for every method; never award repair credit or remove the case",
+  "exposure": "Initial per-finding visible Gold counterfactual evidence, frozen before model runs; rest9/motion42/unexposed3",
+  "interpretation": "Strict original physical-parameter restoration, not perceptual tolerance or overall program correctness"
+}

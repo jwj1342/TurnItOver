@@ -1,0 +1,31 @@
+{
+  "repair": {
+    "python": "3.12.3",
+    "numpy": "2.4.2",
+    "scipy": "1.18.1",
+    "trimesh": "5.2.1",
+    "pyyaml": "6.0.3",
+    "pillow": "13.0.0",
+    "playwright": "1.58.0",
+    "openhands-sdk": "1.62.0",
+    "pydantic": "2.14.3",
+    "litellm": "1.105.7"
+  },
+  "inference": {
+    "python": "3.11.15",
+    "numpy": "2.2.6",
+    "scipy": "1.17.1",
+    "pyyaml": "6.0.3",
+    "pillow": "12.1.1",
+    "pydantic": "2.12.5",
+    "torch": "2.10.0+cu128",
+    "transformers": "5.5.0",
+    "peft": "0.18.0",
+    "accelerate": "1.15.0"
+  },
+  "harness": {
+    "index.html": "06220eedfd10d170188df320c8f4616c00f69f4d3942eccd565e0c7af6dfc673",
+    "three.esm.js": "c230f541f35b300e493b398ed588c399cc03b9bc3b3a30d12d25bec7748344f0",
+    "harness.js": "492ba080139dba50ed77bd2cb82c708a050661392b6f18d67fe4d8a97b0a74c9"
+  }
+}

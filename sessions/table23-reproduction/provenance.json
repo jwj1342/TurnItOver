@@ -1,0 +1,32 @@
+{
+  "base_commit": "89e07db82890af02ae651dcd8b86082981fb7d1b",
+  "dataset_manifest_sha256": "b64e50f027a8788554f9248b6aa7da51b4010e16103f3ffafc9e6bb41806179b",
+  "runtime_hash_normalization": "CRLF converted to LF for Python source only",
+  "runtime_files": {
+    "turnitover/core/__init__.py": "f075a98e1ede25479be57f5ff8bc4f450f208b168bce60e50870267d0fe8e6fb",
+    "turnitover/core/actions.py": "dc9746ff09046ab77a8b313c23409502516fb776985b43e82eff844fc89b5cdf",
+    "turnitover/core/program.py": "1fd81b0c262b2de660990e51172939f2bea8166f53e4aedebcd64f617c645e42",
+    "turnitover/core/spec.py": "eeac480da59f3174acb627aabe019c830dbde5f2509b8afa2c638a18afe19e96",
+    "turnitover/oracle/__init__.py": "a41618de180d0c309fb29d3d90bb19bf4c83b5b2bc09ec025d94fd8e62d11636",
+    "turnitover/oracle/evidence.py": "9bb64b13bf132f98e99df2ca9a9d5998f4a19e119903b5cc83c511012dbc5b5b",
+    "turnitover/oracle/witnesses.py": "7b34a26e69f29fd10eaa96441e2a3f05ffd1e15eef23ee102cb84b677677f954"
+  },
+  "table3_bundle_files": {
+    "views.json": "b082d57193e0dbfd4262bc332f7703d075502ccd4553248783011eb384ec0193",
+    "runtime/harness.js": "492ba080139dba50ed77bd2cb82c708a050661392b6f18d67fe4d8a97b0a74c9",
+    "runtime/three.esm.js": "c230f541f35b300e493b398ed588c399cc03b9bc3b3a30d12d25bec7748344f0"
+  },
+  "original_script_sha256": {
+    "table2/evaluate_table2.py": "3b9f8e41e5abbaf5310408f9addfc52566df7346306821f21a909003870cc545",
+    "table2/table2_projection.py": "22818d35ec503306779cd450a2dfb33eb1e70c0027cee63a99c8fd9560389b93",
+    "table3/run_table3.py": "24273b8fa1452f083dbb737a8b14c1f4407e5d708b97bec07fb38607ae8fedf3",
+    "table3/planner.py": "8c271b03f2b33f5fefe1196f386c3525465082bd63e49a5a2a57cd0f7ec4d2b3",
+    "table3/summarize.py": "5a831879033a0fc4d1b167e27d0b491d1650d2f0b18a1d794c9336e3d2921d67",
+    "table3/audit_results.py": "6b75915d191dc06d51e4e28485d00f3e78324c4ada405bbcdff0af7d1bd03823",
+    "table3/test_analysis.py": "fc87ddac88df0088ed7614aa3a3a503191757cf5c51e3773364bfb9292091db1",
+    "table3/index.html": "9e3c9889c6a182a38c7d8e0862d7f8617b81f8344c901b88b7da406a7f3e4994",
+    "table3/browser.py": "8abd0474d4529518c7abd96b58313a7273f44c87764aa286f4831dcca5753749",
+    "table2/visibility.py": "f987fedfa8d1b5912edeaef1e69ff1afedc9e40e0f3d4de744b473e8a82921ff"
+  },
+  "changes": "browser.py: browser executable selection and Windows creation flags only. visibility.py: input/output CLI only. Other archived scripts are byte-for-byte copies. prepare_table3.py and summarize_table2.py are new utilities."
+}
