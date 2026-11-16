@@ -7,7 +7,7 @@
 #           GEN_PROXY (http://user:token@host:port, used only for the generator API), PROBE_URL (curl probe at start),
 #           GEN_NO_PROXY (comma list of hosts, e.g. the in-cluster vLLM node, that bypass the prolog's http_proxy),
 #           TIO_GENERATOR_RETRY_BUDGET_S (seconds of retries per generator call, default 1800),
-#           JUDGE_SEED (training seed of the ours_* adapters, default 20261013),
+#           JUDGE_SEED (training seed of the ours_* adapters, default 20261013), PARALLEL (runner processes, default 1),
 #           TIO_RUNS (default <repo>/tio-runs), TIO_MODELS (default <repo>/models).
 # Exit status is the runner's: non-zero if any episode ended in generator_error (resubmit to rerun those).
 set -uo pipefail
@@ -57,12 +57,24 @@ EXTRA+=(--config "$CONFIG")
 [ -n "${GENERATOR_MODEL:-}" ] && EXTRA+=(--generator-model "$GENERATOR_MODEL")
 [ -n "${LIMIT:-}" ] && EXTRA+=(--limit "$LIMIT")
 [ -n "${CASE_IDS_FILE:-}" ] && CASE_IDS="$CASE_IDS $(grep -v '^#' "$CASE_IDS_FILE" | tr '\n' ' ')"
-[ -n "${CASE_IDS// /}" ] && EXTRA+=(--case-ids $CASE_IDS)
 # her 58-case pack: labels and per-cell exposure come from the 900 export
 EXPORT900=${EXPORT900:-$TIO_RUNS/data900/three-tier-900-sft-v1/episode_export}
 [ "$PACK" = 1 ] && EXTRA+=(--labels "$EXPORT900/annotations.private.jsonl" --episodes "$EXPORT900/validation.episodes.jsonl")
-python scripts/run_repair_table.py --cases "$CASES" --out "$OUT" --judges $JUDGES --generator "$GENERATOR" \
-  --rounds "${ROUNDS:-3}" "${MODEL_ARGS[@]}" "${EXTRA[@]}"
-rc=$?
+# PARALLEL=P runs P runner processes over disjoint groups of the case list; they share the GPU (each loads its own judge
+# weights) and the output directory, as separate shard jobs already do.
+ids=($CASE_IDS)
+P=${PARALLEL:-1}
+[ "$P" -gt 1 ] && [ ${#ids[@]} = 0 ] && { echo "PARALLEL needs CASE_IDS or CASE_IDS_FILE"; exit 2; }
+pids=()
+for p in $(seq 0 $((P - 1))); do
+  group=()
+  for i in "${!ids[@]}"; do [ $((i % P)) = "$p" ] && group+=("${ids[$i]}"); done
+  [ ${#ids[@]} -gt 0 ] && [ ${#group[@]} = 0 ] && continue
+  python scripts/run_repair_table.py --cases "$CASES" --out "$OUT" --judges $JUDGES --generator "$GENERATOR" \
+    --rounds "${ROUNDS:-3}" "${MODEL_ARGS[@]}" "${EXTRA[@]}" ${group[@]:+--case-ids "${group[@]}"} &
+  pids+=($!)
+done
+rc=0
+for pid in "${pids[@]}"; do wait "$pid" || rc=$?; done
 echo "RUN DONE $(date -Is) exit=$rc"
 exit $rc
