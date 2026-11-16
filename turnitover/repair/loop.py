@@ -174,7 +174,7 @@ def run_repair(initial: str, generator: Callable[[str, list[Path]], ModelResult]
                       observation_cost=observation_cost, teacher_renders=teacher_cost, total_tokens=tokens,
                       quality_gain_per_token=(scores[-1]-scores[0])/tokens if tokens else None)
         (output/'final.ts').write_text(source)
-    except ModelError as exc:   # only the generator raises ModelError; the runner continues with the next episode
+    except ModelError as exc:   # the generator (or an API judge) failed; the runner continues with the next episode
         report.update(status='generator_error', error=str(exc), rounds=ledger)
     except Exception as exc:
         report.update(error_type=type(exc).__name__, rounds=ledger)

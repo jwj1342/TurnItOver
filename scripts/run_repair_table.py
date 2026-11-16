@@ -26,7 +26,7 @@ from turnitover.models.config import model_config, read_environment
 from turnitover.render.session import ObservationSession
 from turnitover.render.views import load_views
 from turnitover.repair.environment import RepairEnvironment
-from turnitover.repair.judges import PACK_FORMAT, Case, judge_from_id, load_pack
+from turnitover.repair.judges import PACK_FORMAT, ApiJudgeModel, Case, judge_from_id, load_pack
 from turnitover.repair.loop import run_repair
 from turnitover.repair.patches import PLACEHOLDER, elide
 
@@ -101,7 +101,8 @@ def main() -> None:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--config", type=Path, default=Path("configs/generate_replicacad.yaml"))
     parser.add_argument("--judges", nargs="+", required=True,
-                        help="none pixel zs8b_screenshot zs8b_sweep ours_2b_ordinary ours_2b_evidence ours_8b_evidence gold")
+                        help="none pixel zs8b_screenshot zs8b_sweep zsapi_screenshot zsapi_sweep ours_2b_ordinary "
+                             "ours_2b_evidence ours_8b_evidence gold (zsapi_*: zero-shot judge behind the TIO_JUDGE_* API)")
     parser.add_argument("--generator", default="api", help="api | scripted-stop | scripted-fix")
     parser.add_argument("--generator-model", help="model id for the api generator, overrides TIO_GENERATOR_MODEL")
     parser.add_argument("--generator-id", help="name used in output paths; default derived from the model id")
@@ -117,7 +118,12 @@ def main() -> None:
     args = parser.parse_args()
 
     adapters = {k: Path(v) for k, v in (item.split("=", 1) for item in args.adapter)}
-    judges = [judge_from_id(j, args.model_root, adapters) for j in args.judges]
+    api_model = None
+    if any(j.startswith("zsapi_") for j in args.judges):
+        judge_config = model_config("judge", read_environment(args.env_file))
+        judge_config.validate()
+        api_model = ApiJudgeModel(judge_config, complete_with_retry)
+    judges = [judge_from_id(j, args.model_root, adapters, api_model) for j in args.judges]
     cfg = load_generate_config(args.config)
     pack_manifest = args.cases / "manifest.json"
     if pack_manifest.exists() and json.loads(pack_manifest.read_text()).get("format") == PACK_FORMAT:

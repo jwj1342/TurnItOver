@@ -220,3 +220,23 @@ def test_real_pack_loads_with_training_cell_names():
         expected = sorted(p.split("/")[-1] for c in entries[case.uid]["observation_cells"] for p in (c["reference_image"], c["candidate_image"]))
         assert sorted(names) == expected, case.uid
         assert any(len(x) for x in case.exposures), case.uid     # every pack case has an exposed label (index 0 is falsy)
+
+
+def test_api_judge_model_is_a_zero_shot_vlm_judge():
+    from turnitover.models.client import ModelResult
+    from turnitover.models.config import model_config
+    config = model_config("judge", {"TIO_JUDGE_PROVIDER": "openai_compatible", "TIO_JUDGE_MODEL": "big-vlm",
+                                    "TIO_JUDGE_BASE_URL": "http://node1:8000/v1", "COMPATIBLE_API_KEY": "k"})
+    calls = []
+    def call(cfg, prompt, images):
+        calls.append((cfg.model, prompt, images))
+        return ModelResult('{"verdict": {}}', "big-vlm", {"input_tokens": 3, "output_tokens": 2}, "completed", 5.0)
+    model = judges.ApiJudgeModel(config, call)
+    assert model("p", [Path("a.png")]) == ('{"verdict": {}}', {"input_tokens": 3, "output_tokens": 2,
+                                                             "finish_reason": "completed", "elapsed_ms": 5.0})
+    assert calls == [("big-vlm", "p", [Path("a.png")])]
+    assert "node1" not in json.dumps(model.identity)          # verdict cache key does not depend on the replica
+    judge = judges.judge_from_id("zsapi_sweep", None, {}, model)
+    assert isinstance(judge, VlmJudge) and judge.mode == "sweep" and judge.describe()["api_model"] == "big-vlm"
+    with pytest.raises(ValueError):
+        judges.judge_from_id("zsapi_sweep", None, {})

@@ -322,6 +322,21 @@ class JudgeModel:
                       "elapsed_ms": (time.perf_counter() - start) * 1000}
 
 
+class ApiJudgeModel:
+    """A judge model behind an API (the TIO_JUDGE_* settings, e.g. a large open VLM served by vLLM), called with the same
+    prompt and images as the local judges. `call(config, prompt, images) -> ModelResult` is the caller's retrying
+    completion; a ModelError it raises ends the episode like a generator failure (status generator_error, rerun on resume)."""
+
+    def __init__(self, config, call: Callable):
+        self.config, self.call = config, call
+        self.identity = {"api_model": config.model, "provider": config.provider, "max_tokens": config.max_tokens,
+                         "chat_template_kwargs": config.chat_template_kwargs}
+
+    def __call__(self, prompt: str, images: list[Path]) -> tuple[str, dict]:
+        result = self.call(self.config, prompt, images)
+        return result.text, {**result.usage, "finish_reason": result.finish_reason, "elapsed_ms": result.elapsed_ms}
+
+
 def pixel_difference(reference: Path, candidate: Path) -> float:
     with Image.open(reference) as a, Image.open(candidate) as b:
         a, b = a.convert("RGB"), b.convert("RGB")
@@ -486,7 +501,8 @@ class GoldJudge(Judge):
         return observe
 
 
-def judge_from_id(judge_id: str, model_root: Path | None, adapters: dict[str, Path]) -> Judge:
+def judge_from_id(judge_id: str, model_root: Path | None, adapters: dict[str, Path],
+                  api_model: ApiJudgeModel | None = None) -> Judge:
     if judge_id == "none":
         return NoneJudge()
     if judge_id == "pixel":
@@ -497,6 +513,10 @@ def judge_from_id(judge_id: str, model_root: Path | None, adapters: dict[str, Pa
         if model_root is None:
             raise ValueError("--model-root is required for VLM judges")
         return VlmJudge(judge_id, JudgeModel(model_root / "Qwen3-VL-8B-Instruct"), judge_id.removeprefix("zs8b_"))
+    if judge_id.startswith("zsapi_"):
+        if api_model is None:
+            raise ValueError("zsapi_ judges need the TIO_JUDGE_* settings")
+        return VlmJudge(judge_id, api_model, judge_id.removeprefix("zsapi_"))
     if judge_id.startswith("ours_"):
         size = judge_id.split("_")[1].upper()
         if judge_id not in adapters or model_root is None:
