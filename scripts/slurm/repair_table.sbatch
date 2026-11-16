@@ -7,6 +7,7 @@
 #           GEN_PROXY (http://user:token@host:port, used only for the generator API), PROBE_URL (curl probe at start),
 #           GEN_NO_PROXY (comma list of hosts, e.g. the in-cluster vLLM node, that bypass the prolog's http_proxy),
 #           TIO_GENERATOR_RETRY_BUDGET_S (seconds of retries per generator call, default 1800),
+#           JUDGE_SEED (training seed of the ours_* adapters, default 20261013),
 #           TIO_RUNS (default <repo>/tio-runs), TIO_MODELS (default <repo>/models).
 # Exit status is the runner's: non-zero if any episode ended in generator_error (resubmit to rerun those).
 set -uo pipefail
@@ -36,7 +37,8 @@ if need 'zs8b_*' || need 'ours_*'; then
   sizes=""; need 'zs8b_*' && sizes="8B"; need 'ours_2b_*' && sizes="$sizes 2B"; need 'ours_8b_*' && sizes="$sizes 8B"
   for size in $(echo $sizes | tr ' ' '\n' | sort -u); do cp -r "$TIO_MODELS/Qwen3-VL-$size-Instruct" "$SLURM_TMPDIR/models/" || exit 4; done
   MODEL_ARGS+=(--model-root "$SLURM_TMPDIR/models")
-  declare -A SRC=( [ours_2b_evidence]=2B/seed20261013/evidence [ours_2b_ordinary]=2B/seed20261013/ordinary [ours_8b_evidence]=8B/seed20261013/evidence )
+  seed=seed${JUDGE_SEED:-20261013}
+  declare -A SRC=( [ours_2b_evidence]=2B/$seed/evidence [ours_2b_ordinary]=2B/$seed/ordinary [ours_8b_evidence]=8B/$seed/evidence )
   for name in "${!SRC[@]}"; do
     need "$name" || continue
     size=${SRC[$name]%%/*}
