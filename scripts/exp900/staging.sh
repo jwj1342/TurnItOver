@@ -37,3 +37,13 @@ date -Is > $S/GENERATED_AT.txt
 for v in v11 v1; do   # split paper_repair.py output into its three tables
   awk -v p=$S/repair-$v '/^% repair.tex/{f="main"} /^% repair_breakdown.tex/{f="breakdown"} /^% repair_cost.tex/{f="cost"} /^% per run/{f=""} f && !/^%/ {print > (p "-" f ".tex")}' $S/repair-$v-rows.tex
 done
+python - > $S/pixel.tex <<'PY'
+import json
+parts = []
+for split in ("validation", "test"):
+    m = json.load(open(f"tio-runs/out/level900v11-pixel/{split}/metrics.json"))
+    v = m["validation"]
+    parts.append(f"{split} {100 * v['status_accuracy']:.1f}\\% ({v['n']} cases, threshold {m['threshold']:g} fit on train)")
+print("\\textbf{Pixel-difference status baseline (no model):} pass/fail status accuracy " + "; ".join(parts)
+      + ". Clean candidates are byte-identical to their references, so status metrics do not measure understanding.")
+PY
