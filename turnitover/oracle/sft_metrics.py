@@ -10,7 +10,7 @@ from turnitover.oracle.sft_contracts import parse_stopping
 from turnitover.verifier.contracts import Context, parse_decision, parse_json
 from turnitover.taxonomy import load_taxonomy
 
-PROTOCOL_VERSION = "fixed-observation-v1"
+PROTOCOL_VERSION = "fixed-observation-v1.1-clean-pass"
 
 
 def public_input_digest(records):
@@ -135,6 +135,18 @@ def summarize(rows, task="diagnosis", defect_ids=None):
     clean_rows = [row for row in rows if row["clean"] is True]
     unsafe_rows = [row for row in rows if row["expected_status"] != "pass"]
     joint_rows = [row for row in rows if row["open_joint_localization"]]
+    defective_rows = [row for row in rows if row["clean"] is False]
+    uncertain_rows = [row for row in rows if row["expected_status"] == "uncertain"]
+    report.update(
+        clean_pass_count=sum(row["predicted_status"] == "pass" for row in clean_rows),
+        clean_pass_rate=_ratio(sum(row["predicted_status"] == "pass" for row in clean_rows), len(clean_rows)),
+        abstention_count=sum(row["predicted_status"] == "uncertain" for row in rows),
+        abstention_rate=sum(row["predicted_status"] == "uncertain" for row in rows) / n,
+        expected_uncertain_cases=len(uncertain_rows),
+        uncertain_recall=_ratio(sum(row["predicted_status"] == "uncertain" for row in uncertain_rows), len(uncertain_rows)),
+        true_defective_cases=len(defective_rows),
+        defective_false_pass_count=sum(row["predicted_status"] == "pass" for row in defective_rows),
+        defective_false_pass_rate=_ratio(sum(row["predicted_status"] == "pass" for row in defective_rows), len(defective_rows)))
     report.update(status_accuracy=sum(row["predicted_status"] == row["expected_status"] for row in rows) / n,
                   exact_verdict_accuracy=sum(row["valid"] and row["predicted_status"] == row["expected_status"] and _sets(row, "expected_findings") == _sets(row, "predicted_findings") for row in rows) / n,
                   defect_macro_f1=sum(f1s) / len(f1s) if f1s else None,

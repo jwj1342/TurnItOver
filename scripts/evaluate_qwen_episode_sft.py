@@ -64,7 +64,11 @@ def evaluate(dataset: Path, model_path: Path, output: Path, *, adapter: Path | N
     effective_generation = {key: value for key, value in generation_config.to_dict().items()
                             if key not in ("_from_model_config", "_commit_hash", "transformers_version")}
     effective_generation_sha = hashlib.sha256(json.dumps(effective_generation, sort_keys=True).encode()).hexdigest()
-    protocol = {"effective_generation_config_sha256": effective_generation_sha, "defect_ids": defect_ids, "processor_sha256": processor_sha, "device": device, "version": PROTOCOL_VERSION, "task": task, "split": split,
+    admission_counts = manifest.get("label_revision_counts", {}).get(split, {})
+    protocol = {"raw_cases": admission_counts.get("raw_cases", len(records)),
+                "excluded_pending_adjudication": admission_counts.get("quarantined_cases", 0),
+                "label_policy": manifest.get("label_policy"),
+                "effective_generation_config_sha256": effective_generation_sha, "defect_ids": defect_ids, "processor_sha256": processor_sha, "device": device, "version": PROTOCOL_VERSION, "task": task, "split": split,
                 "dataset_version": manifest.get("dataset_version", manifest.get("run_id", manifest.get("version"))),
                 "dataset_manifest_sha256": _sha256(dataset / "manifest.json"),
                 "annotations_sha256": _sha256(dataset / "annotations.private.jsonl"),

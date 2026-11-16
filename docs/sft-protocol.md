@@ -26,6 +26,8 @@ python -m pip install -r requirements-qwen.txt
 
 ## 数据契约与审核边界
 
+`three-tier-900-sft-v1.1` 继续使用本分支原训练/评测入口；三态诊断任务无需更换训练框架或 Python 环境。它保留 Train/Validation/Test 原始 600/120/180 例，16 个 Validation 分歧案例由加载器隔离，默认实际分母为 104。所有条件采用相同准入与 Evidence 评测标准；数据 manifest SHA256 为 `b64e50f027a8788554f9248b6aa7da51b4010e16103f3ffafc9e6bb41806179b`。私有数据和审核回件通过 Release 获取，不放入公开代码仓库。
+
 调用者必须提供已审核导出的 manifest SHA-256；摘要匹配只验证版本身份，不能代替审核。`manifest.json` 必须 `status=complete` 且 `formal_training=true`。诊断读取 `<split>.episodes.jsonl` 的 terminal 行；停止读取 `<split>.stopping.jsonl` 的因果前缀。train 只消费 Train 目标。split 审计检查现有导出文件的来源元数据，不把 Validation/Test 目标交给模型或优化器。没有导出的 split 无法据此验证；发布数据时应提供完整 split 元数据。
 
 每行需要 `id`、`episode_id`、`images`、逐图 `image_sha256`、`data_identity` 和一对 user/assistant 消息。`data_identity` 包含 `source_dataset`、`source_asset_id`、`asset_id`、`split_group`、64 位来源身份/内容 SHA、16 位 reference/candidate 程序 SHA 和 `formal_training`。公开 payload 放在 user 消息最后一行 JSON，包含 `context`、`history`、`image_order`，图片顺序必须等于 reference 加历史实际观察。路径必须留在 dataset 根目录内；绝对路径、逃逸根目录的目录穿越及 symlink 均拒绝。图片内容逐张核对 SHA。来源身份相互矛盾、同一原物体跨 split、重复样本或公共观察与图片不一致时拒绝加载。
@@ -38,7 +40,7 @@ python -m pip install -r requirements-qwen.txt
 
 ## 监督与 loss
 
-`--task diagnosis` 和 `--task stopping` 分别运行，不混合优化。`--supervision ordinary|evidence` 使用相同公开输入、图片与顺序；区别只在诊断 assistant 目标。Ordinary 从同身份的私有注入标签构造最终诊断，不按可见曝光筛选；Evidence 校验审核曝光，仅监督已观察证据支持的 findings。Stopping 的两种模式共用同一因果前缀目标。未观察到缺陷、空隐藏标签或预算耗尽均不能单独产生 `pass`；当前导出不提供正向 pass 证据。
+`--task diagnosis` 和 `--task stopping` 分别运行，不混合优化。`--supervision ordinary|evidence` 使用相同公开输入、图片与顺序；区别只在诊断 assistant 目标。Ordinary 从同身份的私有注入标签构造最终诊断，不按可见曝光筛选；Evidence 校验审核曝光，仅监督已观察证据支持的 findings。Stopping 的两种模式共用同一因果前缀目标。未观察到缺陷、空隐藏标签或预算耗尽均不能单独产生 `pass`。旧导出不提供正向 pass 依据；`three-tier-900-sft-v1.1` 对满足参考身份与完整冻结观测核验的 clean 提供绑定输入的私有 pass 认证，Ordinary/Evidence 共用 clean→pass 规则。具体准入与版本映射见 [v1.1 发布说明](three-tier-v1.1-release.md)。
 
 私有注入标签和曝光元数据只供构造/审计目标，不进入 user prompt。Evidence support 指标是与审核曝光目标及引用步骤的一致性，不能称为独立人工 grounding。Ordinary 与 Evidence 的目标长度会不同，不宣称 token 监督量相等。
 

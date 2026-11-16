@@ -48,11 +48,26 @@ def load_examples(root, split, kind="actions", *, require_formal_training=False,
         raise ValueError("Unknown supervision kind")
     if require_formal_training and manifest.get("formal_training") is not True:
         raise ValueError("Refusing non-formal training data")
+    if manifest.get("label_policy"):
+        from turnitover.oracle.clean_pass import POLICY
+        if manifest["label_policy"] != POLICY:
+            raise ValueError("Unsupported label policy")
+        for relative in ("annotations.private.jsonl", f"{split}.{kind}.jsonl"):
+            expected = manifest.get("files", {}).get(relative)
+            if not expected or hashlib.sha256((root / relative).read_bytes()).hexdigest() != expected:
+                raise ValueError("v1.1 metadata SHA mismatch")
     if kind in ("episodes", "stopping"):
         audit_split_identities(root, kind, manifest)
     with (root / f"{split}.{kind}.jsonl").open() as stream:
         for line in stream:
             record = json.loads(line)
+            if manifest.get("label_policy"):
+                if record.get("label_policy") != manifest["label_policy"]:
+                    raise ValueError("Record label policy differs from manifest")
+                if record.get("admission") == "quarantined_pending_adjudication":
+                    continue
+                if record.get("admission") != "eligible":
+                    raise ValueError("Missing v1.1 admission")
             if terminal_only and not record.get("terminal"):
                 continue
             if kind in ("episodes", "stopping"):

@@ -4,6 +4,10 @@
 
 当前已实现合成数据引擎、无头浏览器观测、确定性检查器、截图与视频导出、按角色配置的模型 API，以及支持主动、固定、随机观测的 verifier（验证器）。另有单次照片到程序的生成入口和离线运行时检查基线。已完成真实资产小型 benchmark、自动监督导出及 GPT-5.6 Sol 四条件修复试验。评判器训练、完整 RP oracle 上界与真实照片评测尚未完成。
 
+## 三层 900 诊断数据 v1.1
+
+[#10](https://github.com/jwj1342/TurnItOver/issues/10#issuecomment-6904414090) 的 900 例诊断实验继续使用 `laq/three-tier-900-sft-export` 分支及原训练/评测入口。本分支已兼容 5 类三层数据 `three-tier-900-sft-v1.1` 的 pass/fail/uncertain 标签、clean 认证和待裁决案例隔离；数据附件及固定代码版本见 [v1.1 说明](docs/three-tier-v1.1-release.md)。离线 runtime 附件是代码快照，无需为此更换训练框架或环境。此次未重跑训练。
+
 ## 当前研究进展
 
 合作者请先读 [研究状态与接手指南](docs/research-status.md)：包含研究问题、已验证证据、结论边界、下一轮完成标准和从零复现顺序。

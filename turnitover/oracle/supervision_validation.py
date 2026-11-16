@@ -11,7 +11,8 @@ def _reject_private_fields(value):
     """Reject known teacher-only metadata, including inside observation payloads."""
     private = {"labels", "corruptions", "exposures", "witness_indices", "data_identity",
                "future_history", "private_target", "teacher_metadata", "ground_truth",
-               "covered_label_indices", "uncovered_label_indices", "gold"}
+               "covered_label_indices", "uncovered_label_indices", "gold",
+               "pass_certificate", "is_clean", "human_review", "admission", "label_policy"}
     if isinstance(value, dict):
         if private.intersection(value):
             raise ValueError("Private teacher metadata in public input")

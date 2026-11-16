@@ -43,7 +43,7 @@ def _annotations(root: Path, split: str) -> dict[str, dict]:
     rows = {}
     for line in (root / "annotations.private.jsonl").read_text(encoding="utf-8").splitlines():
         row = json.loads(line)
-        if row["split"] != split:
+        if row["split"] != split or row.get("admission", "eligible") != "eligible":
             continue
         if row["id"] in rows:
             raise ValueError(f"Duplicate private annotation: {row['id']}")
@@ -86,6 +86,10 @@ def _ordinary_target(record: dict, annotation: dict) -> dict:
                 "This ordinary diagnosis target is not filtered by the current visual evidence."
             ],
         }
+    elif annotation.get("pass_certificate"):
+        from turnitover.oracle.clean_pass import validate_clean_pass, clean_verdict
+        validate_clean_pass(record, annotation)
+        verdict = clean_verdict()["verdict"]
     else:
         verdict = {
             "status": "uncertain", "confidence": 0.0, "findings": [],
@@ -152,6 +156,13 @@ def validate_target(record, task, supervision="evidence", annotation=None):
     if annotation is None:
         raise ValueError("Supervision needs audited annotations for validation")
     labels = annotation["labels"]
+    if record.get("label_policy"):
+        from turnitover.oracle.clean_pass import POLICY
+        if (record["label_policy"] != POLICY or annotation.get("label_policy") != POLICY
+                or record.get("admission") != "eligible" or annotation.get("admission") != "eligible"
+                or record.get("is_clean") is not (not labels)
+                or annotation.get("is_clean") is not (not labels)):
+            raise ValueError("Inconsistent v1.1 labels or admission")
     if (not isinstance(covered, list)
             or any(type(index) is not int or not 0 <= index < len(labels) for index in covered)
             or len(set(covered)) != len(covered)):
@@ -160,7 +171,8 @@ def validate_target(record, task, supervision="evidence", annotation=None):
         verdict = parse_decision(target, Context(**payload["context"]),
                                  {row["step"] for row in payload["history"]}, final_only=True)
         if verdict.status == "pass":
-            raise ValueError("These exports do not establish positive pass evidence")
+            from turnitover.oracle.clean_pass import validate_clean_pass
+            validate_clean_pass(record, annotation)
         if supervision == "evidence":
             expected = {_label_key(labels[index]) for index in covered}
             actual = {(f.defect_id, tuple(f.parts), f.joint_id) for f in verdict.findings}
@@ -169,7 +181,10 @@ def validate_target(record, task, supervision="evidence", annotation=None):
     else:
         from turnitover.oracle.sft_contracts import parse_stopping
         decision = parse_stopping(target)
-        if decision["outcome"] == "pass" or (decision["outcome"] == "fail" and not covered):
+        if decision["outcome"] == "pass":
+            from turnitover.oracle.clean_pass import validate_clean_pass
+            validate_clean_pass(record, annotation)
+        if decision["outcome"] == "fail" and not covered:
             raise ValueError("Stop outcome lacks audited visible evidence")
 
 
