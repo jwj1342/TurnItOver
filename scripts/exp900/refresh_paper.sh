@@ -5,7 +5,8 @@ set -euo pipefail
 bash scripts/exp900/staging.sh
 P=paper
 git -C $P pull -q --ff-only origin main
-python scripts/exp900/inline_tables.py tio-runs/repair/q38/final/tex $P/tables/repair.tex $P/tables/acquisition.tex \
+# tables/repair.tex is edited by hand since 11-16 (no intervals, Kimi K3 columns); its rows are in repair-v11-table1.tex
+python scripts/exp900/inline_tables.py tio-runs/repair/q38/final/tex $P/tables/acquisition.tex \
   $P/tables/recognition_main.tex $P/tables/recognition_sizes.tex $P/tables/recognition_test.tex $P/tables/acquisition_full.tex \
   $P/tables/repair_breakdown.tex $P/tables/repair_cost.tex $P/tables/repair_v1.tex
 git -C $P add tables

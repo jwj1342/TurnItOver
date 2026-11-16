@@ -65,6 +65,28 @@ for split in ("validation", "test"):
 print("\\textbf{Pixel-difference status baseline (no model):} pass/fail status accuracy " + "; ".join(parts)
       + ". Clean candidates are byte-identical to their references, so status metrics do not measure understanding.")
 PY
+# Kimi K3 as the coding model (one run; conditions whose 44 episodes are all finished): Success and paired difference from
+# none, inserted after the Qwen3.8-27B columns of the matching Table 1 rows; the other rows get "--".
+K=$T/repair/k3/rep1
+KJ=$(for j in none pixel gold; do [ "$(ls $K/$j/k3/$j/*/result.json 2>/dev/null | grep -vc partial)" = 44 ] && echo $j; done | paste -sd,)
+if [ -n "$KJ" ]; then
+  python scripts/exp900/analysis/repair_bootstrap.py --gen k3 --cases $T/repair/eligible-v11.txt --runs $K:$KJ --json $Q/final/bootstrap-k3.json > $Q/final/bootstrap-k3.md
+  python - $S/repair-v11-table1.tex $Q/final/bootstrap-k3.json <<'PY'
+import json, sys
+path, boot = sys.argv[1], json.load(open(sys.argv[2]))
+judge = {"No verifier": "none", "pixel difference": "pixel", "Ground-truth diagnosis": "gold"}
+rows = []
+for line in open(path).read().splitlines():
+    cells = line.split(" & ")
+    b, k3 = boot.get(judge.get(cells[0])), ["--", "--"]
+    if b:
+        k3[0] = f"{b['success']:.1f}" + r"\,{\tiny[%.1f, %.1f]}" % tuple(b["ci"])
+        if "diff_none" in b:
+            k3[1] = f"{b['diff_none']:+.1f}" + r"\,{\tiny[%+.1f, %+.1f]}" % tuple(b["diff_none_ci"])
+    rows.append(" & ".join(cells[:3] + k3 + cells[3:]))
+open(path, "w").write("\n".join(rows) + "\n")
+PY
+fi
 # paper style: capitalized supervision labels; no negative zero
 sed -i -E 's/^Kimi-K3 & zero-shot &/Kimi K3 \& Zero-shot \&/; s/^27B & zero-shot &/Qwen3.8-27B \& Zero-shot \&/; s/^([0-9]+B) & zero-shot &/\1 \& Zero-shot \&/; s/^([0-9]+B) & ordinary &/\1 \& Ordinary \&/; s/^([0-9]+B) & evidence &/\1 \& Evidence \&/' $S/rec-*.tex
-sed -i -E 's/-0\.0\\,\{/0.0\\,{/g; s/\[-0\.0,/[0.0,/g' $S/repair-*-table1.tex
+sed -i -E 's/-0\.0\\,\{/0.0\\,{/g; s/\[-0\.0,/[0.0,/g; s/, -0\.0\]/, 0.0]/g' $S/repair-*-table1.tex
