@@ -65,11 +65,12 @@ def main() -> None:
     parser.add_argument("--timeout", type=float, default=3600)
     parser.add_argument("--bootstrap-samples", type=int, default=1000)
     parser.add_argument("--seed", type=int, default=20261013)
+    parser.add_argument("--limit", type=int, help="smoke test on the first N examples")
     args = parser.parse_args()
     if sha256(args.dataset / "manifest.json") != args.manifest_sha:
         raise SystemExit("Dataset manifest SHA mismatch")
     args.out.mkdir(parents=True)
-    examples = list(load_training_examples(args.dataset, args.split, "diagnosis", "evidence"))
+    examples = list(load_training_examples(args.dataset, args.split, "diagnosis", "evidence"))[: args.limit]
     records = [record for record, _ in examples]
     manifest = json.loads((args.dataset / "manifest.json").read_text())
     defect_ids = sorted(manifest.get("experiment_taxonomy", load_taxonomy().ids))
