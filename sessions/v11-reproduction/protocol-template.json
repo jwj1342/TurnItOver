@@ -1,0 +1,60 @@
+{
+  "status": "requires_preflight",
+  "data_identity": "three-tier-900-sft-v1.1",
+  "manifest_sha256": "b64e50f027a8788554f9248b6aa7da51b4010e16103f3ffafc9e6bb41806179b",
+  "preflight_summary": "preflight-v4/summary.json",
+  "revision": 2,
+  "run_directory": "runs-v2",
+  "source_view": {
+    "max_chars": 32000,
+    "max_serialized_chars": 45000,
+    "SDK_limit": 50000
+  },
+  "conditions": [
+    "none",
+    "pixel",
+    "ordinary",
+    "zero-shot-sweep",
+    "gold"
+  ],
+  "repetitions": 3,
+  "ordinary_training_seed": 20261013,
+  "generator": "qwen3.8-flash",
+  "thinking": false,
+  "max_repair_rounds": 3,
+  "max_openhands_steps": 10,
+  "generator_max_output_tokens": 8192,
+  "verifier_max_output_tokens": 512,
+  "runtime_policy": {
+    "status": "confirmed",
+    "kind": "reference_complexity"
+  },
+  "geometry": {
+    "tol_chamfer_m": 0.005,
+    "tol_iou": 0.9,
+    "samples_per_part": 1000,
+    "states": [
+      "rest",
+      "joint:*:zero",
+      "joint:*:mid",
+      "joint:*:limit"
+    ]
+  },
+  "visual_input": {
+    "easy": 4,
+    "medium": 6,
+    "hard": 12,
+    "generator": "all frozen view/state reference and fresh candidate images, every method",
+    "verifier": "same full set in frozen episode order"
+  },
+  "stopping": {
+    "none": "fixed 3 submissions including empty edits, 10-step cap",
+    "other": "public verifier pass, generator finish, or budget; independent checks never stop"
+  },
+  "invalid_verdict": "uncertain; no format retry",
+  "pixel_calibration_sha256": "0d13f7d7dd45ea18b93bfb1dd49103d323d4b0bb993fbd28806a5387551dde73",
+  "repetitions_are": "three independent API repair trajectories, not training seeds; server-side sampling defaults retained from pilot",
+  "source_commit": "3e1fbd5e0c38afd78ac53548172f4b0f61f06242",
+  "runtime_commit": "89e07db82890af02ae651dcd8b86082981fb7d1b",
+  "delivery_note": "Final v4 oracle and geometry guards for new runs; historical v2/v3 sources retained. New API trajectories are not the published trajectories."
+}
