@@ -38,7 +38,8 @@ def call(endpoint: str, model: str, key: str, record: dict, root: Path, max_toke
     body = json.dumps({"model": model, "max_tokens": max_tokens, "messages": [{"role": "user", "content": content}]}).encode()
     request = urllib.request.Request(endpoint.rstrip("/") + "/chat/completions", data=body,
                                      headers={"Content-Type": "application/json", "Authorization": f"Bearer {key}"})
-    for attempt in range(10):
+    attempts = int(os.environ.get("TIO_API_ATTEMPTS", "10"))   # 429 quota windows need more (each wait is at most 300 s)
+    for attempt in range(attempts):
         start = time.perf_counter()
         try:
             with urllib.request.urlopen(request, timeout=timeout) as response:
@@ -49,7 +50,7 @@ def call(endpoint: str, model: str, key: str, record: dict, root: Path, max_toke
         except (urllib.error.URLError, TimeoutError, ConnectionError) as exc:
             last = type(exc).__name__
             time.sleep(min(300, 30 * (attempt + 1)))
-    return {"text": "", "finish_reason": f"error:{last}", "usage": {}, "elapsed_ms": 0.0, "attempts": 10}
+    return {"text": "", "finish_reason": f"error:{last}", "usage": {}, "elapsed_ms": 0.0, "attempts": attempts}
 
 
 def main() -> None:
